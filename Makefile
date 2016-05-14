@@ -3,7 +3,7 @@ OK_COLOR=\x1b[32;01m
 ERROR_COLOR=\x1b[31;01m
 WARN_COLOR=\x1b[33;01m
 
-PHPUNIT=tools/phpunit
+PHPUNIT=php tools/phpunit.phar
 
 all: tests testdox cov
 

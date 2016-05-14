@@ -8,5 +8,6 @@ class SomeTest extends PHPUnit_Framework_TestCase
     {
         $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
         $this->assertNotNull($parser);
+        $this->assertNotNull(new \mihaeu\phpDependencies\SomeBaseClass());
     }
 }

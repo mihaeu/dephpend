@@ -1,14 +1,28 @@
 {
     "name": "mihaeu/php-dependencies",
     "description": "Static dependency analysis for PHP",
+    "type": "library",
+    "keywords": [
+        "dependencies",
+        "dependency",
+        "analysis"
+    ],
     "require": {
+        "php": "^7.0",
         "nikic/php-parser": "^2.1"
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "license": "MIT",
     "authors": [
         {
             "name": "Michael Haeuslmann",
             "email": "haeuslmann@gmail.com"
         }
-    ]
+    ],
+    "autoload": {
+        "classmap": [
+            "src/"
+        ]
+    }
 }
