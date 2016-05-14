@@ -1,2 +1,5 @@
 # PHPStorm settings, etc.
 .idea
+
+# composer dependencies
+/vendor/

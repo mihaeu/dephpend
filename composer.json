@@ -1,0 +1,14 @@
+{
+    "name": "mihaeu/php-dependencies",
+    "description": "Static dependency analysis for PHP",
+    "require": {
+        "nikic/php-parser": "^2.1"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Michael Haeuslmann",
+            "email": "haeuslmann@gmail.com"
+        }
+    ]
+}
