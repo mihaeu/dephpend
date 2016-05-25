@@ -5,13 +5,16 @@ namespace mihaeu\phpDependencies;
 
 class PhpFileCollection
 {
+    /** @var PhpFile[] */
+    private $collection;
+
     public function add(PhpFile $file)
     {
-        
+        $collection[] = $file;
     }
 
-    public function equals()
+    public function equals(PhpFileCollection $other)
     {
-        return false;
+        return $this->collection === $other->collection;
     }
 }

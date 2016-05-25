@@ -11,4 +11,9 @@ class PhpFile
     {
         $this->file = $file;
     }
+
+    public function equals(PhpFile $other)
+    {
+        return $this->file === $other->file;
+    }
 }
