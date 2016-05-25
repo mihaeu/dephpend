@@ -9,7 +9,8 @@
     ],
     "require": {
         "php": "^7.0",
-        "nikic/php-parser": "^2.1"
+        "nikic/php-parser": "^2.1",
+        "mikey179/vfsStream": "^1.6"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
