@@ -5,3 +5,8 @@ php:
 
 before_script:
     - composer install
+
+script:
+    - php tools/phpunit.phar -c phpunit.xml.dist
+    - tools/check-code-cov
+
