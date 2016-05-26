@@ -9,6 +9,18 @@ class PhpFileCollection implements \Countable, \IteratorAggregate
     /** @var PhpFile[] */
     private $collection = [];
 
+    /**
+     * Shorthand for creating a collection with one element in just one line.
+     *
+     * @param PhpFile $file
+     */
+    public function __construct(PhpFile $file = null)
+    {
+        if ($file !== null) {
+            $this->add($file);
+        }
+    }
+
     public function add(PhpFile $file)
     {
         $this->collection[] = $file;
@@ -51,5 +63,17 @@ class PhpFileCollection implements \Countable, \IteratorAggregate
     public function getIterator()
     {
         return new \ArrayIterator($this->collection);
+    }
+
+    /**
+     * Applies $function to each element.
+     *
+     * @param \Closure $closure
+     */
+    public function each(\Closure $closure)
+    {
+        foreach ($this->collection as $item) {
+            $closure($item);
+        }
     }
 }

@@ -21,4 +21,9 @@ class PhpFile
     {
         return $this->file()->getPathname() === $other->file()->getPathname();
     }
+
+    public function code()
+    {
+        return file_get_contents($this->file->getPathname());
+    }
 }
