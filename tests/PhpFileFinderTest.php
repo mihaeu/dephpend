@@ -33,13 +33,51 @@ class PhpFileFinderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $this->finder->find($dir));
     }
 
-    public function testFindsASingleFileInDeepStructure()
+    public function testFindsFilesInDeepStructure()
     {
-        $this->markTestSkipped();
+        $mockDir = vfsStream::setup('root', null, [
+            'root' => [
+                'someFile.php' => '<?php echo "Hello World";',
+                'dirA' => [
+                    'dirB' => [
+                        'dirC' => [
+                            'fileInC.php' => '<?php echo "Hello World";',
+                        ],
+                        'fileInB.php' => '<?php echo "Hello World";',
+                        'fileInB2.php' => '<?php echo "Hello World";',
+                    ],
+                    'fileInA.php' => '<?php echo "Hello World";',
+                ],
+            ],
+        ]);
+        $dir = new \SplFileInfo($mockDir->url());
+        $expected = new PhpFileCollection();
+        $expected->add(new PhpFile(new \SplFileInfo($mockDir->url() . '/someFile.php')));
+        $expected->add(new PhpFile(new \SplFileInfo($mockDir->url() . '/fileInA.php')));
+        $expected->add(new PhpFile(new \SplFileInfo($mockDir->url() . '/fileInB.php')));
+        $expected->add(new PhpFile(new \SplFileInfo($mockDir->url() . '/fileInB2.php')));
+        $expected->add(new PhpFile(new \SplFileInfo($mockDir->url() . '/fileInC.php')));
+        $this->assertEquals($expected, $this->finder->find($dir));
     }
 
     public function testFindsNothingIfThereIsNothing()
     {
-        $this->markTestSkipped();
+        $mockDir = vfsStream::setup('root', null, [
+            'root' => [
+                'someFile.js' => 'console.log("Hello World!");',
+                'dirA' => [
+                    'dirB' => [
+                        'dirC' => [
+                            'fileInC.js' => '',
+                        ],
+                        'fileInB.js' => '',
+                        'fileInB2.js' => '',
+                    ],
+                    'fileInA.js' => '',
+                ],
+            ],
+        ]);
+        $dir = new \SplFileInfo($mockDir->url());
+        $this->assertEmpty($this->finder->find($dir));
     }
 }
