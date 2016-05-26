@@ -2,7 +2,7 @@
 
 namespace mihaeu\phpDependencies;
 
-class FileFinder
+class PhpFileFinder
 {
     public function find(\SplFileInfo $file) : PhpFileCollection
     {

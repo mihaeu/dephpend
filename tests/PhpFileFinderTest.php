@@ -5,19 +5,19 @@ namespace mihaeu\phpDependencies;
 use org\bovigo\vfs\vfsStream;
 
 /**
- * @covers mihaeu\phpDependencies\FileFinder
+ * @covers mihaeu\phpDependencies\PhpFileFinder
  *
  * @uses mihaeu\phpDependencies\PhpFile
  * @uses mihaeu\phpDependencies\PhpFileCollection
  */
-class FileFinderTest extends \PHPUnit_Framework_TestCase
+class PhpFileFinderTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var FileFinder */
+    /** @var PhpFileFinder */
     private $finder;
 
     public function setUp()
     {
-        $this->finder = new FileFinder();
+        $this->finder = new PhpFileFinder();
     }
 
     public function testFindsSingleFileInFlatStructure()
