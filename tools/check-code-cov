@@ -1,16 +1,17 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 # This is just a quick hack to determine if the code coverage
-# is enough (at least 95%) or not.
+# is enough or not.
 #
 # @author Michael Haeuslmann <haeuslmann@gmail.com>
 
+min_cov=95
 cov=`php tools/phpunit.phar --coverage-text --colors=never \
     | egrep -o  "Lines:[[:space:]]+([0-9])+" \
     | head -n1 \
     | sed 's/Lines: *//'`
 
-if [ "$cov" -gt "95"  ]; then
+if [ "$cov" -gt "$min_cov"  ]; then
     exit 0
 else
     echo "Line coverage is only $cov%, but needs to be at least 95%."
