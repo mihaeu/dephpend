@@ -2,18 +2,25 @@
 
 namespace mihaeu\phpDependencies;
 
-
 class PhpFileCollection
 {
     /** @var PhpFile[] */
-    private $collection;
+    private $collection = [];
 
     public function add(PhpFile $file)
     {
-        $collection[] = $file;
+        $this->collection[] = $file;
     }
 
-    public function equals(PhpFileCollection $other)
+    public function get(int $i) : PhpFile
+    {
+        if (!array_key_exists($i, $this->collection)) {
+            throw new IndexOutOfBoundsException();
+        }
+        return $this->collection[$i];
+    }
+
+    public function equals(PhpFileCollection $other) : bool
     {
         return $this->collection === $other->collection;
     }

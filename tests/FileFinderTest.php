@@ -5,7 +5,10 @@ namespace mihaeu\phpDependencies;
 use org\bovigo\vfs\vfsStream;
 
 /**
- * @covers FileFinder
+ * @covers mihaeu\phpDependencies\FileFinder
+ *
+ * @uses mihaeu\phpDependencies\PhpFile
+ * @uses mihaeu\phpDependencies\PhpFileCollection
  */
 class FileFinderTest extends \PHPUnit_Framework_TestCase
 {
@@ -27,7 +30,7 @@ class FileFinderTest extends \PHPUnit_Framework_TestCase
         $dir = new \SplFileInfo($mockDir->url());
         $expected = new PhpFileCollection();
         $expected->add(new PhpFile(new \SplFileInfo($mockDir->url() . '/someFile.php')));
-        $this->assertTrue($this->finder->find($dir)->equals($expected));
+        $this->assertEquals($expected, $this->finder->find($dir));
     }
 
     public function testFindsASingleFileInDeepStructure()

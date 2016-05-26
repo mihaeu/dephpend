@@ -12,8 +12,13 @@ class PhpFile
         $this->file = $file;
     }
 
+    public function file() : \SplFileInfo
+    {
+         return $this->file;
+    }
+
     public function equals(PhpFile $other)
     {
-        return $this->file === $other->file;
+        return $this->file()->getPathname() === $other->file()->getPathname();
     }
 }
