@@ -14,7 +14,7 @@ cov=`php tools/phpunit.phar --coverage-text --colors=never \
 if [ "$cov" -gt "$min_cov"  ]; then
     exit 0
 else
-    echo "Line coverage is only $cov%, but needs to be at least 95%."
+    echo "Line coverage is only $cov%, but needs to be at least $min_cov%."
     exit 1
 fi
 
