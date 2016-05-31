@@ -1,11 +1,11 @@
 <?php declare(strict_types = 1);
 
-namespace mihaeu\phpDependencies;
+namespace Mihaeu\PhpDependencies;
 
 /**
- * @covers mihaeu\phpDependencies\Ast
+ * @covers Mihaeu\PhpDependencies\Ast
  *
- * @uses mihaeu\phpDependencies\PhpFile
+ * @uses Mihaeu\PhpDependencies\PhpFile
  */
 class AstTest extends \PHPUnit_Framework_TestCase
 {

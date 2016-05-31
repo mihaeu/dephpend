@@ -1,14 +1,14 @@
 <?php declare(strict_types = 1);
 
-namespace mihaeu\phpDependencies;
+namespace Mihaeu\PhpDependencies;
 
 use org\bovigo\vfs\vfsStream;
 
 /**
- * @covers mihaeu\phpDependencies\PhpFileFinder
+ * @covers Mihaeu\PhpDependencies\PhpFileFinder
  *
- * @uses mihaeu\phpDependencies\PhpFile
- * @uses mihaeu\phpDependencies\PhpFileCollection
+ * @uses Mihaeu\PhpDependencies\PhpFile
+ * @uses Mihaeu\PhpDependencies\PhpFileCollection
  */
 class PhpFileFinderTest extends \PHPUnit_Framework_TestCase
 {

@@ -1,11 +1,11 @@
 <?php declare(strict_types = 1);
 
-namespace mihaeu\phpDependencies;
+namespace Mihaeu\PhpDependencies;
 
 use org\bovigo\vfs\vfsStream;
 
 /**
- * @covers mihaeu\phpDependencies\PhpFile
+ * @covers Mihaeu\PhpDependencies\PhpFile
  */
 class PhpFileTest extends \PHPUnit_Framework_TestCase
 {

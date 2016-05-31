@@ -5,16 +5,23 @@
 #
 # @author Michael Haeuslmann <haeuslmann@gmail.com>
 
+NO_COLOR='\x1b[0m'
+OK_COLOR='\x1b[32;01m'
+ERROR_COLOR='\x1b[31;01m'
+WARN_COLOR='\x1b[33;01m'
+
 min_cov=95
 cov=`php tools/phpunit.phar --coverage-text --colors=never \
     | egrep -o  "Lines:[[:space:]]+([0-9])+" \
     | head -n1 \
     | sed 's/Lines: *//'`
 
-if [ "$cov" -gt "$min_cov"  ]; then
-    exit 0
+if [ "$cov" -eq "100"  ]; then
+    printf "${OK_COLOR}✓ Coverage is $cov%%${NO_COLOR}\n"
+elif [ "$cov" -gt "$min_cov" ]; then
+    printf "${WARN_COLOR}! Coverage is only $cov%%${NO_COLOR}\n"
 else
-    echo "Line coverage is only $cov%, but needs to be at least $min_cov%."
+    printf "${ERROR_COLOR}✗ Coverage is only $cov%%, but needs to be at least $min_cov%%${NO_COLOR}\n"
     exit 1
 fi
 

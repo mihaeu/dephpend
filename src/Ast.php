@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace mihaeu\phpDependencies;
+namespace Mihaeu\PhpDependencies;
 
 use PhpParser\Node;
 use Traversable;
