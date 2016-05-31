@@ -5,7 +5,10 @@ WARN_COLOR=\x1b[33;01m
 
 PHPUNIT=php tools/phpunit.phar
 
-all: tests testdox cov
+all: autoload tests testdox cov
+
+autoload:
+	composer dumpautoload
 
 test:
 	$(PHPUNIT) -c phpunit.xml.dist tests
