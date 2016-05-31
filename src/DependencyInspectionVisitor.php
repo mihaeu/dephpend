@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies;
 
@@ -24,17 +24,15 @@ class DependencyInspectionVisitor extends \PhpParser\NodeVisitorAbstract
     /**
      * @inheritdoc
      */
-    public function leaveNode(Node $node) {
+    public function leaveNode(Node $node)
+    {
         if ($node instanceof NewNode) {
             if ($node->class instanceof FullyQualifiedNameNode) {
                 $this->dependencies->addDependency($this->toFullyQualifiedClass($node->class->parts));
-            }
-            else if ($node->class instanceof VariableNode) {
+            } elseif ($node->class instanceof VariableNode) {
                 $this->dependencies->addDependency($this->toFullyQualifiedClass($node->class->name));
             }
-        }
-        else if ($node instanceof ClassMethodNode) {
-
+        } elseif ($node instanceof ClassMethodNode) {
         }
         return null;
     }

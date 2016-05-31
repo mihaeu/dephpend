@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies;
 
@@ -14,7 +14,7 @@ class PhpFile
 
     public function file() : \SplFileInfo
     {
-         return $this->file;
+        return $this->file;
     }
 
     public function equals(PhpFile $other)

@@ -1,5 +1,7 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies;
 
-class IndexOutOfBoundsException extends \Exception {}
+class IndexOutOfBoundsException extends \Exception
+{
+}

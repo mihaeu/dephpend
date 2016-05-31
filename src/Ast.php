@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies;
 
@@ -22,7 +22,7 @@ class Ast implements \Iterator
      * @param PhpFile $file
      * @param Node[] $node
      */
-    public function add(PhpFile $file, Array $node)
+    public function add(PhpFile $file, array $node)
     {
         $this->nodes->attach($file, $node);
     }
