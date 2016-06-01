@@ -2,7 +2,8 @@
 
 namespace Mihaeu\PhpDependencies;
 
-use PhpParser\ParserFactory;
+use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\Parser as BaseParser;
 
 class Parser
@@ -17,14 +18,22 @@ class Parser
     public function __construct(BaseParser $parser)
     {
         $this->parser = $parser;
+
     }
 
-    public function parse(PhpFileCollection $files) : Ast
+    public function parse(PhpFileCollection $files) : array
     {
-        $ast = new Ast;
-        $files->each(function (PhpFile $file) use ($ast) {
-            $ast->add($file, $this->parser->parse($file->code()));
+        return $files->mapToArray(function (PhpFile $file) {
+            $parsedCode = $this->parser->parse($file->code());
+
+            $traverser = new NodeTraverser();
+            $traverser->addVisitor(new NameResolver);
+            $forClazz = new Clazz($file->file()->getBasename());
+            $dependencies = new ClassDependencies($forClazz);
+            $traverser->addVisitor(new DependencyInspectionVisitor($dependencies));
+            $traverser->traverse($parsedCode);
+
+            return $dependencies->dependencies();
         });
-        return $ast;
     }
 }

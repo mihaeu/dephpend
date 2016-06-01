@@ -8,7 +8,7 @@ class ClassDependencies implements \Countable
     private $clazz;
 
     /** @var Clazz[] */
-    private $dependencies;
+    private $dependencies = [];
 
     /**
      * @param Clazz $clazz

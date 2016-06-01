@@ -45,7 +45,7 @@ class DependencyInspectionVisitor extends \PhpParser\NodeVisitorAbstract
         return $this->dependencies;
     }
 
-    private function toFullyQualifiedClass(string ...$parts) : Clazz
+    private function toFullyQualifiedClass(array $parts) : Clazz
     {
         return new Clazz(implode('.', $parts));
     }

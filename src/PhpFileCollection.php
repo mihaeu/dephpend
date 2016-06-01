@@ -66,7 +66,7 @@ class PhpFileCollection implements \Countable, \IteratorAggregate
     }
 
     /**
-     * Applies $function to each element.
+     * Applies $closure to each element.
      *
      * @param \Closure $closure
      */
@@ -75,5 +75,16 @@ class PhpFileCollection implements \Countable, \IteratorAggregate
         foreach ($this->collection as $item) {
             $closure($item);
         }
+    }
+
+    /**
+     * Returns a new array by applying the $closure to each element.
+     *
+     * @param \Closure $closure
+     * @return array
+     */
+    public function mapToArray(\Closure $closure) : array
+    {
+        return array_map($closure, $this->collection);
     }
 }
