@@ -1,0 +1,6 @@
+{
+    "directories": ["src/", "vendor/"],
+    "main": "bin/php-dependencies",
+    "output": "build/php-dependencies.phar",
+    "stub": true
+}
