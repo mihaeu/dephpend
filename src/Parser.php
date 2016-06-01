@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare (strict_types = 1);
 
 namespace Mihaeu\PhpDependencies;
 
@@ -13,12 +15,12 @@ class Parser
 
     /**
      * Parser constructor.
+     *
      * @param $parser
      */
     public function __construct(BaseParser $parser)
     {
         $this->parser = $parser;
-
     }
 
     public function parse(PhpFileCollection $files) : array
@@ -27,7 +29,7 @@ class Parser
             $parsedCode = $this->parser->parse($file->code());
 
             $traverser = new NodeTraverser();
-            $traverser->addVisitor(new NameResolver);
+            $traverser->addVisitor(new NameResolver());
             $forClazz = new Clazz($file->file()->getBasename());
             $dependencies = new ClassDependencies($forClazz);
             $traverser->addVisitor(new DependencyInspectionVisitor($dependencies));

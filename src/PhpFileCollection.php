@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare (strict_types = 1);
 
 namespace Mihaeu\PhpDependencies;
 
@@ -31,6 +33,7 @@ class PhpFileCollection implements \Countable, \IteratorAggregate
         if (!array_key_exists($i, $this->collection)) {
             throw new IndexOutOfBoundsException();
         }
+
         return $this->collection[$i];
     }
 
@@ -40,12 +43,15 @@ class PhpFileCollection implements \Countable, \IteratorAggregate
     }
 
     /**
-     * Count elements of an object
+     * Count elements of an object.
+     *
      * @link http://php.net/manual/en/countable.count.php
+     *
      * @return int The custom count as an integer.
-     * </p>
-     * <p>
-     * The return value is cast to an integer.
+     *             </p>
+     *             <p>
+     *             The return value is cast to an integer.
+     *
      * @since 5.1.0
      */
     public function count()
@@ -54,10 +60,13 @@ class PhpFileCollection implements \Countable, \IteratorAggregate
     }
 
     /**
-     * Retrieve an external iterator
+     * Retrieve an external iterator.
+     *
      * @link http://php.net/manual/en/iteratoraggregate.getiterator.php
+     *
      * @return Traversable An instance of an object implementing <b>Iterator</b> or
-     * <b>Traversable</b>
+     *                     <b>Traversable</b>
+     *
      * @since 5.0.0
      */
     public function getIterator()
@@ -81,6 +90,7 @@ class PhpFileCollection implements \Countable, \IteratorAggregate
      * Returns a new array by applying the $closure to each element.
      *
      * @param \Closure $closure
+     *
      * @return array
      */
     public function mapToArray(\Closure $closure) : array

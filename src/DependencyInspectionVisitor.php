@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare (strict_types = 1);
 
 namespace Mihaeu\PhpDependencies;
 
@@ -22,7 +24,7 @@ class DependencyInspectionVisitor extends \PhpParser\NodeVisitorAbstract
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function leaveNode(Node $node)
     {
@@ -34,7 +36,8 @@ class DependencyInspectionVisitor extends \PhpParser\NodeVisitorAbstract
             }
         } elseif ($node instanceof ClassMethodNode) {
         }
-        return null;
+
+        return;
     }
 
     /**

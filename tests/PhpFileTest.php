@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare (strict_types = 1);
 
 namespace Mihaeu\PhpDependencies;
 
@@ -27,9 +29,9 @@ class PhpFileTest extends \PHPUnit_Framework_TestCase
     {
         $code = '<?php echo "Hello World";';
         $mockDir = vfsStream::setup('root', null, [
-            'someFile.php' => $code
+            'someFile.php' => $code,
         ]);
-        $file = new PhpFile(new \SplFileInfo($mockDir->url() . '/someFile.php'));
+        $file = new PhpFile(new \SplFileInfo($mockDir->url().'/someFile.php'));
         $this->assertEquals($code, $file->code());
     }
 }

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare (strict_types = 1);
 
 namespace Mihaeu\PhpDependencies;
 
@@ -24,12 +26,12 @@ class PhpFileFinderTest extends \PHPUnit_Framework_TestCase
     {
         $mockDir = vfsStream::setup('root', null, [
             'root' => [
-                'someFile.php' => '<?php echo "Hello World";'
-            ]
+                'someFile.php' => '<?php echo "Hello World";',
+            ],
         ]);
         $dir = new \SplFileInfo($mockDir->url());
         $expected = new PhpFileCollection();
-        $expected->add(new PhpFile(new \SplFileInfo($mockDir->url() . '/someFile.php')));
+        $expected->add(new PhpFile(new \SplFileInfo($mockDir->url().'/someFile.php')));
         $this->assertEquals($expected, $this->finder->find($dir));
     }
 
@@ -52,11 +54,11 @@ class PhpFileFinderTest extends \PHPUnit_Framework_TestCase
         ]);
         $dir = new \SplFileInfo($mockDir->url());
         $expected = new PhpFileCollection();
-        $expected->add(new PhpFile(new \SplFileInfo($mockDir->url() . '/someFile.php')));
-        $expected->add(new PhpFile(new \SplFileInfo($mockDir->url() . '/fileInA.php')));
-        $expected->add(new PhpFile(new \SplFileInfo($mockDir->url() . '/fileInB.php')));
-        $expected->add(new PhpFile(new \SplFileInfo($mockDir->url() . '/fileInB2.php')));
-        $expected->add(new PhpFile(new \SplFileInfo($mockDir->url() . '/fileInC.php')));
+        $expected->add(new PhpFile(new \SplFileInfo($mockDir->url().'/someFile.php')));
+        $expected->add(new PhpFile(new \SplFileInfo($mockDir->url().'/fileInA.php')));
+        $expected->add(new PhpFile(new \SplFileInfo($mockDir->url().'/fileInB.php')));
+        $expected->add(new PhpFile(new \SplFileInfo($mockDir->url().'/fileInB2.php')));
+        $expected->add(new PhpFile(new \SplFileInfo($mockDir->url().'/fileInC.php')));
         $this->assertEquals($expected, $this->finder->find($dir));
     }
 

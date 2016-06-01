@@ -1,9 +1,10 @@
-<?php declare(strict_types=1);
+<?php
+
+declare (strict_types = 1);
 
 namespace Mihaeu\PhpDependencies;
 
 use PhpParser\Node;
-use Traversable;
 
 class Ast implements \Iterator
 {
@@ -20,7 +21,7 @@ class Ast implements \Iterator
 
     /**
      * @param PhpFile $file
-     * @param Node[] $node
+     * @param Node[]  $node
      */
     public function add(PhpFile $file, array $node)
     {
@@ -28,9 +29,12 @@ class Ast implements \Iterator
     }
 
     /**
-     * Return the current element
+     * Return the current element.
+     *
      * @link http://php.net/manual/en/iterator.current.php
+     *
      * @return mixed Can return any type.
+     *
      * @since 5.0.0
      */
     public function current()
@@ -39,9 +43,9 @@ class Ast implements \Iterator
     }
 
     /**
-     * Move forward to next element
+     * Move forward to next element.
+     *
      * @link http://php.net/manual/en/iterator.next.php
-     * @return void Any returned value is ignored.
      * @since 5.0.0
      */
     public function next()
@@ -50,9 +54,12 @@ class Ast implements \Iterator
     }
 
     /**
-     * Return the key of the current element
+     * Return the key of the current element.
+     *
      * @link http://php.net/manual/en/iterator.key.php
+     *
      * @return mixed scalar on success, or null on failure.
+     *
      * @since 5.0.0
      */
     public function key()
@@ -61,10 +68,13 @@ class Ast implements \Iterator
     }
 
     /**
-     * Checks if current position is valid
+     * Checks if current position is valid.
+     *
      * @link http://php.net/manual/en/iterator.valid.php
-     * @return boolean The return value will be casted to boolean and then evaluated.
-     * Returns true on success or false on failure.
+     *
+     * @return bool The return value will be casted to boolean and then evaluated.
+     *              Returns true on success or false on failure.
+     *
      * @since 5.0.0
      */
     public function valid()
@@ -73,9 +83,9 @@ class Ast implements \Iterator
     }
 
     /**
-     * Rewind the Iterator to the first element
+     * Rewind the Iterator to the first element.
+     *
      * @link http://php.net/manual/en/iterator.rewind.php
-     * @return void Any returned value is ignored.
      * @since 5.0.0
      */
     public function rewind()

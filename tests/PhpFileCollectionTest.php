@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare (strict_types = 1);
 
 namespace Mihaeu\PhpDependencies;
 
@@ -48,7 +50,6 @@ class PhpFileCollectionTest extends \PHPUnit_Framework_TestCase
         $collection1 = new PhpFileCollection();
         $this->assertCount(0, $collection1);
     }
-
 
     public function testCount()
     {

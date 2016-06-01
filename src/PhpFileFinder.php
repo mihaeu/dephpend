@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare (strict_types = 1);
 
 namespace Mihaeu\PhpDependencies;
 
@@ -22,6 +24,7 @@ class PhpFileFinder
         foreach ($regexIterator as $fileName) {
             $collection->add(new PhpFile(new \SplFileInfo($fileName[0])));
         }
+
         return $collection;
     }
 }

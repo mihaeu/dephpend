@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare (strict_types = 1);
 
 namespace Mihaeu\PhpDependencies;
 
@@ -23,7 +25,7 @@ class ClassDependenciesTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('OtherClassA', $dependencies->dependencies()[0]);
         $this->assertEquals('OtherClassB', $dependencies->dependencies()[1]);
     }
-    
+
     public function testCountable()
     {
         $dependencies = new ClassDependencies(new Clazz('SomeClass'));
