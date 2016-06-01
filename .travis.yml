@@ -4,9 +4,9 @@ php:
     - 7.0
 
 before_script:
-    - composer install
+    - composer install --prefer-dist
 
 script:
-    - php tools/phpunit.phar -c phpunit.xml.dist
+    - vendor/bin/phpunit -c phpunit.xml.dist
     - bin/check-code-cov
 

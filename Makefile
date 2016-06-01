@@ -3,7 +3,7 @@ OK_COLOR=\x1b[32;01m
 ERROR_COLOR=\x1b[31;01m
 WARN_COLOR=\x1b[33;01m
 
-PHPUNIT=php tools/phpunit.phar
+PHPUNIT=vendor/bin/phpunit
 
 all: autoload tests testdox cov
 
@@ -27,6 +27,13 @@ testdox-osx:
 
 cov:
 	@$(PHPUNIT) -c phpunit.xml.dist --coverage-text
+
+style:
+	@php -n vendor/bin/php-cs-fixer fix --verbose src
+	@php -n vendor/bin/php-cs-fixer fix --verbose tests
+
+phar:
+	@vendor/bin/box build
 
 c: cov
 
