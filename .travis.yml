@@ -8,5 +8,5 @@ before_script:
 
 script:
     - php tools/phpunit.phar -c phpunit.xml.dist
-    - tools/check-code-cov
+    - bin/check-code-cov
 
