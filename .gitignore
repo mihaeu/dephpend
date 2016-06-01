@@ -2,8 +2,15 @@
 .idea
 
 # composer dependencies
-/vendor/
+/vendor
 /samples
 
 # PHP Coding Standards Fixer cache file
 .php_cs.cache
+
+# for now don't add any more .phar files
+# because they might bloat the repo
+*.phar
+
+# build artifacts
+/build
