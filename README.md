@@ -1,4 +1,4 @@
-# PHP Dependencies
+# PHP Dependencies [![Build Status](https://travis-ci.com/mihaeu/php-dependencies.svg?token=6E2gXvaZaEh2XxFCPhrX&branch=develop)](https://travis-ci.com/mihaeu/php-dependencies) ![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)
 
 ## Roadmap
 
