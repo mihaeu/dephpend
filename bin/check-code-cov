@@ -11,14 +11,14 @@ ERROR_COLOR='\x1b[31;01m'
 WARN_COLOR='\x1b[33;01m'
 
 min_cov=95
-cov=`php tools/phpunit.phar --coverage-text --colors=never \
+cov=`vendor/bin/phpunit --coverage-text --colors=never \
     | egrep -o  "Lines:[[:space:]]+([0-9])+" \
     | head -n1 \
     | sed 's/Lines: *//'`
 
 if [ "$cov" -eq "100"  ]; then
     printf "${OK_COLOR}✓ Coverage is $cov%%${NO_COLOR}\n"
-elif [ "$cov" -gt "$min_cov" ]; then
+elif [ "$cov" -ge "$min_cov" ]; then
     printf "${WARN_COLOR}! Coverage is only $cov%%${NO_COLOR}\n"
 else
     printf "${ERROR_COLOR}✗ Coverage is only $cov%%, but needs to be at least $min_cov%%${NO_COLOR}\n"
