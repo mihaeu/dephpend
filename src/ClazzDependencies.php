@@ -4,7 +4,7 @@ declare (strict_types = 1);
 
 namespace Mihaeu\PhpDependencies;
 
-class ClassDependencies implements \Countable
+class ClazzDependencies implements \Countable
 {
     /** @var Clazz */
     private $clazz;

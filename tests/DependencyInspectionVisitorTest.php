@@ -12,19 +12,19 @@ use PhpParser\Node\Name\FullyQualified as FullyQualifiedNameNode;
  * @covers Mihaeu\PhpDependencies\DependencyInspectionVisitor
  *
  * @uses Mihaeu\PhpDependencies\Clazz
- * @uses Mihaeu\PhpDependencies\ClassDependencies
+ * @uses Mihaeu\PhpDependencies\ClazzDependencies
  */
 class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
 {
     /** @var DependencyInspectionVisitor */
     private $dependencyInspectionVisitor;
 
-    /** @var ClassDependencies */
+    /** @var ClazzDependencies */
     private $classDependencies;
 
     public function setUp()
     {
-        $this->classDependencies = new ClassDependencies(new Clazz('Test'));
+        $this->classDependencies = new ClazzDependencies(new Clazz('Test'));
         $this->dependencyInspectionVisitor = new DependencyInspectionVisitor($this->classDependencies);
     }
 

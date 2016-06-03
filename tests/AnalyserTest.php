@@ -10,7 +10,7 @@ use PhpParser\NodeTraverser;
  * @covers Mihaeu\PhpDependencies\Analyser
  *
  * @uses Mihaeu\PhpDependencies\Ast
- * @uses Mihaeu\PhpDependencies\ClassDependencies
+ * @uses Mihaeu\PhpDependencies\ClazzDependencies
  * @uses Mihaeu\PhpDependencies\DependencyInspectionVisitor
  * @uses Mihaeu\PhpDependencies\PhpFile
  * @uses Mihaeu\PhpDependencies\Clazz

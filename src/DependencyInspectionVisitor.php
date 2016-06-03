@@ -11,13 +11,13 @@ use PhpParser\Node\Expr\New_ as NewNode;
 
 class DependencyInspectionVisitor extends \PhpParser\NodeVisitorAbstract
 {
-    /** @var ClassDependencies */
+    /** @var ClazzDependencies */
     private $dependencies;
 
     /**
-     * @param ClassDependencies $dependencies
+     * @param ClazzDependencies $dependencies
      */
-    public function __construct(ClassDependencies $dependencies)
+    public function __construct(ClazzDependencies $dependencies)
     {
         $this->dependencies = $dependencies;
     }
@@ -39,9 +39,9 @@ class DependencyInspectionVisitor extends \PhpParser\NodeVisitorAbstract
     }
 
     /**
-     * @return ClassDependencies
+     * @return ClazzDependencies
      */
-    public function dependencies() : ClassDependencies
+    public function dependencies() : ClazzDependencies
     {
         return $this->dependencies;
     }

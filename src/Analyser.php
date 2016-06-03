@@ -37,15 +37,15 @@ class Analyser
     /**
      * @param PhpFile $file
      *
-     * @return ClassDependencies
+     * @return ClazzDependencies
      */
-    private function changeDependencyInspector(PhpFile $file) : ClassDependencies
+    private function changeDependencyInspector(PhpFile $file) : ClazzDependencies
     {
         if ($this->dependencyInspectionVisitor !== null) {
             $this->nodeTraverser->removeVisitor($this->dependencyInspectionVisitor);
         }
 
-        $dependencies = new ClassDependencies(new Clazz($file->file()->getBasename()));
+        $dependencies = new ClazzDependencies(new Clazz($file->file()->getBasename()));
         $this->dependencyInspectionVisitor = new DependencyInspectionVisitor($dependencies);
         $this->nodeTraverser->addVisitor(new DependencyInspectionVisitor($dependencies));
 
