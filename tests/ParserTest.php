@@ -10,21 +10,15 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 {
     public function testParsesCollection()
     {
-        $mockFile = $this->getMockBuilder(PhpFile::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $mockFile = $this->createMock(PhpFile::class);
         $code = '<?php echo "Hello World!";';
         $mockFile->method('code')->willReturn($code);
 
-        $mockSplFile = $this->getMockBuilder(\SplFileInfo::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $mockSplFile = $this->createMock(\SplFileInfo::class);
         $mockSplFile->method('getBasename')->willReturn('HelloWorld');
         $mockFile->method('file')->willReturn($mockSplFile);
 
-        $mockParser = $this->getMockBuilder(BaseParser::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $mockParser = $this->createMock(BaseParser::class);
         $mockParser->method('parse')->willReturn([]);
         $mockParser->expects($this->once())->method('parse')->with($code);
 
