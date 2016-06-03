@@ -7,7 +7,6 @@ namespace Mihaeu\PhpDependencies;
 use PhpParser\Node;
 use PhpParser\Node\Expr\Variable as VariableNode;
 use PhpParser\Node\Name\FullyQualified as FullyQualifiedNameNode;
-use PhpParser\Node\Stmt\ClassMethod as ClassMethodNode;
 use PhpParser\Node\Expr\New_ as NewNode;
 
 class DependencyInspectionVisitor extends \PhpParser\NodeVisitorAbstract
@@ -32,9 +31,8 @@ class DependencyInspectionVisitor extends \PhpParser\NodeVisitorAbstract
             if ($node->class instanceof FullyQualifiedNameNode) {
                 $this->dependencies->addDependency($this->toFullyQualifiedClass($node->class->parts));
             } elseif ($node->class instanceof VariableNode) {
-                $this->dependencies->addDependency($this->toFullyQualifiedClass($node->class->name));
+                $this->dependencies->addDependency(new Clazz($node->class->name));
             }
-        } elseif ($node instanceof ClassMethodNode) {
         }
 
         return;

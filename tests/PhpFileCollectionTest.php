@@ -80,4 +80,16 @@ class PhpFileCollectionTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals(new PhpFile(new \SplFileInfo(__DIR__)), $file);
         });
     }
+
+    public function testMapToArray()
+    {
+        $collection1 = new PhpFileCollection();
+        $collection1->add(new PhpFile(new \SplFileInfo(__DIR__)));
+        $collection1->add(new PhpFile(new \SplFileInfo(__DIR__)));
+        $result = $collection1->mapToArray(function (PhpFile $file) {
+            return $file;
+        });
+        $this->assertEquals(new PhpFile(new \SplFileInfo(__DIR__)), $result[0]);
+        $this->assertEquals(new PhpFile(new \SplFileInfo(__DIR__)), $result[1]);
+    }
 }

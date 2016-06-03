@@ -3,13 +3,16 @@
 
 use Mihaeu\PhpDependencies\Parser;
 use Mihaeu\PhpDependencies\PhpFileFinder;
+use Mihaeu\PhpDependencies\Analyser;
 use PhpParser\ParserFactory;
+use PhpParser\NodeTraverser;
 
 require __DIR__.'/../vendor/autoload.php';
 
 $parser = new Parser((new ParserFactory)->create(ParserFactory::PREFER_PHP7));
 $files = (new PhpFileFinder())->find(new SplFileInfo(__DIR__ . '/../src'));
-$dependencies = $parser->parse($files);
+$ast = $parser->parse($files);
+$dependencies = (new Analyser(new NodeTraverser()))->analyse($ast);
 
 var_dump($dependencies);
 exit(0);

@@ -99,4 +99,29 @@ class Ast implements \Iterator
             ? $this->nodes[$file]
             : null;
     }
+
+    /**
+     * @param \Closure $closure applied to each element and provides access to the key (PhpFile) and the value (Node[])
+     */
+    public function each(\Closure $closure)
+    {
+        foreach ($this->nodes as $key) {
+            $closure($key, $this->nodes[$key]);
+        }
+    }
+
+    /**
+     * @param \Closure $closure applied to each element and provides access to the key (PhpFile) and the value (Node[])
+     *
+     * @return array
+     */
+    public function mapToArray(\Closure $closure) : array
+    {
+        $result = [];
+        foreach ($this->nodes as $key) {
+            $result[] = $closure($key, $this->nodes[$key]);
+        }
+
+        return $result;
+    }
 }

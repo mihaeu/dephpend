@@ -25,6 +25,6 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $parser = new Parser($mockParser);
         $files = new PhpFileCollection($mockFile);
         $ast = $parser->parse($files);
-        $this->assertNotNull($ast);
+        $this->assertEquals([], $ast->get($mockFile));
     }
 }
