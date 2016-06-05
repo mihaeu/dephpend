@@ -25,7 +25,8 @@ class Parser
     {
         $ast = new Ast();
         $files->each(function (PhpFile $file) use ($ast) {
-            $ast->add($file, $this->parser->parse($file->code()));
+            $node = $this->parser->parse($file->code());
+                $ast->add($file, $node);
         });
 
         return $ast;

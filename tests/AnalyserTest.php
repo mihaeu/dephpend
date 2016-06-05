@@ -20,17 +20,22 @@ class AnalyserTest extends \PHPUnit_Framework_TestCase
     /** @var Analyser */
     private $analyser;
 
+    /** @var DependencyInspectionVisitor|\PHPUnit_Framework_MockObject_MockObject */
+    private $dependencyInspectionVisitor;
+
     public function setUp()
     {
-        $this->analyser = new Analyser($this->createMock(NodeTraverser::class));
+        /** @var NodeTraverser $nodeTraverser */
+        $nodeTraverser = $this->createMock(NodeTraverser::class);
+        $this->dependencyInspectionVisitor = $this->createMock(DependencyInspectionVisitor::class);
+
+        $this->analyser = new Analyser($nodeTraverser, $this->dependencyInspectionVisitor);
     }
 
     public function testAnalyse()
     {
-        $ast = new Ast();
-        $ast->add(new PhpFile(new \SplFileInfo(__FILE__)), [1]);
-        $ast->add(new PhpFile(new \SplFileInfo(__DIR__)), [1]);
-        $dependencies = $this->analyser->analyse($ast);
+        $this->dependencyInspectionVisitor->method('dependencies')->willReturn([1, 2]);
+        $dependencies = $this->analyser->analyse(new Ast());
         $this->assertCount(2, $dependencies);
     }
 }

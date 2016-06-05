@@ -16,39 +16,29 @@ class Analyser
     private $dependencyInspectionVisitor = null;
 
     /**
-     * @param NodeTraverser $nodeTraverser
+     * @param NodeTraverser               $nodeTraverser
+     * @param DependencyInspectionVisitor $dependencyInspectionVisitor
      */
-    public function __construct(NodeTraverser $nodeTraverser)
+    public function __construct(NodeTraverser $nodeTraverser, DependencyInspectionVisitor $dependencyInspectionVisitor)
     {
+        $this->dependencyInspectionVisitor = $dependencyInspectionVisitor;
+
         $this->nodeTraverser = $nodeTraverser;
         $this->nodeTraverser->addVisitor(new NameResolver());
-    }
-
-    public function analyse(Ast $ast) : array
-    {
-        return $ast->mapToArray(function (PhpFile $file, array $nodes) {
-            $dependencies = $this->changeDependencyInspector($file);
-            $this->nodeTraverser->traverse($nodes);
-
-            return $dependencies->dependencies();
-        });
+        $this->nodeTraverser->addVisitor($this->dependencyInspectionVisitor);
     }
 
     /**
-     * @param PhpFile $file
+     * @param Ast $ast
      *
-     * @return ClazzDependencies
+     * @return ClazzDependencies[]
      */
-    private function changeDependencyInspector(PhpFile $file) : ClazzDependencies
+    public function analyse(Ast $ast) : array
     {
-        if ($this->dependencyInspectionVisitor !== null) {
-            $this->nodeTraverser->removeVisitor($this->dependencyInspectionVisitor);
-        }
+        $ast->each(function (PhpFile $file, array $nodes) {
+            $this->nodeTraverser->traverse($nodes);
+        });
 
-        $dependencies = new ClazzDependencies(new Clazz($file->file()->getBasename()));
-        $this->dependencyInspectionVisitor = new DependencyInspectionVisitor($dependencies);
-        $this->nodeTraverser->addVisitor(new DependencyInspectionVisitor($dependencies));
-
-        return $dependencies;
+        return $this->dependencyInspectionVisitor->dependencies();
     }
 }

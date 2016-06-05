@@ -8,18 +8,22 @@ use PhpParser\Node;
 use PhpParser\Node\Expr\Variable as VariableNode;
 use PhpParser\Node\Name\FullyQualified as FullyQualifiedNameNode;
 use PhpParser\Node\Expr\New_ as NewNode;
+use PhpParser\Node\Stmt\Class_ as ClassNode;
+use PhpParser\NodeVisitorAbstract;
 
-class DependencyInspectionVisitor extends \PhpParser\NodeVisitorAbstract
+class DependencyInspectionVisitor extends NodeVisitorAbstract
 {
-    /** @var ClazzDependencies */
+    /** @var ClazzDependencies[] */
     private $dependencies;
 
-    /**
-     * @param ClazzDependencies $dependencies
-     */
-    public function __construct(ClazzDependencies $dependencies)
+    /** @var string */
+    private $currentClass = 'GLOBAL';
+
+    public function __construct()
     {
-        $this->dependencies = $dependencies;
+        $this->dependencies = [
+            'GLOBAL' => new ClazzDependencies(),
+        ];
     }
 
     /**
@@ -27,11 +31,16 @@ class DependencyInspectionVisitor extends \PhpParser\NodeVisitorAbstract
      */
     public function leaveNode(Node $node)
     {
+        if ($node instanceof ClassNode) {
+            $this->currentClass = $this->toFullyQualifiedName($node->namespacedName->parts);
+            $this->dependencies[$this->currentClass] = new ClazzDependencies(new Clazz($this->currentClass));
+        }
+
         if ($node instanceof NewNode) {
             if ($node->class instanceof FullyQualifiedNameNode) {
-                $this->dependencies->addDependency($this->toFullyQualifiedClass($node->class->parts));
+                $this->dependencies[$this->currentClass]->addDependency(new Clazz($this->toFullyQualifiedName($node->class->parts)));
             } elseif ($node->class instanceof VariableNode) {
-                $this->dependencies->addDependency(new Clazz($node->class->name));
+                $this->dependencies[$this->currentClass]->addDependency(new Clazz($node->class->name));
             }
         }
 
@@ -39,15 +48,15 @@ class DependencyInspectionVisitor extends \PhpParser\NodeVisitorAbstract
     }
 
     /**
-     * @return ClazzDependencies
+     * @return array
      */
-    public function dependencies() : ClazzDependencies
+    public function dependencies() : array
     {
         return $this->dependencies;
     }
 
-    private function toFullyQualifiedClass(array $parts) : Clazz
+    private function toFullyQualifiedName(array $parts) : string
     {
-        return new Clazz(implode('.', $parts));
+        return implode('.', $parts);
     }
 }

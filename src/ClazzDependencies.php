@@ -15,14 +15,16 @@ class ClazzDependencies implements \Countable
     /**
      * @param Clazz $clazz
      */
-    public function __construct(Clazz $clazz)
+    public function __construct(Clazz $clazz = null)
     {
         $this->clazz = $clazz;
     }
 
-    public function addDependency(Clazz $class)
+    public function addDependency(Clazz $clazz)
     {
-        $this->dependencies[] = $class;
+        if (!in_array($clazz, $this->dependencies, true)) {
+            $this->dependencies[] = $clazz;
+        }
     }
 
     /**
