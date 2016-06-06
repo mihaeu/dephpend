@@ -49,12 +49,25 @@ class PlantUmlWrapperTest extends \PHPUnit_Framework_TestCase
             'SomeComplexClass' => $complexClassDependencies,
         ];
         $plantUml = new PlantUmlWrapper($this->shellWrapper);
-        $plantUml->generate($dependencies);
+        $plantUml->generate($dependencies, new \SplFileInfo(sys_get_temp_dir().'/dependencies.png'), true);
         $this->assertEquals("@startuml\n"
             ."GLOBAL -down-|> SomeOtherClass\n"
             ."SomeComplexClass -up-|> Class1\n"
             ."SomeComplexClass -up-|> Class2\n"
             ."SomeComplexClass -up-|> Class3\n"
-            .'@enduml', file_get_contents('dependencies.uml'));
+            .'@enduml', file_get_contents(sys_get_temp_dir().'/dependencies.uml'));
+        unlink(sys_get_temp_dir().'/dependencies.uml');
+    }
+
+    public function testRemoveUml()
+    {
+        $simpleClassDependencies = new ClazzDependencies();
+        $simpleClassDependencies->addDependency(new Clazz('SomeOtherClass'));
+        $dependencies = [
+            'GLOBAL' => $simpleClassDependencies,
+        ];
+        $plantUml = new PlantUmlWrapper($this->shellWrapper);
+        $plantUml->generate($dependencies, new \SplFileInfo(sys_get_temp_dir().'/dependencies.png'));
+        $this->assertFileNotExists(sys_get_temp_dir().'/dependencies.uml');
     }
 }

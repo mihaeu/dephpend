@@ -12,8 +12,9 @@ use PhpParser\NodeTraverser;
 
 require __DIR__.'/../vendor/autoload.php';
 
-if (!isset($argv[1])) {
-    echo 'Usage: php-dependencies [FILE|DIRECTORY]'.PHP_EOL;
+if (!isset($argv[1], $argv[2])) {
+    echo 'Usage: php-dependencies [FILE|DIRECTORY] [DESTINATION]'.PHP_EOL.PHP_EOL.
+    'Example: php-dependencies src build/uml-dependencies.png'.PHP_EOL;
     exit(1);
 }
 $path = $argv[1];
@@ -22,10 +23,17 @@ if (!is_readable($path)) {
     exit(1);
 }
 
+$destination = new SplFileInfo($argv[2]);
+if (!$destination->getPathInfo()->isWritable()) {
+    echo 'Destination is not writable.'.PHP_EOL;
+    exit(1);
+}
+$keepUml = in_array('--keep', $argv, true);
+
 $parser = new Parser((new ParserFactory)->create(ParserFactory::PREFER_PHP7));
 $files = (new PhpFileFinder())->find(new SplFileInfo($path));
 $ast = $parser->parse($files);
 $dependencies = (new Analyser(new NodeTraverser(), new DependencyInspectionVisitor()))->analyse($ast);
 
 $plantUml = new PlantUmlWrapper(new ShellWrapper());
-$plantUml->generate($dependencies);
+$plantUml->generate($dependencies, $destination, $keepUml);

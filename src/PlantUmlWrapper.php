@@ -5,7 +5,6 @@ declare (strict_types = 1);
 namespace Mihaeu\PhpDependencies;
 
 use Mihaeu\PhpDependencies\Exceptions\PlantUmlNotInstalledException;
-use Symfony\Component\Finder\Shell\Shell;
 
 class PlantUmlWrapper
 {
@@ -24,7 +23,7 @@ class PlantUmlWrapper
         $this->shell = $shell;
     }
 
-    public function generate(array $clazzDependencies)
+    public function generate(array $clazzDependencies, \SplFileInfo $destination, bool $keepUml = false)
     {
         $output = [];
         foreach ($clazzDependencies as $clazzName => $clazzDependency) {
@@ -37,8 +36,13 @@ class PlantUmlWrapper
                 $output[] = $clazzName.$arrow.$clazz->toString();
             }
         }
-        file_put_contents('dependencies.uml', '@startuml'.PHP_EOL.implode(PHP_EOL, $output).PHP_EOL.'@enduml');
-        $this->shell->run('plantuml dependencies.uml');
+        $umlDestination = preg_replace('/\.\w+$/', '.uml', $destination->getPathname());
+        file_put_contents($umlDestination, '@startuml'.PHP_EOL.implode(PHP_EOL, $output).PHP_EOL.'@enduml');
+        $this->shell->run('plantuml '.$umlDestination);
+
+        if ($keepUml === false) {
+            unlink($umlDestination);
+        }
     }
 
     /**
