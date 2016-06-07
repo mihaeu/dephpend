@@ -4,30 +4,13 @@ declare (strict_types = 1);
 
 namespace Mihaeu\PhpDependencies;
 
-use Traversable;
-
-class PhpFileCollection implements \Countable, \IteratorAggregate
+class PhpFileCollection extends AbstractCollection
 {
-    use FunctionalEach;
-
-    /** @var PhpFile[] */
-    private $collection = [];
-
-    /**
-     * Shorthand for creating a collection with one element in just one line.
-     *
-     * @param PhpFile $file
-     */
-    public function __construct(PhpFile $file = null)
+    public function add(PhpFile $file) : PhpFileCollection
     {
-        if ($file !== null) {
-            $this->add($file);
-        }
-    }
-
-    public function add(PhpFile $file)
-    {
-        $this->collection[] = $file;
+        $clone = clone $this;
+        $clone->collection[] = $file;
+        return $clone;
     }
 
     public function get(int $i) : PhpFile
@@ -42,49 +25,5 @@ class PhpFileCollection implements \Countable, \IteratorAggregate
     public function equals(PhpFileCollection $other) : bool
     {
         return $this->collection === $other->collection;
-    }
-
-    /**
-     * Count elements of an object.
-     *
-     * @link http://php.net/manual/en/countable.count.php
-     *
-     * @return int The custom count as an integer.
-     *             </p>
-     *             <p>
-     *             The return value is cast to an integer.
-     *
-     * @since 5.1.0
-     */
-    public function count()
-    {
-        return count($this->collection);
-    }
-
-    /**
-     * Retrieve an external iterator.
-     *
-     * @link http://php.net/manual/en/iteratoraggregate.getiterator.php
-     *
-     * @return Traversable An instance of an object implementing <b>Iterator</b> or
-     *                     <b>Traversable</b>
-     *
-     * @since 5.0.0
-     */
-    public function getIterator()
-    {
-        return new \ArrayIterator($this->collection);
-    }
-
-    /**
-     * Returns a new array by applying the $closure to each element.
-     *
-     * @param \Closure $closure
-     *
-     * @return array
-     */
-    public function mapToArray(\Closure $closure) : array
-    {
-        return array_map($closure, $this->collection);
     }
 }

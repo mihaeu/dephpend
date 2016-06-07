@@ -6,6 +6,7 @@ namespace Mihaeu\PhpDependencies;
 
 /**
  * @covers Mihaeu\PhpDependencies\ClazzDependencies
+ * @covers Mihaeu\PhpDependencies\AbstractCollection
  *
  * @uses Mihaeu\PhpDependencies\Clazz
  * @uses Mihaeu\PhpDependencies\ClazzCollection

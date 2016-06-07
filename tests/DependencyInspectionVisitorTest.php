@@ -16,6 +16,7 @@ use PhpParser\Node\Stmt\Class_ as ClassNode;
  * @uses Mihaeu\PhpDependencies\ClazzCollection
  * @uses Mihaeu\PhpDependencies\Dependency
  * @uses Mihaeu\PhpDependencies\ClazzDependencies
+ * @uses Mihaeu\PhpDependencies\AbstractCollection
  */
 class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
 {

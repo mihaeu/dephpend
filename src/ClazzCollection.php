@@ -4,13 +4,8 @@ declare (strict_types = 1);
 
 namespace Mihaeu\PhpDependencies;
 
-class ClazzCollection
+class ClazzCollection extends AbstractCollection
 {
-    use FunctionalEach;
-
-    /** @var Clazz[] */
-    private $collection = [];
-
     /**
      * @param Clazz $clazz
      *
@@ -18,18 +13,8 @@ class ClazzCollection
      */
     public function add(Clazz $clazz) : ClazzCollection
     {
-        $collection = new self();
-        $collection->collection = $this->collection;
-        $collection->collection[] = $clazz;
-
-        return $collection;
-    }
-
-    /**
-     * @return Clazz[]
-     */
-    public function toArray() : array
-    {
-        return $this->collection;
+        $clone = clone $this;
+        $clone->collection[] = $clazz;
+        return $clone;
     }
 }

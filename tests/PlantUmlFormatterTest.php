@@ -10,6 +10,7 @@ namespace Mihaeu\PhpDependencies;
  * @uses Mihaeu\PhpDependencies\Clazz
  * @uses Mihaeu\PhpDependencies\ClazzDependencies
  * @uses Mihaeu\PhpDependencies\Dependency
+ * @uses Mihaeu\PhpDependencies\AbstractCollection
  */
 class PlantUmlFormatterTest extends \PHPUnit_Framework_TestCase
 {

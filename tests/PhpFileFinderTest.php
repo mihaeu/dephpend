@@ -11,6 +11,7 @@ use org\bovigo\vfs\vfsStream;
  *
  * @uses Mihaeu\PhpDependencies\PhpFile
  * @uses Mihaeu\PhpDependencies\PhpFileCollection
+ * @uses Mihaeu\PhpDependencies\AbstractCollection
  */
 class PhpFileFinderTest extends \PHPUnit_Framework_TestCase
 {
