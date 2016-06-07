@@ -4,14 +4,14 @@ declare (strict_types = 1);
 
 namespace Mihaeu\PhpDependencies;
 
-class ClazzDependencies extends AbstractCollection
+class DependencyCollection extends AbstractCollection
 {
     /**
      * @param Dependency $dependency
      *
-     * @return ClazzDependencies
+     * @return DependencyCollection
      */
-    public function add(Dependency $dependency) : ClazzDependencies
+    public function add(Dependency $dependency) : DependencyCollection
     {
         $clone = clone $this;
         if (in_array($dependency, $this->collection)) {

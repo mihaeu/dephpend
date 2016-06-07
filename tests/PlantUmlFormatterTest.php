@@ -8,7 +8,7 @@ namespace Mihaeu\PhpDependencies;
  * @covers Mihaeu\PhpDependencies\PlantUmlFormatter
  *
  * @uses Mihaeu\PhpDependencies\Clazz
- * @uses Mihaeu\PhpDependencies\ClazzDependencies
+ * @uses Mihaeu\PhpDependencies\DependencyCollection
  * @uses Mihaeu\PhpDependencies\Dependency
  * @uses Mihaeu\PhpDependencies\AbstractCollection
  */
@@ -24,12 +24,12 @@ class PlantUmlFormatterTest extends \PHPUnit_Framework_TestCase
 
     public function testFormat()
     {
-        $clazzDependencies = (new ClazzDependencies())
+        $dependencyCollection = (new DependencyCollection())
             ->add(new Dependency(new Clazz('ClassA'), new Clazz('ClassB')))
             ->add(new Dependency(new Clazz('ClassA'), new Clazz('ClassC')));
         $this->assertEquals("@startuml\n"
             ."ClassA --|> ClassB\n"
             ."ClassA --|> ClassC\n"
-            .'@enduml', $this->plantUmlFormatter->format($clazzDependencies));
+            .'@enduml', $this->plantUmlFormatter->format($dependencyCollection));
     }
 }

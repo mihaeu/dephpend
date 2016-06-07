@@ -13,7 +13,7 @@ use PhpParser\NodeVisitorAbstract;
 
 class DependencyInspectionVisitor extends NodeVisitorAbstract
 {
-    /** @var ClazzDependencies */
+    /** @var DependencyCollection */
     private $dependencies;
 
     /** @var string */
@@ -21,7 +21,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
 
     public function __construct()
     {
-        $this->dependencies = new ClazzDependencies();
+        $this->dependencies = new DependencyCollection();
     }
 
     /**
@@ -51,9 +51,9 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     }
 
     /**
-     * @return ClazzDependencies
+     * @return DependencyCollection
      */
-    public function dependencies() : ClazzDependencies
+    public function dependencies() : DependencyCollection
     {
         return $this->dependencies;
     }

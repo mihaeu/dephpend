@@ -11,7 +11,7 @@ use Mihaeu\PhpDependencies\Exceptions\PlantUmlNotInstalledException;
  * @covers Mihaeu\PhpDependencies\Exceptions\PlantUmlNotInstalledException
  *
  * @uses Mihaeu\PhpDependencies\Clazz
- * @uses Mihaeu\PhpDependencies\ClazzDependencies
+ * @uses Mihaeu\PhpDependencies\DependencyCollection
  */
 class PlantUmlWrapperTest extends \PHPUnit_Framework_TestCase
 {
@@ -43,7 +43,7 @@ class PlantUmlWrapperTest extends \PHPUnit_Framework_TestCase
     public function testGenerate()
     {
         $plantUml = new PlantUmlWrapper($this->plantUmlFormatter, $this->shellWrapper);
-        $plantUml->generate(new ClazzDependencies(), new \SplFileInfo(sys_get_temp_dir().'/dependencies.png'), true);
+        $plantUml->generate(new DependencyCollection(), new \SplFileInfo(sys_get_temp_dir().'/dependencies.png'), true);
         $this->assertFileExists(sys_get_temp_dir().'/dependencies.uml');
         unlink(sys_get_temp_dir().'/dependencies.uml');
     }
@@ -51,7 +51,7 @@ class PlantUmlWrapperTest extends \PHPUnit_Framework_TestCase
     public function testRemoveUml()
     {
         $plantUml = new PlantUmlWrapper($this->plantUmlFormatter, $this->shellWrapper);
-        $plantUml->generate(new ClazzDependencies(), new \SplFileInfo(sys_get_temp_dir().'/dependencies.png'));
+        $plantUml->generate(new DependencyCollection(), new \SplFileInfo(sys_get_temp_dir().'/dependencies.png'));
         $this->assertFileNotExists(sys_get_temp_dir().'/dependencies.uml');
     }
 }

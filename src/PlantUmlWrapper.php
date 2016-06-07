@@ -28,9 +28,9 @@ class PlantUmlWrapper
         $this->plantUmlFormatter = $plantUmlFormatter;
     }
 
-    public function generate(ClazzDependencies $clazzDependencies, \SplFileInfo $destination, bool $keepUml = false)
+    public function generate(DependencyCollection $dependencyCollection, \SplFileInfo $destination, bool $keepUml = false)
     {
-        $uml = $this->plantUmlFormatter->format($clazzDependencies);
+        $uml = $this->plantUmlFormatter->format($dependencyCollection);
         $umlDestination = preg_replace('/\.\w+$/', '.uml', $destination->getPathname());
         file_put_contents($umlDestination, $uml);
         $this->shell->run('plantuml '.$umlDestination);

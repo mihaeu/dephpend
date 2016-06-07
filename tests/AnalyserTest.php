@@ -10,7 +10,7 @@ use PhpParser\NodeTraverser;
  * @covers Mihaeu\PhpDependencies\Analyser
  *
  * @uses Mihaeu\PhpDependencies\Ast
- * @uses Mihaeu\PhpDependencies\ClazzDependencies
+ * @uses Mihaeu\PhpDependencies\DependencyCollection
  * @uses Mihaeu\PhpDependencies\DependencyInspectionVisitor
  * @uses Mihaeu\PhpDependencies\PhpFile
  * @uses Mihaeu\PhpDependencies\Clazz
@@ -34,8 +34,8 @@ class AnalyserTest extends \PHPUnit_Framework_TestCase
 
     public function testAnalyse()
     {
-        $this->dependencyInspectionVisitor->method('dependencies')->willReturn(new ClazzDependencies());
+        $this->dependencyInspectionVisitor->method('dependencies')->willReturn(new DependencyCollection());
         $dependencies = $this->analyser->analyse(new Ast());
-        $this->assertEquals(new ClazzDependencies(), $dependencies);
+        $this->assertEquals(new DependencyCollection(), $dependencies);
     }
 }

@@ -7,23 +7,23 @@ namespace Mihaeu\PhpDependencies;
 class PlantUmlFormatter
 {
     /**
-     * @param ClazzDependencies $clazzDependencies
+     * @param DependencyCollection $dependencyCollection
      *
      * @return string
      */
-    public function format(ClazzDependencies $clazzDependencies) : string
+    public function format(DependencyCollection $dependencyCollection) : string
     {
-        return '@startuml'.PHP_EOL.$this->dependenciesInPlantUmlFormat($clazzDependencies).'@enduml';
+        return '@startuml'.PHP_EOL.$this->dependenciesInPlantUmlFormat($dependencyCollection).'@enduml';
     }
 
     /**
-     * @param ClazzDependencies $clazzDependencies
+     * @param DependencyCollection $dependencyCollection
      *
      * @return mixed
      */
-    private function dependenciesInPlantUmlFormat(ClazzDependencies $clazzDependencies) : string
+    private function dependenciesInPlantUmlFormat(DependencyCollection $dependencyCollection) : string
     {
-        return $clazzDependencies->reduce('', function (string $output, Dependency $dependency) {
+        return $dependencyCollection->reduce('', function (string $output, Dependency $dependency) {
             return $output.$dependency->from()->toString().' --|> '.$dependency->to()->toString().PHP_EOL;
         });
     }
