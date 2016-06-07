@@ -20,4 +20,9 @@ class DependencyTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(new Clazz('To'), (new Dependency(new Clazz('From'), new Clazz('To')))->to());
     }
+
+    public function testToString()
+    {
+        $this->assertEquals('From --> To', new Dependency(new Clazz('From'), new Clazz('To')));
+    }
 }

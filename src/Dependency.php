@@ -37,4 +37,12 @@ class Dependency
     {
         return $this->to;
     }
+
+    /**
+     * @return string
+     */
+    public function __toString() : string
+    {
+        return $this->from.' --> '.$this->to;
+    }
 }
