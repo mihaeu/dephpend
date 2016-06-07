@@ -34,8 +34,8 @@ class AnalyserTest extends \PHPUnit_Framework_TestCase
 
     public function testAnalyse()
     {
-        $this->dependencyInspectionVisitor->method('dependencies')->willReturn([1, 2]);
+        $this->dependencyInspectionVisitor->method('dependencies')->willReturn(new ClazzDependencies());
         $dependencies = $this->analyser->analyse(new Ast());
-        $this->assertCount(2, $dependencies);
+        $this->assertEquals(new ClazzDependencies(), $dependencies);
     }
 }

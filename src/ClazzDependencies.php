@@ -6,41 +6,62 @@ namespace Mihaeu\PhpDependencies;
 
 class ClazzDependencies implements \Countable
 {
-    /** @var Clazz */
-    private $clazz;
+    /** Dependency[] */
+    private $collection = [];
 
-    /** @var Clazz[] */
-    private $dependencies = [];
+    /**
+     * @param Dependency $dependency
+     *
+     * @return ClazzDependencies
+     */
+    public function addDependency(Dependency $dependency) : ClazzDependencies
+    {
+        $dependencyCollection = new self();
+        $dependencyCollection->collection = $this->collection;
+        $dependencyCollection->collection[$dependency->toString()] = $dependency;
+
+        return $dependencyCollection;
+    }
 
     /**
      * @param Clazz $clazz
+     *
+     * @return ClazzCollection
      */
-    public function __construct(Clazz $clazz = null)
+    public function classesDependingOn(Clazz $clazz) : ClazzCollection
     {
-        $this->clazz = $clazz;
+        $clazzCollection = new ClazzCollection();
+        foreach ($this->collection as $dependency) {
+            /** @var Dependency $dependency */
+            if ($dependency->from()->equals($clazz)) {
+                $clazzCollection = $clazzCollection->add($dependency->to());
+            }
+        }
+
+        return $clazzCollection;
     }
 
-    public function addDependency(Clazz $clazz)
+    /**
+     * Applies $closure to each pair of dependencies.
+     *
+     * @param \Closure $closure with argument Dependency $dependency
+     */
+    public function each(\Closure $closure)
     {
-        if (!in_array($clazz, $this->dependencies)) {
-            $this->dependencies[] = $clazz;
+        foreach ($this->collection as $item) {
+            $closure($item);
         }
     }
 
     /**
-     * @return Clazz
+     * @param mixed    $initial
+     * @param \Closure $closure
+     *
+     * @return mixed
      */
-    public function clazz() : Clazz
+    public function reduce($initial, \Closure $closure)
     {
-        return $this->clazz;
-    }
-
-    /**
-     * @return Clazz[]
-     */
-    public function dependencies() : array
-    {
-        return $this->dependencies;
+        return array_reduce($this->collection, $closure, $initial);
     }
 
     /**
@@ -57,6 +78,6 @@ class ClazzDependencies implements \Countable
      */
     public function count() : int
     {
-        return count($this->dependencies());
+        return count($this->collection);
     }
 }

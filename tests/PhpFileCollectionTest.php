@@ -6,6 +6,7 @@ namespace Mihaeu\PhpDependencies;
 
 /**
  * @covers Mihaeu\PhpDependencies\PhpFileCollection
+ * @covers Mihaeu\PhpDependencies\FunctionalEach
  *
  * @uses Mihaeu\PhpDependencies\PhpFile
  */

@@ -17,6 +17,11 @@ class Clazz
         $this->clazz = $clazz;
     }
 
+    public function equals(Clazz $other) : bool
+    {
+        return $this->clazz === $other->clazz;
+    }
+
     public function toString() : string
     {
         return $this->clazz;

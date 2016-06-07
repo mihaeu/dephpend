@@ -18,56 +18,40 @@ class PlantUmlWrapperTest extends \PHPUnit_Framework_TestCase
     /** @var ShellWrapper|\PHPUnit_Framework_MockObject_MockObject */
     private $shellWrapper;
 
+    /** @var PlantUmlFormatter|\PHPUnit_Framework_MockObject_MockObject */
+    private $plantUmlFormatter;
+
     public function setUp()
     {
         $this->shellWrapper = $this->createMock(ShellWrapper::class);
+        $this->plantUmlFormatter = $this->createMock(PlantUmlFormatter::class);
     }
 
     public function testDetectsIfPlantUmlIsNotInstalled()
     {
         $this->shellWrapper->method('run')->willReturn(1);
         $this->expectException(PlantUmlNotInstalledException::class);
-        new PlantUmlWrapper($this->shellWrapper);
+        new PlantUmlWrapper($this->plantUmlFormatter, $this->shellWrapper);
     }
 
     public function testDetectsIfPlantUmlIsInstalled()
     {
         $this->shellWrapper->method('run')->willReturn(0);
-        $this->assertInstanceOf(PlantUmlWrapper::class, new PlantUmlWrapper($this->shellWrapper));
+        $this->assertInstanceOf(PlantUmlWrapper::class, new PlantUmlWrapper($this->plantUmlFormatter, $this->shellWrapper));
     }
 
     public function testGenerate()
     {
-        $simpleClassDependencies = new ClazzDependencies();
-        $simpleClassDependencies->addDependency(new Clazz('SomeOtherClass'));
-        $complexClassDependencies = new ClazzDependencies();
-        $complexClassDependencies->addDependency(new Clazz('Class1'));
-        $complexClassDependencies->addDependency(new Clazz('Class2'));
-        $complexClassDependencies->addDependency(new Clazz('Class3'));
-        $dependencies = [
-            'GLOBAL' => $simpleClassDependencies,
-            'SomeComplexClass' => $complexClassDependencies,
-        ];
-        $plantUml = new PlantUmlWrapper($this->shellWrapper);
-        $plantUml->generate($dependencies, new \SplFileInfo(sys_get_temp_dir().'/dependencies.png'), true);
-        $this->assertEquals("@startuml\n"
-            ."GLOBAL -down-|> SomeOtherClass\n"
-            ."SomeComplexClass -up-|> Class1\n"
-            ."SomeComplexClass -up-|> Class2\n"
-            ."SomeComplexClass -up-|> Class3\n"
-            .'@enduml', file_get_contents(sys_get_temp_dir().'/dependencies.uml'));
+        $plantUml = new PlantUmlWrapper($this->plantUmlFormatter, $this->shellWrapper);
+        $plantUml->generate(new ClazzDependencies(), new \SplFileInfo(sys_get_temp_dir().'/dependencies.png'), true);
+        $this->assertFileExists(sys_get_temp_dir().'/dependencies.uml');
         unlink(sys_get_temp_dir().'/dependencies.uml');
     }
 
     public function testRemoveUml()
     {
-        $simpleClassDependencies = new ClazzDependencies();
-        $simpleClassDependencies->addDependency(new Clazz('SomeOtherClass'));
-        $dependencies = [
-            'GLOBAL' => $simpleClassDependencies,
-        ];
-        $plantUml = new PlantUmlWrapper($this->shellWrapper);
-        $plantUml->generate($dependencies, new \SplFileInfo(sys_get_temp_dir().'/dependencies.png'));
+        $plantUml = new PlantUmlWrapper($this->plantUmlFormatter, $this->shellWrapper);
+        $plantUml->generate(new ClazzDependencies(), new \SplFileInfo(sys_get_temp_dir().'/dependencies.png'));
         $this->assertFileNotExists(sys_get_temp_dir().'/dependencies.uml');
     }
 }

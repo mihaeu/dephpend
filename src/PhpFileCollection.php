@@ -8,6 +8,8 @@ use Traversable;
 
 class PhpFileCollection implements \Countable, \IteratorAggregate
 {
+    use FunctionalEach;
+
     /** @var PhpFile[] */
     private $collection = [];
 
@@ -72,18 +74,6 @@ class PhpFileCollection implements \Countable, \IteratorAggregate
     public function getIterator()
     {
         return new \ArrayIterator($this->collection);
-    }
-
-    /**
-     * Applies $closure to each element.
-     *
-     * @param \Closure $closure
-     */
-    public function each(\Closure $closure)
-    {
-        foreach ($this->collection as $item) {
-            $closure($item);
-        }
     }
 
     /**

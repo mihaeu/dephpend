@@ -14,4 +14,9 @@ class ClazzTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Name', new Clazz('Name'));
         $this->assertEquals('Name', (new Clazz('Name'))->toString());
     }
+
+    public function testEquals()
+    {
+        $this->assertTrue((new Clazz('A'))->equals(new Clazz('A')));
+    }
 }

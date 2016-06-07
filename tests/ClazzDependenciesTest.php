@@ -8,29 +8,45 @@ namespace Mihaeu\PhpDependencies;
  * @covers Mihaeu\PhpDependencies\ClazzDependencies
  *
  * @uses Mihaeu\PhpDependencies\Clazz
+ * @uses Mihaeu\PhpDependencies\ClazzCollection
+ * @uses Mihaeu\PhpDependencies\Dependency
  */
 class ClazzDependenciesTest extends \PHPUnit_Framework_TestCase
 {
-    public function testHasClass()
+    public function testEach()
     {
-        $dependencies = new ClazzDependencies(new Clazz('SomeClass'));
-        $this->assertEquals('SomeClass', $dependencies->clazz());
+        $clazzDependencies = (new ClazzDependencies())
+            ->addDependency(new Dependency(new Clazz('From'), new Clazz('To')));
+        $clazzDependencies->each(function (Dependency $dependency) {
+            $this->assertEquals(new Dependency(new Clazz('From'), new Clazz('To')), $dependency);
+        });
     }
 
-    public function testHasDependencies()
+    public function testDoesNotAddDuplicated()
     {
-        $dependencies = new ClazzDependencies(new Clazz('SomeClass'));
-        $dependencies->addDependency(new Clazz('OtherClassA'));
-        $dependencies->addDependency(new Clazz('OtherClassB'));
-        $this->assertEquals('OtherClassA', $dependencies->dependencies()[0]);
-        $this->assertEquals('OtherClassB', $dependencies->dependencies()[1]);
+        $clazzDependencies = (new ClazzDependencies())
+            ->addDependency(new Dependency(new Clazz('From'), new Clazz('To')))
+            ->addDependency(new Dependency(new Clazz('From'), new Clazz('To')));
+        $this->assertCount(1, $clazzDependencies);
     }
 
-    public function testCountable()
+    public function testFindsClassesDependingOnClass()
     {
-        $dependencies = new ClazzDependencies(new Clazz('SomeClass'));
-        $dependencies->addDependency(new Clazz('OtherClassA'));
-        $dependencies->addDependency(new Clazz('OtherClassB'));
-        $this->assertCount(2, $dependencies);
+        $clazzDependencies = (new ClazzDependencies())
+            ->addDependency(new Dependency(new Clazz('From'), new Clazz('To')))
+            ->addDependency(new Dependency(new Clazz('From'), new Clazz('ToAnother')));
+        $dependingClasses = $clazzDependencies->classesDependingOn(new Clazz('From'))->toArray();
+        $this->assertEquals(new Clazz('To'), $dependingClasses[0]);
+        $this->assertEquals(new Clazz('ToAnother'), $dependingClasses[1]);
+    }
+
+    public function testReduce()
+    {
+        $clazzDependencies = (new ClazzDependencies())
+            ->addDependency(new Dependency(new Clazz('From'), new Clazz('To')))
+            ->addDependency(new Dependency(new Clazz('From'), new Clazz('ToAnother')));
+        $this->assertEquals('ToToAnother', $clazzDependencies->reduce('', function (string $output, Dependency $dependency) {
+            return $output.$dependency->to()->toString();
+        }));
     }
 }

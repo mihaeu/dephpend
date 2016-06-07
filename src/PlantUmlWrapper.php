@@ -11,33 +11,28 @@ class PlantUmlWrapper
     /** @var ShellWrapper */
     private $shell;
 
+    /** @var PlantUmlFormatter */
+    private $plantUmlFormatter;
+
     /**
-     * @param ShellWrapper $shell
+     * @param PlantUmlFormatter $plantUmlFormatter
+     * @param ShellWrapper      $shell
      *
      * @throws PlantUmlNotInstalledException
      */
-    public function __construct(ShellWrapper $shell)
+    public function __construct(PlantUmlFormatter $plantUmlFormatter, ShellWrapper $shell)
     {
         $this->ensurePlantUmlIsInstalled($shell);
 
         $this->shell = $shell;
+        $this->plantUmlFormatter = $plantUmlFormatter;
     }
 
-    public function generate(array $clazzDependencies, \SplFileInfo $destination, bool $keepUml = false)
+    public function generate(ClazzDependencies $clazzDependencies, \SplFileInfo $destination, bool $keepUml = false)
     {
-        $output = [];
-        foreach ($clazzDependencies as $clazzName => $clazzDependency) {
-            /* @var ClazzDependencies $clazzDependency */
-            $arrow = $clazzDependency->count() > 2
-                ? ' -up-|> '
-                : ' -down-|> ';
-            foreach ($clazzDependency->dependencies() as $clazz) {
-                /* @var Clazz $clazz */
-                $output[] = $clazzName.$arrow.$clazz->toString();
-            }
-        }
+        $uml = $this->plantUmlFormatter->format($clazzDependencies);
         $umlDestination = preg_replace('/\.\w+$/', '.uml', $destination->getPathname());
-        file_put_contents($umlDestination, '@startuml'.PHP_EOL.implode(PHP_EOL, $output).PHP_EOL.'@enduml');
+        file_put_contents($umlDestination, $uml);
         $this->shell->run('plantuml '.$umlDestination);
 
         if ($keepUml === false) {

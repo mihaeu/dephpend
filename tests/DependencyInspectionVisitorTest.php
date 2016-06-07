@@ -13,6 +13,8 @@ use PhpParser\Node\Stmt\Class_ as ClassNode;
  * @covers Mihaeu\PhpDependencies\DependencyInspectionVisitor
  *
  * @uses Mihaeu\PhpDependencies\Clazz
+ * @uses Mihaeu\PhpDependencies\ClazzCollection
+ * @uses Mihaeu\PhpDependencies\Dependency
  * @uses Mihaeu\PhpDependencies\ClazzDependencies
  */
 class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
@@ -35,20 +37,41 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $node = new NewNode(new FullyQualifiedNameNode('TestDep'));
         $this->dependencyInspectionVisitor->leaveNode($node);
 
-        $this->assertArrayHasKey('SomeNamespace.SomeClass', $this->dependencyInspectionVisitor->dependencies());
+        $classesDependingOnSomeClass = $this->dependencyInspectionVisitor
+            ->dependencies()
+            ->classesDependingOn(new Clazz('SomeNamespace.SomeClass'));
+        $this->assertEquals(new Clazz('TestDep'), $classesDependingOnSomeClass->toArray()[0]);
     }
 
     public function testDetectsExplicitNewCreation()
     {
+        $node = new ClassNode('SomeClass');
+        $node->namespacedName = new \stdClass();
+        $node->namespacedName->parts = ['SomeNamespace', 'SomeClass'];
+        $this->dependencyInspectionVisitor->leaveNode($node);
+
         $node = new NewNode(new FullyQualifiedNameNode('TestDep'));
         $this->dependencyInspectionVisitor->leaveNode($node);
-        $this->assertEquals(new Clazz('TestDep'), $this->dependencyInspectionVisitor->dependencies()['GLOBAL']->dependencies()[0]);
+
+        $classesDependingOnSomeClass = $this->dependencyInspectionVisitor
+            ->dependencies()
+            ->classesDependingOn(new Clazz('SomeNamespace.SomeClass'));
+        $this->assertEquals(new Clazz('TestDep'), $classesDependingOnSomeClass->toArray()[0]);
     }
 
     public function testDetectsImplicitNewCreation()
     {
-        $node = new NewNode(new VariableNode('TestDep'));
+        $node = new ClassNode('SomeClass');
+        $node->namespacedName = new \stdClass();
+        $node->namespacedName->parts = ['SomeNamespace', 'SomeClass'];
         $this->dependencyInspectionVisitor->leaveNode($node);
-        $this->assertEquals(new Clazz('TestDep'), $this->dependencyInspectionVisitor->dependencies()['GLOBAL']->dependencies()[0]);
+
+        $node = new NewNode(new VariableNode('$testDep'));
+        $this->dependencyInspectionVisitor->leaveNode($node);
+
+        $classesDependingOnSomeClass = $this->dependencyInspectionVisitor
+            ->dependencies()
+            ->classesDependingOn(new Clazz('SomeNamespace.SomeClass'));
+        $this->assertEquals(new Clazz('$testDep'), $classesDependingOnSomeClass->toArray()[0]);
     }
 }
