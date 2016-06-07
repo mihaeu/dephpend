@@ -9,7 +9,7 @@ namespace Mihaeu\PhpDependencies;
  *
  * @uses Mihaeu\PhpDependencies\Clazz
  */
-class ClassDependenciesTest extends \PHPUnit_Framework_TestCase
+class ClazzDependenciesTest extends \PHPUnit_Framework_TestCase
 {
     public function testHasClass()
     {
