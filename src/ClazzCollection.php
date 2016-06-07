@@ -15,6 +15,7 @@ class ClazzCollection extends AbstractCollection
     {
         $clone = clone $this;
         $clone->collection[] = $clazz;
+
         return $clone;
     }
 }

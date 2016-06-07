@@ -36,7 +36,7 @@ class DependencyCollectionTest extends \PHPUnit_Framework_TestCase
         $dependencyCollection = (new DependencyCollection())
             ->add(new Dependency(new Clazz('From'), new Clazz('To')))
             ->add(new Dependency(new Clazz('From'), new Clazz('ToAnother')));
-        $dependingClasses = $dependencyCollection->classesDependingOn(new Clazz('From'))->toArray();
+        $dependingClasses = $dependencyCollection->findClassesDependingOn(new Clazz('From'))->toArray();
         $this->assertEquals(new Clazz('To'), $dependingClasses[0]);
         $this->assertEquals(new Clazz('ToAnother'), $dependingClasses[1]);
     }

@@ -19,6 +19,7 @@ class DependencyCollection extends AbstractCollection
         }
 
         $clone->collection[] = $dependency;
+
         return $clone;
     }
 
@@ -27,16 +28,25 @@ class DependencyCollection extends AbstractCollection
      *
      * @return ClazzCollection
      */
-    public function classesDependingOn(Clazz $clazz) : ClazzCollection
+    public function findClassesDependingOn(Clazz $clazz) : ClazzCollection
     {
-        $clazzCollection = new ClazzCollection();
-        foreach ($this->collection as $dependency) {
-            /** @var Dependency $dependency */
-            if ($dependency->from()->equals($clazz)) {
-                $clazzCollection = $clazzCollection->add($dependency->to());
-            }
-        }
+        return $this->filter(function (Dependency $dependency) use ($clazz) {
+            return $dependency->from()->equals($clazz);
+        })->reduce(new ClazzCollection(), function (ClazzCollection $clazzCollection, Dependency $dependency) {
+            return $clazzCollection->add($dependency->to());
+        });
+    }
 
-        return $clazzCollection;
+    /**
+     * @param \Closure $closure
+     *
+     * @return DependencyCollection
+     */
+    public function filter(\Closure $closure) : DependencyCollection
+    {
+        $clone = clone $this;
+        $clone->collection = array_filter($this->collection, $closure);
+
+        return $clone;
     }
 }

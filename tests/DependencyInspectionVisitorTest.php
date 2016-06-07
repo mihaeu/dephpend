@@ -40,7 +40,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
 
         $classesDependingOnSomeClass = $this->dependencyInspectionVisitor
             ->dependencies()
-            ->classesDependingOn(new Clazz('SomeNamespace.SomeClass'));
+            ->findClassesDependingOn(new Clazz('SomeNamespace.SomeClass'));
         $this->assertEquals(new Clazz('TestDep'), $classesDependingOnSomeClass->toArray()[0]);
     }
 
@@ -56,7 +56,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
 
         $classesDependingOnSomeClass = $this->dependencyInspectionVisitor
             ->dependencies()
-            ->classesDependingOn(new Clazz('SomeNamespace.SomeClass'));
+            ->findClassesDependingOn(new Clazz('SomeNamespace.SomeClass'));
         $this->assertEquals(new Clazz('TestDep'), $classesDependingOnSomeClass->toArray()[0]);
     }
 
@@ -72,7 +72,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
 
         $classesDependingOnSomeClass = $this->dependencyInspectionVisitor
             ->dependencies()
-            ->classesDependingOn(new Clazz('SomeNamespace.SomeClass'));
+            ->findClassesDependingOn(new Clazz('SomeNamespace.SomeClass'));
         $this->assertEquals(new Clazz('$testDep'), $classesDependingOnSomeClass->toArray()[0]);
     }
 }

@@ -10,6 +10,7 @@ class PhpFileCollection extends AbstractCollection
     {
         $clone = clone $this;
         $clone->collection[] = $file;
+
         return $clone;
     }
 
