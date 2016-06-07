@@ -28,7 +28,7 @@ if (!$destination->getPathInfo()->isWritable()) {
     echo 'Destination is not writable.'.PHP_EOL;
     exit(1);
 }
-$keepUml = in_array('--keep', $argv, true);
+$keepUml = in_array('--keep-uml', $argv, true);
 
 $parser = new Parser((new ParserFactory)->create(ParserFactory::PREFER_PHP7));
 $files = (new PhpFileFinder())->find(new SplFileInfo($path));
