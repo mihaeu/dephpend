@@ -22,7 +22,7 @@ class ClazzDependencies implements \Countable
 
     public function addDependency(Clazz $clazz)
     {
-        if (!in_array($clazz, $this->dependencies, true)) {
+        if (!in_array($clazz, $this->dependencies)) {
             $this->dependencies[] = $clazz;
         }
     }
