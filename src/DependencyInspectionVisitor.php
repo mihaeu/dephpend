@@ -35,12 +35,12 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
 
         if ($node instanceof NewNode && $this->currentClass !== null) {
             if ($node->class instanceof FullyQualifiedNameNode) {
-                $this->dependencies = $this->dependencies->addDependency(new Dependency(
+                $this->dependencies = $this->dependencies->add(new Dependency(
                     $this->currentClass,
                     new Clazz($this->toFullyQualifiedName($node->class->parts))
                 ));
             } elseif ($node->class instanceof VariableNode) {
-                $this->dependencies = $this->dependencies->addDependency(new Dependency(
+                $this->dependencies = $this->dependencies->add(new Dependency(
                     $this->currentClass,
                     new Clazz($node->class->name)
                 ));
