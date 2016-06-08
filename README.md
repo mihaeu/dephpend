@@ -26,6 +26,7 @@
 ### Other languages
 
 - [jdepend by Clarkware](http://clarkware.com/software/JDepend.html) (Java)
+- [NDepend](http://www.ndepend.com/) (C#)
 
 ## Other documents
 
