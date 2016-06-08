@@ -4,15 +4,13 @@ declare (strict_types = 1);
 
 namespace Mihaeu\PhpDependencies;
 
-class AbstractCollection implements \Countable
+abstract class AbstractCollection implements Collection
 {
     /** @var array */
     protected $collection = [];
 
     /**
-     * Applies $closure to each element.
-     *
-     * @param \Closure $closure
+     * {@inheritdoc}
      */
     public function each(\Closure $closure)
     {
@@ -22,11 +20,7 @@ class AbstractCollection implements \Countable
     }
 
     /**
-     * Returns a new array by applying the $closure to each element.
-     *
-     * @param \Closure $closure
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function mapToArray(\Closure $closure) : array
     {
@@ -34,10 +28,7 @@ class AbstractCollection implements \Countable
     }
 
     /**
-     * @param mixed    $initial
-     * @param \Closure $closure
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
     public function reduce($initial, \Closure $closure)
     {
@@ -45,7 +36,18 @@ class AbstractCollection implements \Countable
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
+     */
+    public function filter(\Closure $closure) : Collection
+    {
+        $clone = clone $this;
+        $clone->collection = array_filter($this->collection, $closure);
+
+        return $clone;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function toArray() : array
     {
@@ -53,16 +55,7 @@ class AbstractCollection implements \Countable
     }
 
     /**
-     * Count elements of an object.
-     *
-     * @link http://php.net/manual/en/countable.count.php
-     *
-     * @return int The custom count as an integer.
-     *             </p>
-     *             <p>
-     *             The return value is cast to an integer.
-     *
-     * @since 5.1.0
+     * {@inheritdoc}
      */
     public function count()
     {

@@ -36,17 +36,4 @@ class DependencyCollection extends AbstractCollection
             return $clazzCollection->add($dependency->to());
         });
     }
-
-    /**
-     * @param \Closure $closure
-     *
-     * @return DependencyCollection
-     */
-    public function filter(\Closure $closure) : DependencyCollection
-    {
-        $clone = clone $this;
-        $clone->collection = array_filter($this->collection, $closure);
-
-        return $clone;
-    }
 }
