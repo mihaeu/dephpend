@@ -28,6 +28,11 @@ class PlantUmlWrapper
         $this->plantUmlFormatter = $plantUmlFormatter;
     }
 
+    /**
+     * @param DependencyCollection $dependencyCollection
+     * @param \SplFileInfo         $destination
+     * @param bool                 $keepUml
+     */
     public function generate(DependencyCollection $dependencyCollection, \SplFileInfo $destination, bool $keepUml = false)
     {
         $uml = $this->plantUmlFormatter->format($dependencyCollection);
@@ -41,6 +46,8 @@ class PlantUmlWrapper
     }
 
     /**
+     * @param ShellWrapper $shell
+     *
      * @throws PlantUmlNotInstalledException
      */
     private function ensurePlantUmlIsInstalled(ShellWrapper $shell)
