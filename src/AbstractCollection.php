@@ -41,7 +41,7 @@ abstract class AbstractCollection implements Collection
     public function filter(\Closure $closure) : Collection
     {
         $clone = clone $this;
-        $clone->collection = array_filter($this->collection, $closure);
+        $clone->collection = array_values(array_filter($this->collection, $closure));
 
         return $clone;
     }
