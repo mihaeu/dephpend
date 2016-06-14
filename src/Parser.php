@@ -12,8 +12,6 @@ class Parser
     private $parser;
 
     /**
-     * Parser constructor.
-     *
      * @param $parser
      */
     public function __construct(BaseParser $parser)
@@ -21,6 +19,11 @@ class Parser
         $this->parser = $parser;
     }
 
+    /**
+     * @param PhpFileCollection $files
+     *
+     * @return Ast
+     */
     public function parse(PhpFileCollection $files) : Ast
     {
         $ast = new Ast();
