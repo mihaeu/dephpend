@@ -54,11 +54,22 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     {
         if ($node instanceof ClassNode) {
             $this->currentClass = new Clazz($this->toFullyQualifiedName($node->namespacedName->parts));
+            if ($node->extends !== null) {
+                $this->tempDependencies = $this->tempDependencies->add(new Dependency(
+                    $this->currentClass,
+                    new Clazz($this->toFullyQualifiedName($node->extends->parts))
+                ));
+            }
+            foreach ($node->implements as $interfaceNode) {
+                $this->tempDependencies = $this->tempDependencies->add(new Dependency(
+                    $this->currentClass,
+                    new Clazz($this->toFullyQualifiedName($interfaceNode->parts))
+                ));
+            }
         } else if ($this->currentClass === null) {
             return null;
-        }a
-
-
+        }
+        
         if ($node instanceof NewNode) {
             if ($node->class instanceof FullyQualifiedNameNode) {
                 $this->tempDependencies = $this->tempDependencies->add(new Dependency(
