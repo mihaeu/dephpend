@@ -22,7 +22,7 @@ class PhpFileFinder
             ), '/^.+\.php$/i', \RecursiveRegexIterator::GET_MATCH
         );
         foreach ($regexIterator as $fileName) {
-            $collection->add(new PhpFile(new \SplFileInfo($fileName[0])));
+            $collection = $collection->add(new PhpFile(new \SplFileInfo($fileName[0])));
         }
 
         return $collection;
