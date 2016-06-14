@@ -9,6 +9,7 @@ use PhpParser\Node\Expr\Variable as VariableNode;
 use PhpParser\Node\Name\FullyQualified as FullyQualifiedNameNode;
 use PhpParser\Node\Expr\New_ as NewNode;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
+use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\NodeVisitorAbstract;
 
 class DependencyInspectionVisitor extends NodeVisitorAbstract
@@ -16,38 +17,69 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     /** @var DependencyCollection */
     private $dependencies;
 
-    /** @var string */
+    /** @var DependencyCollection */
+    private $tempDependencies;
+
+    /** @var Clazz */
     private $currentClass = null;
 
     public function __construct()
     {
         $this->dependencies = new DependencyCollection();
+        $this->tempDependencies = new DependencyCollection();
+    }
+
+    public function beforeTraverse(array $nodes)
+    {
+        $this->currentClass = new Clazz('temp');
+    }
+
+    public function afterTraverse(array $nodes)
+    {
+        // by now the class should have been parsed so replace the
+        // temporary class with the parsed class name
+        $this->tempDependencies->each(function (Dependency $dependency) {
+            $this->dependencies = $this->dependencies->add(new Dependency(
+                $this->currentClass,
+                $dependency->to()
+            ));
+        });
+        $this->tempDependencies = new DependencyCollection();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function leaveNode(Node $node)
+    public function enterNode(Node $node)
     {
         if ($node instanceof ClassNode) {
             $this->currentClass = new Clazz($this->toFullyQualifiedName($node->namespacedName->parts));
-        }
+        } else if ($this->currentClass === null) {
+            return null;
+        }a
 
-        if ($node instanceof NewNode && $this->currentClass !== null) {
+
+        if ($node instanceof NewNode) {
             if ($node->class instanceof FullyQualifiedNameNode) {
-                $this->dependencies = $this->dependencies->add(new Dependency(
+                $this->tempDependencies = $this->tempDependencies->add(new Dependency(
                     $this->currentClass,
                     new Clazz($this->toFullyQualifiedName($node->class->parts))
                 ));
             } elseif ($node->class instanceof VariableNode) {
-                $this->dependencies = $this->dependencies->add(new Dependency(
+                $this->tempDependencies = $this->tempDependencies->add(new Dependency(
                     $this->currentClass,
                     new Clazz($node->class->name)
                 ));
             }
+        } else if ($node instanceof ClassMethod
+            && isset($node->params[0], $node->params[0]->type, $node->params[0]->type->parts)) {
+            $this->tempDependencies = $this->tempDependencies->add(new Dependency(
+                $this->currentClass,
+                new Clazz($this->toFullyQualifiedName($node->params[0]->type->parts))
+            ));
         }
 
-        return;
+        return null;
     }
 
     /**
