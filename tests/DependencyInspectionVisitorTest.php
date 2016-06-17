@@ -26,6 +26,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->dependencyInspectionVisitor = new DependencyInspectionVisitor();
+        $this->dependencyInspectionVisitor->beforeTraverse([]);
     }
 
     public function testDetectsClassName()
@@ -33,11 +34,12 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $node = new ClassNode('SomeClass');
         $node->namespacedName = new \stdClass();
         $node->namespacedName->parts = ['SomeNamespace', 'SomeClass'];
-        $this->dependencyInspectionVisitor->leaveNode($node);
+        $this->dependencyInspectionVisitor->enterNode($node);
 
         $node = new NewNode(new FullyQualifiedNameNode('TestDep'));
-        $this->dependencyInspectionVisitor->leaveNode($node);
+        $this->dependencyInspectionVisitor->enterNode($node);
 
+        $this->dependencyInspectionVisitor->afterTraverse([]);
         $classesDependingOnSomeClass = $this->dependencyInspectionVisitor
             ->dependencies()
             ->findClassesDependingOn(new Clazz('SomeNamespace.SomeClass'));
@@ -49,11 +51,12 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $node = new ClassNode('SomeClass');
         $node->namespacedName = new \stdClass();
         $node->namespacedName->parts = ['SomeNamespace', 'SomeClass'];
-        $this->dependencyInspectionVisitor->leaveNode($node);
+        $this->dependencyInspectionVisitor->enterNode($node);
 
         $node = new NewNode(new FullyQualifiedNameNode('TestDep'));
-        $this->dependencyInspectionVisitor->leaveNode($node);
+        $this->dependencyInspectionVisitor->enterNode($node);
 
+        $this->dependencyInspectionVisitor->afterTraverse([]);
         $classesDependingOnSomeClass = $this->dependencyInspectionVisitor
             ->dependencies()
             ->findClassesDependingOn(new Clazz('SomeNamespace.SomeClass'));
@@ -65,11 +68,12 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $node = new ClassNode('SomeClass');
         $node->namespacedName = new \stdClass();
         $node->namespacedName->parts = ['SomeNamespace', 'SomeClass'];
-        $this->dependencyInspectionVisitor->leaveNode($node);
+        $this->dependencyInspectionVisitor->enterNode($node);
 
         $node = new NewNode(new VariableNode('$testDep'));
-        $this->dependencyInspectionVisitor->leaveNode($node);
+        $this->dependencyInspectionVisitor->enterNode($node);
 
+        $this->dependencyInspectionVisitor->afterTraverse([]);
         $classesDependingOnSomeClass = $this->dependencyInspectionVisitor
             ->dependencies()
             ->findClassesDependingOn(new Clazz('SomeNamespace.SomeClass'));

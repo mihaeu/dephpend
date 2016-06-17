@@ -31,8 +31,8 @@ class PhpFileFinderTest extends \PHPUnit_Framework_TestCase
             ],
         ]);
         $dir = new \SplFileInfo($mockDir->url());
-        $expected = new PhpFileCollection();
-        $expected->add(new PhpFile(new \SplFileInfo($mockDir->url().'/someFile.php')));
+        $expected = (new PhpFileCollection())
+            ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/someFile.php')));
         $this->assertEquals($expected, $this->finder->find($dir));
     }
 
@@ -54,12 +54,12 @@ class PhpFileFinderTest extends \PHPUnit_Framework_TestCase
             ],
         ]);
         $dir = new \SplFileInfo($mockDir->url());
-        $expected = new PhpFileCollection();
-        $expected->add(new PhpFile(new \SplFileInfo($mockDir->url().'/someFile.php')));
-        $expected->add(new PhpFile(new \SplFileInfo($mockDir->url().'/fileInA.php')));
-        $expected->add(new PhpFile(new \SplFileInfo($mockDir->url().'/fileInB.php')));
-        $expected->add(new PhpFile(new \SplFileInfo($mockDir->url().'/fileInB2.php')));
-        $expected->add(new PhpFile(new \SplFileInfo($mockDir->url().'/fileInC.php')));
+        $expected = (new PhpFileCollection())
+            ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/someFile.php')))
+            ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/fileInA.php')))
+            ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/fileInB.php')))
+            ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/fileInB2.php')))
+            ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/fileInC.php')));
         $this->assertEquals($expected, $this->finder->find($dir));
     }
 

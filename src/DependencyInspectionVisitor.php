@@ -66,10 +66,10 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
                     new Clazz($this->toFullyQualifiedName($interfaceNode->parts))
                 ));
             }
-        } else if ($this->currentClass === null) {
-            return null;
+        } elseif ($this->currentClass === null) {
+            return;
         }
-        
+
         if ($node instanceof NewNode) {
             if ($node->class instanceof FullyQualifiedNameNode) {
                 $this->tempDependencies = $this->tempDependencies->add(new Dependency(
@@ -82,7 +82,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
                     new Clazz($node->class->name)
                 ));
             }
-        } else if ($node instanceof ClassMethod
+        } elseif ($node instanceof ClassMethod
             && isset($node->params[0], $node->params[0]->type, $node->params[0]->type->parts)) {
             $this->tempDependencies = $this->tempDependencies->add(new Dependency(
                 $this->currentClass,
@@ -90,7 +90,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
             ));
         }
 
-        return null;
+        return;
     }
 
     /**
