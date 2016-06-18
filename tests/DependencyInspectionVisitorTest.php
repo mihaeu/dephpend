@@ -7,7 +7,9 @@ namespace Mihaeu\PhpDependencies;
 use PhpParser\Node\Expr\New_ as NewNode;
 use PhpParser\Node\Expr\Variable as VariableNode;
 use PhpParser\Node\Name\FullyQualified as FullyQualifiedNameNode;
+use PhpParser\Node\Param;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
+use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Interface_ as InterfaceNode;
 
 /**
@@ -86,6 +88,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $node = new ClassNode('SomeClass');
         $node->namespacedName = new \stdClass();
         $node->namespacedName->parts = ['SomeNamespace', 'SomeClass'];
+
         $node->extends = new \stdClass();
         $node->extends->parts = ['SomeSuperClass'];
         $this->dependencyInspectionVisitor->enterNode($node);
@@ -102,12 +105,12 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $node = new ClassNode('SomeClass');
         $node->namespacedName = new \stdClass();
         $node->namespacedName->parts = ['SomeNamespace', 'SomeClass'];
+
         $interfaceOneNode = new InterfaceNode('InterfaceOne');
         $interfaceOneNode->parts = ['Namespace', 'InterfaceOne'];
         $interfaceTwoNode = new InterfaceNode('InterfaceTwo');
         $interfaceTwoNode->parts = ['Namespace', 'InterfaceTwo'];
         $node->implements = [$interfaceOneNode, $interfaceTwoNode];
-
         $this->dependencyInspectionVisitor->enterNode($node);
 
         $this->dependencyInspectionVisitor->afterTraverse([]);
@@ -120,6 +123,29 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
 
     public function testDetectsDependenciesFromMethodArguments()
     {
-        self::fail();
+        $node = new ClassNode('SomeClass');
+        $node->namespacedName = new \stdClass();
+        $node->namespacedName->parts = ['SomeNamespace', 'SomeClass'];
+        $this->dependencyInspectionVisitor->enterNode($node);
+
+        $methodNode = new ClassMethod('someMethod');
+        $paramOne = new Param('one', null, 'DependencyOne');
+        $paramOne->type = new \stdClass();
+        $paramOne->type->parts = ['Namespace', 'DependencyOne'];
+        $paramTwo = new Param('two', null, 'DependencyTwo');
+        $paramTwo->type = new \stdClass();
+        $paramTwo->type->parts = ['Namespace', 'DependencyTwo'];
+        $methodNode->params = [
+            $paramOne,
+            $paramTwo,
+        ];
+        $this->dependencyInspectionVisitor->enterNode($methodNode);
+
+        $this->dependencyInspectionVisitor->afterTraverse([]);
+        $classesDependingOnSomeClass = $this->dependencyInspectionVisitor
+            ->dependencies()
+            ->findClassesDependingOn(new Clazz('SomeNamespace.SomeClass'));
+        $this->assertEquals(new Clazz('Namespace.DependencyOne'), $classesDependingOnSomeClass->toArray()[0]);
+        $this->assertEquals(new Clazz('Namespace.DependencyTwo'), $classesDependingOnSomeClass->toArray()[1]);
     }
 }

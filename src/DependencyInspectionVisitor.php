@@ -66,8 +66,6 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
                     new Clazz($this->toFullyQualifiedName($interfaceNode->parts))
                 ));
             }
-        } elseif ($this->currentClass === null) {
-            return;
         }
 
         if ($node instanceof NewNode) {
@@ -82,15 +80,16 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
                     new Clazz($node->class->name)
                 ));
             }
-        } elseif ($node instanceof ClassMethod
-            && isset($node->params[0], $node->params[0]->type, $node->params[0]->type->parts)) {
-            $this->tempDependencies = $this->tempDependencies->add(new Dependency(
-                $this->currentClass,
-                new Clazz($this->toFullyQualifiedName($node->params[0]->type->parts))
-            ));
+        } elseif ($node instanceof ClassMethod) {
+            foreach ($node->params as $param) { /* @var \PhpParser\Node\Param */
+                if (isset($param->type, $param->type->parts)) {
+                    $this->tempDependencies = $this->tempDependencies->add(new Dependency(
+                        $this->currentClass,
+                        new Clazz($this->toFullyQualifiedName($param->type->parts))
+                    ));
+                }
+            }
         }
-
-        return;
     }
 
     /**
