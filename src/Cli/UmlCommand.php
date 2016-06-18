@@ -1,18 +1,13 @@
 <?php
 
-declare(strict_types = 1);
+declare (strict_types = 1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser;
-use Mihaeu\PhpDependencies\DependencyInspectionVisitor;
 use Mihaeu\PhpDependencies\Parser;
 use Mihaeu\PhpDependencies\PhpFileFinder;
-use Mihaeu\PhpDependencies\PlantUmlFormatter;
 use Mihaeu\PhpDependencies\PlantUmlWrapper;
-use Mihaeu\PhpDependencies\ShellWrapper;
-use PhpParser\NodeTraverser;
-use PhpParser\ParserFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -21,10 +16,41 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class UmlCommand extends Command
 {
+    /** @var PhpFileFinder */
+    private $phpFileFinder;
+
+    /** @var Parser */
+    private $parser;
+
+    /** @var Analyser */
+    private $analyser;
+
+    /** @var PlantUmlWrapper */
+    private $plantUmlWrapper;
+
+    /**
+     * @param PhpFileFinder   $phpFileFinder
+     * @param Parser          $parser
+     * @param Analyser        $analyser
+     * @param PlantUmlWrapper $plantUmlWrapper
+     */
+    public function __construct(
+        PhpFileFinder $phpFileFinder,
+        Parser $parser,
+        Analyser $analyser,
+        PlantUmlWrapper $plantUmlWrapper
+    ) {
+        parent::__construct('uml');
+
+        $this->phpFileFinder = $phpFileFinder;
+        $this->parser = $parser;
+        $this->analyser = $analyser;
+        $this->plantUmlWrapper = $plantUmlWrapper;
+    }
+
     protected function configure()
     {
         $this
-            ->setName('uml')
             ->setDescription('Generate a UML Class diagram of your dependencies')
             ->addArgument(
                 'source',
@@ -47,32 +73,24 @@ class UmlCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->ensureSourceIsReadable($input, $output);
-        $this->ensureDestinationIsWritable($input, $output);
+        $this->ensureSourceIsReadable($input);
+        $this->ensureDestinationIsWritable($input);
 
-        $parser = new Parser((new ParserFactory())->create(ParserFactory::PREFER_PHP7));
-        $files = (new PhpFileFinder())->find(new \SplFileInfo($input->getArgument('source')));
-        $ast = $parser->parse($files);
-        $dependencies = (new Analyser(
-            new NodeTraverser(),
-            new DependencyInspectionVisitor())
-        )->analyse($ast);
+        $files = $this->phpFileFinder->find(new \SplFileInfo($input->getArgument('source')));
+        $ast = $this->parser->parse($files);
+        $dependencies = $this->analyser->analyse($ast);
 
-        $plantUml = new PlantUmlWrapper(new PlantUmlFormatter(), new ShellWrapper());
         $destination = new \SplFileInfo($input->getArgument('destination'));
-        $plantUml->generate($dependencies, $destination, $input->getOption('keep-uml'));
+        $this->plantUmlWrapper->generate($dependencies, $destination, $input->getOption('keep-uml'));
     }
 
     /**
      * @param InputInterface $input
-     * @param OutputInterface $output
      *
      * @throws \Exception
      */
-    private function ensureSourceIsReadable(
-        InputInterface $input,
-        OutputInterface $output
-    ) {
+    private function ensureSourceIsReadable(InputInterface $input)
+    {
         if (!is_readable($input->getArgument('source'))) {
             throw new \Exception('File/Directory does not exist or is not readable.');
         }
@@ -80,14 +98,11 @@ class UmlCommand extends Command
 
     /**
      * @param InputInterface $input
-     * @param OutputInterface $output
      *
      * @throws \Exception
      */
-    private function ensureDestinationIsWritable(
-        InputInterface $input,
-        OutputInterface $output
-    ) {
+    private function ensureDestinationIsWritable(InputInterface $input)
+    {
         if (!is_writable(dirname($input->getArgument('destination')))) {
             throw new \Exception('Destination is not writable.');
         }

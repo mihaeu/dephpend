@@ -1,7 +1,15 @@
 #!/usr/bin/env php
 <?php declare (strict_types = 1);
 
+use Mihaeu\PhpDependencies\Analyser;
 use Mihaeu\PhpDependencies\Cli\UmlCommand;
+use Mihaeu\PhpDependencies\DependencyInspectionVisitor;
+use Mihaeu\PhpDependencies\Parser;
+use Mihaeu\PhpDependencies\PlantUmlFormatter;
+use Mihaeu\PhpDependencies\PlantUmlWrapper;
+use Mihaeu\PhpDependencies\ShellWrapper;
+use PhpParser\NodeTraverser;
+use PhpParser\ParserFactory;
 use Symfony\Component\Console\Application;
 
 require __DIR__.'/../vendor/autoload.php';
@@ -16,5 +24,14 @@ $application->setName(<<<EOT
   \__,_|\___|_|    |_|  |_|_|   \___|_| |_|\__,_|
 EOT
 );
-$application->add(new UmlCommand());
+$umlCommand = new UmlCommand(
+    new \Mihaeu\PhpDependencies\PhpFileFinder(),
+    new Parser((new ParserFactory())->create(ParserFactory::PREFER_PHP7)),
+    new Analyser(
+        new NodeTraverser(),
+        new DependencyInspectionVisitor()
+    ),
+    new PlantUmlWrapper(new PlantUmlFormatter(), new ShellWrapper())
+);
+$application->add($umlCommand);
 $application->run();
