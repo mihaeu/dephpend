@@ -33,7 +33,9 @@ style:
 	@php -n vendor/bin/php-cs-fixer fix --verbose tests
 
 phar:
-	@vendor/bin/box build
+	@composer update --no-dev
+	@php box.phar build
+	@composer update
 
 c: cov
 
