@@ -1,40 +1,20 @@
 #!/usr/bin/env php
 <?php declare (strict_types = 1);
 
-use Mihaeu\PhpDependencies\Parser;
-use Mihaeu\PhpDependencies\PhpFileFinder;
-use Mihaeu\PhpDependencies\Analyser;
-use Mihaeu\PhpDependencies\PlantUmlWrapper;
-use Mihaeu\PhpDependencies\PlantUmlFormatter;
-use Mihaeu\PhpDependencies\ShellWrapper;
-use Mihaeu\PhpDependencies\DependencyInspectionVisitor;
-use PhpParser\ParserFactory;
-use PhpParser\NodeTraverser;
+use Mihaeu\PhpDependencies\Cli\UmlCommand;
+use Symfony\Component\Console\Application;
 
 require __DIR__.'/../vendor/autoload.php';
 
-if (!isset($argv[1], $argv[2])) {
-    echo 'Usage: php-dependencies [FILE|DIRECTORY] [DESTINATION]'.PHP_EOL.PHP_EOL.
-    'Example: php-dependencies src build/uml-dependencies.png'.PHP_EOL;
-    exit(1);
-}
-$path = $argv[1];
-if (!is_readable($path)) {
-    echo 'File/Directory does not exist or is not readable.'.PHP_EOL;
-    exit(1);
-}
-
-$destination = new SplFileInfo($argv[2]);
-if (!$destination->getPathInfo()->isWritable()) {
-    echo 'Destination is not writable.'.PHP_EOL;
-    exit(1);
-}
-$keepUml = in_array('--keep-uml', $argv, true);
-
-$parser = new Parser((new ParserFactory())->create(ParserFactory::PREFER_PHP7));
-$files = (new PhpFileFinder())->find(new SplFileInfo($path));
-$ast = $parser->parse($files);
-$dependencies = (new Analyser(new NodeTraverser(), new DependencyInspectionVisitor()))->analyse($ast);
-
-$plantUml = new PlantUmlWrapper(new PlantUmlFormatter(), new ShellWrapper());
-$plantUml->generate($dependencies, $destination, $keepUml);
+$application = new Application();
+$application->setName(<<<EOT
+      _      _____  _    _ _____               _ 
+     | |    |  __ \| |  | |  __ \             | |
+   __| | ___| |__) | |__| | |__) |__ _ __   __| |
+  / _` |/ _ \  ___/|  __  |  ___/ _ \ '_ \ / _` |
+ | (_| |  __/ |    | |  | | |  |  __/ | | | (_| |
+  \__,_|\___|_|    |_|  |_|_|   \___|_| |_|\__,_|
+EOT
+);
+$application->add(new UmlCommand());
+$application->run();
