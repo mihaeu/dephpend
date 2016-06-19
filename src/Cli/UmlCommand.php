@@ -8,23 +8,13 @@ use Mihaeu\PhpDependencies\Analyser;
 use Mihaeu\PhpDependencies\Parser;
 use Mihaeu\PhpDependencies\PhpFileFinder;
 use Mihaeu\PhpDependencies\PlantUmlWrapper;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class UmlCommand extends Command
+class UmlCommand extends BaseCommand
 {
-    /** @var PhpFileFinder */
-    private $phpFileFinder;
-
-    /** @var Parser */
-    private $parser;
-
-    /** @var Analyser */
-    private $analyser;
-
     /** @var PlantUmlWrapper */
     private $plantUmlWrapper;
 
@@ -40,11 +30,8 @@ class UmlCommand extends Command
         Analyser $analyser,
         PlantUmlWrapper $plantUmlWrapper
     ) {
-        parent::__construct('uml');
+        parent::__construct('uml', $phpFileFinder, $parser, $analyser);
 
-        $this->phpFileFinder = $phpFileFinder;
-        $this->parser = $parser;
-        $this->analyser = $analyser;
         $this->plantUmlWrapper = $plantUmlWrapper;
     }
 
@@ -73,8 +60,8 @@ class UmlCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->ensureSourceIsReadable($input);
-        $this->ensureDestinationIsWritable($input);
+        $this->ensureSourceIsReadable($input->getArgument('source'));
+        $this->ensureDestinationIsWritable($input->getArgument('destination'));
 
         $files = $this->phpFileFinder->find(new \SplFileInfo($input->getArgument('source')));
         $ast = $this->parser->parse($files);
@@ -82,29 +69,5 @@ class UmlCommand extends Command
 
         $destination = new \SplFileInfo($input->getArgument('destination'));
         $this->plantUmlWrapper->generate($dependencies, $destination, $input->getOption('keep-uml'));
-    }
-
-    /**
-     * @param InputInterface $input
-     *
-     * @throws \Exception
-     */
-    private function ensureSourceIsReadable(InputInterface $input)
-    {
-        if (!is_readable($input->getArgument('source'))) {
-            throw new \Exception('File/Directory does not exist or is not readable.');
-        }
-    }
-
-    /**
-     * @param InputInterface $input
-     *
-     * @throws \Exception
-     */
-    private function ensureDestinationIsWritable(InputInterface $input)
-    {
-        if (!is_writable(dirname($input->getArgument('destination')))) {
-            throw new \Exception('Destination is not writable.');
-        }
     }
 }
