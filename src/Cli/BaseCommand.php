@@ -20,6 +20,12 @@ abstract class BaseCommand extends Command
     /** @var Analyser */
     protected $analyser;
 
+    /** @var string */
+    protected $defaultFormat;
+
+    /** @var string[] */
+    protected $allowedFormats;
+
     /**
      * @param string        $name
      * @param PhpFileFinder $phpFileFinder
@@ -37,6 +43,18 @@ abstract class BaseCommand extends Command
         $this->phpFileFinder = $phpFileFinder;
         $this->parser = $parser;
         $this->analyser = $analyser;
+    }
+
+    /**
+     * @param string $destination
+     *
+     * @throws \Exception
+     */
+    protected function ensureOutputFormatIsValid(string $destination)
+    {
+        if (!in_array(preg_replace('/.+\.(\w+)$/', '$1', $destination), $this->allowedFormats, true)) {
+            throw new \Exception('Output format is not allowed ('.implode(', ', $this->allowedFormats).')');
+        }
     }
 
     /**

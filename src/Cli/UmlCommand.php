@@ -33,6 +33,9 @@ class UmlCommand extends BaseCommand
         parent::__construct('uml', $phpFileFinder, $parser, $analyser);
 
         $this->plantUmlWrapper = $plantUmlWrapper;
+
+        $this->defaultFormat = 'png';
+        $this->allowedFormats = [$this->defaultFormat];
     }
 
     protected function configure()
@@ -62,6 +65,7 @@ class UmlCommand extends BaseCommand
     {
         $this->ensureSourceIsReadable($input->getArgument('source'));
         $this->ensureDestinationIsWritable($input->getArgument('destination'));
+        $this->ensureOutputFormatIsValid($input->getArgument('destination'));
 
         $files = $this->phpFileFinder->find(new \SplFileInfo($input->getArgument('source')));
         $ast = $this->parser->parse($files);

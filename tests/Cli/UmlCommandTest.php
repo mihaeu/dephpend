@@ -78,12 +78,26 @@ class UmlCommandTest extends \PHPUnit_Framework_TestCase
     public function testGenerateUml()
     {
         $this->input->method('getArgument')->willReturn(
-            sys_get_temp_dir(), sys_get_temp_dir().'/test.png',
-            sys_get_temp_dir(), sys_get_temp_dir().'/test.png'
+            sys_get_temp_dir(), sys_get_temp_dir().'/test.png', sys_get_temp_dir().'/test.png',
+            sys_get_temp_dir(), sys_get_temp_dir().'/test.png', sys_get_temp_dir().'/test.png'
         );
         $this->input->method('getOption')->willReturn(false);
 
         $this->plantUmlWrapper->expects($this->once())->method('generate');
+        $this->umlCommand->run(
+            $this->input,
+            $this->output
+        );
+    }
+
+    public function testAcceptsOnlyAllowedFormats()
+    {
+        $this->input->method('getArgument')->willReturn(
+            sys_get_temp_dir(), sys_get_temp_dir().'/test.bmp', sys_get_temp_dir().'/test.bmp'
+        );
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Output format is not allowed (png)');
         $this->umlCommand->run(
             $this->input,
             $this->output
