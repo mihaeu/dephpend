@@ -54,6 +54,12 @@ class DsmCommand extends BaseCommand
                 InputOption::VALUE_NONE,
                 'Check for dependencies from internal PHP Classes like SplFileInfo.'
             )
+            ->addOption(
+                'only-namespaces',
+                null,
+                InputOption::VALUE_NONE,
+                'Output dependencies as packages instead of single classes.'
+            )
         ;
     }
 
@@ -64,7 +70,7 @@ class DsmCommand extends BaseCommand
 
         $source = new \SplFileInfo($input->getArgument('source'));
         $output->write($this->dependencyStructureMatrixFormatter->format(
-            $this->detectDependencies($source, $input->getOption('internals')))
+            $this->detectDependencies($source, $input->getOption('internals'), $input->getOption('only-namespaces')))
         );
     }
 }

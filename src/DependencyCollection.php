@@ -14,7 +14,8 @@ class DependencyCollection extends AbstractCollection
     public function add(Dependency $dependency) : DependencyCollection
     {
         $clone = clone $this;
-        if (in_array($dependency, $this->collection)) {
+        if (in_array($dependency, $this->collection)
+            || $dependency->from()->equals($dependency->to())) {
             return $clone;
         }
 
@@ -52,6 +53,34 @@ class DependencyCollection extends AbstractCollection
 
             return $clazzes;
         });
+    }
+
+    /**
+     * @return DependencyCollection
+     */
+    public function onlyNamespaces() : DependencyCollection
+    {
+        return $this->reduce(new self(), function (DependencyCollection $namespaceCollection, Dependency $dependency) {
+            if (!$dependency->from()->hasNamespace()
+                || !$dependency->to()->hasNamespace()) {
+                return $namespaceCollection;
+            }
+
+            return $namespaceCollection->add(new Dependency(
+                $this->extractNamespace($dependency->from()),
+                $this->extractNamespace($dependency->to())
+            ));
+        });
+    }
+
+    /**
+     * @param Clazz $clazz
+     *
+     * @return Clazz
+     */
+    private function extractNamespace(Clazz $clazz) : Clazz
+    {
+        return new Clazz(implode('.', array_slice(explode('.', $clazz->toString()), 0, -1)));
     }
 
     /**

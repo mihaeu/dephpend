@@ -60,7 +60,7 @@ class DsmCommandTest extends \PHPUnit_Framework_TestCase
     public function testHandsDependenciesToFormatter()
     {
         $this->input->method('getArgument')->willReturn(sys_get_temp_dir());
-        $this->input->method('getOption')->willReturn('html', true);
+        $this->input->method('getOption')->willReturn('html', true, false);
 
         $dependencies = (new DependencyCollection())
             ->add(new Dependency(new Clazz('A'), new Clazz('B')));

@@ -15,6 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @covers Mihaeu\PhpDependencies\Cli\TextCommand
+ * @covers Mihaeu\PhpDependencies\Cli\BaseCommand
  */
 class TextCommandTest extends \PHPUnit_Framework_TestCase
 {
@@ -68,6 +69,27 @@ class TextCommandTest extends \PHPUnit_Framework_TestCase
             ['A --> C'],
             ['B --> C']
         );
+        $this->textCommand->run($this->input, $this->output);
+    }
+
+    public function testPrintsOnlyNamespacedDependencies()
+    {
+        $dependencies = (new DependencyCollection())
+            ->add(new Dependency(new Clazz('NamespaceA.A'), new Clazz('NamespaceB.B')))
+            ->add(new Dependency(new Clazz('NamespaceA.A'), new Clazz('NamespaceC.C')))
+            ->add(new Dependency(new Clazz('NamespaceB.B'), new Clazz('NamespaceC.C')));
+        $this->analyser->method('analyse')->willReturn($dependencies);
+
+        $this->input->method('getArgument')->willReturn(sys_get_temp_dir());
+        $this->input->method('getOption')->willReturn(false, true);
+
+        $this->output->expects($this->exactly(3))
+            ->method('writeln')
+            ->withConsecutive(
+                ['NamespaceA --> NamespaceB'],
+                ['NamespaceA --> NamespaceC'],
+                ['NamespaceB --> NamespaceC']
+            );
         $this->textCommand->run($this->input, $this->output);
     }
 }

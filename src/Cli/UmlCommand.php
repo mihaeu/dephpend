@@ -64,6 +64,12 @@ class UmlCommand extends BaseCommand
                 InputOption::VALUE_NONE,
                 'Check for dependencies from internal PHP Classes like SplFileInfo.'
             )
+            ->addOption(
+                'only-namespaces',
+                null,
+                InputOption::VALUE_NONE,
+                'Output dependencies as packages instead of single classes.'
+            )
         ;
     }
 
@@ -74,7 +80,7 @@ class UmlCommand extends BaseCommand
         $this->ensureOutputFormatIsValid($input->getArgument('destination'));
 
         $source = new \SplFileInfo($input->getArgument('source'));
-        $dependencies = $this->detectDependencies($source, $input->getOption('internals'));
+        $dependencies = $this->detectDependencies($source, $input->getOption('internals'), $input->getOption('only-namespaces'));
 
         $destination = new \SplFileInfo($input->getArgument('destination'));
         $this->plantUmlWrapper->generate($dependencies, $destination, $input->getOption('keep-uml'));

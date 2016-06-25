@@ -38,6 +38,12 @@ class TextCommand extends BaseCommand
                 InputOption::VALUE_NONE,
                 'Check for dependencies from internal PHP Classes like SplFileInfo.'
             )
+            ->addOption(
+                'only-namespaces',
+                null,
+                InputOption::VALUE_NONE,
+                'Output dependencies as packages instead of single classes.'
+            )
         ;
     }
 
@@ -46,7 +52,8 @@ class TextCommand extends BaseCommand
         $this->ensureSourceIsReadable($input->getArgument('source'));
 
         $source = new \SplFileInfo($input->getArgument('source'));
-        $this->detectDependencies($source, $input->getOption('internals'))->each(function (Dependency $dependency) use ($output) {
+        $this->detectDependencies($source, $input->getOption('internals'), $input->getOption('only-namespaces'))
+            ->each(function (Dependency $dependency) use ($output) {
             $output->writeln($dependency->toString());
         });
     }
