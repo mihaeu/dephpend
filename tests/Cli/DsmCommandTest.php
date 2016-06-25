@@ -16,6 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @covers Mihaeu\PhpDependencies\Cli\DsmCommand
+ * @covers Mihaeu\PhpDependencies\Cli\BaseCommand
  */
 class DsmCommandTest extends \PHPUnit_Framework_TestCase
 {
@@ -59,7 +60,7 @@ class DsmCommandTest extends \PHPUnit_Framework_TestCase
     public function testHandsDependenciesToFormatter()
     {
         $this->input->method('getArgument')->willReturn(sys_get_temp_dir());
-        $this->input->method('getOption')->willReturn('html');
+        $this->input->method('getOption')->willReturn('html', true);
 
         $dependencies = (new DependencyCollection())
             ->add(new Dependency(new Clazz('A'), new Clazz('B')));

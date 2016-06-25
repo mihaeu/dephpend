@@ -62,4 +62,14 @@ class DependencyCollectionTest extends \PHPUnit_Framework_TestCase
             ->add(new Clazz('ToAnother'));
         $this->assertEquals($expected, $dependencyCollection->allClasses());
     }
+
+    public function testRemovesInternals()
+    {
+        $dependencyCollection = (new DependencyCollection())
+            ->add(new Dependency(new Clazz('From'), new Clazz('To')))
+            ->add(new Dependency(new Clazz('From'), new Clazz('SplFileInfo')));
+        $expected = (new DependencyCollection())
+            ->add(new Dependency(new Clazz('From'), new Clazz('To')));
+        $this->assertEquals($expected, $dependencyCollection->removeInternals());
+    }
 }
