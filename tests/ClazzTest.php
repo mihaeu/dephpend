@@ -19,4 +19,14 @@ class ClazzTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertTrue((new Clazz('A'))->equals(new Clazz('A')));
     }
+
+    public function testDetectsIfClassHasNamespace()
+    {
+        $this->assertTrue((new Clazz('Namespace.Class'))->hasNamespace());
+    }
+
+    public function testDetectsIfClassHasNoNamespace()
+    {
+        $this->assertFalse((new Clazz('Class'))->hasNamespace());
+    }
 }

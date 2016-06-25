@@ -31,4 +31,9 @@ class Clazz
     {
         return $this->clazz;
     }
+
+    public function hasNamespace() : bool
+    {
+        return strpos($this->clazz, '.') !== false;
+    }
 }
