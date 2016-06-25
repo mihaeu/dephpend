@@ -5,6 +5,7 @@ declare (strict_types = 1);
 namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser;
+use Mihaeu\PhpDependencies\DependencyCollection;
 use Mihaeu\PhpDependencies\Parser;
 use Mihaeu\PhpDependencies\PhpFileFinder;
 use Symfony\Component\Console\Command\Command;
@@ -79,5 +80,17 @@ abstract class BaseCommand extends Command
         if (!is_writable(dirname($destination))) {
             throw new \Exception('Destination is not writable.');
         }
+    }
+    
+    /**
+     * @param $source
+     *
+     * @return DependencyCollection
+     */
+    protected function detectDependencies($source)
+    {
+        $files = $this->phpFileFinder->find($source);
+        $ast = $this->parser->parse($files);
+        return $this->analyser->analyse($ast);
     }
 }

@@ -5,6 +5,7 @@ declare (strict_types = 1);
 namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser;
+use Mihaeu\PhpDependencies\DependencyCollection;
 use Mihaeu\PhpDependencies\Parser;
 use Mihaeu\PhpDependencies\PhpFileFinder;
 use Mihaeu\PhpDependencies\PlantUmlWrapper;
@@ -67,9 +68,8 @@ class UmlCommand extends BaseCommand
         $this->ensureDestinationIsWritable($input->getArgument('destination'));
         $this->ensureOutputFormatIsValid($input->getArgument('destination'));
 
-        $files = $this->phpFileFinder->find(new \SplFileInfo($input->getArgument('source')));
-        $ast = $this->parser->parse($files);
-        $dependencies = $this->analyser->analyse($ast);
+        $source = new \SplFileInfo($input->getArgument('source'));
+        $dependencies = $this->detectDependencies($source);
 
         $destination = new \SplFileInfo($input->getArgument('destination'));
         $this->plantUmlWrapper->generate($dependencies, $destination, $input->getOption('keep-uml'));
