@@ -50,4 +50,16 @@ class DependencyCollectionTest extends \PHPUnit_Framework_TestCase
             return $output.$dependency->to()->toString();
         }));
     }
+
+    public function testAllClasses()
+    {
+        $dependencyCollection = (new DependencyCollection())
+            ->add(new Dependency(new Clazz('From'), new Clazz('To')))
+            ->add(new Dependency(new Clazz('From'), new Clazz('ToAnother')));
+        $expected = (new ClazzCollection())
+            ->add(new Clazz('From'))
+            ->add(new Clazz('To'))
+            ->add(new Clazz('ToAnother'));
+        $this->assertEquals($expected, $dependencyCollection->allClasses());
+    }
 }

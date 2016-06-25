@@ -61,4 +61,12 @@ abstract class AbstractCollection implements Collection
     {
         return count($this->collection);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function contains($other) : bool
+    {
+        return in_array($other, $this->collection);
+    }
 }

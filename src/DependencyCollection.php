@@ -36,4 +36,21 @@ class DependencyCollection extends AbstractCollection
             return $clazzCollection->add($dependency->to());
         });
     }
+
+    /**
+     * @return ClazzCollection
+     */
+    public function allClasses() : ClazzCollection
+    {
+        return $this->reduce(new ClazzCollection(), function (ClazzCollection $clazzes, Dependency $dependency) {
+            if (!$clazzes->contains($dependency->from())) {
+                $clazzes = $clazzes->add($dependency->from());
+            }
+            if (!$clazzes->contains($dependency->to())) {
+                $clazzes = $clazzes->add($dependency->to());
+            }
+
+            return $clazzes;
+        });
+    }
 }

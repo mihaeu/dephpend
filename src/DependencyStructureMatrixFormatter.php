@@ -13,11 +13,46 @@ class DependencyStructureMatrixFormatter implements Formatter
     {
         $dependencyArray = $this->buildMatrix(
             $dependencyCollection,
-            $this->allClasses($dependencyCollection)
+            $dependencyCollection->allClasses($dependencyCollection)
         );
-        $output = ['<table><tr><th></th><th>'.implode('</th><th>', array_keys($dependencyArray))];
+
+        return $this->buildHtmlTable($dependencyArray);
+    }
+
+    /**
+     * @param DependencyCollection $dependencyCollection
+     * @param ClazzCollection      $clazzCollection
+     *
+     * @return array
+     */
+    private function buildMatrix(DependencyCollection $dependencyCollection, ClazzCollection $clazzCollection) : array
+    {
+        $emptyDsm = $clazzCollection->reduce([], function (array $combined, Clazz $clazz) use ($clazzCollection) {
+            $combined[$clazz->toString()] = array_combine(array_values($clazzCollection->toArray()), array_pad([], $clazzCollection->count(), 0));
+
+            return $combined;
+        });
+
+        return $dependencyCollection->reduce($emptyDsm, function (array $dsm, Dependency $dependency) use ($emptyDsm) {
+            $dsm[$dependency->from()->toString()][$dependency->to()->toString()] = 1;
+
+            return $dsm;
+        });
+    }
+
+    /**
+     * @param array $dependencyArray
+     *
+     * @return string
+     */
+    private function buildHtmlTable(array $dependencyArray) : string
+    {
+        $output = [
+            '<table><tr><th></th><th>'.implode('</th><th>',
+                array_keys($dependencyArray)),
+        ];
         $output[] = '</th></tr>';
-        // build table body
+
         foreach ($dependencyArray as $dependencyRow => $dependencies) {
             $output[] = '<tr><td>'.$dependencyRow.'</td>';
             foreach ($dependencies as $dependencyHeader => $count) {
@@ -28,47 +63,5 @@ class DependencyStructureMatrixFormatter implements Formatter
         $output[] = '</table>';
 
         return implode('', $output);
-    }
-
-    private function buildMatrix(DependencyCollection $dependencyCollection, array $allClasses) : array
-    {
-        $allClassesAsKeys = array_reduce($allClasses, function (array $allClassesAsKeys, string $clazzName) {
-            $allClassesAsKeys[$clazzName] = 0;
-
-            return $allClassesAsKeys;
-        }, []);
-        $emptyDsm = array_reduce($allClasses, function (array $dsm, string $clazzName) use ($allClassesAsKeys) {
-            $dsm[$clazzName] = $allClassesAsKeys;
-
-            return $dsm;
-        }, []);
-
-        return $dependencyCollection->reduce($emptyDsm, function (array $dsm, Dependency $dependency) use ($emptyDsm) {
-            $dsm[$dependency->from()->toString()][$dependency->to()->toString()] = 1;
-
-            return $dsm;
-        });
-    }
-
-    private function allClasses(DependencyCollection $dependencyCollection) : array
-    {
-        return $dependencyCollection->reduce([], function (array $dependencyCount, Dependency $dependency) {
-            if (!in_array($dependency->from()->toString(), $dependencyCount, true)) {
-                $dependencyCount[] = $dependency->from()->toString();
-            }
-            if (!in_array($dependency->to()->toString(), $dependencyCount, true)) {
-                $dependencyCount[] = $dependency->to()->toString();
-            }
-
-            return $dependencyCount;
-
-//            if (!array_key_exists($dependency->from()->toString(), $dependencyCount)) {
-//                $dependencyCount[$dependency->from()->toString()] = [
-//                    $dependency->to()->toString() => 0
-//                ];
-//            }
-//            $dependencyCount[$dependency->from()->toString()][$dependency->to()->toString()] += 1;
-//            return $dependencyCount;
-        });
     }
 }

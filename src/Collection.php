@@ -41,4 +41,9 @@ interface Collection extends \Countable
      * @return array
      */
     public function toArray() : array;
+
+    /**
+     * @return bool
+     */
+    public function contains($other) : bool;
 }
