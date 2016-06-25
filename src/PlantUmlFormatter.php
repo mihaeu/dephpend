@@ -4,12 +4,10 @@ declare (strict_types = 1);
 
 namespace Mihaeu\PhpDependencies;
 
-class PlantUmlFormatter
+class PlantUmlFormatter implements Formatter
 {
     /**
-     * @param DependencyCollection $dependencyCollection
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function format(DependencyCollection $dependencyCollection) : string
     {
