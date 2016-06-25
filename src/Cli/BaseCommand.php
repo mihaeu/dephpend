@@ -84,14 +84,17 @@ abstract class BaseCommand extends Command
 
     /**
      * @param $source
+     * @param bool $withInternals
      *
      * @return DependencyCollection
      */
-    protected function detectDependencies($source)
+    protected function detectDependencies($source, bool $withInternals = false)
     {
         $files = $this->phpFileFinder->find($source);
         $ast = $this->parser->parse($files);
 
-        return $this->analyser->analyse($ast);
+        return $withInternals
+            ? $this->analyser->analyse($ast)
+            : $this->analyser->analyse($ast)->removeInternals();
     }
 }

@@ -48,6 +48,12 @@ class DsmCommand extends BaseCommand
                 'Output format.',
                 'html'
             )
+            ->addOption(
+                'internals',
+                null,
+                InputOption::VALUE_NONE,
+                'Check for dependencies from internal PHP Classes like SplFileInfo.'
+            )
         ;
     }
 
@@ -57,6 +63,8 @@ class DsmCommand extends BaseCommand
         $this->ensureOutputFormatIsValid($input->getOption('format'));
 
         $source = new \SplFileInfo($input->getArgument('source'));
-        $output->write($this->dependencyStructureMatrixFormatter->format($this->detectDependencies($source)));
+        $output->write($this->dependencyStructureMatrixFormatter->format(
+            $this->detectDependencies($source, $input->getOption('internals')))
+        );
     }
 }

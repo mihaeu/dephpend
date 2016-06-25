@@ -58,6 +58,12 @@ class UmlCommand extends BaseCommand
                 InputOption::VALUE_NONE,
                 'Keep the intermediate PlantUML file instead of deleting it.'
             )
+            ->addOption(
+                'internals',
+                null,
+                InputOption::VALUE_NONE,
+                'Check for dependencies from internal PHP Classes like SplFileInfo.'
+            )
         ;
     }
 
@@ -68,7 +74,7 @@ class UmlCommand extends BaseCommand
         $this->ensureOutputFormatIsValid($input->getArgument('destination'));
 
         $source = new \SplFileInfo($input->getArgument('source'));
-        $dependencies = $this->detectDependencies($source);
+        $dependencies = $this->detectDependencies($source, $input->getOption('internals'));
 
         $destination = new \SplFileInfo($input->getArgument('destination'));
         $this->plantUmlWrapper->generate($dependencies, $destination, $input->getOption('keep-uml'));
