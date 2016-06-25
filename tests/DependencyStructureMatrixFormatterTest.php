@@ -16,10 +16,10 @@ class DependencyStructureMatrixFormatterTest extends \PHPUnit_Framework_TestCase
             ->add(new Dependency(new Clazz('A'), new Clazz('C')))
             ->add(new Dependency(new Clazz('B'), new Clazz('C')));
         $this->assertEquals('<table>'
-            .'<tr><th></th><th>A</th><th>B</th><th>C</th></tr>'
-            .'<tr><td>A</td><td>0</td><td>1</td><td>1</td></tr>'
-            .'<tr><td>B</td><td>0</td><td>0</td><td>1</td></tr>'
-            .'<tr><td>C</td><td>0</td><td>0</td><td>0</td></tr>'
+            .'<tr><th>X</th><th>A</th><th>B</th><th>C</th></tr>'
+            .'<tr><td>A</td><td>X</td><td>1</td><td>1</td></tr>'
+            .'<tr><td>B</td><td>0</td><td>X</td><td>1</td></tr>'
+            .'<tr><td>C</td><td>0</td><td>0</td><td>X</td></tr>'
             .'</table>',
             (new DependencyStructureMatrixFormatter())->format($dependencies)
         );

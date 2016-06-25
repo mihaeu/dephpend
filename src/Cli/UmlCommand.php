@@ -5,7 +5,6 @@ declare (strict_types = 1);
 namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser;
-use Mihaeu\PhpDependencies\DependencyCollection;
 use Mihaeu\PhpDependencies\Parser;
 use Mihaeu\PhpDependencies\PhpFileFinder;
 use Mihaeu\PhpDependencies\PlantUmlWrapper;
@@ -46,7 +45,7 @@ class UmlCommand extends BaseCommand
             ->addArgument(
                 'source',
                 InputArgument::REQUIRED,
-                'Who do you want to greet?'
+                'Location of your PHP source files.'
             )
             ->addArgument(
                 'destination',

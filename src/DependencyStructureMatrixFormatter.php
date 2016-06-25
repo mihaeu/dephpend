@@ -48,7 +48,7 @@ class DependencyStructureMatrixFormatter implements Formatter
     private function buildHtmlTable(array $dependencyArray) : string
     {
         $output = [
-            '<table><tr><th></th><th>'.implode('</th><th>',
+            '<table><tr><th>X</th><th>'.implode('</th><th>',
                 array_keys($dependencyArray)),
         ];
         $output[] = '</th></tr>';
@@ -56,7 +56,11 @@ class DependencyStructureMatrixFormatter implements Formatter
         foreach ($dependencyArray as $dependencyRow => $dependencies) {
             $output[] = '<tr><td>'.$dependencyRow.'</td>';
             foreach ($dependencies as $dependencyHeader => $count) {
-                $output[] = '<td>'.$count.'</td>';
+                if ($dependencyRow === $dependencyHeader) {
+                    $output[] = '<td>X</td>';
+                } else {
+                    $output[] = '<td>'.$count.'</td>';
+                }
             }
             $output[] = '</tr>';
         }

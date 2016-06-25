@@ -2,9 +2,11 @@
 <?php declare (strict_types = 1);
 
 use Mihaeu\PhpDependencies\Analyser;
+use Mihaeu\PhpDependencies\Cli\DsmCommand;
 use Mihaeu\PhpDependencies\Cli\UmlCommand;
 use Mihaeu\PhpDependencies\DependencyInspectionVisitor;
 use Mihaeu\PhpDependencies\Parser;
+use Mihaeu\PhpDependencies\PhpFileFinder;
 use Mihaeu\PhpDependencies\PlantUmlFormatter;
 use Mihaeu\PhpDependencies\PlantUmlWrapper;
 use Mihaeu\PhpDependencies\ShellWrapper;
@@ -24,14 +26,23 @@ $application->setName(<<<EOT
   \__,_|\___|_|    |_|  |_|_|   \___|_| |_|\__,_|
 EOT
 );
-$umlCommand = new UmlCommand(
-    new \Mihaeu\PhpDependencies\PhpFileFinder(),
-    new Parser((new ParserFactory())->create(ParserFactory::PREFER_PHP7)),
-    new Analyser(
-        new NodeTraverser(),
-        new DependencyInspectionVisitor()
-    ),
+
+$phpFileFinder = new PhpFileFinder();
+$parser = new Parser((new ParserFactory())->create(ParserFactory::PREFER_PHP7));
+$analyser = new Analyser(new NodeTraverser(), new DependencyInspectionVisitor());
+
+$application->add(new UmlCommand(
+    $phpFileFinder,
+    $parser,
+    $analyser,
     new PlantUmlWrapper(new PlantUmlFormatter(), new ShellWrapper())
-);
-$application->add($umlCommand);
+));
+
+$application->add(new DsmCommand(
+    $phpFileFinder,
+    $parser,
+    $analyser,
+    new \Mihaeu\PhpDependencies\DependencyStructureMatrixFormatter()
+));
+
 $application->run();

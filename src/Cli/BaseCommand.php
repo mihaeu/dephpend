@@ -81,7 +81,7 @@ abstract class BaseCommand extends Command
             throw new \Exception('Destination is not writable.');
         }
     }
-    
+
     /**
      * @param $source
      *
@@ -91,6 +91,7 @@ abstract class BaseCommand extends Command
     {
         $files = $this->phpFileFinder->find($source);
         $ast = $this->parser->parse($files);
+
         return $this->analyser->analyse($ast);
     }
 }
