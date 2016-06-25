@@ -4,6 +4,7 @@
 use Mihaeu\PhpDependencies\Analyser;
 use Mihaeu\PhpDependencies\Cli\DsmCommand;
 use Mihaeu\PhpDependencies\Cli\UmlCommand;
+use Mihaeu\PhpDependencies\Cli\TextCommand;
 use Mihaeu\PhpDependencies\DependencyInspectionVisitor;
 use Mihaeu\PhpDependencies\Parser;
 use Mihaeu\PhpDependencies\PhpFileFinder;
@@ -43,6 +44,12 @@ $application->add(new DsmCommand(
     $parser,
     $analyser,
     new \Mihaeu\PhpDependencies\DependencyStructureMatrixFormatter()
+));
+
+$application->add(new TextCommand(
+    $phpFileFinder,
+    $parser,
+    $analyser
 ));
 
 $application->run();

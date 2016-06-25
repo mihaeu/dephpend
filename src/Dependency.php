@@ -43,7 +43,7 @@ class Dependency
      */
     public function toString() : string
     {
-        return $this->from.' --> '.$this->to;
+        return $this->from->toString().' --> '.$this->to->toString();
     }
 
     /**
