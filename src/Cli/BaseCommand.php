@@ -54,7 +54,7 @@ abstract class BaseCommand extends Command
         $this
             ->addArgument(
                 'source',
-                InputArgument::IS_ARRAY,
+                InputArgument::IS_ARRAY | InputArgument::REQUIRED,
                 'Location of your PHP source files.'
             )
             ->addOption(
