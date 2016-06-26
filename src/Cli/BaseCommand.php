@@ -9,6 +9,8 @@ use Mihaeu\PhpDependencies\DependencyCollection;
 use Mihaeu\PhpDependencies\Parser;
 use Mihaeu\PhpDependencies\PhpFileFinder;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 abstract class BaseCommand extends Command
 {
@@ -44,6 +46,29 @@ abstract class BaseCommand extends Command
         $this->phpFileFinder = $phpFileFinder;
         $this->parser = $parser;
         $this->analyser = $analyser;
+    }
+
+    protected function configure()
+    {
+        $this
+            ->addArgument(
+                'source',
+                InputArgument::REQUIRED,
+                'Location of your PHP source files.'
+            )
+            ->addOption(
+                'internals',
+                null,
+                InputOption::VALUE_NONE,
+                'Check for dependencies from internal PHP Classes like SplFileInfo.'
+            )
+            ->addOption(
+                'only-namespaces',
+                null,
+                InputOption::VALUE_NONE,
+                'Output dependencies as packages instead of single classes.'
+            )
+        ;
     }
 
     /**

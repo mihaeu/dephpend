@@ -25,26 +25,9 @@ class TextCommand extends BaseCommand
 
     protected function configure()
     {
-        $this
-            ->setDescription('Generate a Dependency Structure Matrix of your dependencies')
-            ->addArgument(
-                'source',
-                InputArgument::REQUIRED,
-                'Location of your PHP source files.'
-            )
-            ->addOption(
-                'internals',
-                null,
-                InputOption::VALUE_NONE,
-                'Check for dependencies from internal PHP Classes like SplFileInfo.'
-            )
-            ->addOption(
-                'only-namespaces',
-                null,
-                InputOption::VALUE_NONE,
-                'Output dependencies as packages instead of single classes.'
-            )
-        ;
+        parent::configure();
+
+        $this->setDescription('Generate a Dependency Structure Matrix of your dependencies');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

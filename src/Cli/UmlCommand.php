@@ -40,13 +40,10 @@ class UmlCommand extends BaseCommand
 
     protected function configure()
     {
+        parent::configure();
+
         $this
             ->setDescription('Generate a UML Class diagram of your dependencies')
-            ->addArgument(
-                'source',
-                InputArgument::REQUIRED,
-                'Location of your PHP source files.'
-            )
             ->addArgument(
                 'destination',
                 InputArgument::REQUIRED,
@@ -57,18 +54,6 @@ class UmlCommand extends BaseCommand
                 null,
                 InputOption::VALUE_NONE,
                 'Keep the intermediate PlantUML file instead of deleting it.'
-            )
-            ->addOption(
-                'internals',
-                null,
-                InputOption::VALUE_NONE,
-                'Check for dependencies from internal PHP Classes like SplFileInfo.'
-            )
-            ->addOption(
-                'only-namespaces',
-                null,
-                InputOption::VALUE_NONE,
-                'Output dependencies as packages instead of single classes.'
             )
         ;
     }

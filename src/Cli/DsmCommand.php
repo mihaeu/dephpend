@@ -34,31 +34,16 @@ class DsmCommand extends BaseCommand
 
     protected function configure()
     {
+        parent::configure();
+
         $this
             ->setDescription('Generate a Dependency Structure Matrix of your dependencies')
-            ->addArgument(
-                'source',
-                InputArgument::REQUIRED,
-                'Location of your PHP source files.'
-            )
             ->addOption(
                 'format',
                 null,
                 InputOption::VALUE_REQUIRED,
                 'Output format.',
                 'html'
-            )
-            ->addOption(
-                'internals',
-                null,
-                InputOption::VALUE_NONE,
-                'Check for dependencies from internal PHP Classes like SplFileInfo.'
-            )
-            ->addOption(
-                'only-namespaces',
-                null,
-                InputOption::VALUE_NONE,
-                'Output dependencies as packages instead of single classes.'
             )
         ;
     }
