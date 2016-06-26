@@ -11,6 +11,7 @@ use PhpParser\Node\Param;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Interface_ as InterfaceNode;
+use PhpParser\Node\Stmt\Use_ as UseNode;
 
 /**
  * @covers Mihaeu\PhpDependencies\DependencyInspectionVisitor
@@ -147,5 +148,25 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
             ->findClassesDependingOn(new Clazz('SomeNamespace.SomeClass'));
         $this->assertEquals(new Clazz('Namespace.DependencyOne'), $classesDependingOnSomeClass->toArray()[0]);
         $this->assertEquals(new Clazz('Namespace.DependencyTwo'), $classesDependingOnSomeClass->toArray()[1]);
+    }
+
+    public function testDetectsUseNodes()
+    {
+        $node = new ClassNode('SomeClass');
+        $node->namespacedName = new \stdClass();
+        $node->namespacedName->parts = ['SomeNamespace', 'SomeClass'];
+        $this->dependencyInspectionVisitor->enterNode($node);
+
+        $use = new \stdClass();
+        $use->name = new \stdClass();
+        $use->name->parts = ['Test'];
+        $useNode = new UseNode([$use]);
+        $this->dependencyInspectionVisitor->enterNode($useNode);
+
+        $this->dependencyInspectionVisitor->afterTraverse([]);
+        $classesDependingOnSomeClass = $this->dependencyInspectionVisitor
+            ->dependencies()
+            ->findClassesDependingOn(new Clazz('SomeNamespace.SomeClass'));
+        $this->assertEquals(new Clazz('Test'), $classesDependingOnSomeClass->toArray()[0]);
     }
 }
