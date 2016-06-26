@@ -9,7 +9,8 @@ use PhpParser\Node\Expr\Variable as VariableNode;
 use PhpParser\Node\Name\FullyQualified as FullyQualifiedNameNode;
 use PhpParser\Node\Expr\New_ as NewNode;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
-use PhpParser\Node\Stmt\ClassMethod;
+use PhpParser\Node\Stmt\ClassMethod as ClassMethodNode;
+use PhpParser\Node\Stmt\Use_ as UseNode;
 use PhpParser\NodeVisitorAbstract;
 
 class DependencyInspectionVisitor extends NodeVisitorAbstract
@@ -80,7 +81,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
                     new Clazz($node->class->name)
                 ));
             }
-        } elseif ($node instanceof ClassMethod) {
+        } elseif ($node instanceof ClassMethodNode) {
             foreach ($node->params as $param) { /* @var \PhpParser\Node\Param */
                 if (isset($param->type, $param->type->parts)) {
                     $this->tempDependencies = $this->tempDependencies->add(new Dependency(
@@ -89,6 +90,11 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
                     ));
                 }
             }
+        } elseif ($node instanceof UseNode) {
+            $this->tempDependencies = $this->tempDependencies->add(new Dependency(
+                $this->currentClass,
+                new Clazz($this->toFullyQualifiedName($node->uses[0]->name->parts))
+            ));
         }
     }
 
