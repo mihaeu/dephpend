@@ -8,7 +8,6 @@ use Mihaeu\PhpDependencies\Analyser;
 use Mihaeu\PhpDependencies\DependencyStructureMatrixFormatter;
 use Mihaeu\PhpDependencies\Parser;
 use Mihaeu\PhpDependencies\PhpFileFinder;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -50,12 +49,15 @@ class DsmCommand extends BaseCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->ensureSourceIsReadable($input->getArgument('source'));
+        $this->ensureSourcesAreReadable($input->getArgument('source'));
         $this->ensureOutputFormatIsValid($input->getOption('format'));
 
-        $source = new \SplFileInfo($input->getArgument('source'));
         $output->write($this->dependencyStructureMatrixFormatter->format(
-            $this->detectDependencies($source, $input->getOption('internals'), $input->getOption('only-namespaces')))
-        );
+            $this->detectDependencies(
+                $input->getArgument('source'),
+                $input->getOption('internals'),
+                $input->getOption('only-namespaces')
+            )
+        ));
     }
 }

@@ -8,7 +8,6 @@ use Mihaeu\PhpDependencies\Analyser;
 use Mihaeu\PhpDependencies\Parser;
 use Mihaeu\PhpDependencies\PhpFileFinder;
 use Mihaeu\PhpDependencies\PlantUmlWrapper;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -44,9 +43,10 @@ class UmlCommand extends BaseCommand
 
         $this
             ->setDescription('Generate a UML Class diagram of your dependencies')
-            ->addArgument(
-                'destination',
-                InputArgument::REQUIRED,
+            ->addOption(
+                'output',
+                'o',
+                InputOption::VALUE_REQUIRED,
                 'Destination for the generated class diagram (in .png format).'
             )
             ->addOption(
@@ -60,14 +60,28 @@ class UmlCommand extends BaseCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->ensureSourceIsReadable($input->getArgument('source'));
-        $this->ensureDestinationIsWritable($input->getArgument('destination'));
-        $this->ensureOutputFormatIsValid($input->getArgument('destination'));
+        $this->ensureSourcesAreReadable($input->getArgument('source'));
+        $this->ensureOutputExists($input->getOption('output'));
+        $this->ensureDestinationIsWritable($input->getOption('output'));
+        $this->ensureOutputFormatIsValid($input->getOption('output'));
 
-        $source = new \SplFileInfo($input->getArgument('source'));
-        $dependencies = $this->detectDependencies($source, $input->getOption('internals'), $input->getOption('only-namespaces'));
+        $dependencies = $this->detectDependencies(
+            $input->getArgument('source'),
+            $input->getOption('internals'),
+            $input->getOption('only-namespaces')
+        );
 
-        $destination = new \SplFileInfo($input->getArgument('destination'));
+        $destination = new \SplFileInfo($input->getOption('output'));
         $this->plantUmlWrapper->generate($dependencies, $destination, $input->getOption('keep-uml'));
+    }
+
+    /**
+     * @param $outputOption
+     */
+    private function ensureOutputExists($outputOption)
+    {
+        if ($outputOption === null) {
+            throw new \InvalidArgumentException('Output not defined (use "help" for more information).');
+        }
     }
 }

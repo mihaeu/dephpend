@@ -8,9 +8,7 @@ use Mihaeu\PhpDependencies\Analyser;
 use Mihaeu\PhpDependencies\Dependency;
 use Mihaeu\PhpDependencies\Parser;
 use Mihaeu\PhpDependencies\PhpFileFinder;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class TextCommand extends BaseCommand
@@ -32,11 +30,13 @@ class TextCommand extends BaseCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->ensureSourceIsReadable($input->getArgument('source'));
+        $this->ensureSourcesAreReadable($input->getArgument('source'));
 
-        $source = new \SplFileInfo($input->getArgument('source'));
-        $this->detectDependencies($source, $input->getOption('internals'), $input->getOption('only-namespaces'))
-            ->each(function (Dependency $dependency) use ($output) {
+        $this->detectDependencies(
+            $input->getArgument('source'),
+            $input->getOption('internals'),
+            $input->getOption('only-namespaces')
+        )->each(function (Dependency $dependency) use ($output) {
             $output->writeln($dependency->toString());
         });
     }

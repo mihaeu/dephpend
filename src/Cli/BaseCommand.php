@@ -7,6 +7,7 @@ namespace Mihaeu\PhpDependencies\Cli;
 use Mihaeu\PhpDependencies\Analyser;
 use Mihaeu\PhpDependencies\DependencyCollection;
 use Mihaeu\PhpDependencies\Parser;
+use Mihaeu\PhpDependencies\PhpFileCollection;
 use Mihaeu\PhpDependencies\PhpFileFinder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -53,7 +54,7 @@ abstract class BaseCommand extends Command
         $this
             ->addArgument(
                 'source',
-                InputArgument::REQUIRED,
+                InputArgument::IS_ARRAY,
                 'Location of your PHP source files.'
             )
             ->addOption(
@@ -79,19 +80,21 @@ abstract class BaseCommand extends Command
     protected function ensureOutputFormatIsValid(string $destination)
     {
         if (!in_array(preg_replace('/.+\.(\w+)$/', '$1', $destination), $this->allowedFormats, true)) {
-            throw new \Exception('Output format is not allowed ('.implode(', ', $this->allowedFormats).')');
+            throw new \InvalidArgumentException('Output format is not allowed ('.implode(', ', $this->allowedFormats).')');
         }
     }
 
     /**
-     * @param string $source
+     * @param string[] $sources
      *
      * @throws \Exception
      */
-    protected function ensureSourceIsReadable(string $source)
+    protected function ensureSourcesAreReadable(array $sources)
     {
-        if (!is_readable($source)) {
-            throw new \Exception('File/Directory does not exist or is not readable.');
+        foreach ($sources as $source) {
+            if (!is_readable($source)) {
+                throw new \InvalidArgumentException('File/Directory does not exist or is not readable.');
+            }
         }
     }
 
@@ -103,20 +106,23 @@ abstract class BaseCommand extends Command
     protected function ensureDestinationIsWritable(string $destination)
     {
         if (!is_writable(dirname($destination))) {
-            throw new \Exception('Destination is not writable.');
+            throw new \InvalidArgumentException('Destination is not writable.');
         }
     }
 
     /**
-     * @param $source
+     * @param $sources
      * @param bool $withInternals
      * @param bool $onlyNamespaces
      *
      * @return DependencyCollection
      */
-    protected function detectDependencies($source, bool $withInternals = false, bool $onlyNamespaces = false) : DependencyCollection
+    protected function detectDependencies(array $sources, bool $withInternals = false, bool $onlyNamespaces = false) : DependencyCollection
     {
-        $files = $this->phpFileFinder->find($source);
+        $files = new PhpFileCollection();
+        foreach ($sources as $source) {
+            $files = $files->addAll($this->phpFileFinder->find(new \SplFileInfo($source)));
+        }
         $ast = $this->parser->parse($files);
 
         $dependencies = $withInternals

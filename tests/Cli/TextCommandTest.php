@@ -59,7 +59,7 @@ class TextCommandTest extends \PHPUnit_Framework_TestCase
             ->add(new Dependency(new Clazz('B'), new Clazz('C')));
         $this->analyser->method('analyse')->willReturn($dependencies);
 
-        $this->input->method('getArgument')->willReturn(sys_get_temp_dir());
+        $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
         $this->input->method('getOption')->willReturn(false);
 
         $this->output->expects($this->exactly(3))
@@ -80,7 +80,7 @@ class TextCommandTest extends \PHPUnit_Framework_TestCase
             ->add(new Dependency(new Clazz('NamespaceB.B'), new Clazz('NamespaceC.C')));
         $this->analyser->method('analyse')->willReturn($dependencies);
 
-        $this->input->method('getArgument')->willReturn(sys_get_temp_dir());
+        $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
         $this->input->method('getOption')->willReturn(false, true);
 
         $this->output->expects($this->exactly(3))

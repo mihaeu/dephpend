@@ -79,4 +79,16 @@ class PhpFileCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(new PhpFile(new \SplFileInfo(__DIR__)), $result[0]);
         $this->assertEquals(new PhpFile(new \SplFileInfo(__DIR__)), $result[1]);
     }
+
+    public function testAddAll()
+    {
+        $collection1 = new PhpFileCollection();
+        $collection2 = (new PhpFileCollection())
+            ->add(new PhpFile(new \SplFileInfo(__DIR__)))
+            ->add(new PhpFile(new \SplFileInfo(__FILE__)));
+        $combinedCollection = $collection1->addAll($collection2);
+        $this->assertCount(2, $combinedCollection);
+        $this->assertEquals(new PhpFile(new \SplFileInfo(__DIR__)), $combinedCollection->toArray()[0]);
+        $this->assertEquals(new PhpFile(new \SplFileInfo(__FILE__)), $combinedCollection->toArray()[1]);
+    }
 }

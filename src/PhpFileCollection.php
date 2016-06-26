@@ -14,6 +14,14 @@ class PhpFileCollection extends AbstractCollection
         return $clone;
     }
 
+    public function addAll(PhpFileCollection $otherCollection) : PhpFileCollection
+    {
+        $clone = clone $this;
+        $clone->collection = array_merge($clone->collection, $otherCollection->collection);
+
+        return $clone;
+    }
+
     public function get(int $i) : PhpFile
     {
         if (!array_key_exists($i, $this->collection)) {

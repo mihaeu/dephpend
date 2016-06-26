@@ -59,7 +59,7 @@ class DsmCommandTest extends \PHPUnit_Framework_TestCase
 
     public function testHandsDependenciesToFormatter()
     {
-        $this->input->method('getArgument')->willReturn(sys_get_temp_dir());
+        $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
         $this->input->method('getOption')->willReturn('html', true, false);
 
         $dependencies = (new DependencyCollection())
@@ -72,7 +72,7 @@ class DsmCommandTest extends \PHPUnit_Framework_TestCase
 
     public function testDoesNotAllowOtherFormats()
     {
-        $this->input->method('getArgument')->willReturn(sys_get_temp_dir());
+        $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
         $this->input->method('getOption')->willReturn('tiff');
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Output format is not allowed (html)');

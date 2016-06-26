@@ -55,9 +55,20 @@ class UmlCommandTest extends \PHPUnit_Framework_TestCase
 
     public function testCheckIfSourceExists()
     {
-        $this->input->method('getArgument')->willReturn('/tsdfsfsfs');
-        $this->expectException(\Exception::class);
+        $this->input->method('getArgument')->willReturn(['/tsdfsfsfs']);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('File/Directory does not exist or is not readable.');
+        $this->umlCommand->run(
+            $this->input,
+            $this->output
+        );
+    }
+
+    public function testOutputHasToBeDefined()
+    {
+        $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Output not defined (use "help" for more information).');
         $this->umlCommand->run(
             $this->input,
             $this->output
@@ -66,8 +77,9 @@ class UmlCommandTest extends \PHPUnit_Framework_TestCase
 
     public function testChecksIfDestinationIsWritable()
     {
-        $this->input->method('getArgument')->willReturn(sys_get_temp_dir(), '/sdfgsfafsdfs');
-        $this->expectException(\Exception::class);
+        $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
+        $this->input->method('getOption')->willReturn('/sdfsdfsd');
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Destination is not writable.');
         $this->umlCommand->run(
             $this->input,
@@ -77,11 +89,16 @@ class UmlCommandTest extends \PHPUnit_Framework_TestCase
 
     public function testGenerateUml()
     {
-        $this->input->method('getArgument')->willReturn(
-            sys_get_temp_dir(), sys_get_temp_dir().'/test.png', sys_get_temp_dir().'/test.png',
-            sys_get_temp_dir(), sys_get_temp_dir().'/test.png', sys_get_temp_dir().'/test.png'
+        $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
+        $this->input->method('getOption')->willReturn(
+            '/tmp/test.png',
+            '/tmp/test.png',
+            '/tmp/test.png',
+            false,
+            false,
+            '/tmp/test.png',
+            false
         );
-        $this->input->method('getOption')->willReturn(false);
 
         $this->plantUmlWrapper->expects($this->once())->method('generate');
         $this->umlCommand->run(
@@ -92,11 +109,10 @@ class UmlCommandTest extends \PHPUnit_Framework_TestCase
 
     public function testAcceptsOnlyAllowedFormats()
     {
-        $this->input->method('getArgument')->willReturn(
-            sys_get_temp_dir(), sys_get_temp_dir().'/test.bmp', sys_get_temp_dir().'/test.bmp'
-        );
+        $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
+        $this->input->method('getOption')->willReturn(sys_get_temp_dir().'/test.bmp');
 
-        $this->expectException(\Exception::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Output format is not allowed (png)');
         $this->umlCommand->run(
             $this->input,
