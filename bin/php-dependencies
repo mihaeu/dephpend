@@ -17,6 +17,9 @@ use Symfony\Component\Console\Application;
 
 require __DIR__.'/../vendor/autoload.php';
 
+ini_set('xdebug.max_nesting_level', '3000');
+ini_set('memory_limit', '512M');
+
 $application = new Application();
 $application->setName(<<<EOT
       _      _____  _    _ _____               _ 
