@@ -1,4 +1,37 @@
-# PHP Dependencies [![Build Status](https://travis-ci.com/mihaeu/php-dependencies.svg?token=6E2gXvaZaEh2XxFCPhrX&branch=develop)](https://travis-ci.com/mihaeu/php-dependencies) ![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat) [![Gitter](https://img.shields.io/gitter/room/mihaeu/php-dependencies.svg?maxAge=2592000&style=flat)]()
+# ![logo](http://mike-on-a-bike.com/dephpend-logo.png) 
+
+[![Build Status](https://travis-ci.com/mihaeu/php-dependencies.svg?token=6E2gXvaZaEh2XxFCPhrX&branch=develop)](https://travis-ci.com/mihaeu/php-dependencies) ![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat) [![Gitter](https://img.shields.io/gitter/room/mihaeu/php-dependencies.svg?maxAge=2592000&style=flat)]()
+
+## Usage 
+
+```bash
+$ bin/php-dependencies                                                                                                 
+        _      _____  _    _ _____               _ 
+       | |    |  __ \| |  | |  __ \             | |
+     __| | ___| |__) | |__| | |__) |__ _ __   __| |
+    / _` |/ _ \  ___/|  __  |  ___/ _ \ '_ \ / _` |
+   | (_| |  __/ |    | |  | | |  |  __/ | | | (_| |
+    \__,_|\___|_|    |_|  |_|_|   \___|_| |_|\__,_|
+  
+  Usage:
+    command [options] [arguments]
+  
+  Options:
+    -h, --help            Display this help message
+    -q, --quiet           Do not output any message
+    -V, --version         Display this application version
+        --ansi            Force ANSI output
+        --no-ansi         Disable ANSI output
+    -n, --no-interaction  Do not ask any interactive question
+    -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+  
+  Available commands:
+    dsm   Generate a Dependency Structure Matrix of your dependencies
+    help  Displays help for a command
+    list  Lists commands
+    text  Generate a Dependency Structure Matrix of your dependencies
+    uml   Generate a UML Class diagram of your dependencies
+```
 
 ## Roadmap
 
