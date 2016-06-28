@@ -5,6 +5,9 @@ declare (strict_types = 1);
 namespace Mihaeu\PhpDependencies;
 
 use PhpParser\Node;
+use PhpParser\Node\Expr\MethodCall as MethodCallNode;
+use PhpParser\Node\Expr\StaticCall as StaticCallNode;
+use PhpParser\Node\Name as NameNode;
 use PhpParser\Node\Name\FullyQualified as FullyQualifiedNameNode;
 use PhpParser\Node\Expr\New_ as NewNode;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
@@ -65,9 +68,9 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
             $this->addInjectedDependencies($node);
         } elseif ($node instanceof UseNode) {
             $this->addUseDependency($node);
-        } elseif ($node instanceof Node\Expr\MethodCall
-            && $node->var instanceof Node\Expr\StaticCall
-            && $node->var->class instanceof Node\Name) {
+        } elseif ($node instanceof MethodCallNode
+            && $node->var instanceof StaticCallNode
+            && $node->var->class instanceof NameNode) {
             $this->addStaticDependency($node);
         }
     }
@@ -91,17 +94,17 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     }
 
     /**
-     * @param Node $node
+     * @param ClassNode $node
      */
-    private function setCurrentClass(Node $node)
+    private function setCurrentClass(ClassNode $node)
     {
         $this->currentClass = new Clazz($this->toFullyQualifiedName($node->namespacedName->parts));
     }
 
     /**
-     * @param Node $node
+     * @param ClassNode $node
      */
-    private function addSubclassDependency(Node $node)
+    private function addSubclassDependency(ClassNode $node)
     {
         if ($node->extends !== null) {
             $this->tempDependencies = $this->tempDependencies->add(new Dependency(
@@ -112,9 +115,9 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     }
 
     /**
-     * @param Node $node
+     * @param ClassNode $node
      */
-    private function addInterfaceDependency(Node $node)
+    private function addInterfaceDependency(ClassNode $node)
     {
         foreach ($node->implements as $interfaceNode) {
             $this->tempDependencies = $this->tempDependencies->add(new Dependency(
@@ -125,9 +128,9 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     }
 
     /**
-     * @param Node $node
+     * @param NewNode $node
      */
-    private function addInstantiationDependency(Node $node)
+    private function addInstantiationDependency(NewNode $node)
     {
         $this->tempDependencies = $this->tempDependencies->add(new Dependency(
             $this->currentClass,
@@ -136,9 +139,9 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     }
 
     /**
-     * @param Node $node
+     * @param ClassMethodNode $node
      */
-    private function addInjectedDependencies(Node $node)
+    private function addInjectedDependencies(ClassMethodNode $node)
     {
         foreach ($node->params as $param) {
             /* @var \PhpParser\Node\Param */
@@ -152,9 +155,9 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     }
 
     /**
-     * @param Node $node
+     * @param UseNode $node
      */
-    private function addUseDependency(Node $node)
+    private function addUseDependency(UseNode $node)
     {
         $this->tempDependencies = $this->tempDependencies->add(new Dependency(
             $this->currentClass,
@@ -163,9 +166,9 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     }
 
     /**
-     * @param Node $node
+     * @param MethodCallNode $node
      */
-    private function addStaticDependency(Node $node)
+    private function addStaticDependency(MethodCallNode $node)
     {
         $this->tempDependencies = $this->tempDependencies->add(new Dependency(
             $this->currentClass,

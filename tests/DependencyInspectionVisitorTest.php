@@ -7,7 +7,6 @@ namespace Mihaeu\PhpDependencies;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\New_ as NewNode;
 use PhpParser\Node\Expr\StaticCall;
-use PhpParser\Node\Expr\Variable as VariableNode;
 use PhpParser\Node\Name;
 use PhpParser\Node\Name\FullyQualified as FullyQualifiedNameNode;
 use PhpParser\Node\Param;
@@ -68,23 +67,6 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
             ->dependencies()
             ->findClassesDependingOn(new Clazz('SomeNamespace.SomeClass'));
         $this->assertEquals(new Clazz('TestDep'), $classesDependingOnSomeClass->toArray()[0]);
-    }
-
-    public function testDetectsImplicitNewCreation()
-    {
-        $node = new ClassNode('SomeClass');
-        $node->namespacedName = new \stdClass();
-        $node->namespacedName->parts = ['SomeNamespace', 'SomeClass'];
-        $this->dependencyInspectionVisitor->enterNode($node);
-
-        $node = new NewNode(new VariableNode('$testDep'));
-        $this->dependencyInspectionVisitor->enterNode($node);
-
-        $this->dependencyInspectionVisitor->afterTraverse([]);
-        $classesDependingOnSomeClass = $this->dependencyInspectionVisitor
-            ->dependencies()
-            ->findClassesDependingOn(new Clazz('SomeNamespace.SomeClass'));
-        $this->assertEquals(new Clazz('$testDep'), $classesDependingOnSomeClass->toArray()[0]);
     }
 
     public function testDetectsExtendedClasses()
