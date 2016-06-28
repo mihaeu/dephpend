@@ -111,18 +111,17 @@ abstract class BaseCommand extends Command
     }
 
     /**
-     * @param $sources
-     * @param bool $withInternals
-     * @param bool $onlyNamespaces
+     * @param string[] $sources
+     * @param bool     $withInternals
+     * @param bool     $onlyNamespaces
      *
      * @return DependencyCollection
      */
     protected function detectDependencies(array $sources, bool $withInternals = false, bool $onlyNamespaces = false) : DependencyCollection
     {
-        $files = new PhpFileCollection();
-        foreach ($sources as $source) {
-            $files = $files->addAll($this->phpFileFinder->find(new \SplFileInfo($source)));
-        }
+        $files = array_reduce($sources, function (PhpFileCollection $collection, string $source) {
+            return $collection->addAll($this->phpFileFinder->find(new \SplFileInfo($source)));
+        }, new PhpFileCollection());
         $ast = $this->parser->parse($files);
 
         $dependencies = $withInternals
