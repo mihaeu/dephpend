@@ -26,19 +26,49 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     /** @var Clazz */
     private $currentClass = null;
 
+    /** @var Clazz */
+    private $temporaryClass;
+
     public function __construct()
     {
         $this->dependencies = new DependencyCollection();
         $this->tempDependencies = new DependencyCollection();
+
+        $this->temporaryClass = new Clazz('temporary class');
     }
 
+    /**
+     * This is called before any actual work is being done. The order in which
+     * the file will be traversed is not always as expected. We therefore
+     * might encounter a dependency before we actually know which class we are
+     * in. To get around this issue we will set the current node to temp
+     * and will update it later when we are done traversing.
+     *
+     * @param Node[] $nodes
+     *
+     * @return null|\PhpParser\Node[]|void
+     */
     public function beforeTraverse(array $nodes)
     {
-        $this->currentClass = new Clazz('temp');
+        $this->currentClass = $this->temporaryClass;
     }
 
+    /**
+     * As described in beforeTraverse we are going to update the class we are
+     * currently parsing for all dependencies. If we are not in class context
+     * we won't add the dependencies.
+     *
+     * @param array $nodes
+     *
+     * @return null|\PhpParser\Node[]|void
+     */
     public function afterTraverse(array $nodes)
     {
+        // not in class context
+        if ($this->currentClass->equals($this->temporaryClass)) {
+            $this->tempDependencies = new DependencyCollection();
+        }
+
         // by now the class should have been parsed so replace the
         // temporary class with the parsed class name
         $this->tempDependencies->each(function (Dependency $dependency) {

@@ -175,4 +175,14 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
             ->findClassesDependingOn(new Clazz('SomeNamespace.SomeClass'));
         $this->assertEquals(new Clazz('Singleton'), $classesDependingOnSomeClass->toArray()[0]);
     }
+
+    public function testAddsDependenciesOnlyWhenInClassContext()
+    {
+        $node = new NewNode(new FullyQualifiedNameNode('TestDep'));
+        $this->dependencyInspectionVisitor->enterNode($node);
+
+        $this->dependencyInspectionVisitor->afterTraverse([]);
+        $dependencies = $this->dependencyInspectionVisitor->dependencies();
+        $this->assertEmpty($dependencies);
+    }
 }
