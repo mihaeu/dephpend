@@ -5,7 +5,6 @@ declare (strict_types = 1);
 namespace Mihaeu\PhpDependencies;
 
 use PhpParser\Node;
-use PhpParser\Node\Expr\Variable as VariableNode;
 use PhpParser\Node\Name\FullyQualified as FullyQualifiedNameNode;
 use PhpParser\Node\Expr\New_ as NewNode;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
@@ -54,54 +53,22 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     public function enterNode(Node $node)
     {
         if ($node instanceof ClassNode) {
-            $this->currentClass = new Clazz($this->toFullyQualifiedName($node->namespacedName->parts));
-            if ($node->extends !== null) {
-                $this->tempDependencies = $this->tempDependencies->add(new Dependency(
-                    $this->currentClass,
-                    new Clazz($this->toFullyQualifiedName($node->extends->parts))
-                ));
-            }
-            foreach ($node->implements as $interfaceNode) {
-                $this->tempDependencies = $this->tempDependencies->add(new Dependency(
-                    $this->currentClass,
-                    new Clazz($this->toFullyQualifiedName($interfaceNode->parts))
-                ));
-            }
+            $this->setCurrentClass($node);
+            $this->addSubclassDependency($node);
+            $this->addInterfaceDependency($node);
         }
 
-        if ($node instanceof NewNode) {
-            if ($node->class instanceof FullyQualifiedNameNode) {
-                $this->tempDependencies = $this->tempDependencies->add(new Dependency(
-                    $this->currentClass,
-                    new Clazz($this->toFullyQualifiedName($node->class->parts))
-                ));
-            } elseif ($node->class instanceof VariableNode) {
-                $this->tempDependencies = $this->tempDependencies->add(new Dependency(
-                    $this->currentClass,
-                    new Clazz($node->class->name)
-                ));
-            }
+        if ($node instanceof NewNode
+            && $node->class instanceof FullyQualifiedNameNode) {
+            $this->addInstantiationDependency($node);
         } elseif ($node instanceof ClassMethodNode) {
-            foreach ($node->params as $param) { /* @var \PhpParser\Node\Param */
-                if (isset($param->type, $param->type->parts)) {
-                    $this->tempDependencies = $this->tempDependencies->add(new Dependency(
-                        $this->currentClass,
-                        new Clazz($this->toFullyQualifiedName($param->type->parts))
-                    ));
-                }
-            }
+            $this->addInjectedDependencies($node);
         } elseif ($node instanceof UseNode) {
-            $this->tempDependencies = $this->tempDependencies->add(new Dependency(
-                $this->currentClass,
-                new Clazz($this->toFullyQualifiedName($node->uses[0]->name->parts))
-            ));
+            $this->addUseDependency($node);
         } elseif ($node instanceof Node\Expr\MethodCall
             && $node->var instanceof Node\Expr\StaticCall
             && $node->var->class instanceof Node\Name) {
-            $this->tempDependencies = $this->tempDependencies->add(new Dependency(
-                $this->currentClass,
-                new Clazz($this->toFullyQualifiedName($node->var->class->parts))
-            ));
+            $this->addStaticDependency($node);
         }
     }
 
@@ -121,5 +88,88 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     private function toFullyQualifiedName(array $parts) : string
     {
         return implode('.', $parts);
+    }
+
+    /**
+     * @param Node $node
+     */
+    private function setCurrentClass(Node $node)
+    {
+        $this->currentClass = new Clazz($this->toFullyQualifiedName($node->namespacedName->parts));
+    }
+
+    /**
+     * @param Node $node
+     */
+    private function addSubclassDependency(Node $node)
+    {
+        if ($node->extends !== null) {
+            $this->tempDependencies = $this->tempDependencies->add(new Dependency(
+                $this->currentClass,
+                new Clazz($this->toFullyQualifiedName($node->extends->parts))
+            ));
+        }
+    }
+
+    /**
+     * @param Node $node
+     */
+    private function addInterfaceDependency(Node $node)
+    {
+        foreach ($node->implements as $interfaceNode) {
+            $this->tempDependencies = $this->tempDependencies->add(new Dependency(
+                $this->currentClass,
+                new Clazz($this->toFullyQualifiedName($interfaceNode->parts))
+            ));
+        }
+    }
+
+    /**
+     * @param Node $node
+     */
+    private function addInstantiationDependency(Node $node)
+    {
+        $this->tempDependencies = $this->tempDependencies->add(new Dependency(
+            $this->currentClass,
+            new Clazz($this->toFullyQualifiedName($node->class->parts))
+        ));
+    }
+
+    /**
+     * @param Node $node
+     */
+    private function addInjectedDependencies(Node $node)
+    {
+        foreach ($node->params as $param) {
+            /* @var \PhpParser\Node\Param */
+            if (isset($param->type, $param->type->parts)) {
+                $this->tempDependencies = $this->tempDependencies->add(new Dependency(
+                    $this->currentClass,
+                    new Clazz($this->toFullyQualifiedName($param->type->parts))
+                ));
+            }
+        }
+    }
+
+    /**
+     * @param Node $node
+     */
+    private function addUseDependency(Node $node)
+    {
+        $this->tempDependencies = $this->tempDependencies->add(new Dependency(
+            $this->currentClass,
+            new Clazz($this->toFullyQualifiedName($node->uses[0]->name->parts))
+        ));
+    }
+
+    /**
+     * @param Node $node
+     */
+    private function addStaticDependency(Node $node)
+    {
+        $this->tempDependencies = $this->tempDependencies->add(new Dependency(
+            $this->currentClass,
+            new Clazz($this->toFullyQualifiedName($node->var->class->parts))
+        ));
     }
 }
