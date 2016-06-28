@@ -4,8 +4,11 @@ declare (strict_types = 1);
 
 namespace Mihaeu\PhpDependencies;
 
+use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\New_ as NewNode;
+use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Expr\Variable as VariableNode;
+use PhpParser\Node\Name;
 use PhpParser\Node\Name\FullyQualified as FullyQualifiedNameNode;
 use PhpParser\Node\Param;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
@@ -168,5 +171,26 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
             ->dependencies()
             ->findClassesDependingOn(new Clazz('SomeNamespace.SomeClass'));
         $this->assertEquals(new Clazz('Test'), $classesDependingOnSomeClass->toArray()[0]);
+    }
+
+    public function testDetectsCallsOnStaticClasses()
+    {
+        $node = new ClassNode('SomeClass');
+        $node->namespacedName = new \stdClass();
+        $node->namespacedName->parts = ['SomeNamespace', 'SomeClass'];
+        $this->dependencyInspectionVisitor->enterNode($node);
+
+        $staticCall = new MethodCall(
+            new StaticCall(new Name('Singleton'), 'Singleton'),
+            'staticMethod'
+        );
+        $staticCall->var->class->parts = ['Singleton'];
+        $this->dependencyInspectionVisitor->enterNode($staticCall);
+
+        $this->dependencyInspectionVisitor->afterTraverse([]);
+        $classesDependingOnSomeClass = $this->dependencyInspectionVisitor
+            ->dependencies()
+            ->findClassesDependingOn(new Clazz('SomeNamespace.SomeClass'));
+        $this->assertEquals(new Clazz('Singleton'), $classesDependingOnSomeClass->toArray()[0]);
     }
 }

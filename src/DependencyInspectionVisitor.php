@@ -95,6 +95,13 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
                 $this->currentClass,
                 new Clazz($this->toFullyQualifiedName($node->uses[0]->name->parts))
             ));
+        } elseif ($node instanceof Node\Expr\MethodCall
+            && $node->var instanceof Node\Expr\StaticCall
+            && $node->var->class instanceof Node\Name) {
+            $this->tempDependencies = $this->tempDependencies->add(new Dependency(
+                $this->currentClass,
+                new Clazz($this->toFullyQualifiedName($node->var->class->parts))
+            ));
         }
     }
 
