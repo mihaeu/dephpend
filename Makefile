@@ -38,7 +38,7 @@ phar:
 	@composer update
 
 pages:
-	@pandoc README.md -o index.html --template template.html --toc --toc-depth 2
+	@pandoc README.md -o index.html --template template.html --variable pagetitle=dePHPend --toc --toc-depth 2 --variable title=dePHPend --variable date="`date`" --variable author="Michael Haeuslmann"
 
 c: cov
 
