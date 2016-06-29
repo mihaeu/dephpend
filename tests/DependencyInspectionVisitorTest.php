@@ -42,10 +42,10 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $node->namespacedName->parts = ['SomeNamespace', 'SomeClass'];
         $this->dependencyInspectionVisitor->enterNode($node);
 
-        $node = new NewNode(new FullyQualifiedNameNode('TestDep'));
-        $this->dependencyInspectionVisitor->enterNode($node);
+        $newNode = new NewNode(new FullyQualifiedNameNode('TestDep'));
+        $this->dependencyInspectionVisitor->enterNode($newNode);
 
-        $this->dependencyInspectionVisitor->afterTraverse([]);
+        $this->dependencyInspectionVisitor->leaveNode($node);
         $classesDependingOnSomeClass = $this->dependencyInspectionVisitor
             ->dependencies()
             ->findClassesDependingOn(new Clazz('SomeNamespace.SomeClass'));
@@ -59,10 +59,10 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $node->namespacedName->parts = ['SomeNamespace', 'SomeClass'];
         $this->dependencyInspectionVisitor->enterNode($node);
 
-        $node = new NewNode(new FullyQualifiedNameNode('TestDep'));
-        $this->dependencyInspectionVisitor->enterNode($node);
+        $newNode = new NewNode(new FullyQualifiedNameNode('TestDep'));
+        $this->dependencyInspectionVisitor->enterNode($newNode);
 
-        $this->dependencyInspectionVisitor->afterTraverse([]);
+        $this->dependencyInspectionVisitor->leaveNode($node);
         $classesDependingOnSomeClass = $this->dependencyInspectionVisitor
             ->dependencies()
             ->findClassesDependingOn(new Clazz('SomeNamespace.SomeClass'));
@@ -79,7 +79,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $node->extends->parts = ['SomeSuperClass'];
         $this->dependencyInspectionVisitor->enterNode($node);
 
-        $this->dependencyInspectionVisitor->afterTraverse([]);
+        $this->dependencyInspectionVisitor->leaveNode($node);
         $classesDependingOnSomeClass = $this->dependencyInspectionVisitor
             ->dependencies()
             ->findClassesDependingOn(new Clazz('SomeNamespace.SomeClass'));
@@ -99,7 +99,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $node->implements = [$interfaceOneNode, $interfaceTwoNode];
         $this->dependencyInspectionVisitor->enterNode($node);
 
-        $this->dependencyInspectionVisitor->afterTraverse([]);
+        $this->dependencyInspectionVisitor->leaveNode($node);
         $classesDependingOnSomeClass = $this->dependencyInspectionVisitor
             ->dependencies()
             ->findClassesDependingOn(new Clazz('SomeNamespace.SomeClass'));
@@ -127,7 +127,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         ];
         $this->dependencyInspectionVisitor->enterNode($methodNode);
 
-        $this->dependencyInspectionVisitor->afterTraverse([]);
+        $this->dependencyInspectionVisitor->leaveNode($node);
         $classesDependingOnSomeClass = $this->dependencyInspectionVisitor
             ->dependencies()
             ->findClassesDependingOn(new Clazz('SomeNamespace.SomeClass'));
@@ -148,7 +148,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $useNode = new UseNode([$use]);
         $this->dependencyInspectionVisitor->enterNode($useNode);
 
-        $this->dependencyInspectionVisitor->afterTraverse([]);
+        $this->dependencyInspectionVisitor->leaveNode($node);
         $classesDependingOnSomeClass = $this->dependencyInspectionVisitor
             ->dependencies()
             ->findClassesDependingOn(new Clazz('SomeNamespace.SomeClass'));
@@ -169,7 +169,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $staticCall->var->class->parts = ['Singleton'];
         $this->dependencyInspectionVisitor->enterNode($staticCall);
 
-        $this->dependencyInspectionVisitor->afterTraverse([]);
+        $this->dependencyInspectionVisitor->leaveNode($node);
         $classesDependingOnSomeClass = $this->dependencyInspectionVisitor
             ->dependencies()
             ->findClassesDependingOn(new Clazz('SomeNamespace.SomeClass'));
@@ -181,7 +181,8 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $node = new NewNode(new FullyQualifiedNameNode('TestDep'));
         $this->dependencyInspectionVisitor->enterNode($node);
 
-        $this->dependencyInspectionVisitor->afterTraverse([]);
+        // we leave the ClassNode, but we haven't entered it, so class context is unknown
+        $this->dependencyInspectionVisitor->leaveNode(new ClassNode('test'));
         $dependencies = $this->dependencyInspectionVisitor->dependencies();
         $this->assertEmpty($dependencies);
     }
