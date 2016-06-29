@@ -27,10 +27,27 @@ With this information you can:
  - track architecture violations (maybe your view shouldn't be telling the model what to do?)
  - find out why your changes are breaking tests
 
+## Installation
+
+### Phar (recommended)
+
+When this is more mature, I'm going to sign the phar and set it up with [Phive](https://phar.io/).
+
+Until then just download the phar file by clicking [here](http://mike-on-a-bike.com/php-dependencies.phar) or use
+
+```bash
+wget http://mike-on-a-bike.com/php-dependencies.phar
+```
+
+### Others
+
+You could `git clone` or `composer require` this, but it's best to not mix tools and software dependencies (because those have dependencies on their own).
+
 ## Usage 
 
 ```bash
-$ bin/php-dependencies                                                                                                 
+# or bin/php-dependencies, depending on how you installed this
+$ php php-dependencies.phar                                                                                                 
         _      _____  _    _ _____               _ 
        | |    |  __ \| |  | |  __ \             | |
      __| | ___| |__) | |__| | |__) |__ _ __   __| |
