@@ -37,6 +37,9 @@ phar:
 	@php box.phar build
 	@composer update
 
+pages:
+	@pandoc README.md -o index.html --template template.html --toc --toc-depth 2
+
 c: cov
 
 t: test
