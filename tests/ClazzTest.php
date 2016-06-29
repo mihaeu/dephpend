@@ -29,4 +29,14 @@ class ClazzTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertFalse((new Clazz('Class'))->hasNamespace());
     }
+
+    public function testDetectsAbstractClasses()
+    {
+        $this->assertTrue((new Clazz('Class', Clazz::abstract))->isAbstract());
+    }
+
+    public function testDetectsInterfaces()
+    {
+        $this->assertTrue((new Clazz('Class', Clazz::interface))->isInterface());
+    }
 }
