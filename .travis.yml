@@ -10,3 +10,6 @@ script:
     - vendor/bin/phpunit -c phpunit.xml.dist
     - bin/check-code-cov
 
+branches:
+  only:
+    - develop
