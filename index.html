@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+  </style>
+  <link rel="stylesheet" href="/tmp/pandoc-bootstrap-template/template.css" type="text/css" />
+</head>
+<body>
+    <div class="container">
+    <div class="row">
+            <div id="TOC" class="span3">
+        <div class="well toc">
+        <ul>
+          <li class="nav-header">Table of Contents</li>
+        </ul>
+        <ul>
+        <li><a href="#logo"><img src="http://mike-on-a-bike.com/dephpend-logo.png" alt="logo" /></a><ul>
+        <li><a href="#what-it-does">What it does</a></li>
+        <li><a href="#installation">Installation</a></li>
+        <li><a href="#usage">Usage</a></li>
+        <li><a href="#how-it-all-works">How it all works</a></li>
+        <li><a href="#license">License</a></li>
+        </ul></li>
+        </ul>
+        </div>
+      </div>
+            <div class="span9">
+            <h1 id="logo"><img src="http://mike-on-a-bike.com/dephpend-logo.png" alt="logo" /></h1>
+<blockquote>
+<p>Detect flaws in your architecture, before they drag you down into the depths of dependency hell ...</p>
+</blockquote>
+<p><a href="https://travis-ci.com/mihaeu/php-dependencies"><img src="https://travis-ci.com/mihaeu/php-dependencies.svg?token=6E2gXvaZaEh2XxFCPhrX&amp;branch=develop" alt="Build Status" /></a> <img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat" alt="License MIT" /> <a href=""><img src="https://img.shields.io/gitter/room/mihaeu/php-dependencies.svg?maxAge=2592000&amp;style=flat" alt="Gitter" /></a></p>
+<blockquote>
+<p><strong>DISCLAIMER</strong></p>
+<p>This project is in an early stage and many things aren't working as expected and lots of information is not being picked up yet. Star the project and check in every now and then, as development is very active. New major releases will be released at the end of every month.</p>
+</blockquote>
+<h2 id="what-it-does">What it does</h2>
+<p>dePHPend helps with bringing your PHP projects back in shape. Over the course of a project, we usually keep adding more and more dependencies. Often hidden behind singletons or service locators, these dependencies can quickly become a maintenance (and testing!) nightmare.</p>
+<p>dePHPend analyses your app and attempts to find everything you depend on.</p>
+<p>With this information you can:</p>
+<ul>
+<li>get a quick overview of how an application is structured</li>
+<li>start refactoring where it's needed the most</li>
+<li>track architecture violations (maybe your view shouldn't be telling the model what to do?)</li>
+<li>find out why your changes are breaking tests</li>
+</ul>
+<h2 id="installation">Installation</h2>
+<h3 id="phar-recommended">Phar (recommended)</h3>
+<p>When this is more mature, I'm going to sign the phar and set it up with <a href="https://phar.io/">Phive</a>.</p>
+<p>Until then just download the phar file by clicking <a href="http://mike-on-a-bike.com/php-dependencies.phar">here</a> or use</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">wget</span> http://mike-on-a-bike.com/php-dependencies.phar</code></pre>
+<h3 id="others">Others</h3>
+<p>You could <code>git clone</code> or <code>composer require</code> this, but it's best to not mix tools and software dependencies (because those have dependencies on their own).</p>
+<h2 id="usage">Usage</h2>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># or bin/php-dependencies, depending on how you installed this</span>
+$ <span class="kw">php</span> php-dependencies.phar                                                                                                 
+        <span class="kw">_</span>      _____  _    _ _____               _ 
+       <span class="kw">|</span> <span class="kw">|</span>    <span class="kw">|</span>  <span class="kw">__</span> <span class="dt">\|</span> <span class="kw">|</span>  <span class="kw">|</span> <span class="kw">|</span>  <span class="kw">__</span> <span class="dt">\ </span>            <span class="kw">|</span> <span class="kw">|</span>
+     <span class="kw">__|</span> <span class="kw">|</span> <span class="kw">___|</span> <span class="kw">|__</span>) <span class="kw">|</span> <span class="kw">|__|</span> <span class="kw">|</span> <span class="kw">|__</span>) <span class="kw">|__</span> _ __   __<span class="kw">|</span> <span class="kw">|</span>
+    <span class="kw">/</span> _<span class="kw">`</span> <span class="kw">|/</span> _ <span class="dt">\ </span> ___/<span class="kw">|</span>  <span class="kw">__</span>  <span class="kw">|</span>  <span class="kw">___/</span> _ <span class="dt">\ </span><span class="st">&#39;_ \ / _` |</span>
+<span class="st">   | (_| |  __/ |    | |  | | |  |  __/ | | | (_| |</span>
+<span class="st">    \__,_|\___|_|    |_|  |_|_|   \___|_| |_|\__,_|</span>
+<span class="st">  </span>
+<span class="st">  Usage:</span>
+<span class="st">    command [options] [arguments]</span>
+<span class="st">  </span>
+<span class="st">  Options:</span>
+<span class="st">    -h, --help            Display this help message</span>
+<span class="st">    -q, --quiet           Do not output any message</span>
+<span class="st">    -V, --version         Display this application version</span>
+<span class="st">        --ansi            Force ANSI output</span>
+<span class="st">        --no-ansi         Disable ANSI output</span>
+<span class="st">    -n, --no-interaction  Do not ask any interactive question</span>
+<span class="st">    -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug</span>
+<span class="st">  </span>
+<span class="st">  Available commands:</span>
+<span class="st">    dsm   Generate a Dependency Structure Matrix of your dependencies</span>
+<span class="st">    help  Displays help for a command</span>
+<span class="st">    list  Lists commands</span>
+<span class="st">    text  Generate a Dependency Structure Matrix of your dependencies</span>
+<span class="st">    uml   Generate a UML Class diagram of your dependencies</span></code></pre>
+<h2 id="how-it-all-works">How it all works</h2>
+<p>Basically the process can be broken down into four steps (the actual work is a bit more complicated and for those interested, I'll publish a paper about it, later this year):</p>
+<ul>
+<li>find all relevant PHP files</li>
+<li>generate an abstract syntax tree using <a href="">php-parser</a> by the awesome Nikita Popov</li>
+<li>traverse the tree, gathering dependencies along the way</li>
+<li>pass the information to a formatter</li>
+</ul>
+<h2 id="license">License</h2>
+<p>See <a href="LICENSE" class="uri">LICENSE</a> file</p>
+            </div>
+    </div>
+  </div>
+</body>
+</html>
