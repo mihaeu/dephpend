@@ -17,13 +17,9 @@ class PlantUmlWrapper
     /**
      * @param PlantUmlFormatter $plantUmlFormatter
      * @param ShellWrapper      $shell
-     *
-     * @throws PlantUmlNotInstalledException
      */
     public function __construct(PlantUmlFormatter $plantUmlFormatter, ShellWrapper $shell)
     {
-        $this->ensurePlantUmlIsInstalled($shell);
-
         $this->shell = $shell;
         $this->plantUmlFormatter = $plantUmlFormatter;
     }
@@ -32,9 +28,13 @@ class PlantUmlWrapper
      * @param DependencyCollection $dependencyCollection
      * @param \SplFileInfo         $destination
      * @param bool                 $keepUml
+     *
+     * @throws PlantUmlNotInstalledException
      */
     public function generate(DependencyCollection $dependencyCollection, \SplFileInfo $destination, bool $keepUml = false)
     {
+        $this->ensurePlantUmlIsInstalled($this->shell);
+
         $uml = $this->plantUmlFormatter->format($dependencyCollection);
         $umlDestination = preg_replace('/\.\w+$/', '.uml', $destination->getPathname());
         file_put_contents($umlDestination, $uml);
