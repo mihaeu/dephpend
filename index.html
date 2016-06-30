@@ -3086,7 +3086,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
         <span class="doc-title">dePHPend</span>
         <ul class="nav pull-right doc-info">
                     <li><p class="navbar-text">Michael Haeuslmann</p></li>
-                              <li><p class="navbar-text">Wed Jun 29 22:36:40 CEST 2016</p></li>
+                              <li><p class="navbar-text">Fri Jul  1 00:39:02 CEST 2016</p></li>
                   </ul>
       </div>
     </div>
@@ -3114,7 +3114,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <blockquote>
 <p>Detect flaws in your architecture, before they drag you down into the depths of dependency hell ...</p>
 </blockquote>
-<p><a href="https://travis-ci.com/mihaeu/php-dependencies"><img src="https://travis-ci.com/mihaeu/php-dependencies.svg?token=6E2gXvaZaEh2XxFCPhrX&amp;branch=develop" alt="Build Status" /></a> <img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat" alt="License MIT" /> <a href=""><img src="https://img.shields.io/gitter/room/mihaeu/php-dependencies.svg?maxAge=2592000&amp;style=flat" alt="Gitter" /></a></p>
+<p><a href=""><img src="https://img.shields.io/travis/mihaeu/php-dependencies.svg?maxAge=2592000" alt="Travis" /></a> <a href=""><img src="https://img.shields.io/coveralls/mihaeu/php-dependencies.svg?maxAge=2592000" alt="Coveralls" /></a> <img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat" alt="License MIT" /> <a href=""><img src="https://img.shields.io/gitter/room/mihaeu/php-dependencies.svg?maxAge=2592000&amp;style=flat" alt="Gitter" /></a></p>
 <blockquote>
 <p><strong>DISCLAIMER</strong></p>
 <p>This project is in an early stage and many things aren't working as expected and lots of information is not being picked up yet. Star the project and check in every now and then, as development is very active. New major releases will be released at the end of every month.</p>
@@ -3137,33 +3137,46 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <h3 id="others">Others</h3>
 <p>You could <code>git clone</code> or <code>composer require</code> this, but it's best to not mix tools and software dependencies (because those have dependencies on their own).</p>
 <h2 id="usage">Usage</h2>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># or bin/php-dependencies, depending on how you installed this</span>
-$ <span class="kw">php</span> php-dependencies.phar                                                                                                 
-        <span class="kw">_</span>      _____  _    _ _____               _ 
-       <span class="kw">|</span> <span class="kw">|</span>    <span class="kw">|</span>  <span class="kw">__</span> <span class="dt">\|</span> <span class="kw">|</span>  <span class="kw">|</span> <span class="kw">|</span>  <span class="kw">__</span> <span class="dt">\ </span>            <span class="kw">|</span> <span class="kw">|</span>
-     <span class="kw">__|</span> <span class="kw">|</span> <span class="kw">___|</span> <span class="kw">|__</span>) <span class="kw">|</span> <span class="kw">|__|</span> <span class="kw">|</span> <span class="kw">|__</span>) <span class="kw">|__</span> _ __   __<span class="kw">|</span> <span class="kw">|</span>
-    <span class="kw">/</span> _<span class="kw">`</span> <span class="kw">|/</span> _ <span class="dt">\ </span> ___/<span class="kw">|</span>  <span class="kw">__</span>  <span class="kw">|</span>  <span class="kw">___/</span> _ <span class="dt">\ </span><span class="st">&#39;_ \ / _` |</span>
-<span class="st">   | (_| |  __/ |    | |  | | |  |  __/ | | | (_| |</span>
-<span class="st">    \__,_|\___|_|    |_|  |_|_|   \___|_| |_|\__,_|</span>
-<span class="st">  </span>
-<span class="st">  Usage:</span>
-<span class="st">    command [options] [arguments]</span>
-<span class="st">  </span>
-<span class="st">  Options:</span>
-<span class="st">    -h, --help            Display this help message</span>
-<span class="st">    -q, --quiet           Do not output any message</span>
-<span class="st">    -V, --version         Display this application version</span>
-<span class="st">        --ansi            Force ANSI output</span>
-<span class="st">        --no-ansi         Disable ANSI output</span>
-<span class="st">    -n, --no-interaction  Do not ask any interactive question</span>
-<span class="st">    -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug</span>
-<span class="st">  </span>
-<span class="st">  Available commands:</span>
-<span class="st">    dsm   Generate a Dependency Structure Matrix of your dependencies</span>
-<span class="st">    help  Displays help for a command</span>
-<span class="st">    list  Lists commands</span>
-<span class="st">    text  Generate a Dependency Structure Matrix of your dependencies</span>
-<span class="st">    uml   Generate a UML Class diagram of your dependencies</span></code></pre>
+<pre><code># or bin/php-dependencies, depending on how you installed this
+$ php php-dependencies.phar                                                                                                 
+        _      _____  _    _ _____               _ 
+       | |    |  __ \| |  | |  __ \             | |
+     __| | ___| |__) | |__| | |__) |__ _ __   __| |
+    / _` |/ _ \  ___/|  __  |  ___/ _ \ &#39;_ \ / _` |
+   | (_| |  __/ |    | |  | | |  |  __/ | | | (_| |
+    \__,_|\___|_|    |_|  |_|_|   \___|_| |_|\__,_|
+  
+  Usage:
+    command [options] [arguments]
+  
+  Options:
+    -h, --help            Display this help message
+    -q, --quiet           Do not output any message
+    -V, --version         Display this application version
+        --ansi            Force ANSI output
+        --no-ansi         Disable ANSI output
+    -n, --no-interaction  Do not ask any interactive question
+    -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+  
+  Available commands:
+    dsm   Generate a Dependency Structure Matrix of your dependencies
+    help  Displays help for a command
+    list  Lists commands
+    text  Generate a Dependency Structure Matrix of your dependencies
+    uml   Generate a UML Class diagram of your dependencies</code></pre>
+<h3 id="text">Text</h3>
+<p>For quick debugging use the <code>text</code> command. Say you want to find out which classes depend on XYZ and what XYZ depends on, you'd run:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">bin/php-dependencies</span> text src <span class="kw">|</span> <span class="kw">grep</span> XYZ</code></pre>
+<h3 id="uml">UML</h3>
+<p>Generates UML class or package diagrams of your source code. Requires <a href="http://plantuml.com/">PlantUML</a> to be installed.</p>
+<p>You can either run</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">bin/php-dependencies</span> uml --output=uml.png src</code></pre>
+<p>but most likely what you want to do is to use the <code>--only-namespaces</code> option. If your app has more than 20 classes, the UML will become messy if you don't use namespace instead of class level.</p>
+<h3 id="dependency-structure-matrix">Dependency Structure Matrix</h3>
+<p>If you've tried decrypting massive UML diagrams before, you know that they become very hard to interpret for large applications. DSMs allow you to get a quick overview of your application and where dependency hotspots are.</p>
+<p>This feature is still under rework and right now it's not really fun to use. If you still want to try run</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">bin/php-dependencies</span> dsm src <span class="kw">&gt;</span> dependencies.html</code></pre>
+<p>or pipe it to something like <a href="https://rtomayko.github.io/bcat/">bcat</a>.</p>
 <h2 id="how-it-all-works">How it all works</h2>
 <p>Basically the process can be broken down into four steps (the actual work is a bit more complicated and for those interested, I'll publish a paper about it, later this year):</p>
 <ul>
