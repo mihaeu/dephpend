@@ -30,8 +30,10 @@ class PlantUmlWrapperTest extends \PHPUnit_Framework_TestCase
     public function testDetectsIfPlantUmlIsNotInstalled()
     {
         $this->shellWrapper->method('run')->willReturn(1);
+        $plantUml = new PlantUmlWrapper($this->plantUmlFormatter, $this->shellWrapper);
+
         $this->expectException(PlantUmlNotInstalledException::class);
-        new PlantUmlWrapper($this->plantUmlFormatter, $this->shellWrapper);
+        $plantUml->generate(new DependencyCollection(), new \SplFileInfo(__FILE__));
     }
 
     public function testDetectsIfPlantUmlIsInstalled()
