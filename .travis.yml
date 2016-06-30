@@ -5,10 +5,15 @@ php:
 
 before_script:
     - composer install --prefer-dist
+    - composer require "satooshi/php-coveralls:^1.0"
 
 script:
-    - vendor/bin/phpunit -c phpunit.xml.dist
+    - mkdir -p build/logs
     - bin/check-code-cov
+    - vendor/bin/phpunit -c phpunit.xml.dist --coverage-text --coverage-clover ./build/logs/clover.xml
+
+after_script:
+    - php vendor/bin/coveralls -v
 
 branches:
   only:

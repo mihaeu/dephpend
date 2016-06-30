@@ -2,7 +2,7 @@
 
 > Detect flaws in your architecture, before they drag you down into the depths of dependency hell ...
 
-[![Build Status](https://travis-ci.com/mihaeu/php-dependencies.svg?token=6E2gXvaZaEh2XxFCPhrX&branch=develop)](https://travis-ci.com/mihaeu/php-dependencies) ![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat) [![Gitter](https://img.shields.io/gitter/room/mihaeu/php-dependencies.svg?maxAge=2592000&style=flat)]()
+[![Travis](https://img.shields.io/travis/mihaeu/php-dependencies.svg?maxAge=2592000)]() [![Coveralls](https://img.shields.io/coveralls/mihaeu/php-dependencies.svg?maxAge=2592000)]() ![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat) [![Gitter](https://img.shields.io/gitter/room/mihaeu/php-dependencies.svg?maxAge=2592000&style=flat)]()
 
 > **DISCLAIMER**
 >
@@ -79,8 +79,8 @@ $ php php-dependencies.phar
 
 For quick debugging use the `text` command. Say you want to find out which classes depend on XYZ and what XYZ depends on, you'd run: 
 
-```php
-php-dependencies text src | grep XYZ
+```bash
+bin/php-dependencies text src | grep XYZ
 ```
 
 ### UML
@@ -89,8 +89,8 @@ Generates UML class or package diagrams of your source code. Requires [PlantUML]
 
 You can either run 
 
-```php
-php-dependencies uml --output=uml.png src
+```bash
+bin/php-dependencies uml --output=uml.png src
 ``` 
 
 but most likely what you want to do is to use the `--only-namespaces` option. If your app has more than 20 classes, the UML will become messy if you don't use namespace instead of class level.  
@@ -101,8 +101,8 @@ If you've tried decrypting massive UML diagrams before, you know that they becom
 
 This feature is still under rework and right now it's not really fun to use. If you still want to try run 
 
-```php
-php-dependencies dsm src > dependencies.html
+```bash
+bin/php-dependencies dsm src > dependencies.html
 ``` 
 or pipe it to something like [bcat](https://rtomayko.github.io/bcat/).
 
