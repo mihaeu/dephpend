@@ -75,6 +75,37 @@ $ php php-dependencies.phar
     uml   Generate a UML Class diagram of your dependencies
 ```
 
+### Text
+
+For quick debugging use the `text` command. Say you want to find out which classes depend on XYZ and what XYZ depends on, you'd run: 
+
+```php
+php-dependencies text src | grep XYZ
+```
+
+### UML
+
+Generates UML class or package diagrams of your source code. Requires [PlantUML](http://plantuml.com/) to be installed.
+
+You can either run 
+
+```php
+php-dependencies uml --output=uml.png src
+``` 
+
+but most likely what you want to do is to use the `--only-namespaces` option. If your app has more than 20 classes, the UML will become messy if you don't use namespace instead of class level.  
+
+### Dependency Structure Matrix
+
+If you've tried decrypting massive UML diagrams before, you know that they become very hard to interpret for large applications. DSMs allow you to get a quick overview of your application and where dependency hotspots are.
+
+This feature is still under rework and right now it's not really fun to use. If you still want to try run 
+
+```php
+php-dependencies dsm src > dependencies.html
+``` 
+or pipe it to something like [bcat](https://rtomayko.github.io/bcat/).
+
 ## How it all works
 
 Basically the process can be broken down into four steps (the actual work is a bit more complicated and for those interested, I'll publish a paper about it, later this year):
