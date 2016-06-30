@@ -34,7 +34,7 @@ class DependencyStructureMatrixFormatter implements Formatter
         });
 
         return $dependencyCollection->reduce($emptyDsm, function (array $dsm, Dependency $dependency) use ($emptyDsm) {
-            $dsm[$dependency->from()->toString()][$dependency->to()->toString()] = 1;
+            $dsm[$dependency->from()->toString()][$dependency->to()->toString()] += 1;
 
             return $dsm;
         });
