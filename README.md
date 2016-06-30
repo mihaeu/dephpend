@@ -45,7 +45,7 @@ You could `git clone` or `composer require` this, but it's best to not mix tools
 
 ## Usage 
 
-```bash
+```
 # or bin/php-dependencies, depending on how you installed this
 $ php php-dependencies.phar                                                                                                 
         _      _____  _    _ _____               _ 
