@@ -4,7 +4,7 @@ declare (strict_types = 1);
 
 namespace Mihaeu\PhpDependencies;
 
-class DependencyStructureMatrixFormatter implements Formatter
+class DependencyStructureMatrixHtmlFormatter implements Formatter
 {
     /**
      * {@inheritdoc}

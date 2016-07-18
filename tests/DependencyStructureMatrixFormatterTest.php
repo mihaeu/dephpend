@@ -5,7 +5,7 @@ declare (strict_types = 1);
 namespace Mihaeu\PhpDependencies;
 
 /**
- * @covers Mihaeu\PhpDependencies\DependencyStructureMatrixFormatter
+ * @covers Mihaeu\PhpDependencies\DependencyStructureMatrixHtmlFormatter
  */
 class DependencyStructureMatrixFormatterTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,7 +21,7 @@ class DependencyStructureMatrixFormatterTest extends \PHPUnit_Framework_TestCase
             .'<tr><td>B</td><td>0</td><td>X</td><td>1</td></tr>'
             .'<tr><td>C</td><td>0</td><td>0</td><td>X</td></tr>'
             .'</table>',
-            (new DependencyStructureMatrixFormatter())->format($dependencies)
+            (new DependencyStructureMatrixHtmlFormatter())->format($dependencies)
         );
     }
 }

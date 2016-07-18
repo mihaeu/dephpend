@@ -8,7 +8,7 @@ use Mihaeu\PhpDependencies\Analyser;
 use Mihaeu\PhpDependencies\Clazz;
 use Mihaeu\PhpDependencies\Dependency;
 use Mihaeu\PhpDependencies\DependencyCollection;
-use Mihaeu\PhpDependencies\DependencyStructureMatrixFormatter;
+use Mihaeu\PhpDependencies\DependencyStructureMatrixHtmlFormatter;
 use Mihaeu\PhpDependencies\Parser;
 use Mihaeu\PhpDependencies\PhpFileFinder;
 use Symfony\Component\Console\Input\InputInterface;
@@ -38,7 +38,7 @@ class DsmCommandTest extends \PHPUnit_Framework_TestCase
     /** @var Analyser|\PHPUnit_Framework_MockObject_MockObject */
     private $analyser;
 
-    /** @var DependencyStructureMatrixFormatter|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var DependencyStructureMatrixHtmlFormatter|\PHPUnit_Framework_MockObject_MockObject */
     private $dependencyStructureMatrixFormatter;
 
     public function setUp()
@@ -46,7 +46,7 @@ class DsmCommandTest extends \PHPUnit_Framework_TestCase
         $this->phpFileFinder = $this->createMock(PhpFileFinder::class);
         $this->parser = $this->createMock(Parser::class);
         $this->analyser = $this->createMock(Analyser::class);
-        $this->dependencyStructureMatrixFormatter = $this->createMock(DependencyStructureMatrixFormatter::class);
+        $this->dependencyStructureMatrixFormatter = $this->createMock(DependencyStructureMatrixHtmlFormatter::class);
         $this->dsmCommand = new DsmCommand(
             $this->phpFileFinder,
             $this->parser,

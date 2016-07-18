@@ -5,7 +5,7 @@ declare (strict_types = 1);
 namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser;
-use Mihaeu\PhpDependencies\DependencyStructureMatrixFormatter;
+use Mihaeu\PhpDependencies\DependencyStructureMatrixHtmlFormatter;
 use Mihaeu\PhpDependencies\Parser;
 use Mihaeu\PhpDependencies\PhpFileFinder;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,14 +14,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class DsmCommand extends BaseCommand
 {
-    /** @var DependencyStructureMatrixFormatter */
+    /** @var DependencyStructureMatrixHtmlFormatter */
     private $dependencyStructureMatrixFormatter;
 
     public function __construct(
         PhpFileFinder $phpFileFinder,
         Parser $parser,
         Analyser $analyser,
-        DependencyStructureMatrixFormatter $dependencyStructureMatrixFormatter)
+        DependencyStructureMatrixHtmlFormatter $dependencyStructureMatrixFormatter)
     {
         parent::__construct('dsm', $phpFileFinder, $parser, $analyser);
 

@@ -46,7 +46,7 @@ $application->add(new DsmCommand(
     $phpFileFinder,
     $parser,
     $analyser,
-    new \Mihaeu\PhpDependencies\DependencyStructureMatrixFormatter()
+    new \Mihaeu\PhpDependencies\DependencyStructureMatrixHtmlFormatter()
 ));
 
 $application->add(new TextCommand(
