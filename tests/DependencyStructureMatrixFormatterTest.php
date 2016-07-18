@@ -6,6 +6,7 @@ namespace Mihaeu\PhpDependencies;
 
 /**
  * @covers Mihaeu\PhpDependencies\DependencyStructureMatrixHtmlFormatter
+ * @covers Mihaeu\PhpDependencies\DependencyStructureMatrixFormatter
  */
 class DependencyStructureMatrixFormatterTest extends \PHPUnit_Framework_TestCase
 {

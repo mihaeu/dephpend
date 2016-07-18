@@ -4,7 +4,7 @@ declare (strict_types = 1);
 
 namespace Mihaeu\PhpDependencies;
 
-class DependencyStructureMatrixHtmlFormatter implements Formatter
+class DependencyStructureMatrixHtmlFormatter extends DependencyStructureMatrixFormatter
 {
     /**
      * {@inheritdoc}
@@ -13,31 +13,10 @@ class DependencyStructureMatrixHtmlFormatter implements Formatter
     {
         $dependencyArray = $this->buildMatrix(
             $dependencyCollection,
-            $dependencyCollection->allClasses($dependencyCollection)
+            $dependencyCollection->allClasses()
         );
 
         return $this->buildHtmlTable($dependencyArray);
-    }
-
-    /**
-     * @param DependencyCollection $dependencyCollection
-     * @param ClazzCollection      $clazzCollection
-     *
-     * @return array
-     */
-    private function buildMatrix(DependencyCollection $dependencyCollection, ClazzCollection $clazzCollection) : array
-    {
-        $emptyDsm = $clazzCollection->reduce([], function (array $combined, Clazz $clazz) use ($clazzCollection) {
-            $combined[$clazz->toString()] = array_combine(array_values($clazzCollection->toArray()), array_pad([], $clazzCollection->count(), 0));
-
-            return $combined;
-        });
-
-        return $dependencyCollection->reduce($emptyDsm, function (array $dsm, Dependency $dependency) use ($emptyDsm) {
-            $dsm[$dependency->from()->toString()][$dependency->to()->toString()] += 1;
-
-            return $dsm;
-        });
     }
 
     /**
