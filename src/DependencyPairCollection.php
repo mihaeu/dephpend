@@ -67,8 +67,11 @@ class DependencyPairCollection extends AbstractCollection
 
     public function filterByDepth(int $depth) : DependencyPairCollection
     {
-        return $this->filter(function (DependencyPair $dependencyPair) use ($depth) {
-
+        return $this->reduce(new self(), function (DependencyPairCollection $dependencies, DependencyPair $dependencyPair) use ($depth) {
+            return $dependencies->add(new DependencyPair(
+                $dependencyPair->from()->reduceToDepth($depth),
+                $dependencyPair->to()->reduceToDepth($depth))
+            );
         });
     }
 

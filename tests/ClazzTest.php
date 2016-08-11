@@ -39,4 +39,20 @@ class ClazzTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(3, (new Clazz('A', new ClazzNamespace(['B', 'C'])))->depth());
     }
+
+    public function testReduceDepth()
+    {
+        $this->assertEquals(
+            new ClazzNamespace(['B', 'C']),
+            (new Clazz('A', new ClazzNamespace(['B', 'C', 'D'])))->reduceToDepth(2)
+        );
+    }
+
+    public function testReduceToDepthOfOne()
+    {
+        $this->assertEquals(
+            new ClazzNamespace(['B']),
+            (new Clazz('A', new ClazzNamespace(['B', 'C', 'D'])))->reduceToDepth(1)
+        );
+    }
 }

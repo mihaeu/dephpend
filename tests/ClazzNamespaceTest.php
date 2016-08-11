@@ -34,4 +34,14 @@ class ClazzNamespaceTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(2, (new ClazzNamespace(['A', 'B']))->depth());
     }
+
+    public function testReduceToMaxDepth()
+    {
+        $this->assertEquals(new ClazzNamespace(['A', 'B']), (new ClazzNamespace(['A', 'B', 'C', 'D']))->reduceToDepth(2));
+    }
+
+    public function testDoNotReduceForMaxDepthZero()
+    {
+        $this->assertEquals(new ClazzNamespace(['A', 'B']), (new ClazzNamespace(['A', 'B']))->reduceToDepth(0));
+    }
 }

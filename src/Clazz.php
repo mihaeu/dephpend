@@ -52,4 +52,11 @@ class Clazz implements Dependency
     {
         return 1 + $this->clazzNamespace->depth();
     }
+
+    public function reduceToDepth(int $maxDepth) : Dependency
+    {
+        return $this->depth() <= $maxDepth || $maxDepth === 0
+            ? $this
+            : $this->clazzNamespace->reduceToDepth($maxDepth);
+    }
 }

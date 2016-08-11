@@ -45,4 +45,11 @@ class ClazzNamespace implements Dependency
     {
         return count($this->parts);
     }
+
+    public function reduceToDepth(int $maxDepth) : Dependency
+    {
+        return $this->depth() <= $maxDepth || $maxDepth === 0
+            ? $this
+            : new self(array_slice($this->parts, 0, $maxDepth));
+    }
 }
