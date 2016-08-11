@@ -4,7 +4,7 @@ declare (strict_types = 1);
 
 namespace Mihaeu\PhpDependencies;
 
-class Clazz implements ClazzLike
+class Clazz implements Dependency
 {
     /** @var string */
     private $clazz;

@@ -4,7 +4,7 @@ declare (strict_types = 1);
 
 namespace Mihaeu\PhpDependencies;
 
-class ClazzNamespace
+class ClazzNamespace implements Dependency
 {
     /** @var string[] */
     private $parts;

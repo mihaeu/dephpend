@@ -6,34 +6,34 @@ namespace Mihaeu\PhpDependencies;
 
 class DependencyPair
 {
-    /** @var Clazz */
+    /** @var Dependency */
     private $from;
 
-    /** @var Clazz */
+    /** @var Dependency */
     private $to;
 
     /**
-     * @param Clazz $from
-     * @param Clazz $to
+     * @param Dependency $from
+     * @param Dependency $to
      */
-    public function __construct(Clazz $from, Clazz $to)
+    public function __construct(Dependency $from, Dependency $to)
     {
         $this->from = $from;
         $this->to = $to;
     }
 
     /**
-     * @return Clazz
+     * @return Dependency
      */
-    public function from() : Clazz
+    public function from() : Dependency
     {
         return $this->from;
     }
 
     /**
-     * @return Clazz
+     * @return Dependency
      */
-    public function to() : Clazz
+    public function to() : Dependency
     {
         return $this->to;
     }
