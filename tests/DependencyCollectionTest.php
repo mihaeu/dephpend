@@ -72,15 +72,4 @@ class DependencyCollectionTest extends \PHPUnit_Framework_TestCase
             ->add(new Dependency(new Clazz('From'), new Clazz('To')));
         $this->assertEquals($expected, $dependencyCollection->removeInternals());
     }
-
-    public function testNamespacesOnly()
-    {
-        $dependencyCollection = (new DependencyCollection())
-            ->add(new Dependency(new Clazz('NamespaceA.From'), new Clazz('NamespaceB.Sub.To')))
-            ->add(new Dependency(new Clazz('NamespaceB.From'), new Clazz('ToAnother')))
-            ->add(new Dependency(new Clazz('NamespaceB.From'), new Clazz('NamespaceB.ToAnother')));
-        $namespacesOnly = $dependencyCollection->onlyNamespaces();
-        $this->assertEquals(new Dependency(new Clazz('NamespaceA'), new Clazz('NamespaceB.Sub')), $namespacesOnly->toArray()[0]);
-        $this->assertCount(1, $namespacesOnly);
-    }
 }

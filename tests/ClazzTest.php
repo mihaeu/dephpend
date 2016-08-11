@@ -22,21 +22,11 @@ class ClazzTest extends \PHPUnit_Framework_TestCase
 
     public function testDetectsIfClassHasNamespace()
     {
-        $this->assertTrue((new Clazz('Namespace.Class'))->hasNamespace());
+        $this->assertTrue((new Clazz('Class', new ClazzNamespace(['A'])))->hasNamespace());
     }
 
     public function testDetectsIfClassHasNoNamespace()
     {
         $this->assertFalse((new Clazz('Class'))->hasNamespace());
-    }
-
-    public function testDetectsAbstractClasses()
-    {
-        $this->assertTrue((new Clazz('Class', Clazz::abstract))->isAbstract());
-    }
-
-    public function testDetectsInterfaces()
-    {
-        $this->assertTrue((new Clazz('Class', Clazz::interface))->isInterface());
     }
 }

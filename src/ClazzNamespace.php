@@ -18,9 +18,14 @@ class ClazzNamespace
         $this->parts = $parts;
     }
 
-    public function __toString() : string
+    public function toString() : string
     {
         return implode('\\', $this->parts);
+    }
+
+    public function __toString() : string
+    {
+        return $this->toString();
     }
 
     /**

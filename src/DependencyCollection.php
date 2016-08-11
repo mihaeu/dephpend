@@ -58,34 +58,6 @@ class DependencyCollection extends AbstractCollection
     /**
      * @return DependencyCollection
      */
-    public function onlyNamespaces() : DependencyCollection
-    {
-        return $this->reduce(new self(), function (DependencyCollection $namespaceCollection, Dependency $dependency) {
-            if (!$dependency->from()->hasNamespace()
-                || !$dependency->to()->hasNamespace()) {
-                return $namespaceCollection;
-            }
-
-            return $namespaceCollection->add(new Dependency(
-                $this->extractNamespace($dependency->from()),
-                $this->extractNamespace($dependency->to())
-            ));
-        });
-    }
-
-    /**
-     * @param Clazz $clazz
-     *
-     * @return Clazz
-     */
-    private function extractNamespace(Clazz $clazz) : Clazz
-    {
-        return new Clazz(implode('.', array_slice(explode('.', $clazz->toString()), 0, -1)));
-    }
-
-    /**
-     * @return DependencyCollection
-     */
     public function removeInternals() : DependencyCollection
     {
         return $this->filter(function (Dependency $dependency) {

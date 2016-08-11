@@ -113,11 +113,10 @@ abstract class BaseCommand extends Command
     /**
      * @param string[] $sources
      * @param bool     $withInternals
-     * @param bool     $onlyNamespaces
      *
      * @return DependencyCollection
      */
-    protected function detectDependencies(array $sources, bool $withInternals = false, bool $onlyNamespaces = false) : DependencyCollection
+    protected function detectDependencies(array $sources, bool $withInternals = false) : DependencyCollection
     {
         $files = array_reduce($sources, function (PhpFileCollection $collection, string $source) {
             return $collection->addAll($this->phpFileFinder->find(new \SplFileInfo($source)));
@@ -128,8 +127,6 @@ abstract class BaseCommand extends Command
             ? $this->analyser->analyse($ast)
             : $this->analyser->analyse($ast)->removeInternals();
 
-        return $onlyNamespaces
-            ? $dependencies->onlyNamespaces()
-            : $dependencies;
+        return $dependencies;
     }
 }
