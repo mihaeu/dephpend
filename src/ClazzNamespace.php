@@ -40,4 +40,9 @@ class ClazzNamespace implements Dependency
             throw new \InvalidArgumentException('Invalid namespace');
         }
     }
+
+    public function depth() : int
+    {
+        return count($this->parts);
+    }
 }

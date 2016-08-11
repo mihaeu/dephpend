@@ -47,4 +47,9 @@ class Clazz implements Dependency
     {
         return $this->clazzNamespace->toString() !== '';
     }
+
+    public function depth() : int
+    {
+        return 1 + $this->clazzNamespace->depth();
+    }
 }

@@ -24,4 +24,14 @@ class ClazzNamespaceTest extends \PHPUnit_Framework_TestCase
         $this->expectException(\InvalidArgumentException::class);
         new ClazzNamespace([1]);
     }
+
+    public function testDepthOfEmptyNamespaceIsZero()
+    {
+        $this->assertEquals(0, (new ClazzNamespace([]))->depth());
+    }
+
+    public function testDepthOfNamespace()
+    {
+        $this->assertEquals(2, (new ClazzNamespace(['A', 'B']))->depth());
+    }
 }

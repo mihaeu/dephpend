@@ -6,4 +6,5 @@ namespace Mihaeu\PhpDependencies;
 
 interface Dependency
 {
+    public function depth() : int;
 }

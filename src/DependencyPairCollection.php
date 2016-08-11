@@ -60,8 +60,15 @@ class DependencyPairCollection extends AbstractCollection
      */
     public function removeInternals() : DependencyPairCollection
     {
-        return $this->filter(function (DependencyPair $dependency) {
-            return !in_array($dependency->to()->toString(), DependencyPairCollection::$internals, true);
+        return $this->filter(function (DependencyPair $dependencyPair) {
+            return !in_array($dependencyPair->to()->toString(), DependencyPairCollection::$internals, true);
+        });
+    }
+
+    public function filterByDepth(int $depth) : DependencyPairCollection
+    {
+        return $this->filter(function (DependencyPair $dependencyPair) use ($depth) {
+
         });
     }
 

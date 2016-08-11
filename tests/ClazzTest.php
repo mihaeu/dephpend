@@ -29,4 +29,14 @@ class ClazzTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertFalse((new Clazz('Class'))->hasNamespace());
     }
+
+    public function testDepthWithoutNamespaceIsOne()
+    {
+        $this->assertEquals(1, (new Clazz('A'))->depth());
+    }
+
+    public function testDepthWithNamespace()
+    {
+        $this->assertEquals(3, (new Clazz('A', new ClazzNamespace(['B', 'C'])))->depth());
+    }
 }
