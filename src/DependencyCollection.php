@@ -89,8 +89,7 @@ class DependencyCollection extends AbstractCollection
     public function removeInternals() : DependencyCollection
     {
         return $this->filter(function (Dependency $dependency) {
-            return !in_array($dependency->from()->toString(), DependencyCollection::$internals, true)
-                && !in_array($dependency->to()->toString(), DependencyCollection::$internals, true);
+            return !in_array($dependency->to()->toString(), DependencyCollection::$internals, true);
         });
     }
 
