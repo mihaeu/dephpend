@@ -7,9 +7,9 @@ namespace Mihaeu\PhpDependencies;
 interface Formatter
 {
     /**
-     * @param DependencyCollection $dependencyCollection
+     * @param DependencyPairCollection $dependencyCollection
      *
      * @return string
      */
-    public function format(DependencyCollection $dependencyCollection) : string;
+    public function format(DependencyPairCollection $dependencyCollection) : string;
 }

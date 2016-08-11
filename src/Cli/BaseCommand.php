@@ -5,7 +5,7 @@ declare (strict_types = 1);
 namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser;
-use Mihaeu\PhpDependencies\DependencyCollection;
+use Mihaeu\PhpDependencies\DependencyPairCollection;
 use Mihaeu\PhpDependencies\Parser;
 use Mihaeu\PhpDependencies\PhpFileCollection;
 use Mihaeu\PhpDependencies\PhpFileFinder;
@@ -64,10 +64,11 @@ abstract class BaseCommand extends Command
                 'Check for dependencies from internal PHP Classes like SplFileInfo.'
             )
             ->addOption(
-                'only-namespaces',
-                null,
-                InputOption::VALUE_NONE,
-                'Output dependencies as packages instead of single classes.'
+                'depth',
+                'd',
+                InputOption::VALUE_OPTIONAL,
+                'Output dependencies as packages instead of single classes.',
+                0
             )
         ;
     }
@@ -114,9 +115,9 @@ abstract class BaseCommand extends Command
      * @param string[] $sources
      * @param bool     $withInternals
      *
-     * @return DependencyCollection
+     * @return DependencyPairCollection
      */
-    protected function detectDependencies(array $sources, bool $withInternals = false) : DependencyCollection
+    protected function detectDependencies(array $sources, bool $withInternals = false) : DependencyPairCollection
     {
         $files = array_reduce($sources, function (PhpFileCollection $collection, string $source) {
             return $collection->addAll($this->phpFileFinder->find(new \SplFileInfo($source)));

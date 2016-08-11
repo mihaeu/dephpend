@@ -31,9 +31,9 @@ class Analyser
     /**
      * @param Ast $ast
      *
-     * @return DependencyCollection
+     * @return DependencyPairCollection
      */
-    public function analyse(Ast $ast) : DependencyCollection
+    public function analyse(Ast $ast) : DependencyPairCollection
     {
         $ast->each(function (PhpFile $file, array $nodes) {
             $this->nodeTraverser->traverse($nodes);

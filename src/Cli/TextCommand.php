@@ -5,7 +5,7 @@ declare (strict_types = 1);
 namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser;
-use Mihaeu\PhpDependencies\Dependency;
+use Mihaeu\PhpDependencies\DependencyPair;
 use Mihaeu\PhpDependencies\Parser;
 use Mihaeu\PhpDependencies\PhpFileFinder;
 use Symfony\Component\Console\Input\InputInterface;
@@ -36,7 +36,7 @@ class TextCommand extends BaseCommand
             $input->getArgument('source'),
             $input->getOption('internals'),
             $input->getOption('only-namespaces')
-        )->each(function (Dependency $dependency) use ($output) {
+        )->each(function (DependencyPair $dependency) use ($output) {
             $output->writeln($dependency->toString());
         });
     }

@@ -9,7 +9,7 @@ class DependencyStructureMatrixHtmlFormatter extends DependencyStructureMatrixFo
     /**
      * {@inheritdoc}
      */
-    public function format(DependencyCollection $dependencyCollection) : string
+    public function format(DependencyPairCollection $dependencyCollection) : string
     {
         $dependencyArray = $this->buildMatrix(
             $dependencyCollection,

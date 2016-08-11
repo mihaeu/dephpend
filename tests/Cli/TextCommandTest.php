@@ -6,8 +6,9 @@ namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser;
 use Mihaeu\PhpDependencies\Clazz;
-use Mihaeu\PhpDependencies\Dependency;
-use Mihaeu\PhpDependencies\DependencyCollection;
+use Mihaeu\PhpDependencies\ClazzNamespace;
+use Mihaeu\PhpDependencies\DependencyPair;
+use Mihaeu\PhpDependencies\DependencyPairCollection;
 use Mihaeu\PhpDependencies\Parser;
 use Mihaeu\PhpDependencies\PhpFileFinder;
 use Symfony\Component\Console\Input\InputInterface;
@@ -53,10 +54,10 @@ class TextCommandTest extends \PHPUnit_Framework_TestCase
 
     public function testPrintsDependencies()
     {
-        $dependencies = (new DependencyCollection())
-            ->add(new Dependency(new Clazz('A'), new Clazz('B')))
-            ->add(new Dependency(new Clazz('A'), new Clazz('C')))
-            ->add(new Dependency(new Clazz('B'), new Clazz('C')));
+        $dependencies = (new DependencyPairCollection())
+            ->add(new DependencyPair(new Clazz('A'), new Clazz('B')))
+            ->add(new DependencyPair(new Clazz('A'), new Clazz('C')))
+            ->add(new DependencyPair(new Clazz('B'), new Clazz('C')));
         $this->analyser->method('analyse')->willReturn($dependencies);
 
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
@@ -75,10 +76,17 @@ class TextCommandTest extends \PHPUnit_Framework_TestCase
     public function testPrintsOnlyNamespacedDependencies()
     {
         self::markTestSkipped('Refactoring ...');
-        $dependencies = (new DependencyCollection())
-            ->add(new Dependency(new Clazz('NamespaceA.A'), new Clazz('NamespaceB.B')))
-            ->add(new Dependency(new Clazz('NamespaceA.A'), new Clazz('NamespaceC.C')))
-            ->add(new Dependency(new Clazz('NamespaceB.B'), new Clazz('NamespaceC.C')));
+        $dependencies = (new DependencyPairCollection())
+            ->add(new DependencyPair(
+                new Clazz('A', new ClazzNamespace(['NamespaceA'])),
+                new Clazz('B', new ClazzNamespace(['NamespaceB'])))
+            )->add(new DependencyPair(
+                new Clazz('A', new ClazzNamespace(['NamespaceA'])),
+                new Clazz('C', new ClazzNamespace(['NamespaceC'])))
+            )->add(new DependencyPair(
+                new Clazz('B', new ClazzNamespace(['NamespaceB'])),
+                new Clazz('C', new ClazzNamespace(['NamespaceC'])))
+            );
         $this->analyser->method('analyse')->willReturn($dependencies);
 
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);

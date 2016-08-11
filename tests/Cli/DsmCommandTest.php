@@ -6,8 +6,8 @@ namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser;
 use Mihaeu\PhpDependencies\Clazz;
-use Mihaeu\PhpDependencies\Dependency;
-use Mihaeu\PhpDependencies\DependencyCollection;
+use Mihaeu\PhpDependencies\DependencyPair;
+use Mihaeu\PhpDependencies\DependencyPairCollection;
 use Mihaeu\PhpDependencies\DependencyStructureMatrixHtmlFormatter;
 use Mihaeu\PhpDependencies\Parser;
 use Mihaeu\PhpDependencies\PhpFileFinder;
@@ -62,8 +62,8 @@ class DsmCommandTest extends \PHPUnit_Framework_TestCase
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
         $this->input->method('getOption')->willReturn('html', true, false);
 
-        $dependencies = (new DependencyCollection())
-            ->add(new Dependency(new Clazz('A'), new Clazz('B')));
+        $dependencies = (new DependencyPairCollection())
+            ->add(new DependencyPair(new Clazz('A'), new Clazz('B')));
         $this->analyser->method('analyse')->willReturn($dependencies);
 
         $this->dependencyStructureMatrixFormatter->expects($this->once())->method('format')->with($dependencies);

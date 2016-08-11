@@ -18,10 +18,10 @@ use PhpParser\NodeVisitorAbstract;
 
 class DependencyInspectionVisitor extends NodeVisitorAbstract
 {
-    /** @var DependencyCollection */
+    /** @var DependencyPairCollection */
     private $dependencies;
 
-    /** @var DependencyCollection */
+    /** @var DependencyPairCollection */
     private $tempDependencies;
 
     /** @var Clazz */
@@ -32,8 +32,8 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
 
     public function __construct()
     {
-        $this->dependencies = new DependencyCollection();
-        $this->tempDependencies = new DependencyCollection();
+        $this->dependencies = new DependencyPairCollection();
+        $this->tempDependencies = new DependencyPairCollection();
 
         $this->temporaryClass = new Clazz('temporary class');
     }
@@ -96,25 +96,25 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         if ($node instanceof ClassNode) {
             // not in class context
             if ($this->currentClass->equals($this->temporaryClass)) {
-                $this->tempDependencies = new DependencyCollection();
+                $this->tempDependencies = new DependencyPairCollection();
             }
 
             // by now the class should have been parsed so replace the
             // temporary class with the parsed class name
-            $this->tempDependencies->each(function (Dependency $dependency) {
-                $this->dependencies = $this->dependencies->add(new Dependency(
+            $this->tempDependencies->each(function (DependencyPair $dependency) {
+                $this->dependencies = $this->dependencies->add(new DependencyPair(
                     $this->currentClass,
                     $dependency->to()
                 ));
             });
-            $this->tempDependencies = new DependencyCollection();
+            $this->tempDependencies = new DependencyPairCollection();
         }
     }
 
     /**
-     * @return DependencyCollection
+     * @return DependencyPairCollection
      */
-    public function dependencies() : DependencyCollection
+    public function dependencies() : DependencyPairCollection
     {
         return $this->dependencies;
     }
@@ -152,7 +152,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         }
 
         foreach ($subClasses as $subClass) {
-            $this->tempDependencies = $this->tempDependencies->add(new Dependency(
+            $this->tempDependencies = $this->tempDependencies->add(new DependencyPair(
                 $this->currentClass,
                 new Clazz($this->toFullyQualifiedName($subClass->parts))
             ));
@@ -165,7 +165,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     private function addInterfaceDependency(ClassNode $node)
     {
         foreach ($node->implements as $interfaceNode) {
-            $this->tempDependencies = $this->tempDependencies->add(new Dependency(
+            $this->tempDependencies = $this->tempDependencies->add(new DependencyPair(
                 $this->currentClass,
                 new Clazz($this->toFullyQualifiedName($interfaceNode->parts))
             ));
@@ -177,7 +177,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
      */
     private function addInstantiationDependency(NewNode $node)
     {
-        $this->tempDependencies = $this->tempDependencies->add(new Dependency(
+        $this->tempDependencies = $this->tempDependencies->add(new DependencyPair(
             $this->currentClass,
             new Clazz($this->toFullyQualifiedName($node->class->parts))
         ));
@@ -191,7 +191,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         foreach ($node->params as $param) {
             /* @var \PhpParser\Node\Param */
             if (isset($param->type, $param->type->parts)) {
-                $this->tempDependencies = $this->tempDependencies->add(new Dependency(
+                $this->tempDependencies = $this->tempDependencies->add(new DependencyPair(
                     $this->currentClass,
                     new Clazz($this->toFullyQualifiedName($param->type->parts))
                 ));
@@ -204,7 +204,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
      */
     private function addUseDependency(UseNode $node)
     {
-        $this->tempDependencies = $this->tempDependencies->add(new Dependency(
+        $this->tempDependencies = $this->tempDependencies->add(new DependencyPair(
             $this->currentClass,
             new Clazz($this->toFullyQualifiedName($node->uses[0]->name->parts))
         ));
@@ -215,7 +215,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
      */
     private function addStaticDependency(MethodCallNode $node)
     {
-        $this->tempDependencies = $this->tempDependencies->add(new Dependency(
+        $this->tempDependencies = $this->tempDependencies->add(new DependencyPair(
             $this->currentClass,
             new Clazz($this->toFullyQualifiedName($node->var->class->parts))
         ));

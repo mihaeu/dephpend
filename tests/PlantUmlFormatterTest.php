@@ -24,9 +24,9 @@ class PlantUmlFormatterTest extends \PHPUnit_Framework_TestCase
 
     public function testFormat()
     {
-        $dependencyCollection = (new DependencyCollection())
-            ->add(new Dependency(new Clazz('ClassA'), new Clazz('ClassB')))
-            ->add(new Dependency(new Clazz('ClassA'), new Clazz('ClassC')));
+        $dependencyCollection = (new DependencyPairCollection())
+            ->add(new DependencyPair(new Clazz('ClassA'), new Clazz('ClassB')))
+            ->add(new DependencyPair(new Clazz('ClassA'), new Clazz('ClassC')));
         $this->assertEquals("@startuml\n"
             ."ClassA --|> ClassB\n"
             ."ClassA --|> ClassC\n"

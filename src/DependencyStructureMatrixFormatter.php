@@ -9,15 +9,15 @@ abstract class DependencyStructureMatrixFormatter implements Formatter
     /*
      * {@inheritdoc}
      */
-    abstract public function format(DependencyCollection $dependencyCollection) : string;
+    abstract public function format(DependencyPairCollection $dependencyCollection) : string;
 
     /**
-     * @param DependencyCollection $dependencyCollection
-     * @param ClazzCollection      $clazzCollection
+     * @param DependencyPairCollection $dependencyCollection
+     * @param ClazzCollection          $clazzCollection
      *
      * @return array
      */
-    protected function buildMatrix(DependencyCollection $dependencyCollection, ClazzCollection $clazzCollection) : array
+    protected function buildMatrix(DependencyPairCollection $dependencyCollection, ClazzCollection $clazzCollection) : array
     {
         $emptyDsm = $clazzCollection->reduce([], function (array $combined, Clazz $clazz) use ($clazzCollection) {
             $combined[$clazz->toString()] = array_combine(array_values($clazzCollection->toArray()), array_pad([], $clazzCollection->count(), 0));
@@ -25,7 +25,7 @@ abstract class DependencyStructureMatrixFormatter implements Formatter
             return $combined;
         });
 
-        return $dependencyCollection->reduce($emptyDsm, function (array $dsm, Dependency $dependency) use ($emptyDsm) {
+        return $dependencyCollection->reduce($emptyDsm, function (array $dsm, DependencyPair $dependency) use ($emptyDsm) {
             $dsm[$dependency->from()->toString()][$dependency->to()->toString()] += 1;
 
             return $dsm;

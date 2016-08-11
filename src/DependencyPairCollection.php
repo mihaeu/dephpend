@@ -4,14 +4,14 @@ declare (strict_types = 1);
 
 namespace Mihaeu\PhpDependencies;
 
-class DependencyCollection extends AbstractCollection
+class DependencyPairCollection extends AbstractCollection
 {
     /**
-     * @param Dependency $dependency
+     * @param DependencyPair $dependency
      *
-     * @return DependencyCollection
+     * @return DependencyPairCollection
      */
-    public function add(Dependency $dependency) : DependencyCollection
+    public function add(DependencyPair $dependency) : DependencyPairCollection
     {
         $clone = clone $this;
         if (in_array($dependency, $this->collection)
@@ -31,9 +31,9 @@ class DependencyCollection extends AbstractCollection
      */
     public function findClassesDependingOn(Clazz $clazz) : ClazzCollection
     {
-        return $this->filter(function (Dependency $dependency) use ($clazz) {
+        return $this->filter(function (DependencyPair $dependency) use ($clazz) {
             return $dependency->from()->equals($clazz);
-        })->reduce(new ClazzCollection(), function (ClazzCollection $clazzCollection, Dependency $dependency) {
+        })->reduce(new ClazzCollection(), function (ClazzCollection $clazzCollection, DependencyPair $dependency) {
             return $clazzCollection->add($dependency->to());
         });
     }
@@ -43,7 +43,7 @@ class DependencyCollection extends AbstractCollection
      */
     public function allClasses() : ClazzCollection
     {
-        return $this->reduce(new ClazzCollection(), function (ClazzCollection $clazzes, Dependency $dependency) {
+        return $this->reduce(new ClazzCollection(), function (ClazzCollection $clazzes, DependencyPair $dependency) {
             if (!$clazzes->contains($dependency->from())) {
                 $clazzes = $clazzes->add($dependency->from());
             }
@@ -56,12 +56,12 @@ class DependencyCollection extends AbstractCollection
     }
 
     /**
-     * @return DependencyCollection
+     * @return DependencyPairCollection
      */
-    public function removeInternals() : DependencyCollection
+    public function removeInternals() : DependencyPairCollection
     {
-        return $this->filter(function (Dependency $dependency) {
-            return !in_array($dependency->to()->toString(), DependencyCollection::$internals, true);
+        return $this->filter(function (DependencyPair $dependency) {
+            return !in_array($dependency->to()->toString(), DependencyPairCollection::$internals, true);
         });
     }
 

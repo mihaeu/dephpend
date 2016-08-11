@@ -4,7 +4,7 @@ declare (strict_types = 1);
 
 namespace Mihaeu\PhpDependencies;
 
-class Dependency
+class DependencyPair
 {
     /** @var Clazz */
     private $from;

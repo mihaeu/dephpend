@@ -25,13 +25,13 @@ class PlantUmlWrapper
     }
 
     /**
-     * @param DependencyCollection $dependencyCollection
-     * @param \SplFileInfo         $destination
-     * @param bool                 $keepUml
+     * @param DependencyPairCollection $dependencyCollection
+     * @param \SplFileInfo             $destination
+     * @param bool                     $keepUml
      *
      * @throws PlantUmlNotInstalledException
      */
-    public function generate(DependencyCollection $dependencyCollection, \SplFileInfo $destination, bool $keepUml = false)
+    public function generate(DependencyPairCollection $dependencyCollection, \SplFileInfo $destination, bool $keepUml = false)
     {
         $this->ensurePlantUmlIsInstalled($this->shell);
 
