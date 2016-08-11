@@ -19,12 +19,12 @@ class DependencyPairCollectionTest extends \PHPUnit_Framework_TestCase
         });
     }
 
-    public function testDoesNotAddDuplicated()
+    public function testUniqueRemovesDuplicates()
     {
         $dependencies = (new DependencyPairCollection())
             ->add(new DependencyPair(new Clazz('From'), new Clazz('To')))
             ->add(new DependencyPair(new Clazz('From'), new Clazz('To')));
-        $this->assertCount(1, $dependencies);
+        $this->assertCount(1, $dependencies->unique());
     }
 
     public function testFindsClassesDependingOnClass()

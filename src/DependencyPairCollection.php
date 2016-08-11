@@ -14,13 +14,21 @@ class DependencyPairCollection extends AbstractCollection
     public function add(DependencyPair $dependency) : DependencyPairCollection
     {
         $clone = clone $this;
-        if (in_array($dependency, $this->collection)) {
-            return $clone;
-        }
-
         $clone->collection[] = $dependency;
 
         return $clone;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function unique() : Collection
+    {
+        return $this->reduce(new self(), function (DependencyPairCollection $dependencies, DependencyPair $dependency) {
+            return $dependencies->contains($dependency)
+                ? $dependencies
+                : $dependencies->add($dependency);
+        });
     }
 
     /**
