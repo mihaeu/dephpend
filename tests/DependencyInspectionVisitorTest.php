@@ -40,9 +40,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $this->dependencyInspectionVisitor->enterNode($newNode);
 
         $this->dependencyInspectionVisitor->leaveNode($node);
-        $classesDependingOnSomeClass = $this->dependencyInspectionVisitor
-            ->dependencies()
-            ->findClassesDependingOn(new Clazz('SomeNamespace.SomeClass'));
+        $classesDependingOnSomeClass = $this->findClassesDependingOn($this->dependencyInspectionVisitor->dependencies(), new Clazz('SomeNamespace.SomeClass'));
         $this->assertEquals(new Clazz('TestDep'), $classesDependingOnSomeClass->toArray()[0]);
     }
 
@@ -57,9 +55,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $this->dependencyInspectionVisitor->enterNode($newNode);
 
         $this->dependencyInspectionVisitor->leaveNode($node);
-        $classesDependingOnSomeClass = $this->dependencyInspectionVisitor
-            ->dependencies()
-            ->findClassesDependingOn(new Clazz('SomeNamespace.SomeClass'));
+        $classesDependingOnSomeClass = $this->findClassesDependingOn($this->dependencyInspectionVisitor->dependencies(), new Clazz('SomeNamespace.SomeClass'));
         $this->assertEquals(new Clazz('TestDep'), $classesDependingOnSomeClass->toArray()[0]);
     }
 
@@ -74,10 +70,22 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $this->dependencyInspectionVisitor->enterNode($node);
 
         $this->dependencyInspectionVisitor->leaveNode($node);
-        $classesDependingOnSomeClass = $this->dependencyInspectionVisitor
-            ->dependencies()
-            ->findClassesDependingOn(new Clazz('SomeNamespace.SomeClass'));
+        $classesDependingOnSomeClass = $this->findClassesDependingOn($this->dependencyInspectionVisitor->dependencies(), new Clazz('SomeNamespace.SomeClass'));
         $this->assertEquals(new Clazz('SomeSuperClass'), $classesDependingOnSomeClass->toArray()[0]);
+    }
+
+    /**
+     * @param Clazz $clazz
+     *
+     * @return ClazzCollection
+     */
+    private function findClassesDependingOn(DependencyPairCollection $dependencies, Clazz $clazz) : ClazzCollection
+    {
+        return $dependencies->filter(function (DependencyPair $dependency) use ($clazz) {
+            return $dependency->from()->equals($clazz);
+        })->reduce(new ClazzCollection(), function (ClazzCollection $clazzCollection, DependencyPair $dependency) {
+            return $clazzCollection->add($dependency->to());
+        });
     }
 
     public function testDetectsImplementedInterfaces()
@@ -94,9 +102,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $this->dependencyInspectionVisitor->enterNode($node);
 
         $this->dependencyInspectionVisitor->leaveNode($node);
-        $classesDependingOnSomeClass = $this->dependencyInspectionVisitor
-            ->dependencies()
-            ->findClassesDependingOn(new Clazz('SomeNamespace.SomeClass'));
+        $classesDependingOnSomeClass = $this->findClassesDependingOn($this->dependencyInspectionVisitor->dependencies(), new Clazz('SomeNamespace.SomeClass'));
         $this->assertEquals(new Clazz('Namespace.InterfaceOne'), $classesDependingOnSomeClass->toArray()[0]);
         $this->assertEquals(new Clazz('Namespace.InterfaceTwo'), $classesDependingOnSomeClass->toArray()[1]);
     }
@@ -122,9 +128,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $this->dependencyInspectionVisitor->enterNode($methodNode);
 
         $this->dependencyInspectionVisitor->leaveNode($node);
-        $classesDependingOnSomeClass = $this->dependencyInspectionVisitor
-            ->dependencies()
-            ->findClassesDependingOn(new Clazz('SomeNamespace.SomeClass'));
+        $classesDependingOnSomeClass = $this->findClassesDependingOn($this->dependencyInspectionVisitor->dependencies(), new Clazz('SomeNamespace.SomeClass'));
         $this->assertEquals(new Clazz('Namespace.DependencyOne'), $classesDependingOnSomeClass->toArray()[0]);
         $this->assertEquals(new Clazz('Namespace.DependencyTwo'), $classesDependingOnSomeClass->toArray()[1]);
     }
@@ -143,9 +147,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $this->dependencyInspectionVisitor->enterNode($useNode);
 
         $this->dependencyInspectionVisitor->leaveNode($node);
-        $classesDependingOnSomeClass = $this->dependencyInspectionVisitor
-            ->dependencies()
-            ->findClassesDependingOn(new Clazz('SomeNamespace.SomeClass'));
+        $classesDependingOnSomeClass = $this->findClassesDependingOn($this->dependencyInspectionVisitor->dependencies(), new Clazz('SomeNamespace.SomeClass'));
         $this->assertEquals(new Clazz('Test'), $classesDependingOnSomeClass->toArray()[0]);
     }
 
@@ -164,9 +166,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $this->dependencyInspectionVisitor->enterNode($staticCall);
 
         $this->dependencyInspectionVisitor->leaveNode($node);
-        $classesDependingOnSomeClass = $this->dependencyInspectionVisitor
-            ->dependencies()
-            ->findClassesDependingOn(new Clazz('SomeNamespace.SomeClass'));
+        $classesDependingOnSomeClass = $this->findClassesDependingOn($this->dependencyInspectionVisitor->dependencies(), new Clazz('SomeNamespace.SomeClass'));
         $this->assertEquals(new Clazz('Singleton'), $classesDependingOnSomeClass->toArray()[0]);
     }
 

@@ -27,16 +27,6 @@ class DependencyPairCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $dependencies->unique());
     }
 
-    public function testFindsClassesDependingOnClass()
-    {
-        $dependencies = (new DependencyPairCollection())
-            ->add(new DependencyPair(new Clazz('From'), new Clazz('To')))
-            ->add(new DependencyPair(new Clazz('From'), new Clazz('ToAnother')));
-        $dependingClasses = $dependencies->findClassesDependingOn(new Clazz('From'))->toArray();
-        $this->assertEquals(new Clazz('To'), $dependingClasses[0]);
-        $this->assertEquals(new Clazz('ToAnother'), $dependingClasses[1]);
-    }
-
     public function testReduce()
     {
         $dependencies = (new DependencyPairCollection())

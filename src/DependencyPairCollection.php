@@ -32,20 +32,6 @@ class DependencyPairCollection extends AbstractCollection
     }
 
     /**
-     * @param Clazz $clazz
-     *
-     * @return ClazzCollection
-     */
-    public function findClassesDependingOn(Clazz $clazz) : ClazzCollection
-    {
-        return $this->filter(function (DependencyPair $dependency) use ($clazz) {
-            return $dependency->from()->equals($clazz);
-        })->reduce(new ClazzCollection(), function (ClazzCollection $clazzCollection, DependencyPair $dependency) {
-            return $clazzCollection->add($dependency->to());
-        });
-    }
-
-    /**
      * @return ClazzCollection
      */
     public function allClasses() : ClazzCollection
