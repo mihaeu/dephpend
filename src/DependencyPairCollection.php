@@ -14,8 +14,7 @@ class DependencyPairCollection extends AbstractCollection
     public function add(DependencyPair $dependency) : DependencyPairCollection
     {
         $clone = clone $this;
-        if (in_array($dependency, $this->collection)
-            || $dependency->from()->equals($dependency->to())) {
+        if (in_array($dependency, $this->collection)) {
             return $clone;
         }
 
@@ -61,7 +60,10 @@ class DependencyPairCollection extends AbstractCollection
     public function removeInternals() : DependencyPairCollection
     {
         return $this->filter(function (DependencyPair $dependencyPair) {
-            return !in_array($dependencyPair->to()->toString(), DependencyPairCollection::$internals, true);
+            return !in_array(
+                $dependencyPair->to()->toString(),
+                DependencyPairCollection::$internals, true
+            );
         });
     }
 

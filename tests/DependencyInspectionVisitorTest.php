@@ -17,12 +17,6 @@ use PhpParser\Node\Stmt\Use_ as UseNode;
 
 /**
  * @covers Mihaeu\PhpDependencies\DependencyInspectionVisitor
- *
- * @uses Mihaeu\PhpDependencies\Clazz
- * @uses Mihaeu\PhpDependencies\ClazzCollection
- * @uses Mihaeu\PhpDependencies\Dependency
- * @uses Mihaeu\PhpDependencies\DependencyCollection
- * @uses Mihaeu\PhpDependencies\AbstractCollection
  */
 class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
 {

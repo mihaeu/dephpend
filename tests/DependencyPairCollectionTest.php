@@ -5,71 +5,95 @@ declare (strict_types = 1);
 namespace Mihaeu\PhpDependencies;
 
 /**
- * @covers Mihaeu\PhpDependencies\DependencyCollection
+ * @covers Mihaeu\PhpDependencies\DependencyPairCollection
  * @covers Mihaeu\PhpDependencies\AbstractCollection
- *
- * @uses Mihaeu\PhpDependencies\Clazz
- * @uses Mihaeu\PhpDependencies\ClazzCollection
- * @uses Mihaeu\PhpDependencies\DependencyPair
  */
 class DependencyPairCollectionTest extends \PHPUnit_Framework_TestCase
 {
     public function testEach()
     {
-        $dependencyCollection = (new DependencyPairCollection())
+        $dependencies = (new DependencyPairCollection())
             ->add(new DependencyPair(new Clazz('From'), new Clazz('To')));
-        $dependencyCollection->each(function (DependencyPair $dependency) {
+        $dependencies->each(function (DependencyPair $dependency) {
             $this->assertEquals(new DependencyPair(new Clazz('From'), new Clazz('To')), $dependency);
         });
     }
 
     public function testDoesNotAddDuplicated()
     {
-        $dependencyCollection = (new DependencyPairCollection())
+        $dependencies = (new DependencyPairCollection())
             ->add(new DependencyPair(new Clazz('From'), new Clazz('To')))
             ->add(new DependencyPair(new Clazz('From'), new Clazz('To')));
-        $this->assertCount(1, $dependencyCollection);
+        $this->assertCount(1, $dependencies);
     }
 
     public function testFindsClassesDependingOnClass()
     {
-        $dependencyCollection = (new DependencyPairCollection())
+        $dependencies = (new DependencyPairCollection())
             ->add(new DependencyPair(new Clazz('From'), new Clazz('To')))
             ->add(new DependencyPair(new Clazz('From'), new Clazz('ToAnother')));
-        $dependingClasses = $dependencyCollection->findClassesDependingOn(new Clazz('From'))->toArray();
+        $dependingClasses = $dependencies->findClassesDependingOn(new Clazz('From'))->toArray();
         $this->assertEquals(new Clazz('To'), $dependingClasses[0]);
         $this->assertEquals(new Clazz('ToAnother'), $dependingClasses[1]);
     }
 
     public function testReduce()
     {
-        $dependencyCollection = (new DependencyPairCollection())
+        $dependencies = (new DependencyPairCollection())
             ->add(new DependencyPair(new Clazz('From'), new Clazz('To')))
             ->add(new DependencyPair(new Clazz('From'), new Clazz('ToAnother')));
-        $this->assertEquals('ToToAnother', $dependencyCollection->reduce('', function (string $output, DependencyPair $dependency) {
+        $this->assertEquals('ToToAnother', $dependencies->reduce('', function (string $output, DependencyPair $dependency) {
             return $output.$dependency->to()->toString();
         }));
     }
 
     public function testAllClasses()
     {
-        $dependencyCollection = (new DependencyPairCollection())
+        $dependencies = (new DependencyPairCollection())
             ->add(new DependencyPair(new Clazz('From'), new Clazz('To')))
             ->add(new DependencyPair(new Clazz('From'), new Clazz('ToAnother')));
         $expected = (new ClazzCollection())
             ->add(new Clazz('From'))
             ->add(new Clazz('To'))
             ->add(new Clazz('ToAnother'));
-        $this->assertEquals($expected, $dependencyCollection->allClasses());
+        $this->assertEquals($expected, $dependencies->allClasses());
     }
 
     public function testRemovesInternals()
     {
-        $dependencyCollection = (new DependencyPairCollection())
+        $dependencies = (new DependencyPairCollection())
             ->add(new DependencyPair(new Clazz('From'), new Clazz('To')))
             ->add(new DependencyPair(new Clazz('From'), new Clazz('SplFileInfo')));
         $expected = (new DependencyPairCollection())
             ->add(new DependencyPair(new Clazz('From'), new Clazz('To')));
-        $this->assertEquals($expected, $dependencyCollection->removeInternals());
+        $this->assertEquals($expected, $dependencies->removeInternals());
+    }
+
+    public function testFilterByDepthOne()
+    {
+        $dependencies = (new DependencyPairCollection())
+            ->add(new DependencyPair(new Clazz('From'), new Clazz('To', new ClazzNamespace(['A', 'a']))))
+            ->add(new DependencyPair(new Clazz('FromOther', new ClazzNamespace(['B', 'b'])), new Clazz('SplFileInfo')));
+        $expected = (new DependencyPairCollection())
+            ->add(new DependencyPair(new Clazz('From'), new ClazzNamespace(['A'])))
+            ->add(new DependencyPair(new ClazzNamespace(['B']), new Clazz('SplFileInfo')));
+        $actual = $dependencies->filterByDepth(1);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testFilterByDepthThree()
+    {
+        $dependencies = (new DependencyPairCollection())
+            ->add(new DependencyPair(
+                new Clazz('From', new ClazzNamespace(['VendorA', 'ProjectA', 'PathA'])),
+                new Clazz('To', new ClazzNamespace(['VendorB', 'ProjectB', 'PathB'])))
+        );
+        $expected = (new DependencyPairCollection())
+            ->add(new DependencyPair(
+                    new ClazzNamespace(['VendorA', 'ProjectA', 'PathA']),
+                    new ClazzNamespace(['VendorB', 'ProjectB', 'PathB']))
+        );
+        $actual = $dependencies->filterByDepth(3);
+        $this->assertEquals($expected, $actual);
     }
 }

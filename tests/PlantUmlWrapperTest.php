@@ -9,9 +9,6 @@ use Mihaeu\PhpDependencies\Exceptions\PlantUmlNotInstalledException;
 /**
  * @covers Mihaeu\PhpDependencies\PlantUmlWrapper
  * @covers Mihaeu\PhpDependencies\Exceptions\PlantUmlNotInstalledException
- *
- * @uses Mihaeu\PhpDependencies\Clazz
- * @uses Mihaeu\PhpDependencies\DependencyCollection
  */
 class PlantUmlWrapperTest extends \PHPUnit_Framework_TestCase
 {
