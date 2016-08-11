@@ -93,7 +93,7 @@ You can either run
 bin/php-dependencies uml --output=uml.png src
 ``` 
 
-but most likely what you want to do is to use the `--only-namespaces` option. If your app has more than 20 classes, the UML will become messy if you don't use namespace instead of class level.  
+but most likely what you want to do is to use the `--depth[=DEPTH]` option. If your app has more than 20 classes, the UML will become messy if you don't use namespace instead of class level. Experiment with different depth values, but usually a depth of 2 or 3 is what you want.
 
 ### Dependency Structure Matrix
 

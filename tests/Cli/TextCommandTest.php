@@ -61,7 +61,7 @@ class TextCommandTest extends \PHPUnit_Framework_TestCase
         $this->analyser->method('analyse')->willReturn($dependencies);
 
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
-        $this->input->method('getOption')->willReturn(false);
+        $this->input->method('getOption')->willReturn(false, 0);
 
         $this->output->expects($this->exactly(3))
             ->method('writeln')
@@ -75,7 +75,6 @@ class TextCommandTest extends \PHPUnit_Framework_TestCase
 
     public function testPrintsOnlyNamespacedDependencies()
     {
-        self::markTestSkipped('Refactoring ...');
         $dependencies = (new DependencyPairCollection())
             ->add(new DependencyPair(
                 new Clazz('A', new ClazzNamespace(['NamespaceA'])),
@@ -90,7 +89,7 @@ class TextCommandTest extends \PHPUnit_Framework_TestCase
         $this->analyser->method('analyse')->willReturn($dependencies);
 
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
-        $this->input->method('getOption')->willReturn(false, true);
+        $this->input->method('getOption')->willReturn(false, 1);
 
         $this->output->expects($this->exactly(3))
             ->method('writeln')

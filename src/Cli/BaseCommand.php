@@ -117,7 +117,7 @@ abstract class BaseCommand extends Command
      *
      * @return DependencyPairCollection
      */
-    protected function detectDependencies(array $sources, bool $withInternals = false) : DependencyPairCollection
+    protected function detectDependencies(array $sources, bool $withInternals = false, int $depth = 0) : DependencyPairCollection
     {
         $files = array_reduce($sources, function (PhpFileCollection $collection, string $source) {
             return $collection->addAll($this->phpFileFinder->find(new \SplFileInfo($source)));
@@ -128,6 +128,6 @@ abstract class BaseCommand extends Command
             ? $this->analyser->analyse($ast)
             : $this->analyser->analyse($ast)->removeInternals();
 
-        return $dependencies;
+        return $dependencies->filterByDepth($depth);
     }
 }

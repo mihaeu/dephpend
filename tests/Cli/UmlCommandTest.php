@@ -95,7 +95,7 @@ class UmlCommandTest extends \PHPUnit_Framework_TestCase
             '/tmp/test.png',
             '/tmp/test.png',
             false,
-            false,
+            0,
             '/tmp/test.png',
             false
         );

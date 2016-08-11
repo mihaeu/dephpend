@@ -68,7 +68,7 @@ class UmlCommand extends BaseCommand
         $dependencies = $this->detectDependencies(
             $input->getArgument('source'),
             $input->getOption('internals'),
-            $input->getOption('only-namespaces')
+            $input->getOption('depth')
         );
 
         $destination = new \SplFileInfo($input->getOption('output'));
