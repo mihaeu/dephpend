@@ -14,6 +14,10 @@ class DependencyPairCollection extends AbstractCollection
     public function add(DependencyPair $dependency) : DependencyPairCollection
     {
         $clone = clone $this;
+        if ($dependency->from()->equals($dependency->to())) {
+            return $clone;
+        }
+
         $clone->collection[] = $dependency;
 
         return $clone;
