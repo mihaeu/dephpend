@@ -69,7 +69,7 @@ class UmlCommand extends BaseCommand
             $input->getArgument('source'),
             $input->getOption('internals'),
             (int) $input->getOption('depth')
-        );
+        )->unique();
 
         $destination = new \SplFileInfo($input->getOption('output'));
         $this->plantUmlWrapper->generate($dependencies, $destination, $input->getOption('keep-uml'));

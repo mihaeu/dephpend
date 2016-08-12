@@ -36,7 +36,7 @@ class TextCommand extends BaseCommand
             $input->getArgument('source'),
             $input->getOption('internals'),
             (int) $input->getOption('depth')
-        )->each(function (DependencyPair $dependency) use ($output) {
+        )->unique()->each(function (DependencyPair $dependency) use ($output) {
             $output->writeln($dependency->toString());
         });
     }
