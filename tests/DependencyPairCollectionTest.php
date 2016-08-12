@@ -10,6 +10,13 @@ namespace Mihaeu\PhpDependencies;
  */
 class DependencyPairCollectionTest extends \PHPUnit_Framework_TestCase
 {
+    public function testCannotAddDuplicates()
+    {
+        $this->assertEmpty((new DependencyPairCollection())->add(
+            new DependencyPair(new Clazz('X'), new Clazz('X')))
+        );
+    }
+
     public function testReturnsTrueIfAnyMatches()
     {
         $to = new Clazz('ToAnother');

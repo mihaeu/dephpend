@@ -120,16 +120,6 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     }
 
     /**
-     * @param array $parts
-     *
-     * @return ClazzNamespace
-     */
-    private function namespaceFromParts(array $parts) : ClazzNamespace
-    {
-        return new ClazzNamespace(array_slice($parts, 1));
-    }
-
-    /**
      * @param ClassLikeNode $node
      */
     private function setCurrentClass(ClassLikeNode $node)
