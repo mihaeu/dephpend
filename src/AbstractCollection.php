@@ -12,6 +12,20 @@ abstract class AbstractCollection implements Collection
     /**
      * {@inheritdoc}
      */
+    public function any(\Closure $closure) : bool
+    {
+        foreach ($this->collection as $item) {
+            if ($closure($item) === true) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function each(\Closure $closure)
     {
         foreach ($this->collection as $item) {

@@ -100,20 +100,9 @@ abstract class BaseCommand extends Command
     }
 
     /**
-     * @param string $destination
-     *
-     * @throws \Exception
-     */
-    protected function ensureDestinationIsWritable(string $destination)
-    {
-        if (!is_writable(dirname($destination))) {
-            throw new \InvalidArgumentException('Destination is not writable.');
-        }
-    }
-
-    /**
      * @param string[] $sources
      * @param bool     $withInternals
+     * @param int      $depth
      *
      * @return DependencyPairCollection
      */
@@ -129,5 +118,17 @@ abstract class BaseCommand extends Command
             : $this->analyser->analyse($ast)->removeInternals();
 
         return $dependencies->filterByDepth($depth);
+    }
+
+    /**
+     * @param string $destination
+     *
+     * @throws \Exception
+     */
+    protected function ensureDestinationIsWritable(string $destination)
+    {
+        if (!is_writable(dirname($destination))) {
+            throw new \InvalidArgumentException('Destination is not writable.');
+        }
     }
 }

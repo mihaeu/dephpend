@@ -10,6 +10,27 @@ namespace Mihaeu\PhpDependencies;
  */
 class DependencyPairCollectionTest extends \PHPUnit_Framework_TestCase
 {
+    public function testReturnsTrueIfAnyMatches()
+    {
+        $to = new Clazz('ToAnother');
+        $dependencies = (new DependencyPairCollection())
+            ->add(new DependencyPair(new Clazz('From'), new Clazz('To')))
+            ->add(new DependencyPair(new Clazz('From'), $to));
+        $this->assertTrue($dependencies->any(function (DependencyPair $dependency) use ($to) {
+            return $dependency->to() === $to || $dependency->from() === $to;
+        }));
+    }
+
+    public function testReturnsFalseIfNoneMatches()
+    {
+        $dependencies = (new DependencyPairCollection())
+            ->add(new DependencyPair(new Clazz('From'), new Clazz('To')))
+            ->add(new DependencyPair(new Clazz('From'), new Clazz('ToAnother')));
+        $this->assertFalse($dependencies->any(function (DependencyPair $dependency) {
+            return $dependency->to() === new Clazz('Test');
+        }));
+    }
+
     public function testEach()
     {
         $dependencies = (new DependencyPairCollection())
@@ -46,7 +67,7 @@ class DependencyPairCollectionTest extends \PHPUnit_Framework_TestCase
             ->add(new Clazz('From'))
             ->add(new Clazz('To'))
             ->add(new Clazz('ToAnother'));
-        $this->assertEquals($expected, $dependencies->allClasses());
+        $this->assertEquals($expected, $dependencies->allDependencies());
     }
 
     public function testRemovesInternals()

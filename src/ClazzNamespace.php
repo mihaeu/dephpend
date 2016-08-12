@@ -52,4 +52,9 @@ class ClazzNamespace implements Dependency
             ? $this
             : new self(array_slice($this->parts, 0, $maxDepth));
     }
+
+    public function equals(Dependency $other) : bool
+    {
+        return $this->toString() === $other->toString();
+    }
 }

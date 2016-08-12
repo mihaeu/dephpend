@@ -34,7 +34,7 @@ class DependencyPairCollection extends AbstractCollection
     /**
      * @return ClazzCollection
      */
-    public function allClasses() : ClazzCollection
+    public function allDependencies() : ClazzCollection
     {
         return $this->reduce(new ClazzCollection(), function (ClazzCollection $clazzes, DependencyPair $dependency) {
             if (!$clazzes->contains($dependency->from())) {

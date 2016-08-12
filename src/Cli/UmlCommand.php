@@ -68,7 +68,7 @@ class UmlCommand extends BaseCommand
         $dependencies = $this->detectDependencies(
             $input->getArgument('source'),
             $input->getOption('internals'),
-            $input->getOption('depth')
+            (int) $input->getOption('depth')
         );
 
         $destination = new \SplFileInfo($input->getOption('output'));
@@ -77,6 +77,8 @@ class UmlCommand extends BaseCommand
 
     /**
      * @param $outputOption
+     *
+     * @throws \InvalidArgumentException
      */
     private function ensureOutputExists($outputOption)
     {

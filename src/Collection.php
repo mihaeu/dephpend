@@ -7,6 +7,15 @@ namespace Mihaeu\PhpDependencies;
 interface Collection extends \Countable
 {
     /**
+     * True if any element matches the $closure.
+     *
+     * @param \Closure $closure
+     *
+     * @return bool
+     */
+    public function any(\Closure $closure) : bool;
+
+    /**
      * Applies $closure to each element.
      *
      * @param \Closure $closure

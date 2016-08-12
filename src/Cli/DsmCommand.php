@@ -56,7 +56,7 @@ class DsmCommand extends BaseCommand
             $this->detectDependencies(
                 $input->getArgument('source'),
                 $input->getOption('internals'),
-                $input->getOption('depth')
+                (int) $input->getOption('depth')
             )
         ));
     }

@@ -13,7 +13,7 @@ class DependencyStructureMatrixHtmlFormatter extends DependencyStructureMatrixFo
     {
         $dependencyArray = $this->buildMatrix(
             $dependencyCollection,
-            $dependencyCollection->allClasses()
+            $dependencyCollection->allDependencies()
         );
 
         return $this->buildHtmlTable($dependencyArray);

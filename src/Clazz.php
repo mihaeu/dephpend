@@ -25,10 +25,9 @@ class Clazz implements Dependency
         $this->clazzNamespace = $clazzNamespace;
     }
 
-    public function equals(Clazz $other) : bool
+    public function equals(Dependency $other) : bool
     {
-        return $this->clazz === $other->clazz
-            && $this->clazzNamespace->toString() === $other->clazzNamespace->toString();
+        return $this->toString() === $other->toString();
     }
 
     public function toString() : string

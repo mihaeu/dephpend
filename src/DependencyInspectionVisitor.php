@@ -122,11 +122,11 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     /**
      * @param array $parts
      *
-     * @return string
+     * @return ClazzNamespace
      */
-    private function toFullyQualifiedName(array $parts) : string
+    private function namespaceFromParts(array $parts) : ClazzNamespace
     {
-        return implode('.', $parts);
+        return new ClazzNamespace(array_slice($parts, 1));
     }
 
     /**
@@ -134,7 +134,10 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
      */
     private function setCurrentClass(ClassLikeNode $node)
     {
-        $this->currentClass = new Clazz($this->toFullyQualifiedName($node->namespacedName->parts));
+        $this->currentClass = new Clazz(
+            $node->namespacedName->parts[0],
+            $this->namespaceFromParts($node->namespacedName->parts)
+        );
     }
 
     /**
@@ -154,7 +157,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         foreach ($subClasses as $subClass) {
             $this->tempDependencies = $this->tempDependencies->add(new DependencyPair(
                 $this->currentClass,
-                new Clazz($this->toFullyQualifiedName($subClass->parts))
+                new Clazz($subClass->parts[0], $this->namespaceFromParts($subClass->parts))
             ));
         }
     }
@@ -167,8 +170,10 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         foreach ($node->implements as $interfaceNode) {
             $this->tempDependencies = $this->tempDependencies->add(new DependencyPair(
                 $this->currentClass,
-                new Clazz($this->toFullyQualifiedName($interfaceNode->parts))
-            ));
+            new Clazz(
+                array_slice($interfaceNode->parts, -1)[0],
+                new ClazzNamespace(array_slice($interfaceNode->parts, 0, -1))
+            )));
         }
     }
 
@@ -179,7 +184,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     {
         $this->tempDependencies = $this->tempDependencies->add(new DependencyPair(
             $this->currentClass,
-            new Clazz($this->toFullyQualifiedName($node->class->parts))
+            new Clazz($node->class->parts[0], $this->namespaceFromParts($node->class->parts))
         ));
     }
 
@@ -193,7 +198,10 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
             if (isset($param->type, $param->type->parts)) {
                 $this->tempDependencies = $this->tempDependencies->add(new DependencyPair(
                     $this->currentClass,
-                    new Clazz($this->toFullyQualifiedName($param->type->parts))
+                    new Clazz(
+                        array_slice($param->type->parts, -1)[0],
+                        new ClazzNamespace(array_slice($param->type->parts, 0, -1))
+                    )
                 ));
             }
         }
@@ -206,7 +214,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     {
         $this->tempDependencies = $this->tempDependencies->add(new DependencyPair(
             $this->currentClass,
-            new Clazz($this->toFullyQualifiedName($node->uses[0]->name->parts))
+            new Clazz($node->uses[0]->name->parts[0], $this->namespaceFromParts($node->uses[0]->name->parts))
         ));
     }
 
@@ -217,7 +225,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     {
         $this->tempDependencies = $this->tempDependencies->add(new DependencyPair(
             $this->currentClass,
-            new Clazz($this->toFullyQualifiedName($node->var->class->parts))
+            new Clazz($node->var->class->parts[0], $this->namespaceFromParts($node->var->class->parts))
         ));
     }
 }
