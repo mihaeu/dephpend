@@ -63,7 +63,7 @@ class DependencyPairCollectionTest extends \PHPUnit_Framework_TestCase
         $dependencies = (new DependencyPairCollection())
             ->add(new DependencyPair(new Clazz('From'), new Clazz('To')))
             ->add(new DependencyPair(new Clazz('From'), new Clazz('ToAnother')));
-        $expected = (new ClazzCollection())
+        $expected = (new DependencyCollection())
             ->add(new Clazz('From'))
             ->add(new Clazz('To'))
             ->add(new Clazz('ToAnother'));

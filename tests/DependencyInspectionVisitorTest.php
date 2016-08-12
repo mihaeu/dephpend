@@ -29,20 +29,6 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $this->dependencyInspectionVisitor->beforeTraverse([]);
     }
 
-    public function testDetectsClassName()
-    {
-        $node = new ClassNode('SomeClass');
-        $node->namespacedName = new \stdClass();
-        $node->namespacedName->parts = ['SomeNamespace', 'SomeClass'];
-        $this->dependencyInspectionVisitor->enterNode($node);
-
-        $newNode = new NewNode(new FullyQualifiedNameNode('TestDep'));
-        $this->dependencyInspectionVisitor->enterNode($newNode);
-
-        $this->dependencyInspectionVisitor->leaveNode($node);
-        $this->assertTrue($this->dependenciesContain($this->dependencyInspectionVisitor->dependencies(), new Clazz('TestDep')));
-    }
-
     public function testDetectsExplicitNewCreation()
     {
         $node = new ClassNode('SomeClass');

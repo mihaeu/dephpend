@@ -5,25 +5,25 @@ declare (strict_types = 1);
 namespace Mihaeu\PhpDependencies;
 
 /**
- * @covers Mihaeu\PhpDependencies\ClazzCollection
+ * @covers Mihaeu\PhpDependencies\DependencyCollection
  * @covers Mihaeu\PhpDependencies\AbstractCollection
  *
  * @uses Mihaeu\PhpDependencies\Clazz
  */
-class ClazzCollectionTest extends \PHPUnit_Framework_TestCase
+class DependencyCollectionTest extends \PHPUnit_Framework_TestCase
 {
     public function testAdd()
     {
-        $clazzCollection = (new ClazzCollection())
+        $clazzCollection = (new DependencyCollection())
             ->add(new Clazz('Test'));
-        $clazzCollection->each(function (Clazz $clazz) {
+        $clazzCollection->each(function (Dependency $clazz) {
             $this->assertEquals(new Clazz('Test'), $clazz);
         });
     }
 
     public function testToArray()
     {
-        $clazzCollection = (new ClazzCollection())
+        $clazzCollection = (new DependencyCollection())
             ->add(new Clazz('Test'));
         $this->assertEquals([new Clazz('Test')], $clazzCollection->toArray());
     }

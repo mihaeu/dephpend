@@ -55,9 +55,15 @@ class TextCommandTest extends \PHPUnit_Framework_TestCase
     public function testPrintsDependencies()
     {
         $dependencies = (new DependencyPairCollection())
-            ->add(new DependencyPair(new Clazz('A'), new Clazz('B')))
-            ->add(new DependencyPair(new Clazz('A'), new Clazz('C')))
-            ->add(new DependencyPair(new Clazz('B'), new Clazz('C')));
+            ->add(new DependencyPair(
+                new Clazz('ClassA', new ClazzNamespace(['A', 'a', '1'])),
+                new Clazz('ClassB', new ClazzNamespace(['B', 'a', '1']))))
+            ->add(new DependencyPair(
+                new Clazz('ClassA', new ClazzNamespace(['A', 'a', '1'])),
+                new Clazz('ClassC', new ClazzNamespace(['C', 'a', '1']))))
+            ->add(new DependencyPair(
+                new Clazz('ClassB', new ClazzNamespace(['B', 'a', '1'])),
+                new Clazz('ClassC', new ClazzNamespace(['C', 'a', '1']))));
         $this->analyser->method('analyse')->willReturn($dependencies);
 
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
@@ -66,9 +72,9 @@ class TextCommandTest extends \PHPUnit_Framework_TestCase
         $this->output->expects($this->exactly(3))
             ->method('writeln')
             ->withConsecutive(
-            ['A --> B'],
-            ['A --> C'],
-            ['B --> C']
+            ['A\\a\\1\\ClassA --> B\\a\\1\\ClassB'],
+            ['A\\a\\1\\ClassA --> C\\a\\1\\ClassC'],
+            ['B\\a\\1\\ClassB --> C\\a\\1\\ClassC']
         );
         $this->textCommand->run($this->input, $this->output);
     }

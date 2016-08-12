@@ -11,4 +11,6 @@ interface Dependency
     public function reduceToDepth(int $maxDepth) : Dependency;
 
     public function equals(Dependency $other) : bool;
+
+    public function toString() : string;
 }
