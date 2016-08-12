@@ -31,10 +31,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
 
     public function testDetectsExplicitNewCreation()
     {
-        $node = new ClassNode('SomeClass');
-        $node->namespacedName = new \stdClass();
-        $node->namespacedName->parts = ['SomeNamespace', 'SomeClass'];
-        $this->dependencyInspectionVisitor->enterNode($node);
+        $node = $this->createAndEnterCurrentClassNode();
 
         $newNode = new NewNode(new FullyQualifiedNameNode('TestDep'));
         $this->dependencyInspectionVisitor->enterNode($newNode);
@@ -50,11 +47,14 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $node->namespacedName->parts = ['SomeNamespace', 'SomeClass'];
 
         $node->extends = new \stdClass();
-        $node->extends->parts = ['SomeSuperClass'];
+        $node->extends->parts = ['A', 'a', '1', 'ClassA'];
         $this->dependencyInspectionVisitor->enterNode($node);
 
         $this->dependencyInspectionVisitor->leaveNode($node);
-        $this->assertTrue($this->dependenciesContain($this->dependencyInspectionVisitor->dependencies(), new Clazz('SomeSuperClass')));
+        $this->assertTrue($this->dependenciesContain(
+            $this->dependencyInspectionVisitor->dependencies(),
+            new Clazz('ClassA', new ClazzNamespace(['A', 'a', '1']))
+        ));
     }
 
     public function testDetectsImplementedInterfaces()
@@ -83,10 +83,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
 
     public function testDetectsDependenciesFromMethodArguments()
     {
-        $node = new ClassNode('SomeClass');
-        $node->namespacedName = new \stdClass();
-        $node->namespacedName->parts = ['SomeNamespace', 'SomeClass'];
-        $this->dependencyInspectionVisitor->enterNode($node);
+        $node = $this->createAndEnterCurrentClassNode();
 
         $methodNode = new ClassMethod('someMethod');
         $paramOne = new Param('one', null, 'DependencyOne');
@@ -114,10 +111,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
 
     public function testDetectsUseNodes()
     {
-        $node = new ClassNode('SomeClass');
-        $node->namespacedName = new \stdClass();
-        $node->namespacedName->parts = ['SomeNamespace', 'SomeClass'];
-        $this->dependencyInspectionVisitor->enterNode($node);
+        $node = $this->createAndEnterCurrentClassNode();
 
         $use = new \stdClass();
         $use->name = new \stdClass();
@@ -131,10 +125,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
 
     public function testDetectsCallsOnStaticClasses()
     {
-        $node = new ClassNode('SomeClass');
-        $node->namespacedName = new \stdClass();
-        $node->namespacedName->parts = ['SomeNamespace', 'SomeClass'];
-        $this->dependencyInspectionVisitor->enterNode($node);
+        $node = $this->createAndEnterCurrentClassNode();
 
         $staticCall = new MethodCall(
             new StaticCall(new Name('Singleton'), 'Singleton'),
@@ -170,5 +161,18 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
             return $dependency->from()->equals($otherDependency)
             || $dependency->to()->equals($otherDependency);
         });
+    }
+
+    /**
+     * @return ClassNode
+     */
+    private function createAndEnterCurrentClassNode()
+    {
+        $node = new ClassNode('SomeClass');
+        $node->namespacedName = new \stdClass();
+        $node->namespacedName->parts = ['SomeNamespace', 'SomeClass'];
+        $this->dependencyInspectionVisitor->enterNode($node);
+
+        return $node;
     }
 }
