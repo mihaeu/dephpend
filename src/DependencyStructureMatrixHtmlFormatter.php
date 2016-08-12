@@ -27,10 +27,10 @@ class DependencyStructureMatrixHtmlFormatter extends DependencyStructureMatrixFo
     private function buildHtmlTable(array $dependencyArray) : string
     {
         $output = [
-            '<table><tr><th>X</th><th>'.implode('</th><th>',
+            '<table><thead><tr><th>X</th><th>'.implode('</th><th>',
                 array_keys($dependencyArray)),
         ];
-        $output[] = '</th></tr>';
+        $output[] = '</th></tr></thead><tbody>';
 
         foreach ($dependencyArray as $dependencyRow => $dependencies) {
             $output[] = '<tr><td>'.$dependencyRow.'</td>';
@@ -43,7 +43,7 @@ class DependencyStructureMatrixHtmlFormatter extends DependencyStructureMatrixFo
             }
             $output[] = '</tr>';
         }
-        $output[] = '</table>';
+        $output[] = '</tbody></table>';
 
         return implode('', $output);
     }
