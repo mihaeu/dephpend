@@ -115,12 +115,15 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
 
         $use = new \stdClass();
         $use->name = new \stdClass();
-        $use->name->parts = ['Test'];
+        $use->name->parts = ['A', 'a', '1', 'Test'];
         $useNode = new UseNode([$use]);
         $this->dependencyInspectionVisitor->enterNode($useNode);
 
         $this->dependencyInspectionVisitor->leaveNode($node);
-        $this->assertTrue($this->dependenciesContain($this->dependencyInspectionVisitor->dependencies(), new Clazz('Test')));
+        $this->assertTrue($this->dependenciesContain(
+            $this->dependencyInspectionVisitor->dependencies(),
+            new Clazz('Test', new ClazzNamespace(['A', 'a', '1']))
+        ));
     }
 
     public function testDetectsCallsOnStaticClasses()
@@ -131,11 +134,14 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
             new StaticCall(new Name('Singleton'), 'Singleton'),
             'staticMethod'
         );
-        $staticCall->var->class->parts = ['Singleton'];
+        $staticCall->var->class->parts = ['A', 'a', '1', 'Singleton'];
         $this->dependencyInspectionVisitor->enterNode($staticCall);
 
         $this->dependencyInspectionVisitor->leaveNode($node);
-        $this->assertTrue($this->dependenciesContain($this->dependencyInspectionVisitor->dependencies(), new Clazz('Singleton')));
+        $this->assertTrue($this->dependenciesContain(
+            $this->dependencyInspectionVisitor->dependencies(),
+            new Clazz('Singleton', new ClazzNamespace(['A', 'a', '1']))
+        ));
     }
 
     public function testAddsDependenciesOnlyWhenInClassContext()

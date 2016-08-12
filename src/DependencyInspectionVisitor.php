@@ -134,10 +134,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
      */
     private function setCurrentClass(ClassLikeNode $node)
     {
-        $this->currentClass = new Clazz(
-            $node->namespacedName->parts[0],
-            $this->namespaceFromParts($node->namespacedName->parts)
-        );
+        $this->currentClass = $this->clazzFromParts($node->namespacedName->parts);
     }
 
     /**
