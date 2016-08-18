@@ -3,7 +3,7 @@ OK_COLOR=\x1b[32;01m
 ERROR_COLOR=\x1b[31;01m
 WARN_COLOR=\x1b[33;01m
 
-PHPUNIT=vendor/bin/phpunit
+PHPUNIT=php -n vendor/bin/phpunit
 
 all: autoload tests testdox cov
 
