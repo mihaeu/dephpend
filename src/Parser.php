@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies;
 
@@ -28,10 +28,15 @@ class Parser
     {
         $ast = new Ast();
         $files->each(function (PhpFile $file) use ($ast) {
-            $node = $this->parser->parse($file->code());
+            $node = $this->test($file->code());
             $ast->add($file, $node);
         });
 
         return $ast;
+    }
+
+    private function test(string $bla)
+    {
+        return $this->parser->parse($bla);
     }
 }

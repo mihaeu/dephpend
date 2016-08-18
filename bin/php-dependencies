@@ -2,6 +2,7 @@
 <?php declare (strict_types = 1);
 
 use Mihaeu\PhpDependencies\Analyser;
+use Mihaeu\PhpDependencies\Cli\Application;
 use Mihaeu\PhpDependencies\Cli\DsmCommand;
 use Mihaeu\PhpDependencies\Cli\UmlCommand;
 use Mihaeu\PhpDependencies\Cli\TextCommand;
@@ -13,12 +14,11 @@ use Mihaeu\PhpDependencies\PlantUmlWrapper;
 use Mihaeu\PhpDependencies\ShellWrapper;
 use PhpParser\NodeTraverser;
 use PhpParser\ParserFactory;
-use Symfony\Component\Console\Application;
 
 require __DIR__.'/../vendor/autoload.php';
 
 ini_set('xdebug.max_nesting_level', '3000');
-ini_set('memory_limit', '512M');
+ini_set('memory_limit', '2048M');
 
 $application = new Application();
 $application->setName(<<<EOT

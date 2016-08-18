@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies;
 
@@ -33,7 +33,7 @@ class Ast implements \Iterator
      *
      * @link http://php.net/manual/en/iterator.current.php
      *
-     * @return mixed Can return any type.
+     * @return mixed Can return any type
      *
      * @since 5.0.0
      */
@@ -58,7 +58,7 @@ class Ast implements \Iterator
      *
      * @link http://php.net/manual/en/iterator.key.php
      *
-     * @return mixed scalar on success, or null on failure.
+     * @return mixed scalar on success, or null on failure
      *
      * @since 5.0.0
      */
@@ -73,7 +73,7 @@ class Ast implements \Iterator
      * @link http://php.net/manual/en/iterator.valid.php
      *
      * @return bool The return value will be casted to boolean and then evaluated.
-     *              Returns true on success or false on failure.
+     *              Returns true on success or false on failure
      *
      * @since 5.0.0
      */

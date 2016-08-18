@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies;
 
@@ -11,7 +11,7 @@ class Util
      * @param \Closure $fn
      *                     Tests every element of xs against this function. The first
      *                     parameter is the value of the current element, the second
-     *                     is the index of the current element.
+     *                     is the index of the current element
      *
      * @return bool
      */
