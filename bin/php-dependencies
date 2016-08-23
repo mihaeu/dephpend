@@ -2,6 +2,7 @@
 <?php declare(strict_types=1);
 
 use Mihaeu\PhpDependencies\Cli\Application;
+use Mihaeu\PhpDependencies\DI;
 
 require __DIR__.'/../vendor/autoload.php';
 
@@ -15,5 +16,5 @@ $name = <<<EOT
  | (_| |  __/ |    | |  | | |  |  __/ | | | (_| |
   \__,_|\___|_|    |_|  |_|_|   \___|_| |_|\__,_|
 EOT;
-$application = new Application($name, '0.1');
+$application = new Application($name, '0.1', new DI());
 $application->run();
