@@ -76,6 +76,12 @@ abstract class BaseCommand extends Command
                 InputOption::VALUE_REQUIRED,
                 'Set maximum memory e.g. 2048M'
             )
+            ->addOption(
+                'underscore-namespaces',
+                'u',
+                InputOption::VALUE_NONE,
+                'Parse underscores in Class names as namespaces.'
+        )
         ;
     }
 

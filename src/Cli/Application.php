@@ -12,6 +12,7 @@ use Mihaeu\PhpDependencies\PhpFileFinder;
 use Mihaeu\PhpDependencies\PlantUmlFormatter;
 use Mihaeu\PhpDependencies\PlantUmlWrapper;
 use Mihaeu\PhpDependencies\ShellWrapper;
+use Mihaeu\PhpDependencies\UnderscoreClazzFactory;
 use PhpParser\NodeTraverser;
 use PhpParser\ParserFactory;
 use Symfony\Component\Console\Input\InputInterface;
@@ -35,7 +36,11 @@ class Application extends \Symfony\Component\Console\Application
 
         $phpFileFinder = new PhpFileFinder();
         $parser = new Parser((new ParserFactory())->create(ParserFactory::PREFER_PHP7));
-        $dependencyInspectionVisitor = new DependencyInspectionVisitor(new ClazzFactory());
+
+        $clazzFactory = $input->getOption('underscore-namespaces')
+            ? new UnderscoreClazzFactory()
+            : new ClazzFactory();
+        $dependencyInspectionVisitor = new DependencyInspectionVisitor($clazzFactory);
         $analyser = new Analyser(new NodeTraverser(), $dependencyInspectionVisitor);
 
         $this->add(new UmlCommand(
