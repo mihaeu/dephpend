@@ -37,7 +37,7 @@ class Application extends \Symfony\Component\Console\Application
         $phpFileFinder = new PhpFileFinder();
         $parser = new Parser((new ParserFactory())->create(ParserFactory::PREFER_PHP7));
 
-        $clazzFactory = $input->getOption('underscore-namespaces')
+        $clazzFactory = $this->isUnderscoreSupportRequired($input)
             ? new UnderscoreClazzFactory()
             : new ClazzFactory();
         $dependencyInspectionVisitor = new DependencyInspectionVisitor($clazzFactory);
@@ -88,5 +88,15 @@ class Application extends \Symfony\Component\Console\Application
         if ($input->hasOption('memory') && $input->getOption('memory')) {
             ini_set('memory_limit', $input->getOption('memory'));
         }
+    }
+
+    /**
+     * @param InputInterface $input
+     *
+     * @return bool
+     */
+    private function isUnderscoreSupportRequired(InputInterface $input)
+    {
+        return $input->hasParameterOption(array('--underscore-namespaces', '-u'), true);
     }
 }
