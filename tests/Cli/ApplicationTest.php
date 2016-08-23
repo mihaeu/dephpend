@@ -28,7 +28,13 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $app = new Application();
         $input = $this->createMock(Input::class);
         $output = $this->createMock(Output::class);
-        $output->expects($this->once())->method('writeln');
+
+        // not sure how to mock this, so we test only one case
+        if (!extension_loaded('xdebug')) {
+            $output->expects($this->never())->method('writeln');
+        } else {
+            $output->expects($this->once())->method('writeln');
+        }
         $app->doRun($input, $output);
     }
 }
