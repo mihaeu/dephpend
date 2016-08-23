@@ -32,7 +32,8 @@ EOT
 
 $phpFileFinder = new PhpFileFinder();
 $parser = new Parser((new ParserFactory())->create(ParserFactory::PREFER_PHP7));
-$analyser = new Analyser(new NodeTraverser(), new DependencyInspectionVisitor());
+$dependencyInspectionVisitor = new DependencyInspectionVisitor();
+$analyser = new Analyser(new NodeTraverser(), $dependencyInspectionVisitor);
 
 $application->add(new UmlCommand(
     $phpFileFinder,
