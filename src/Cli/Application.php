@@ -5,27 +5,28 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser;
-use Mihaeu\PhpDependencies\ClazzFactory;
-use Mihaeu\PhpDependencies\DependencyInspectionVisitor;
+use Mihaeu\PhpDependencies\DI;
 use Mihaeu\PhpDependencies\Parser;
 use Mihaeu\PhpDependencies\PhpFileFinder;
 use Mihaeu\PhpDependencies\PlantUmlFormatter;
 use Mihaeu\PhpDependencies\PlantUmlWrapper;
 use Mihaeu\PhpDependencies\ShellWrapper;
-use Mihaeu\PhpDependencies\UnderscoreClazzFactory;
-use PhpParser\NodeTraverser;
-use PhpParser\ParserFactory;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class Application extends \Symfony\Component\Console\Application
 {
+    /** @var DI */
+    private $dI;
+
     /**
      * @param string $name
      * @param string $version
      */
-    public function __construct(string $name, string $version)
+    public function __construct(string $name, string $version, DI $dI)
     {
+        $this->dI = $dI;
+
         parent::__construct($name, $version);
     }
 
@@ -34,14 +35,9 @@ class Application extends \Symfony\Component\Console\Application
         $this->printWarningIfXdebugIsEnabled($output);
         $this->setMemoryLimit($input);
 
-        $phpFileFinder = new PhpFileFinder();
-        $parser = new Parser((new ParserFactory())->create(ParserFactory::PREFER_PHP7));
-
-        $clazzFactory = $this->isUnderscoreSupportRequired($input)
-            ? new UnderscoreClazzFactory()
-            : new ClazzFactory();
-        $dependencyInspectionVisitor = new DependencyInspectionVisitor($clazzFactory);
-        $analyser = new Analyser(new NodeTraverser(), $dependencyInspectionVisitor);
+        $phpFileFinder = $this->dI->phpFileFinder();
+        $parser = $this->dI->parser();
+        $analyser = $this->dI->analyser($this->isUnderscoreSupportRequired($input));
 
         $this->add(new UmlCommand(
             $phpFileFinder,

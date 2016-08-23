@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
+use Mihaeu\PhpDependencies\DI;
 use Symfony\Component\Console\Input\Input;
 use Symfony\Component\Console\Output\Output;
 
@@ -12,21 +13,33 @@ use Symfony\Component\Console\Output\Output;
  */
 class ApplicationTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var Application */
+    private $application;
+
+    /** @var DI */
+    private $dI;
+
+    public function setUp()
+    {
+        $this->dI = $this->createMock(DI::class);
+        $this->application = new Application('', '', $this->dI);
+    }
+
     public function testSetMemoryLimit()
     {
-        $app = new Application('', '');
         $input = $this->createMock(Input::class);
         $input->method('hasOption')->willReturn(true);
         $input->method('getOption')->willReturn('1234M');
+        $input->method('hasParameterOption')->willReturn(false);
         $output = $this->createMock(Output::class);
-        $app->doRun($input, $output);
+        $this->application->doRun($input, $output);
         $this->assertEquals('1234M', ini_get('memory_limit'));
     }
 
     public function testWarningIfXDebugEnabled()
     {
-        $app = new Application('', '');
         $input = $this->createMock(Input::class);
+        $input->method('hasParameterOption')->willReturn(false);
         $output = $this->createMock(Output::class);
 
         // not sure how to mock this, so we test only one case
@@ -35,6 +48,6 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         } else {
             $output->expects($this->once())->method('writeln');
         }
-        $app->doRun($input, $output);
+        $this->application->doRun($input, $output);
     }
 }

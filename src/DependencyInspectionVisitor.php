@@ -43,7 +43,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         $this->dependencies = new DependencyPairCollection();
         $this->tempDependencies = new DependencyPairCollection();
 
-        $this->temporaryClass = new Clazz('temporary class');
+        $this->temporaryClass = $clazzFactory->createFromStringArray(['temporary class']);
     }
 
     /**
