@@ -70,6 +70,12 @@ abstract class BaseCommand extends Command
                 'Output dependencies as packages instead of single classes.',
                 0
             )
+            ->addOption(
+                'memory',
+                'm',
+                InputOption::VALUE_REQUIRED,
+                'Set maximum memory e.g. 2048M'
+            )
         ;
     }
 

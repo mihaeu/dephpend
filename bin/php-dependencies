@@ -18,7 +18,6 @@ use PhpParser\ParserFactory;
 require __DIR__.'/../vendor/autoload.php';
 
 ini_set('xdebug.max_nesting_level', '3000');
-ini_set('memory_limit', '2048M');
 
 $application = new Application();
 $application->setName(<<<EOT
