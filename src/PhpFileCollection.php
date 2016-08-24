@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies;
 
+use Mihaeu\PhpDependencies\Exceptions\IndexOutOfBoundsException;
+
 class PhpFileCollection extends AbstractCollection
 {
     public function add(PhpFile $file) : PhpFileCollection

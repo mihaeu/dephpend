@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies;
 
+use Mihaeu\PhpDependencies\Exceptions\IndexOutOfBoundsException;
+
 /**
  * @covers Mihaeu\PhpDependencies\PhpFileCollection
  * @covers Mihaeu\PhpDependencies\AbstractCollection

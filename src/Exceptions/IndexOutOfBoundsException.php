@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Mihaeu\PhpDependencies;
+namespace Mihaeu\PhpDependencies\Exceptions;
 
 class IndexOutOfBoundsException extends \Exception
 {
