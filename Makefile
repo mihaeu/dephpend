@@ -44,3 +44,5 @@ c: cov
 t: test
 
 d: testdox
+
+s: style
