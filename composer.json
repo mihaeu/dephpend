@@ -27,8 +27,8 @@
         }
     ],
     "autoload": {
-        "classmap": [
-            "src/"
-        ]
+        "psr-4": {
+            "Mihaeu\\PhpDependencies\\": ["src/", "tests/"]
+        }
     }
 }
