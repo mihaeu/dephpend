@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# GIT PRE-PUSH HOOK (copy to .git/hooks)
+# --------------------------------------
+#
+# - enforces code coverage to be above a certain threshold
+#   aborts the push if threshold is not met
+#
+# (coding styles are already enforced for every commit)
+
+/home/mike/workspace/php-dependencies/bin/check-code-cov
+exit $?
