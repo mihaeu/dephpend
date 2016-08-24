@@ -13,6 +13,7 @@ use PhpParser\Node\Expr\New_ as NewNode;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\ClassLike as ClassLikeNode;
 use PhpParser\Node\Stmt\ClassMethod as ClassMethodNode;
+use PhpParser\Node\Stmt\Interface_ as InterfaceNode;
 use PhpParser\Node\Stmt\Use_ as UseNode;
 use PhpParser\NodeVisitorAbstract;
 
@@ -69,10 +70,13 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     {
         if ($node instanceof ClassLikeNode) {
             $this->setCurrentClass($node);
-            $this->addSubclassDependency($node);
+
+            if ($this->isSubclass($node)) {
+                $this->addSubclassDependency($node);
+            }
 
             if ($node instanceof ClassNode) {
-                $this->addInterfaceDependency($node);
+                $this->addImplementedInterfaceDependency($node);
             }
         }
 
@@ -132,7 +136,13 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
      */
     private function setCurrentClass(ClassLikeNode $node)
     {
-        $this->currentClass = $this->clazzFactory->createClazzFromStringArray($node->namespacedName->parts);
+        if ($node instanceof ClassNode) {
+            $this->currentClass = $node->isAbstract()
+                ? $this->clazzFactory->createAbstractClazzFromStringArray($node->namespacedName->parts)
+                : $this->clazzFactory->createClazzFromStringArray($node->namespacedName->parts);
+        } elseif ($node instanceof InterfaceNode) {
+            $this->currentClass = $this->clazzFactory->createInterfazeFromStringArray($node->namespacedName->parts);
+        }
     }
 
     /**
@@ -140,14 +150,9 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
      */
     private function addSubclassDependency(ClassLikeNode $node)
     {
-        if (empty($node->extends)) {
-            return;
-        }
-
-        $subClasses = $node->extends;
-        if (!is_array($node->extends)) {
-            $subClasses = [$subClasses];
-        }
+        $subClasses = is_array($node->extends)
+            ? $node->extends
+            : [$node->extends];
 
         foreach ($subClasses as $subClass) {
             $this->tempDependencies = $this->tempDependencies->add(new DependencyPair(
@@ -160,7 +165,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     /**
      * @param ClassNode $node
      */
-    private function addInterfaceDependency(ClassNode $node)
+    private function addImplementedInterfaceDependency(ClassNode $node)
     {
         foreach ($node->implements as $interfaceNode) {
             $this->tempDependencies = $this->tempDependencies->add(new DependencyPair(
@@ -217,5 +222,15 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
             $this->currentClass,
             $this->clazzFactory->createClazzFromStringArray($node->var->class->parts)
         ));
+    }
+
+    /**
+     * @param ClassLikeNode $node
+     *
+     * @return bool
+     */
+    private function isSubclass(ClassLikeNode $node)
+    {
+        return !empty($node->extends);
     }
 }
