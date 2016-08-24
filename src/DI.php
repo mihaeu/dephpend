@@ -29,15 +29,27 @@ class DI
     }
 
     /**
+     * @param bool $withUnderscoreSupport
+     *
+     * @return ClazzFactory
+     */
+    private function clazzFactory(bool $withUnderscoreSupport = false) : ClazzFactory
+    {
+        return $withUnderscoreSupport
+            ? new UnderscoreClazzFactory()
+            : new ClazzFactory();
+    }
+
+    /**
      * @return Analyser
      */
     public function analyser(bool $withUnderscoreSupport = false) : Analyser
     {
-        $clazzFactory = $withUnderscoreSupport
-            ? new UnderscoreClazzFactory()
-            : new ClazzFactory();
-        $dependencyInspectionVisitor = new DependencyInspectionVisitor($clazzFactory);
-
-        return  new Analyser(new NodeTraverser(), $dependencyInspectionVisitor);
+        return  new Analyser(
+            new NodeTraverser(),
+                new DependencyInspectionVisitor(
+                    $this->clazzFactory($withUnderscoreSupport)
+                )
+            );
     }
 }
