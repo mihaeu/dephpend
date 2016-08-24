@@ -30,20 +30,20 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     /** @var Clazz */
     private $temporaryClass;
 
-    /** @var ClazzFactory */
+    /** @var DependencyFactory */
     private $clazzFactory;
 
     /**
-     * @param ClazzFactory $clazzFactory
+     * @param DependencyFactory $clazzFactory
      */
-    public function __construct(ClazzFactory $clazzFactory)
+    public function __construct(DependencyFactory $clazzFactory)
     {
         $this->clazzFactory = $clazzFactory;
 
         $this->dependencies = new DependencyPairCollection();
         $this->tempDependencies = new DependencyPairCollection();
 
-        $this->temporaryClass = $clazzFactory->createFromStringArray(['temporary class']);
+        $this->temporaryClass = $clazzFactory->createClazzFromStringArray(['temporary class']);
     }
 
     /**
@@ -132,7 +132,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
      */
     private function setCurrentClass(ClassLikeNode $node)
     {
-        $this->currentClass = $this->clazzFactory->createFromStringArray($node->namespacedName->parts);
+        $this->currentClass = $this->clazzFactory->createClazzFromStringArray($node->namespacedName->parts);
     }
 
     /**
@@ -152,7 +152,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         foreach ($subClasses as $subClass) {
             $this->tempDependencies = $this->tempDependencies->add(new DependencyPair(
                 $this->currentClass,
-                $this->clazzFactory->createFromStringArray($subClass->parts)
+                $this->clazzFactory->createClazzFromStringArray($subClass->parts)
             ));
         }
     }
@@ -165,7 +165,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         foreach ($node->implements as $interfaceNode) {
             $this->tempDependencies = $this->tempDependencies->add(new DependencyPair(
                 $this->currentClass,
-                $this->clazzFactory->createFromStringArray($interfaceNode->parts)
+                $this->clazzFactory->createClazzFromStringArray($interfaceNode->parts)
             ));
         }
     }
@@ -177,7 +177,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     {
         $this->tempDependencies = $this->tempDependencies->add(new DependencyPair(
             $this->currentClass,
-            $this->clazzFactory->createFromStringArray($node->class->parts)
+            $this->clazzFactory->createClazzFromStringArray($node->class->parts)
         ));
     }
 
@@ -191,7 +191,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
             if (isset($param->type, $param->type->parts)) {
                 $this->tempDependencies = $this->tempDependencies->add(new DependencyPair(
                     $this->currentClass,
-                    $this->clazzFactory->createFromStringArray($param->type->parts)
+                    $this->clazzFactory->createClazzFromStringArray($param->type->parts)
                 ));
             }
         }
@@ -204,7 +204,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     {
         $this->tempDependencies = $this->tempDependencies->add(new DependencyPair(
             $this->currentClass,
-            $this->clazzFactory->createFromStringArray($node->uses[0]->name->parts)
+            $this->clazzFactory->createClazzFromStringArray($node->uses[0]->name->parts)
         ));
     }
 
@@ -215,7 +215,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     {
         $this->tempDependencies = $this->tempDependencies->add(new DependencyPair(
             $this->currentClass,
-            $this->clazzFactory->createFromStringArray($node->var->class->parts)
+            $this->clazzFactory->createClazzFromStringArray($node->var->class->parts)
         ));
     }
 }

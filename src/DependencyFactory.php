@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies;
 
-class ClazzFactory
+class DependencyFactory
 {
-    public function createFromStringArray(array $parts) : Clazz
+    public function createClazzFromStringArray(array $parts) : Clazz
     {
         return new Clazz(
             array_slice($parts, -1)[0],

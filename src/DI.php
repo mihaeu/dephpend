@@ -31,13 +31,13 @@ class DI
     /**
      * @param bool $withUnderscoreSupport
      *
-     * @return ClazzFactory
+     * @return DependencyFactory
      */
-    private function clazzFactory(bool $withUnderscoreSupport = false) : ClazzFactory
+    private function clazzFactory(bool $withUnderscoreSupport = false) : DependencyFactory
     {
         return $withUnderscoreSupport
-            ? new UnderscoreClazzFactory()
-            : new ClazzFactory();
+            ? new UnderscoreDependencyFactory()
+            : new DependencyFactory();
     }
 
     /**

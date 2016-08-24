@@ -25,7 +25,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->dependencyInspectionVisitor = new DependencyInspectionVisitor(new ClazzFactory());
+        $this->dependencyInspectionVisitor = new DependencyInspectionVisitor(new DependencyFactory());
         $this->dependencyInspectionVisitor->beforeTraverse([]);
     }
 

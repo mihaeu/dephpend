@@ -5,28 +5,28 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies;
 
 /**
- * @covers Mihaeu\PhpDependencies\UnderscoreClazzFactory
+ * @covers Mihaeu\PhpDependencies\UnderscoreDependencyFactory
  */
-class UnderscoreClazzFactoryTest extends \PHPUnit_Framework_TestCase
+class UnderscoreDependencyFactoryTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var ClazzFactory */
+    /** @var DependencyFactory */
     private $clazzFactory;
 
     public function setUp()
     {
-        $this->clazzFactory = new UnderscoreClazzFactory();
+        $this->clazzFactory = new UnderscoreDependencyFactory();
     }
 
     public function testNoUnderscoresNoNamespaces()
     {
-        $this->assertEquals(new Clazz('Test'), $this->clazzFactory->createFromStringArray(['Test']));
+        $this->assertEquals(new Clazz('Test'), $this->clazzFactory->createClazzFromStringArray(['Test']));
     }
 
     public function testPhp5NamespacesStillDetected()
     {
         $this->assertEquals(
             new Clazz('Test', new ClazzNamespace(['A'])),
-            $this->clazzFactory->createFromStringArray(['A', 'Test'])
+            $this->clazzFactory->createClazzFromStringArray(['A', 'Test'])
         );
     }
 
@@ -34,7 +34,7 @@ class UnderscoreClazzFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             new Clazz('Test', new ClazzNamespace(['A', 'b', 'c'])),
-            $this->clazzFactory->createFromStringArray(['A_b_c_Test'])
+            $this->clazzFactory->createClazzFromStringArray(['A_b_c_Test'])
         );
     }
 
@@ -42,7 +42,7 @@ class UnderscoreClazzFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             new Clazz('Test', new ClazzNamespace(['A', 'B'])),
-            $this->clazzFactory->createFromStringArray(['A', 'B_Test'])
+            $this->clazzFactory->createClazzFromStringArray(['A', 'B_Test'])
         );
     }
 }
