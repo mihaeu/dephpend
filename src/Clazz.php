@@ -9,18 +9,18 @@ class Clazz implements Dependency
     /** @var string */
     private $clazz;
 
-    /** @var ClazzNamespace */
+    /** @var Namespaze */
     private $clazzNamespace;
 
     /**
-     * @param string         $clazz
-     * @param ClazzNamespace $clazzNamespace
+     * @param string    $clazz
+     * @param Namespaze $clazzNamespace
      */
-    public function __construct(string $clazz, ClazzNamespace $clazzNamespace = null)
+    public function __construct(string $clazz, Namespaze $clazzNamespace = null)
     {
         $this->clazz = $clazz;
         if ($clazzNamespace === null) {
-            $clazzNamespace = new ClazzNamespace([]);
+            $clazzNamespace = new Namespaze([]);
         }
         $this->clazzNamespace = $clazzNamespace;
     }

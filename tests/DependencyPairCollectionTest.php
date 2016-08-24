@@ -90,11 +90,11 @@ class DependencyPairCollectionTest extends \PHPUnit_Framework_TestCase
     public function testFilterByDepthOne()
     {
         $dependencies = (new DependencyPairCollection())
-            ->add(new DependencyPair(new Clazz('From'), new Clazz('To', new ClazzNamespace(['A', 'a']))))
-            ->add(new DependencyPair(new Clazz('FromOther', new ClazzNamespace(['B', 'b'])), new Clazz('SplFileInfo')));
+            ->add(new DependencyPair(new Clazz('From'), new Clazz('To', new Namespaze(['A', 'a']))))
+            ->add(new DependencyPair(new Clazz('FromOther', new Namespaze(['B', 'b'])), new Clazz('SplFileInfo')));
         $expected = (new DependencyPairCollection())
-            ->add(new DependencyPair(new Clazz('From'), new ClazzNamespace(['A'])))
-            ->add(new DependencyPair(new ClazzNamespace(['B']), new Clazz('SplFileInfo')));
+            ->add(new DependencyPair(new Clazz('From'), new Namespaze(['A'])))
+            ->add(new DependencyPair(new Namespaze(['B']), new Clazz('SplFileInfo')));
         $actual = $dependencies->filterByDepth(1);
         $this->assertEquals($expected, $actual);
     }
@@ -103,13 +103,13 @@ class DependencyPairCollectionTest extends \PHPUnit_Framework_TestCase
     {
         $dependencies = (new DependencyPairCollection())
             ->add(new DependencyPair(
-                new Clazz('From', new ClazzNamespace(['VendorA', 'ProjectA', 'PathA'])),
-                new Clazz('To', new ClazzNamespace(['VendorB', 'ProjectB', 'PathB'])))
+                new Clazz('From', new Namespaze(['VendorA', 'ProjectA', 'PathA'])),
+                new Clazz('To', new Namespaze(['VendorB', 'ProjectB', 'PathB'])))
         );
         $expected = (new DependencyPairCollection())
             ->add(new DependencyPair(
-                    new ClazzNamespace(['VendorA', 'ProjectA', 'PathA']),
-                    new ClazzNamespace(['VendorB', 'ProjectB', 'PathB']))
+                    new Namespaze(['VendorA', 'ProjectA', 'PathA']),
+                    new Namespaze(['VendorB', 'ProjectB', 'PathB']))
         );
         $actual = $dependencies->filterByDepth(3);
         $this->assertEquals($expected, $actual);

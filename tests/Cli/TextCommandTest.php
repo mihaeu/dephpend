@@ -6,7 +6,7 @@ namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser;
 use Mihaeu\PhpDependencies\Clazz;
-use Mihaeu\PhpDependencies\ClazzNamespace;
+use Mihaeu\PhpDependencies\Namespaze;
 use Mihaeu\PhpDependencies\DependencyPair;
 use Mihaeu\PhpDependencies\DependencyPairCollection;
 use Mihaeu\PhpDependencies\Parser;
@@ -56,14 +56,14 @@ class TextCommandTest extends \PHPUnit_Framework_TestCase
     {
         $dependencies = (new DependencyPairCollection())
             ->add(new DependencyPair(
-                new Clazz('ClassA', new ClazzNamespace(['A', 'a', '1'])),
-                new Clazz('ClassB', new ClazzNamespace(['B', 'a', '1']))))
+                new Clazz('ClassA', new Namespaze(['A', 'a', '1'])),
+                new Clazz('ClassB', new Namespaze(['B', 'a', '1']))))
             ->add(new DependencyPair(
-                new Clazz('ClassA', new ClazzNamespace(['A', 'a', '1'])),
-                new Clazz('ClassC', new ClazzNamespace(['C', 'a', '1']))))
+                new Clazz('ClassA', new Namespaze(['A', 'a', '1'])),
+                new Clazz('ClassC', new Namespaze(['C', 'a', '1']))))
             ->add(new DependencyPair(
-                new Clazz('ClassB', new ClazzNamespace(['B', 'a', '1'])),
-                new Clazz('ClassC', new ClazzNamespace(['C', 'a', '1']))));
+                new Clazz('ClassB', new Namespaze(['B', 'a', '1'])),
+                new Clazz('ClassC', new Namespaze(['C', 'a', '1']))));
         $this->analyser->method('analyse')->willReturn($dependencies);
 
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
@@ -83,14 +83,14 @@ class TextCommandTest extends \PHPUnit_Framework_TestCase
     {
         $dependencies = (new DependencyPairCollection())
             ->add(new DependencyPair(
-                new Clazz('A', new ClazzNamespace(['NamespaceA'])),
-                new Clazz('B', new ClazzNamespace(['NamespaceB'])))
+                new Clazz('A', new Namespaze(['NamespaceA'])),
+                new Clazz('B', new Namespaze(['NamespaceB'])))
             )->add(new DependencyPair(
-                new Clazz('A', new ClazzNamespace(['NamespaceA'])),
-                new Clazz('C', new ClazzNamespace(['NamespaceC'])))
+                new Clazz('A', new Namespaze(['NamespaceA'])),
+                new Clazz('C', new Namespaze(['NamespaceC'])))
             )->add(new DependencyPair(
-                new Clazz('B', new ClazzNamespace(['NamespaceB'])),
-                new Clazz('C', new ClazzNamespace(['NamespaceC'])))
+                new Clazz('B', new Namespaze(['NamespaceB'])),
+                new Clazz('C', new Namespaze(['NamespaceC'])))
             );
         $this->analyser->method('analyse')->willReturn($dependencies);
 

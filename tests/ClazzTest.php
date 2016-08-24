@@ -17,7 +17,7 @@ class ClazzTest extends \PHPUnit_Framework_TestCase
 
     public function testToStringWithNamespace()
     {
-        $this->assertEquals('A\\a\\ClassA', (new Clazz('ClassA', new ClazzNamespace(['A', 'a']))));
+        $this->assertEquals('A\\a\\ClassA', (new Clazz('ClassA', new Namespaze(['A', 'a']))));
     }
 
     public function testEquals()
@@ -27,7 +27,7 @@ class ClazzTest extends \PHPUnit_Framework_TestCase
 
     public function testDetectsIfClassHasNamespace()
     {
-        $this->assertTrue((new Clazz('Class', new ClazzNamespace(['A'])))->hasNamespace());
+        $this->assertTrue((new Clazz('Class', new Namespaze(['A'])))->hasNamespace());
     }
 
     public function testDetectsIfClassHasNoNamespace()
@@ -42,14 +42,14 @@ class ClazzTest extends \PHPUnit_Framework_TestCase
 
     public function testDepthWithNamespace()
     {
-        $this->assertEquals(3, (new Clazz('A', new ClazzNamespace(['B', 'C'])))->depth());
+        $this->assertEquals(3, (new Clazz('A', new Namespaze(['B', 'C'])))->depth());
     }
 
     public function testReduceWithDepthZero()
     {
         $this->assertEquals(
-            new Clazz('A', new ClazzNamespace(['B', 'C', 'D'])),
-            (new Clazz('A', new ClazzNamespace(['B', 'C', 'D'])))->reduceToDepth(0)
+            new Clazz('A', new Namespaze(['B', 'C', 'D'])),
+            (new Clazz('A', new Namespaze(['B', 'C', 'D'])))->reduceToDepth(0)
         );
     }
 
@@ -61,16 +61,16 @@ class ClazzTest extends \PHPUnit_Framework_TestCase
     public function testReduceDepthToTwoProducesTopTwoNamespaces()
     {
         $this->assertEquals(
-            new ClazzNamespace(['B', 'C']),
-            (new Clazz('A', new ClazzNamespace(['B', 'C', 'D'])))->reduceToDepth(2)
+            new Namespaze(['B', 'C']),
+            (new Clazz('A', new Namespaze(['B', 'C', 'D'])))->reduceToDepth(2)
         );
     }
 
     public function testReduceToDepthOfOneProducesOneNamespace()
     {
         $this->assertEquals(
-            new ClazzNamespace(['B']),
-            (new Clazz('A', new ClazzNamespace(['B', 'C', 'D'])))->reduceToDepth(1)
+            new Namespaze(['B']),
+            (new Clazz('A', new Namespaze(['B', 'C', 'D'])))->reduceToDepth(1)
         );
     }
 }

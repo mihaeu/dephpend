@@ -25,7 +25,7 @@ class UnderscoreDependencyFactoryTest extends \PHPUnit_Framework_TestCase
     public function testPhp5NamespacesStillDetected()
     {
         $this->assertEquals(
-            new Clazz('Test', new ClazzNamespace(['A'])),
+            new Clazz('Test', new Namespaze(['A'])),
             $this->clazzFactory->createClazzFromStringArray(['A', 'Test'])
         );
     }
@@ -33,7 +33,7 @@ class UnderscoreDependencyFactoryTest extends \PHPUnit_Framework_TestCase
     public function testDetectsNamespacesFromClassWithOnlyUnderscores()
     {
         $this->assertEquals(
-            new Clazz('Test', new ClazzNamespace(['A', 'b', 'c'])),
+            new Clazz('Test', new Namespaze(['A', 'b', 'c'])),
             $this->clazzFactory->createClazzFromStringArray(['A_b_c_Test'])
         );
     }
@@ -41,7 +41,7 @@ class UnderscoreDependencyFactoryTest extends \PHPUnit_Framework_TestCase
     public function testMixedNamespacesDetected()
     {
         $this->assertEquals(
-            new Clazz('Test', new ClazzNamespace(['A', 'B'])),
+            new Clazz('Test', new Namespaze(['A', 'B'])),
             $this->clazzFactory->createClazzFromStringArray(['A', 'B_Test'])
         );
     }

@@ -53,7 +53,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $this->dependencyInspectionVisitor->leaveNode($node);
         $this->assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
-            new Clazz('ClassA', new ClazzNamespace(['A', 'a', '1']))
+            new Clazz('ClassA', new Namespaze(['A', 'a', '1']))
         ));
     }
 
@@ -73,11 +73,11 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $this->dependencyInspectionVisitor->leaveNode($node);
         $this->assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
-            new Clazz('InterfaceOne', new ClazzNamespace(['A', 'B'])))
+            new Clazz('InterfaceOne', new Namespaze(['A', 'B'])))
         );
         $this->assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
-            new Clazz('InterfaceTwo', new ClazzNamespace(['C', 'D'])))
+            new Clazz('InterfaceTwo', new Namespaze(['C', 'D'])))
         );
     }
 
@@ -101,11 +101,11 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $this->dependencyInspectionVisitor->leaveNode($node);
         $this->assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
-            new Clazz('DependencyOne', new ClazzNamespace(['A', 'B'])))
+            new Clazz('DependencyOne', new Namespaze(['A', 'B'])))
         );
         $this->assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
-            new Clazz('DependencyTwo', new ClazzNamespace(['A', 'B'])))
+            new Clazz('DependencyTwo', new Namespaze(['A', 'B'])))
         );
     }
 
@@ -122,7 +122,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $this->dependencyInspectionVisitor->leaveNode($node);
         $this->assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
-            new Clazz('Test', new ClazzNamespace(['A', 'a', '1']))
+            new Clazz('Test', new Namespaze(['A', 'a', '1']))
         ));
     }
 
@@ -140,7 +140,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $this->dependencyInspectionVisitor->leaveNode($node);
         $this->assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
-            new Clazz('Singleton', new ClazzNamespace(['A', 'a', '1']))
+            new Clazz('Singleton', new Namespaze(['A', 'a', '1']))
         ));
     }
 
