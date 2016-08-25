@@ -14,7 +14,9 @@ use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Interface_ as InterfaceNode;
 use PhpParser\Node\Stmt\Interface_;
+use PhpParser\Node\Stmt\TraitUse;
 use PhpParser\Node\Stmt\Use_ as UseNode;
+use PhpParser\Node\Stmt\Trait_ as TraitNode;
 
 /**
  * The Dependency Inspection is where all the magic happens,
@@ -252,5 +254,67 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $this->dependencyInspectionVisitor->leaveNode(new ClassNode('test'));
         $dependencies = $this->dependencyInspectionVisitor->dependencies();
         $this->assertEmpty($dependencies);
+    }
+
+    public function testTrait()
+    {
+        $node = new TraitNode('Test');
+        $node->namespacedName = new \stdClass();
+        $node->namespacedName->parts = ['A', 'Test'];
+        $this->dependencyInspectionVisitor->enterNode($node);
+
+        $this->addRandomDependency();
+
+        $this->dependencyInspectionVisitor->leaveNode($node);
+        $this->assertTrue($this->dependenciesContain(
+            $this->dependencyInspectionVisitor->dependencies(),
+            new Trait_('Test', new Namespaze(['A']))
+        ));
+    }
+
+    public function testUseSingleTrait()
+    {
+        $node = $this->createAndEnterCurrentClassNode();
+
+        $useTraitNode = new TraitUse(['Trait']);
+        $useTraitNode->traits = [new \stdClass()];
+        $useTraitNode->traits[0]->parts = ['A', 'Test'];
+
+        $this->dependencyInspectionVisitor->enterNode($useTraitNode);
+        $this->dependencyInspectionVisitor->leaveNode($useTraitNode);
+
+        $this->dependencyInspectionVisitor->leaveNode($node);
+        $this->assertTrue($this->dependenciesContain(
+            $this->dependencyInspectionVisitor->dependencies(),
+            new Trait_('Test', new Namespaze(['A']))
+        ));
+    }
+
+    public function testUseMultipleTraits()
+    {
+        $node = $this->createAndEnterCurrentClassNode();
+
+        $useTraitNode = new TraitUse(['Trait']);
+        $useTraitNode->traits = [new \stdClass(), new \stdClass(), new \stdClass()];
+        $useTraitNode->traits[0]->parts = ['A', 'Test'];
+        $useTraitNode->traits[1]->parts = ['B', 'Test2'];
+        $useTraitNode->traits[2]->parts = ['C', 'Test3'];
+
+        $this->dependencyInspectionVisitor->enterNode($useTraitNode);
+        $this->dependencyInspectionVisitor->leaveNode($useTraitNode);
+
+        $this->dependencyInspectionVisitor->leaveNode($node);
+        $this->assertTrue($this->dependenciesContain(
+            $this->dependencyInspectionVisitor->dependencies(),
+            new Trait_('Test', new Namespaze(['A']))
+        ));
+        $this->assertTrue($this->dependenciesContain(
+            $this->dependencyInspectionVisitor->dependencies(),
+            new Trait_('Test2', new Namespaze(['B']))
+        ));
+        $this->assertTrue($this->dependenciesContain(
+            $this->dependencyInspectionVisitor->dependencies(),
+            new Trait_('Test3', new Namespaze(['C']))
+        ));
     }
 }
