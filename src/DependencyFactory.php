@@ -48,6 +48,19 @@ class DependencyFactory
     /**
      * @param array $parts
      *
+     * @return Trait_
+     */
+    public function createTraitFromStringArray(array $parts) : Trait_
+    {
+        return new Trait_(
+            $this->extractClazzPart($parts),
+            new Namespaze($this->extractNamespaceParts($parts))
+        );
+    }
+
+    /**
+     * @param array $parts
+     *
      * @return array
      */
     private function extractNamespaceParts(array $parts)

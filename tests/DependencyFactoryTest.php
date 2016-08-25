@@ -39,4 +39,9 @@ class DependencyFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(new Interfaze('Test', new Namespaze([])), $this->clazzFactory->createInterfazeFromStringArray(['Test']));
     }
+
+    public function testCreateTrait()
+    {
+        $this->assertEquals(new Trait_('Test', new Namespaze([])), $this->clazzFactory->createTraitFromStringArray(['Test']));
+    }
 }

@@ -14,6 +14,8 @@ use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\ClassLike as ClassLikeNode;
 use PhpParser\Node\Stmt\ClassMethod as ClassMethodNode;
 use PhpParser\Node\Stmt\Interface_ as InterfaceNode;
+use PhpParser\Node\Stmt\Trait_ as TraitNode;
+use PhpParser\Node\Stmt\TraitUse as UseTraitNode;
 use PhpParser\Node\Stmt\Use_ as UseNode;
 use PhpParser\NodeVisitorAbstract;
 
@@ -78,9 +80,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
             if ($node instanceof ClassNode) {
                 $this->addImplementedInterfaceDependency($node);
             }
-        }
-
-        if ($node instanceof NewNode
+        } elseif ($node instanceof NewNode
             && $node->class instanceof FullyQualifiedNameNode) {
             $this->addInstantiationDependency($node);
         } elseif ($node instanceof ClassMethodNode) {
@@ -91,6 +91,8 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
             && $node->var instanceof StaticCallNode
             && $node->var->class instanceof NameNode) {
             $this->addStaticDependency($node);
+        } elseif ($node instanceof UseTraitNode) {
+            $this->addUseTraitDependency($node);
         }
     }
 
@@ -138,6 +140,8 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     {
         if ($node instanceof InterfaceNode) {
             $this->currentClass = $this->clazzFactory->createInterfazeFromStringArray($node->namespacedName->parts);
+        } elseif ($node instanceof TraitNode) {
+            $this->currentClass = $this->clazzFactory->createTraitFromStringArray($node->namespacedName->parts);
         } else {
             $this->currentClass = $node->isAbstract()
                 ? $this->clazzFactory->createAbstractClazzFromStringArray($node->namespacedName->parts)
@@ -226,5 +230,18 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     private function isSubclass(ClassLikeNode $node)
     {
         return !empty($node->extends);
+    }
+
+    /**
+     * @param Node $node
+     */
+    private function addUseTraitDependency(Node $node)
+    {
+        foreach ($node->traits as $trait) {
+            $this->tempDependencies = $this->tempDependencies->add(new DependencyPair(
+                $this->currentClass,
+                $this->clazzFactory->createTraitFromStringArray($trait->parts)
+            ));
+        }
     }
 }
