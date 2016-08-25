@@ -31,8 +31,8 @@ cov:
 	@$(PHP) $(PHPUNIT) -c phpunit.xml.dist --coverage-text
 
 style:
-	@$(PHP_NO_INI) vendor/bin/php-cs-fixer fix --verbose src
-	@$(PHP_NO_INI) vendor/bin/php-cs-fixer fix --verbose tests
+	@$(PHP_NO_INI) vendor/bin/php-cs-fixer fix --level=psr2 --verbose src
+	@$(PHP_NO_INI) vendor/bin/php-cs-fixer fix --level=psr2 --verbose tests
 
 phar:
 	@composer update --no-dev
