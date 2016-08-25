@@ -72,7 +72,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
             $this->setCurrentClass($node);
 
             if ($this->isSubclass($node)) {
-                $this->addSubclassDependency($node);
+                $this->addParentDependency($node);
             }
 
             if ($node instanceof ClassNode) {
@@ -105,7 +105,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
      */
     public function leaveNode(Node $node)
     {
-        if ($node instanceof ClassNode) {
+        if ($node instanceof ClassLikeNode) {
             // not in class context
             if ($this->currentClass->equals($this->temporaryClass)) {
                 $this->tempDependencies = new DependencyPairCollection();
@@ -136,30 +136,24 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
      */
     private function setCurrentClass(ClassLikeNode $node)
     {
-        if ($node instanceof ClassNode) {
+        if ($node instanceof InterfaceNode) {
+            $this->currentClass = $this->clazzFactory->createInterfazeFromStringArray($node->namespacedName->parts);
+        } else {
             $this->currentClass = $node->isAbstract()
                 ? $this->clazzFactory->createAbstractClazzFromStringArray($node->namespacedName->parts)
                 : $this->clazzFactory->createClazzFromStringArray($node->namespacedName->parts);
-        } elseif ($node instanceof InterfaceNode) {
-            $this->currentClass = $this->clazzFactory->createInterfazeFromStringArray($node->namespacedName->parts);
         }
     }
 
     /**
      * @param ClassLikeNode $node
      */
-    private function addSubclassDependency(ClassLikeNode $node)
+    private function addParentDependency(ClassLikeNode $node)
     {
-        $subClasses = is_array($node->extends)
-            ? $node->extends
-            : [$node->extends];
-
-        foreach ($subClasses as $subClass) {
-            $this->tempDependencies = $this->tempDependencies->add(new DependencyPair(
-                $this->currentClass,
-                $this->clazzFactory->createClazzFromStringArray($subClass->parts)
-            ));
-        }
+        $this->tempDependencies = $this->tempDependencies->add(new DependencyPair(
+            $this->currentClass,
+            $this->clazzFactory->createClazzFromStringArray($node->extends->parts)
+        ));
     }
 
     /**
