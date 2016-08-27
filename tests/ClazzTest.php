@@ -6,6 +6,7 @@ namespace Mihaeu\PhpDependencies;
 
 /**
  * @covers Mihaeu\PhpDependencies\Clazz
+ * @covers Mihaeu\PhpDependencies\ClazzLike
  */
 class ClazzTest extends \PHPUnit_Framework_TestCase
 {
