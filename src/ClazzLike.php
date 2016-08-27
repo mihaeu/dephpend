@@ -7,18 +7,18 @@ namespace Mihaeu\PhpDependencies;
 abstract class ClazzLike implements Dependency
 {
     /** @var string */
-    private $clazz;
+    private $name;
 
     /** @var Namespaze */
     private $clazzNamespace;
 
     /**
-     * @param string    $clazz
+     * @param string    $name
      * @param Namespaze $clazzNamespace
      */
-    public function __construct(string $clazz, Namespaze $clazzNamespace = null)
+    public function __construct(string $name, Namespaze $clazzNamespace = null)
     {
-        $this->clazz = $clazz;
+        $this->name = $name;
         if ($clazzNamespace === null) {
             $clazzNamespace = new Namespaze([]);
         }
@@ -27,14 +27,15 @@ abstract class ClazzLike implements Dependency
 
     public function equals(Dependency $other) : bool
     {
-        return $this->toString() === $other->toString();
+        return $this->toString() === $other->toString()
+            && $this instanceof $other;
     }
 
     public function toString() : string
     {
         return $this->hasNamespace()
-            ? $this->clazzNamespace.'\\'.$this->clazz
-            : $this->clazz;
+            ? $this->clazzNamespace.'\\'.$this->name
+            : $this->name;
     }
 
     public function __toString() : string
