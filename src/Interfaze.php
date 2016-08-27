@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies;
 
-class Interfaze extends Clazz
+class Interfaze extends ClazzLike
 {
 }

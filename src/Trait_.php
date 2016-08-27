@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies;
 
-class Trait_ extends Clazz
+class Trait_ extends ClazzLike
 {
 }
