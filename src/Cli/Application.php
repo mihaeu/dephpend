@@ -6,6 +6,7 @@ namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser;
 use Mihaeu\PhpDependencies\DI;
+use Mihaeu\PhpDependencies\Metrics;
 use Mihaeu\PhpDependencies\Parser;
 use Mihaeu\PhpDependencies\PhpFileFinder;
 use Mihaeu\PhpDependencies\PlantUmlFormatter;
@@ -57,6 +58,13 @@ class Application extends \Symfony\Component\Console\Application
             $phpFileFinder,
             $parser,
             $analyser
+        ));
+
+        $this->add(new MetricsCommand(
+            $phpFileFinder,
+            $parser,
+            $analyser,
+            new Metrics()
         ));
 
         return parent::doRun($input, $output);
