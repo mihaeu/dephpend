@@ -23,13 +23,15 @@ class MetricsTest extends \PHPUnit_Framework_TestCase
             ->add(new DependencyPair(new Clazz('A'), new Interfaze('B')))
             ->add(new DependencyPair(new Clazz('B'), new Interfaze('B')))
             ->add(new DependencyPair(new Clazz('R'), new Interfaze('B')))
+            ->add(new DependencyPair(new Clazz('C'), new Trait_('B')))
             ->add(new DependencyPair(new AbstractClazz('D'), new Interfaze('E')))
-            ->add(new DependencyPair(new Clazz('C'), new Trait_('B')));
+        ;
         $this->assertEquals([
-            'classes'               => 3,
+            'classes'               => 4,
             'abstractClasses'       => 1,
             'interfaces'            => 2,
             'traits'                => 1,
+            'abstractness'          => 0.5
         ], $this->metrics->computeMetrics($dependencies));
     }
 }

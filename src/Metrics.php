@@ -13,11 +13,20 @@ class Metrics
      */
     public function computeMetrics(DependencyPairCollection $dependencies) : array
     {
+        $classCount = $this->classCount($dependencies);
+        $abstractClassCount = $this->abstractClassCount($dependencies);
+        $interfaceCount = $this->interfaceCount($dependencies);
+        $traitCount = $this->traitCount($dependencies);
+
+        $abstractions = $abstractClassCount + $interfaceCount + $traitCount;
+        $allClasses = $classCount + $abstractClassCount + $interfaceCount + $traitCount;
+
         return [
-            'classes' => $this->classCount($dependencies),
-            'abstractClasses' => $this->abstractClassCount($dependencies),
-            'interfaces' => $this->interfaceCount($dependencies),
-            'traits' => $this->traitCount($dependencies),
+            'classes'               => $classCount,
+            'abstractClasses'       => $abstractClassCount,
+            'interfaces'            => $interfaceCount,
+            'traits'                => $traitCount,
+            'abstractness'          => $abstractions / $allClasses,
         ];
     }
 
