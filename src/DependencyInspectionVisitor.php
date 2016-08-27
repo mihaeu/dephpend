@@ -163,10 +163,18 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
      */
     private function addParentDependency(ClassLikeNode $node)
     {
-        $this->tempDependencies = $this->tempDependencies->add(new DependencyPair(
-            $this->currentClass,
-            $this->clazzFactory->createClazzFromStringArray($node->extends->parts)
-        ));
+        // interfaces EXTEND other interfaces, they don't implement them,
+        // so if the node is an interface, then this could contain
+        // multiple dependencies
+        $extendedClasses = is_array($node->extends)
+            ? $node->extends
+            : [$node->extends];
+        foreach ($extendedClasses as $extendedClass) {
+            $this->tempDependencies = $this->tempDependencies->add(new DependencyPair(
+                $this->currentClass,
+                $this->clazzFactory->createClazzFromStringArray($extendedClass->parts)
+            ));
+        }
     }
 
     /**

@@ -126,6 +126,31 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         ));
     }
 
+    public function testDetectsWhenInterfacesImplementMultipleInterfaces()
+    {
+        $node = new InterfaceNode('SomeInterface');
+        $node->namespacedName = new \stdClass();
+        $node->namespacedName->parts = ['SomeNamespace', 'SomeInterface'];
+
+        $node->extends = [
+            new \stdClass(),
+            new \stdClass()
+        ];
+        $node->extends[0]->parts = ['A', 'a', '1', 'ClassA'];
+        $node->extends[1]->parts = ['B', 'b', '2', 'ClassB'];
+        $this->dependencyInspectionVisitor->enterNode($node);
+
+        $this->dependencyInspectionVisitor->leaveNode($node);
+        $this->assertTrue($this->dependenciesContain(
+            $this->dependencyInspectionVisitor->dependencies(),
+            new Clazz('ClassA', new Namespaze(['A', 'a', '1']))
+        ));
+        $this->assertTrue($this->dependenciesContain(
+            $this->dependencyInspectionVisitor->dependencies(),
+            new Clazz('ClassB', new Namespaze(['B', 'b', '2']))
+        ));
+    }
+
     public function testDetectsAbstractClasses()
     {
         $node = new ClassNode('Test', ['type' => 16]);
