@@ -5,13 +5,8 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser;
-use Mihaeu\PhpDependencies\Clazz;
-use Mihaeu\PhpDependencies\DependencyPair;
-use Mihaeu\PhpDependencies\DependencyPairCollection;
-use Mihaeu\PhpDependencies\Interfaze;
 use Mihaeu\PhpDependencies\Metrics;
 use Mihaeu\PhpDependencies\Parser;
-use Mihaeu\PhpDependencies\Trait_;
 use Mihaeu\PhpDependencies\PhpFileFinder;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -25,6 +20,7 @@ class MetricsCommand extends BaseCommand
      * @param PhpFileFinder $phpFileFinder
      * @param Parser $parser
      * @param Analyser $analyser
+     * @param Metrics $metrics
      */
     public function __construct(
         PhpFileFinder $phpFileFinder,
@@ -47,8 +43,7 @@ class MetricsCommand extends BaseCommand
     }
 
     /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

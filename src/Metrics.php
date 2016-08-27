@@ -30,6 +30,7 @@ class Metrics
             if ($dependencyPair->to() instanceof Clazz) {
                 $total[$dependencyPair->to()->toString()] = 1;
             }
+
             return $total;
         }));
     }
@@ -44,6 +45,7 @@ class Metrics
             if ($dependencyPair->to() instanceof Interfaze) {
                 $total[$dependencyPair->to()->toString()] = 1;
             }
+
             return $total;
         }));
     }
@@ -58,6 +60,7 @@ class Metrics
             if ($dependencyPair->to() instanceof Trait_) {
                 $total[$dependencyPair->to()->toString()] = 1;
             }
+
             return $total;
         }));
     }

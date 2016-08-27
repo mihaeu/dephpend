@@ -83,15 +83,24 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         } elseif ($node instanceof NewNode
             && $node->class instanceof FullyQualifiedNameNode) {
             $this->addInstantiationDependency($node);
+            // WEIRD BUG CAUSING XDEBUG TO NOT COVER ELSEIF ONLY ELSE IF
+            // @codeCoverageIgnoreStart
         } elseif ($node instanceof ClassMethodNode) {
+            // @codeCoverageIgnoreEnd
             $this->addInjectedDependencies($node);
+            // WEIRD BUG CAUSING XDEBUG TO NOT COVER ELSEIF ONLY ELSE IF
+            // @codeCoverageIgnoreStart
         } elseif ($node instanceof UseNode) {
+            // @codeCoverageIgnoreEnd
             $this->addUseDependency($node);
         } elseif ($node instanceof MethodCallNode
             && $node->var instanceof StaticCallNode
             && $node->var->class instanceof NameNode) {
             $this->addStaticDependency($node);
+            // WEIRD BUG CAUSING XDEBUG TO NOT COVER ELSEIF ONLY ELSE IF
+            // @codeCoverageIgnoreStart
         } elseif ($node instanceof UseTraitNode) {
+            // @codeCoverageIgnoreEnd
             $this->addUseTraitDependency($node);
         }
     }
