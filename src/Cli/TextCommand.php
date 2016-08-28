@@ -32,12 +32,12 @@ class TextCommand extends BaseCommand
     {
         $this->ensureSourcesAreReadable($input->getArgument('source'));
 
-        $this->detectDependencies(
+        $output->writeln($this->detectDependencies(
             $input->getArgument('source'),
             $input->getOption('internals'),
             (int) $input->getOption('depth')
-        )->unique()->each(function (DependencyPair $dependency) use ($output) {
-            $output->writeln($dependency->toString());
-        });
+        )->unique()->toString());
+//            $output->writeln($dependency->toString());
+//        });
     }
 }

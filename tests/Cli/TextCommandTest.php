@@ -69,13 +69,13 @@ class TextCommandTest extends \PHPUnit_Framework_TestCase
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
         $this->input->method('getOption')->willReturn(false, 0);
 
-        $this->output->expects($this->exactly(3))
+        $this->output->expects($this->once())
             ->method('writeln')
-            ->withConsecutive(
-            ['A\\a\\1\\ClassA --> B\\a\\1\\ClassB'],
-            ['A\\a\\1\\ClassA --> C\\a\\1\\ClassC'],
-            ['B\\a\\1\\ClassB --> C\\a\\1\\ClassC']
-        );
+            ->with(
+                'A\\a\\1\\ClassA --> B\\a\\1\\ClassB'.PHP_EOL
+                .'A\\a\\1\\ClassA --> C\\a\\1\\ClassC'.PHP_EOL
+                .'B\\a\\1\\ClassB --> C\\a\\1\\ClassC'
+            );
         $this->textCommand->run($this->input, $this->output);
     }
 
@@ -97,12 +97,12 @@ class TextCommandTest extends \PHPUnit_Framework_TestCase
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
         $this->input->method('getOption')->willReturn(false, 1);
 
-        $this->output->expects($this->exactly(3))
+        $this->output->expects($this->once())
             ->method('writeln')
-            ->withConsecutive(
-                ['NamespaceA --> NamespaceB'],
-                ['NamespaceA --> NamespaceC'],
-                ['NamespaceB --> NamespaceC']
+            ->with(
+                'NamespaceA --> NamespaceB'.PHP_EOL
+                .'NamespaceA --> NamespaceC'.PHP_EOL
+                .'NamespaceB --> NamespaceC'
             );
         $this->textCommand->run($this->input, $this->output);
     }
