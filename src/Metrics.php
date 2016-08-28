@@ -36,9 +36,6 @@ class Metrics
             if (!$dependencies->contains($dependencyPair->from())) {
                 $dependencies = $dependencies->add($dependencyPair->from());
             }
-            if (!$dependencies->contains($dependencyPair->to())) {
-                $dependencies = $dependencies->add($dependencyPair->to());
-            }
             return $dependencies;
         })->filter($closure)->count();
     }
