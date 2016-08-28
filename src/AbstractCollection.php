@@ -96,6 +96,6 @@ abstract class AbstractCollection implements Collection
      */
     public function __toString() : string
     {
-        $this->toString();
+        return $this->toString();
     }
 }

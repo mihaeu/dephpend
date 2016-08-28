@@ -33,6 +33,6 @@ class DependencyCollectionTest extends \PHPUnit_Framework_TestCase
         $clazzCollection = (new DependencyCollection())
             ->add(new Clazz('Test'))
             ->add(new Clazz('Test2'));
-        $this->assertEquals('Test'.PHP_EOL.'Test2', $clazzCollection->toString());
+        $this->assertEquals('Test'.PHP_EOL.'Test2', $clazzCollection->__toString());
     }
 }
