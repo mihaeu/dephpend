@@ -64,7 +64,6 @@ class Metrics
         foreach ($this->extractFromDependencies($dependencies)->toArray() as $dependencyFrom) {
             /** @var Dependency $dependencyFrom */
             $afferent[$dependencyFrom->toString()] = 0;
-
             foreach ($dependencies->toArray() as $dependencyPair) {
                 /** @var DependencyPair $dependencyPair */
                 if ($dependencyPair->to()->equals($dependencyFrom)) {
@@ -88,11 +87,11 @@ class Metrics
         foreach ($this->extractFromDependencies($dependencies)->toArray() as $dependencyFrom) {
             /** @var Dependency $dependencyFrom */
             $efferent[$dependencyFrom->toString()] = 0;
-
             foreach ($dependencies->toArray() as $dependencyPair) {
                 /** @var DependencyPair $dependencyPair */
-                if ($dependencyPair->from()->equals($dependencyFrom)) {
-                    $efferent[$dependencyFrom->toString()] += 1;
+                if ($dependencyPair->from()->equals($dependencyFrom)
+                ) {
+                    ++$efferent[$dependencyFrom->toString()];
                 }
             }
         }
