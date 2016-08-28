@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\Analyser;
 use Mihaeu\PhpDependencies\DI;
 use Mihaeu\PhpDependencies\Metrics;
-use Mihaeu\PhpDependencies\Parser;
-use Mihaeu\PhpDependencies\PhpFileFinder;
 use Mihaeu\PhpDependencies\PlantUmlFormatter;
 use Mihaeu\PhpDependencies\PlantUmlWrapper;
 use Mihaeu\PhpDependencies\ShellWrapper;

@@ -20,7 +20,6 @@ class MetricsCommand extends BaseCommand
      * @param PhpFileFinder $phpFileFinder
      * @param Parser $parser
      * @param Analyser $analyser
-     * @param Metrics $metrics
      */
     public function __construct(
         PhpFileFinder $phpFileFinder,
@@ -29,7 +28,6 @@ class MetricsCommand extends BaseCommand
         Metrics $metrics
     ) {
         $this->metrics = $metrics;
-
         parent::__construct('metrics', $phpFileFinder, $parser, $analyser);
     }
 
@@ -47,10 +45,15 @@ class MetricsCommand extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln(print_r($this->metrics->computeMetrics($this->detectDependencies(
+        $dependencies = $this->detectDependencies(
             $input->getArgument('source'),
             $input->getOption('internals'),
             (int) $input->getOption('depth')
-        )), true));
+        );
+        $output->writeln('Classes: '.$this->metrics->classCount($dependencies));
+        $output->writeln('Abstract classes: '.$this->metrics->abstractClassCount($dependencies));
+        $output->writeln('Interfaces: '.$this->metrics->interfaceCount($dependencies));
+        $output->writeln('Traits: '.$this->metrics->traitCount($dependencies));
+        $output->writeln('Abstractness: '.$this->metrics->abstractness($dependencies));
     }
 }

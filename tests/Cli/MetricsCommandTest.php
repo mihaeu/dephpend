@@ -19,7 +19,7 @@ class MetricsCommandTest extends \PHPUnit_Framework_TestCase
     /** @var MetricsCommand */
     private $metricsCommand;
 
-    /** @var Metrics */
+    /** @var Metrics|\PHPUnit_Framework_MockObject_MockObject */
     private $metrics;
 
     /** @var InputInterface|\PHPUnit_Framework_MockObject_MockObject */
@@ -53,8 +53,26 @@ class MetricsCommandTest extends \PHPUnit_Framework_TestCase
         $this->output = $this->createMock(OutputInterface::class);
     }
 
-    public function testHasName()
+    public function testPrintsMetrics()
     {
-        $this->assertEquals('metrics', $this->metricsCommand->getName());
+        $this->input->method('getArgument')->willReturn([]);
+        $this->input->method('getOption')->willReturn(true, 0);
+
+        $this->metrics->method('classCount')->willReturn(1);
+        $this->metrics->method('abstractClassCount')->willReturn(1);
+        $this->metrics->method('interfaceCount')->willReturn(1);
+        $this->metrics->method('traitCount')->willReturn(1);
+        $this->metrics->method('abstractness')->willReturn(1);
+
+        $this->output->expects($this->exactly(5))->method('writeln')->withAnyParameters();
+//            ->withConsecutive(
+//            'Classes: 1',
+//            'Abstract classes: 1',
+//            'Interfaces: 1',
+//            'Traits: 1',
+//            'Abstractness: 1'
+//        );
+
+        $this->metricsCommand->run($this->input, $this->output);
     }
 }

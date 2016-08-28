@@ -6,28 +6,44 @@ namespace Mihaeu\PhpDependencies;
 
 class Metrics
 {
-    /**
-     * @param DependencyPairCollection $dependencies
-     *
-     * @return array
-     */
-    public function computeMetrics(DependencyPairCollection $dependencies) : array
+    public function abstractness(DependencyPairCollection $dependencies) : float
     {
-        $classCount = $this->classCount($dependencies);
-        $abstractClassCount = $this->abstractClassCount($dependencies);
-        $interfaceCount = $this->interfaceCount($dependencies);
-        $traitCount = $this->traitCount($dependencies);
+        $abstractions = $this->abstractClassCount($dependencies)
+            + $this->interfaceCount($dependencies)
+            + $this->traitCount($dependencies);
+        $allClasses = $this->classCount($dependencies)
+            + $this->abstractClassCount($dependencies)
+            + $this->interfaceCount($dependencies)
+            + $this->traitCount($dependencies);
+        return $abstractions / $allClasses;
+    }
 
-        $abstractions = $abstractClassCount + $interfaceCount + $traitCount;
-        $allClasses = $classCount + $abstractClassCount + $interfaceCount + $traitCount;
+    public function classCount(DependencyPairCollection $dependencies) : int
+    {
+        return $this->countFilteredItems($dependencies, function (Dependency $dependency) {
+            return $dependency instanceof Clazz;
+        });
+    }
 
-        return [
-            'classes'               => $classCount,
-            'abstractClasses'       => $abstractClassCount,
-            'interfaces'            => $interfaceCount,
-            'traits'                => $traitCount,
-            'abstractness'          => $abstractions / $allClasses,
-        ];
+    public function abstractClassCount(DependencyPairCollection $dependencies) : int
+    {
+        return $this->countFilteredItems($dependencies, function (Dependency $dependency) {
+            return $dependency instanceof AbstractClazz;
+        });
+    }
+
+    public function interfaceCount(DependencyPairCollection $dependencies) : int
+    {
+        return $this->countFilteredItems($dependencies, function (Dependency $dependency) {
+            return $dependency instanceof Interfaze;
+        });
+    }
+
+    public function traitCount(DependencyPairCollection $dependencies) : int
+    {
+        return $this->countFilteredItems($dependencies, function (Dependency $dependency) {
+            return $dependency instanceof Trait_;
+        });
     }
 
     private function countFilteredItems(DependencyPairCollection $dependencyPairCollection, \Closure $closure)
@@ -38,33 +54,5 @@ class Metrics
             }
             return $dependencies;
         })->filter($closure)->count();
-    }
-
-    private function classCount(DependencyPairCollection $dependencies) : int
-    {
-        return $this->countFilteredItems($dependencies, function (Dependency $dependency) {
-            return $dependency instanceof Clazz;
-        });
-    }
-
-    private function abstractClassCount(DependencyPairCollection $dependencies) : int
-    {
-        return $this->countFilteredItems($dependencies, function (Dependency $dependency) {
-            return $dependency instanceof AbstractClazz;
-        });
-    }
-
-    private function interfaceCount(DependencyPairCollection $dependencies) : int
-    {
-        return $this->countFilteredItems($dependencies, function (Dependency $dependency) {
-            return $dependency instanceof Interfaze;
-        });
-    }
-
-    private function traitCount(DependencyPairCollection $dependencies) : int
-    {
-        return $this->countFilteredItems($dependencies, function (Dependency $dependency) {
-            return $dependency instanceof Trait_;
-        });
     }
 }

@@ -12,14 +12,12 @@ class MetricsTest extends \PHPUnit_Framework_TestCase
     /** @var Metrics */
     private $metrics;
 
+    /** @var DependencyPairCollection */
+    private $dependencies;
+
     public function setUp()
     {
-        $this->metrics = new Metrics();
-    }
-
-    public function testComputesMetrics()
-    {
-        $dependencies = (new DependencyPairCollection())
+        $this->dependencies = (new DependencyPairCollection())
             ->add(new DependencyPair(new Clazz('A'), new Interfaze('B')))
             ->add(new DependencyPair(new Clazz('B'), new Interfaze('B')))
             ->add(new DependencyPair(new Clazz('R'), new Interfaze('B')))
@@ -28,11 +26,31 @@ class MetricsTest extends \PHPUnit_Framework_TestCase
             ->add(new DependencyPair(new Interfaze('B'), new Interfaze('E')))
             ->add(new DependencyPair(new Trait_('B'), new Interfaze('E')))
         ;
-        $actual = $this->metrics->computeMetrics($dependencies);
-        $this->assertEquals(4, $actual['classes']);
-        $this->assertEquals(1, $actual['abstractClasses']);
-        $this->assertEquals(1, $actual['interfaces']);
-        $this->assertEquals(1, $actual['traits']);
-        $this->assertEquals(0.428, $actual['abstractness'], '', 0.001);
+        $this->metrics = new Metrics($this->dependencies);
+    }
+
+    public function testCountClasses()
+    {
+        $this->assertEquals(4, $this->metrics->classCount($this->dependencies));
+    }
+
+    public function testCountInterfaces()
+    {
+        $this->assertEquals(1, $this->metrics->interfaceCount($this->dependencies));
+    }
+
+    public function testCountAbstractClasses()
+    {
+        $this->assertEquals(1, $this->metrics->abstractClassCount($this->dependencies));
+    }
+
+    public function testCountTraits()
+    {
+        $this->assertEquals(1, $this->metrics->traitCount($this->dependencies));
+    }
+
+    public function testComputeAbstractness()
+    {
+        $this->assertEquals(0.428, $this->metrics->abstractness($this->dependencies), '', 0.001);
     }
 }
