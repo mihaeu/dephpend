@@ -27,4 +27,12 @@ class DependencyCollectionTest extends \PHPUnit_Framework_TestCase
             ->add(new Clazz('Test'));
         $this->assertEquals([new Clazz('Test')], $clazzCollection->toArray());
     }
+
+    public function testToString()
+    {
+        $clazzCollection = (new DependencyCollection())
+            ->add(new Clazz('Test'))
+            ->add(new Clazz('Test2'));
+        $this->assertEquals('Test'.PHP_EOL.'Test2', $clazzCollection->toString());
+    }
 }

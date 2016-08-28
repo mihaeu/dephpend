@@ -83,4 +83,19 @@ abstract class AbstractCollection implements Collection
     {
         return in_array($other, $this->collection);
     }
+
+    public function toString() : string
+    {
+        return implode(PHP_EOL, $this->mapToArray(function ($x) {
+            return $x->toString();
+        }));
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString() : string
+    {
+        $this->toString();
+    }
 }
