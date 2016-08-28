@@ -64,7 +64,7 @@ class MetricsCommandTest extends \PHPUnit_Framework_TestCase
         $this->metrics->method('traitCount')->willReturn(1);
         $this->metrics->method('abstractness')->willReturn(1);
 
-        $this->output->expects($this->exactly(5))->method('writeln')->withAnyParameters();
+        $this->output->expects($this->exactly(8))->method('writeln')->withAnyParameters();
 //            ->withConsecutive(
 //            'Classes: 1',
 //            'Abstract classes: 1',

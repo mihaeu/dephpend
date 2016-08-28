@@ -6,6 +6,11 @@ namespace Mihaeu\PhpDependencies;
 
 class Metrics
 {
+    /**
+     * @param DependencyPairCollection $dependencies
+     *
+     * @return float Value from 0 (completely concrete) to 1 (completely abstract)
+     */
     public function abstractness(DependencyPairCollection $dependencies) : float
     {
         $abstractions = $this->abstractClassCount($dependencies)
@@ -92,6 +97,27 @@ class Metrics
             }
         }
         return $efferent;
+    }
+
+    /**
+     * Instability is an indicator for how resilient a package is towards change.
+     *
+     * @param DependencyPairCollection $dependencyPairCollection
+     *
+     * @return array Key: Class Value: Range from 0 (completely stable) to 1 (completely unstable)
+     */
+    public function instability(DependencyPairCollection $dependencyPairCollection) : array
+    {
+        $ce = $this->efferentCoupling($dependencyPairCollection);
+        $ca = $this->afferentCoupling($dependencyPairCollection);
+        $instability = [];
+        foreach ($ce as $class => $count) {
+            $totalCoupling = $ce[$class] + $ca[$class];
+            $instability[$class] = $totalCoupling !== 0
+                ? $ce[$class] / $totalCoupling
+                : 0;
+        }
+        return $instability;
     }
 
     private function extractFromDependencies(DependencyPairCollection $dependencyPairCollection) : DependencyCollection

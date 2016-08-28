@@ -55,5 +55,8 @@ class MetricsCommand extends BaseCommand
         $output->writeln('Interfaces: '.$this->metrics->interfaceCount($dependencies));
         $output->writeln('Traits: '.$this->metrics->traitCount($dependencies));
         $output->writeln('Abstractness: '.$this->metrics->abstractness($dependencies));
+        $output->writeln('Afferent Coupling: '.PHP_EOL.print_r($this->metrics->afferentCoupling($dependencies), true));
+        $output->writeln('Efferent Coupling: '.PHP_EOL.print_r($this->metrics->efferentCoupling($dependencies), true));
+        $output->writeln('Instability: '.PHP_EOL.print_r($this->metrics->instability($dependencies), true));
     }
 }

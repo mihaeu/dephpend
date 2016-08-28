@@ -80,4 +80,17 @@ class MetricsTest extends \PHPUnit_Framework_TestCase
             'H' => 1,
         ], $this->metrics->efferentCoupling($this->dependencies));
     }
+
+    public function testComputeInstability()
+    {
+        $this->assertEquals([
+            'A' => 1,
+            'G' => 1,
+            'R' => 1,
+            'C' => 1,
+            'D' => 1,
+            'B' => 0.25,
+            'H' => 1,
+        ], $this->metrics->instability($this->dependencies));
+    }
 }
