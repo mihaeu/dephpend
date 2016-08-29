@@ -79,6 +79,20 @@ class DependencyPairCollection extends AbstractCollection
         });
     }
 
+    /**
+     * @param string $vendor
+     *
+     * @return DependencyPairCollection
+     */
+    public function filterByVendor(string $vendor) : DependencyPairCollection
+    {
+        $vendor = new Namespaze([$vendor]);
+        return $this->filter(function (DependencyPair $dependencyPair) use ($vendor) {
+            return $dependencyPair->from()->reduceToDepth(1)->equals($vendor)
+                && $dependencyPair->to()->reduceToDepth(1)->equals($vendor);
+        });
+    }
+
     public function filterByDepth(int $depth) : DependencyPairCollection
     {
         return $this->reduce(new self(), function (DependencyPairCollection $dependencies, DependencyPair $dependencyPair) use ($depth) {

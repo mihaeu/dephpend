@@ -81,7 +81,13 @@ abstract class BaseCommand extends Command
                 'u',
                 InputOption::VALUE_NONE,
                 'Parse underscores in Class names as namespaces.'
-        )
+            )
+            ->addOption(
+                'vendor',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Analyse only classes from this vendor'
+            )
         ;
     }
 
@@ -113,12 +119,13 @@ abstract class BaseCommand extends Command
 
     /**
      * @param string[] $sources
-     * @param bool     $withInternals
-     * @param int      $depth
+     * @param bool $withInternals
+     * @param int $depth
+     * @param string $vendor
      *
      * @return DependencyPairCollection
      */
-    protected function detectDependencies(array $sources, bool $withInternals = false, int $depth = 0) : DependencyPairCollection
+    protected function detectDependencies(array $sources, bool $withInternals = false, int $depth = 0, string $vendor = null) : DependencyPairCollection
     {
         $files = array_reduce($sources, function (PhpFileCollection $collection, string $source) {
             return $collection->addAll($this->phpFileFinder->find(new \SplFileInfo($source)));
@@ -128,6 +135,10 @@ abstract class BaseCommand extends Command
         $dependencies = $withInternals
             ? $this->analyser->analyse($ast)
             : $this->analyser->analyse($ast)->removeInternals();
+
+        if ($vendor !== null) {
+            $dependencies = $dependencies->filterByVendor($vendor);
+        }
 
         return $dependencies->filterByDepth($depth);
     }
