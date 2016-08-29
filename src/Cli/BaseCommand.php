@@ -145,7 +145,7 @@ abstract class BaseCommand extends Command
      */
     protected function filterByInputOptions(DependencyPairCollection $dependencies, array $options) : DependencyPairCollection
     {
-        if ($options['internals']) {
+        if (!$options['internals']) {
             $dependencies = $dependencies->removeInternals();
         }
 
