@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
+use Mihaeu\PhpDependencies\DependencyStructureMatrixBuilder;
+use Mihaeu\PhpDependencies\DependencyStructureMatrixHtmlFormatter;
 use Mihaeu\PhpDependencies\DI;
 use Mihaeu\PhpDependencies\Metrics;
 use Mihaeu\PhpDependencies\PlantUmlFormatter;
@@ -48,7 +50,9 @@ class Application extends \Symfony\Component\Console\Application
             $phpFileFinder,
             $parser,
             $analyser,
-            new \Mihaeu\PhpDependencies\DependencyStructureMatrixHtmlFormatter()
+            new DependencyStructureMatrixHtmlFormatter(
+                new DependencyStructureMatrixBuilder()
+            )
         ));
 
         $this->add(new TextCommand(

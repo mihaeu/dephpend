@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class DsmCommand extends BaseCommand
 {
     /** @var DependencyStructureMatrixHtmlFormatter */
-    private $dependencyStructureMatrixFormatter;
+    private $dependencyStructureMatrixHtmlFormatter;
 
     public function __construct(
         PhpFileFinder $phpFileFinder,
@@ -28,7 +28,7 @@ class DsmCommand extends BaseCommand
         $this->defaultFormat = 'html';
         $this->allowedFormats = [$this->defaultFormat];
 
-        $this->dependencyStructureMatrixFormatter = $dependencyStructureMatrixFormatter;
+        $this->dependencyStructureMatrixHtmlFormatter = $dependencyStructureMatrixFormatter;
     }
 
     protected function configure()
@@ -52,7 +52,7 @@ class DsmCommand extends BaseCommand
         $this->ensureSourcesAreReadable($input->getArgument('source'));
         $this->ensureOutputFormatIsValid($input->getOption('format'));
 
-        $output->write($this->dependencyStructureMatrixFormatter->format(
+        $output->write($this->dependencyStructureMatrixHtmlFormatter->format(
             $this->detectDependencies(
                 $input->getArgument('source'),
                 $input->getOption('internals'),

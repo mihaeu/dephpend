@@ -71,10 +71,8 @@ class DependencyPairCollectionTest extends \PHPUnit_Framework_TestCase
             ->add(new DependencyPair(new Clazz('From'), new Clazz('To')))
             ->add(new DependencyPair(new Clazz('From'), new Clazz('ToAnother')));
         $expected = (new DependencyCollection())
-            ->add(new Clazz('From'))
-            ->add(new Clazz('To'))
-            ->add(new Clazz('ToAnother'));
-        $this->assertEquals($expected, $dependencies->allDependencies());
+            ->add(new Clazz('From'));
+        $this->assertEquals($expected, $dependencies->fromDependencies());
     }
 
     public function testRemovesInternals()

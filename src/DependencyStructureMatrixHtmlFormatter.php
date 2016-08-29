@@ -4,17 +4,25 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies;
 
-class DependencyStructureMatrixHtmlFormatter extends DependencyStructureMatrixFormatter
+class DependencyStructureMatrixHtmlFormatter implements Formatter
 {
+    /** @var DependencyStructureMatrixBuilder */
+    private $dependencyStructureMatrixBuilder;
+
+    /**
+     * @param DependencyStructureMatrixBuilder $dependencyStructureMatrixBuilder
+     */
+    public function __construct(DependencyStructureMatrixBuilder $dependencyStructureMatrixBuilder)
+    {
+        $this->dependencyStructureMatrixBuilder = $dependencyStructureMatrixBuilder;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function format(DependencyPairCollection $dependencyCollection) : string
     {
-        $dependencyArray = $this->buildMatrix(
-            $dependencyCollection,
-            $dependencyCollection->allDependencies()
-        );
+        $dependencyArray = $this->dependencyStructureMatrixBuilder->buildMatrix($dependencyCollection);
 
         return $this->buildHtmlTable($dependencyArray);
     }

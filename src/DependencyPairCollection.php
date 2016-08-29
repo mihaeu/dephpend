@@ -39,17 +39,12 @@ class DependencyPairCollection extends AbstractCollection
     /**
      * @return DependencyCollection
      */
-    public function allDependencies() : DependencyCollection
+    public function fromDependencies() : DependencyCollection
     {
         return $this->reduce(new DependencyCollection(), function (DependencyCollection $clazzes, DependencyPair $dependency) {
-            if (!$clazzes->contains($dependency->from())) {
-                $clazzes = $clazzes->add($dependency->from());
-            }
-            if (!$clazzes->contains($dependency->to())) {
-                $clazzes = $clazzes->add($dependency->to());
-            }
-
-            return $clazzes;
+            return $clazzes->contains($dependency->from())
+                ? $clazzes
+                : $clazzes->add($dependency->from());
         });
     }
 
