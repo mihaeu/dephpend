@@ -136,6 +136,6 @@ class DependencyPairCollectionTest extends \PHPUnit_Framework_TestCase
         $expected = DependencyHelper::convert('
             A --> C
         ');
-        $this->assertEquals($expected, $dependencies->filterByVendor('VendorA'));
+        $this->assertEquals($expected, $dependencies->filterByNamespace('VendorA'));
     }
 }

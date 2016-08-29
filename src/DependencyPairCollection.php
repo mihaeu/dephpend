@@ -80,19 +80,19 @@ class DependencyPairCollection extends AbstractCollection
     }
 
     /**
-     * @param string $vendor
+     * @param string $namespace
      *
      * @return DependencyPairCollection
      */
-    public function filterByVendor(string $vendor) : DependencyPairCollection
+    public function filterByNamespace(string $namespace) : DependencyPairCollection
     {
-        $vendor = new Namespaze([$vendor]);
-        return $this->reduce(new DependencyPairCollection(), function (DependencyPairCollection $dependencies, DependencyPair $dependencyPair) use ($vendor) {
-            if ($dependencyPair->from()->reduceToDepth(1)->equals($vendor)
-                && $dependencyPair->to()->reduceToDepth(1)->equals($vendor)) {
+        $namespace = new Namespaze(array_filter(explode('\\', $namespace)));
+        return $this->reduce(new DependencyPairCollection(), function (DependencyPairCollection $dependencies, DependencyPair $dependencyPair) use ($namespace) {
+            if ($dependencyPair->from()->reduceToDepth($namespace->count())->equals($namespace)
+                && $dependencyPair->to()->reduceToDepth($namespace->count())->equals($namespace)) {
                 $dependencies = $dependencies->add(new DependencyPair(
-                    $dependencyPair->from()->reduceDepthFromLeftBy(1),
-                    $dependencyPair->to()->reduceDepthFromLeftBy(1)
+                    $dependencyPair->from()->reduceDepthFromLeftBy($namespace->count()),
+                    $dependencyPair->to()->reduceDepthFromLeftBy($namespace->count())
                 ));
             }
 

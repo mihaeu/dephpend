@@ -84,10 +84,10 @@ abstract class BaseCommand extends Command
                 'Parse underscores in Class names as namespaces.'
             )
             ->addOption(
-                'vendor',
+                'filter-namespace',
                 null,
                 InputOption::VALUE_REQUIRED,
-                'Analyse only classes from this vendor'
+                'Analyse only classes from this namespace'
             )
         ;
     }
@@ -149,8 +149,8 @@ abstract class BaseCommand extends Command
             $dependencies = $dependencies->removeInternals();
         }
 
-        if ($options['vendor']) {
-            $dependencies = $dependencies->filterByVendor($options['vendor']);
+        if ($options['filter-namespace']) {
+            $dependencies = $dependencies->filterByNamespace($options['filter-namespace']);
         }
 
         if ($options['depth']) {

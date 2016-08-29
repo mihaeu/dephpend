@@ -57,7 +57,7 @@ class MetricsCommandTest extends \PHPUnit_Framework_TestCase
     {
         $this->input->method('getArgument')->willReturn([]);
         $this->input->method('getOption')->willReturn(true, 0);
-        $this->input->method('getOptions')->willReturn(['internals' => false, 'vendor' => null, 'depth' => 0]);
+        $this->input->method('getOptions')->willReturn(['internals' => false, 'filter-namespace' => null, 'depth' => 0]);
 
         $this->metrics->method('classCount')->willReturn(1);
         $this->metrics->method('abstractClassCount')->willReturn(1);

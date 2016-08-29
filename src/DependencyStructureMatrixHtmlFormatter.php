@@ -50,7 +50,7 @@ class DependencyStructureMatrixHtmlFormatter implements Formatter
         $output = '<tbody>';
         $numIndex = 1;
         foreach ($dependencyArray as $dependencyRow => $dependencies) {
-            $output .= "<tr><td>$numIndex: $dependencyRow</td>";
+            $output .= "<tr><th>$numIndex: $dependencyRow</th>";
             foreach ($dependencies as $dependencyHeader => $count) {
                 if ($dependencyRow === $dependencyHeader) {
                     $output .= '<td>X</td>';

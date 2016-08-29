@@ -97,7 +97,7 @@ class UmlCommandTest extends \PHPUnit_Framework_TestCase
             '/tmp/test.png',    // output
             false               // keep-uml
         );
-        $this->input->method('getOptions')->willReturn(['internals' => false, 'vendor' => null, 'depth' => 0]);
+        $this->input->method('getOptions')->willReturn(['internals' => false, 'filter-namespace' => null, 'depth' => 0]);
 
         $this->plantUmlWrapper->expects($this->once())->method('generate');
         $this->umlCommand->run(

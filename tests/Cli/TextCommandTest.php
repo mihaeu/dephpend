@@ -64,7 +64,7 @@ class TextCommandTest extends \PHPUnit_Framework_TestCase
 
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
         $this->input->method('getOption')->willReturn(false, 0);
-        $this->input->method('getOptions')->willReturn(['internals' => false, 'vendor' => null, 'depth' => 0]);
+        $this->input->method('getOptions')->willReturn(['internals' => false, 'filter-namespace' => null, 'depth' => 0]);
 
         $this->output->expects($this->once())
             ->method('writeln')
@@ -86,7 +86,7 @@ class TextCommandTest extends \PHPUnit_Framework_TestCase
         $this->analyser->method('analyse')->willReturn($dependencies);
 
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
-        $this->input->method('getOptions')->willReturn(['internals' => false, 'vendor' => null, 'depth' => 1]);
+        $this->input->method('getOptions')->willReturn(['internals' => false, 'filter-namespace' => null, 'depth' => 1]);
 
         $this->output->expects($this->once())
             ->method('writeln')
