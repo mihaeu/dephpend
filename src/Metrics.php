@@ -61,7 +61,7 @@ class Metrics
     public function afferentCoupling(DependencyPairCollection $dependencies) : array
     {
         $afferent = [];
-        foreach ($this->extractFromDependencies($dependencies)->toArray() as $dependencyFrom) {
+        foreach ($dependencies->fromDependencies()->toArray() as $dependencyFrom) {
             /** @var Dependency $dependencyFrom */
             $afferent[$dependencyFrom->toString()] = 0;
             foreach ($dependencies->toArray() as $dependencyPair) {
@@ -84,7 +84,7 @@ class Metrics
     public function efferentCoupling(DependencyPairCollection $dependencies) : array
     {
         $efferent = [];
-        foreach ($this->extractFromDependencies($dependencies)->toArray() as $dependencyFrom) {
+        foreach ($dependencies->fromDependencies()->toArray() as $dependencyFrom) {
             /** @var Dependency $dependencyFrom */
             $efferent[$dependencyFrom->toString()] = 0;
             foreach ($dependencies->toArray() as $dependencyPair) {
@@ -119,18 +119,8 @@ class Metrics
         return $instability;
     }
 
-    private function extractFromDependencies(DependencyPairCollection $dependencyPairCollection) : DependencyCollection
-    {
-        return $dependencyPairCollection->reduce(new DependencyCollection(), function (DependencyCollection $dependencies, DependencyPair $dependencyPair) {
-            if (!$dependencies->contains($dependencyPair->from())) {
-                $dependencies = $dependencies->add($dependencyPair->from());
-            }
-            return $dependencies;
-        });
-    }
-
     private function countFilteredItems(DependencyPairCollection $dependencyPairCollection, \Closure $closure)
     {
-        return $this->extractFromDependencies($dependencyPairCollection)->filter($closure)->count();
+        return $dependencyPairCollection->fromDependencies()->filter($closure)->count();
     }
 }
