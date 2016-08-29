@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies;
 
-interface Dependency
+interface Dependency extends \Countable
 {
-    public function depth() : int;
-
     public function reduceToDepth(int $maxDepth) : Dependency;
 
     public function reduceDepthFromLeftBy(int $reduction) : Dependency;

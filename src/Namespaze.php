@@ -41,22 +41,22 @@ class Namespaze implements Dependency
         }
     }
 
-    public function depth() : int
+    public function count() : int
     {
         return count($this->parts);
     }
 
     public function reduceToDepth(int $maxDepth) : Dependency
     {
-        return $this->depth() <= $maxDepth || $maxDepth === 0
+        return $this->count() <= $maxDepth || $maxDepth === 0
             ? $this
             : new self(array_slice($this->parts, 0, $maxDepth));
     }
 
     public function reduceDepthFromLeftBy(int $reduction) : Dependency
     {
-        return $this->depth() < $reduction || $reduction === 0
-            ? $this
+        return $reduction >= $this->count()
+            ? new self([])
             : new self(array_slice($this->parts, $reduction));
     }
 

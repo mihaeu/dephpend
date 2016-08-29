@@ -40,12 +40,12 @@ class ClazzTest extends \PHPUnit_Framework_TestCase
 
     public function testDepthWithoutNamespaceIsOne()
     {
-        $this->assertEquals(1, (new Clazz('A'))->depth());
+        $this->assertCount(1, new Clazz('A'));
     }
 
     public function testDepthWithNamespace()
     {
-        $this->assertEquals(3, (new Clazz('A', new Namespaze(['B', 'C'])))->depth());
+        $this->assertCount(3, new Clazz('A', new Namespaze(['B', 'C'])));
     }
 
     public function testReduceWithDepthZero()
@@ -83,6 +83,22 @@ class ClazzTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             H::clazz('D'),
             H::clazz('A\\B\\C\\D')->reduceDepthFromLeftBy(3)
+        );
+    }
+
+    public function testCannotLeftReduceClassWithNamespaceByItsLength()
+    {
+        $this->assertEquals(
+            H::clazz('A\\B\\C\\D'),
+            H::clazz('A\\B\\C\\D')->reduceDepthFromLeftBy(4)
+        );
+    }
+
+    public function testCannotLeftReduceClassWithNamespaceByMoreThanItsLength()
+    {
+        $this->assertEquals(
+            H::clazz('A\\B\\C\\D'),
+            H::clazz('A\\B\\C\\D')->reduceDepthFromLeftBy(5)
         );
     }
 }

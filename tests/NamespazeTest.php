@@ -27,12 +27,12 @@ class NamespazeTest extends \PHPUnit_Framework_TestCase
 
     public function testDepthOfEmptyNamespaceIsZero()
     {
-        $this->assertEquals(0, (new Namespaze([]))->depth());
+        $this->assertCount(0, new Namespaze([]));
     }
 
     public function testDepthOfNamespace()
     {
-        $this->assertEquals(2, (new Namespaze(['A', 'B']))->depth());
+        $this->assertCount(2, new Namespaze(['A', 'B']));
     }
 
     public function testReduceToMaxDepth()
@@ -48,6 +48,16 @@ class NamespazeTest extends \PHPUnit_Framework_TestCase
     public function testLeftReduceNamespace()
     {
         $this->assertEquals(new Namespaze(['C']), (new Namespaze(['A', 'B', 'C']))->reduceDepthFromLeftBy(2));
+    }
+
+    public function testReduceSameAsLengthProducesEmptyNamespace()
+    {
+        $this->assertEquals(new Namespaze([]), (new Namespaze(['A', 'B', 'C']))->reduceDepthFromLeftBy(3));
+    }
+
+    public function testReduceMoreThanLengthProducesEmptyNamespace()
+    {
+        $this->assertEquals(new Namespaze([]), (new Namespaze(['A', 'B', 'C']))->reduceDepthFromLeftBy(5));
     }
 
     public function testEquals()
