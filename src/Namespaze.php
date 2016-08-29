@@ -53,6 +53,13 @@ class Namespaze implements Dependency
             : new self(array_slice($this->parts, 0, $maxDepth));
     }
 
+    public function reduceDepthFromLeftBy(int $reduction) : Dependency
+    {
+        return $this->depth() < $reduction || $reduction === 0
+            ? $this
+            : new self(array_slice($this->parts, $reduction));
+    }
+
     public function equals(Dependency $other) : bool
     {
         return $this->toString() === $other->toString();

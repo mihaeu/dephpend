@@ -59,4 +59,11 @@ abstract class ClazzLike implements Dependency
             ? $this
             : $this->clazzNamespace->reduceToDepth($maxDepth);
     }
+
+    public function reduceDepthFromLeftBy(int $reduction) : Dependency
+    {
+        return $this->depth() <= $reduction || $reduction === 0
+            ? $this
+            : new Clazz($this->name, $this->clazzNamespace->reduceDepthFromLeftBy($reduction));
+    }
 }

@@ -10,7 +10,7 @@ class DependencyHelper
      * Converts dependencies written in string format into a proper
      * DependencyPairCollection.
      *
-     * @param string $input Written in the following format:
+     * @param string $input format:
      *
      *      DepA --> DepB
      *      DepC --> DepD
@@ -29,14 +29,23 @@ class DependencyHelper
             );
         }
 
-        $factory = new DependencyFactory();
         $dependencies = new DependencyPairCollection();
         for ($i = 0, $len = count($tokens); $i < $len; $i += 3) {
             $dependencies = $dependencies->add(new DependencyPair(
-                $factory->createClazzFromStringArray((explode('\\', $tokens[$i]))),
-                $factory->createClazzFromStringArray((explode('\\', $tokens[$i + 2])))
+                self::clazz($tokens[$i]),
+                self::clazz($tokens[$i + 2])
             ));
         }
         return $dependencies;
+    }
+
+    /**
+     * @param string $input format: NamespaceA\\ClassA
+     *
+     * @return Clazz
+     */
+    public static function clazz(string $input) : Clazz
+    {
+        return (new DependencyFactory())->createClazzFromStringArray((explode('\\', $input)));
     }
 }

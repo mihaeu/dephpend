@@ -91,14 +91,13 @@ class UmlCommandTest extends \PHPUnit_Framework_TestCase
     {
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
         $this->input->method('getOption')->willReturn(
-            '/tmp/test.png',
-            '/tmp/test.png',
-            '/tmp/test.png',
-            false,
-            0,
-            '/tmp/test.png',
-            false
+            '/tmp/test.png',    // output
+            '/tmp/test.png',    // output
+            '/tmp/test.png',    // output
+            '/tmp/test.png',    // output
+            false               // keep-uml
         );
+        $this->input->method('getOptions')->willReturn(['internals' => false, 'vendor' => null, 'depth' => 0]);
 
         $this->plantUmlWrapper->expects($this->once())->method('generate');
         $this->umlCommand->run(

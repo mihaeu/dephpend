@@ -112,17 +112,30 @@ class DependencyPairCollectionTest extends \PHPUnit_Framework_TestCase
 
     public function testFilterByDepthThree()
     {
-        $dependencies = (new DependencyPairCollection())
-            ->add(new DependencyPair(
-                new Clazz('From', new Namespaze(['VendorA', 'ProjectA', 'PathA'])),
-                new Clazz('To', new Namespaze(['VendorB', 'ProjectB', 'PathB'])))
-        );
+        $dependencies = DependencyHelper::convert('
+            VendorA\\ProjectA\\PathA\\From --> VendorB\\ProjectB\\PathB\\To
+        ');
         $expected = (new DependencyPairCollection())
             ->add(new DependencyPair(
                     new Namespaze(['VendorA', 'ProjectA', 'PathA']),
-                    new Namespaze(['VendorB', 'ProjectB', 'PathB']))
+                    new Namespaze(['VendorB', 'ProjectB', 'PathB'])
+            )
         );
         $actual = $dependencies->filterByDepth(3);
         $this->assertEquals($expected, $actual);
+    }
+
+    public function testFilterByVendor()
+    {
+        $dependencies = DependencyHelper::convert('
+            VendorA\\A --> VendorB\\A
+            VendorA\\A --> VendorA\\C
+            VendorB\\B --> VendorA\\A
+            VendorC\\C --> VendorA\\A
+        ');
+        $expected = DependencyHelper::convert('
+            A --> C
+        ');
+        $this->assertEquals($expected, $dependencies->filterByVendor('VendorA'));
     }
 }

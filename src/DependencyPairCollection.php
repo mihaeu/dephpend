@@ -87,9 +87,16 @@ class DependencyPairCollection extends AbstractCollection
     public function filterByVendor(string $vendor) : DependencyPairCollection
     {
         $vendor = new Namespaze([$vendor]);
-        return $this->filter(function (DependencyPair $dependencyPair) use ($vendor) {
-            return $dependencyPair->from()->reduceToDepth(1)->equals($vendor)
-                && $dependencyPair->to()->reduceToDepth(1)->equals($vendor);
+        return $this->reduce(new DependencyPairCollection(), function (DependencyPairCollection $dependencies, DependencyPair $dependencyPair) use ($vendor) {
+            if ($dependencyPair->from()->reduceToDepth(1)->equals($vendor)
+                && $dependencyPair->to()->reduceToDepth(1)->equals($vendor)) {
+                $dependencies = $dependencies->add(new DependencyPair(
+                    $dependencyPair->from()->reduceDepthFromLeftBy(1),
+                    $dependencyPair->to()->reduceDepthFromLeftBy(1)
+                ));
+            }
+
+            return $dependencies;
         });
     }
 

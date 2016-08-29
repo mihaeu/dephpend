@@ -10,6 +10,7 @@ use Mihaeu\PhpDependencies\Parser;
 use Mihaeu\PhpDependencies\PhpFileCollection;
 use Mihaeu\PhpDependencies\PhpFileFinder;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\Input;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -130,17 +131,33 @@ abstract class BaseCommand extends Command
         $files = array_reduce($sources, function (PhpFileCollection $collection, string $source) {
             return $collection->addAll($this->phpFileFinder->find(new \SplFileInfo($source)));
         }, new PhpFileCollection());
-        $ast = $this->parser->parse($files);
 
-        $dependencies = $withInternals
-            ? $this->analyser->analyse($ast)
-            : $this->analyser->analyse($ast)->removeInternals();
+        return $this->analyser->analyse(
+            $this->parser->parse($files)
+        );
+    }
 
-        if ($vendor !== null) {
-            $dependencies = $dependencies->filterByVendor($vendor);
+    /**
+     * @param DependencyPairCollection $dependencies
+     * @param string[] $options
+     *
+     * @return DependencyPairCollection
+     */
+    protected function filterByInputOptions(DependencyPairCollection $dependencies, array $options) : DependencyPairCollection
+    {
+        if ($options['internals']) {
+            $dependencies = $dependencies->removeInternals();
         }
 
-        return $dependencies->filterByDepth($depth);
+        if ($options['vendor']) {
+            $dependencies = $dependencies->filterByVendor($options['vendor']);
+        }
+
+        if ($options['depth']) {
+            $dependencies = $dependencies->filterByDepth((int) $options['depth']);
+        }
+
+        return $dependencies;
     }
 
     /**

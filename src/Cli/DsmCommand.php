@@ -52,13 +52,10 @@ class DsmCommand extends BaseCommand
         $this->ensureSourcesAreReadable($input->getArgument('source'));
         $this->ensureOutputFormatIsValid($input->getOption('format'));
 
-        $output->write($this->dependencyStructureMatrixHtmlFormatter->format(
-            $this->detectDependencies(
-                $input->getArgument('source'),
-                $input->getOption('internals'),
-                (int) $input->getOption('depth'),
-                $input->getOption('vendor')
-            )
-        ));
+        $dependencies = $this->filterByInputOptions(
+            $this->detectDependencies($input->getArgument('source')),
+            $input->getOptions()
+        );
+        $output->write($this->dependencyStructureMatrixHtmlFormatter->format($dependencies));
     }
 }

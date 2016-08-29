@@ -65,10 +65,9 @@ class UmlCommand extends BaseCommand
         $this->ensureDestinationIsWritable($input->getOption('output'));
         $this->ensureOutputFormatIsValid($input->getOption('output'));
 
-        $dependencies = $this->detectDependencies(
-            $input->getArgument('source'),
-            $input->getOption('internals'),
-            (int) $input->getOption('depth')
+        $dependencies = $this->filterByInputOptions(
+            $this->detectDependencies($input->getArgument('source')),
+            $input->getOptions()
         )->unique();
 
         $destination = new \SplFileInfo($input->getOption('output'));

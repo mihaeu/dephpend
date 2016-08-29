@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies;
 
+use Mihaeu\PhpDependencies\DependencyHelper as H;
+
 /**
  * @covers Mihaeu\PhpDependencies\Clazz
  * @covers Mihaeu\PhpDependencies\ClazzLike
@@ -49,8 +51,8 @@ class ClazzTest extends \PHPUnit_Framework_TestCase
     public function testReduceWithDepthZero()
     {
         $this->assertEquals(
-            new Clazz('A', new Namespaze(['B', 'C', 'D'])),
-            (new Clazz('A', new Namespaze(['B', 'C', 'D'])))->reduceToDepth(0)
+            H::clazz('A\\B\\C\\D'),
+            H::clazz('A\\B\\C\\D')->reduceToDepth(0)
         );
     }
 
@@ -61,17 +63,26 @@ class ClazzTest extends \PHPUnit_Framework_TestCase
 
     public function testReduceDepthToTwoProducesTopTwoNamespaces()
     {
+        $clazz = H::clazz('A\\B\\C\\D');
         $this->assertEquals(
-            new Namespaze(['B', 'C']),
-            (new Clazz('A', new Namespaze(['B', 'C', 'D'])))->reduceToDepth(2)
+            new Namespaze(['A', 'B']),
+            $clazz->reduceToDepth(2)
         );
     }
 
     public function testReduceToDepthOfOneProducesOneNamespace()
     {
         $this->assertEquals(
-            new Namespaze(['B']),
-            (new Clazz('A', new Namespaze(['B', 'C', 'D'])))->reduceToDepth(1)
+            new Namespaze(['A']),
+            H::clazz('A\\B\\C\\D')->reduceToDepth(1)
+        );
+    }
+
+    public function testLeftReduceClassWithNamespace()
+    {
+        $this->assertEquals(
+            H::clazz('D'),
+            H::clazz('A\\B\\C\\D')->reduceDepthFromLeftBy(3)
         );
     }
 }

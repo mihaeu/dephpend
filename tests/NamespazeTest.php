@@ -45,6 +45,11 @@ class NamespazeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(new Namespaze(['A', 'B']), (new Namespaze(['A', 'B']))->reduceToDepth(0));
     }
 
+    public function testLeftReduceNamespace()
+    {
+        $this->assertEquals(new Namespaze(['C']), (new Namespaze(['A', 'B', 'C']))->reduceDepthFromLeftBy(2));
+    }
+
     public function testEquals()
     {
         $this->assertTrue((new Namespaze(['A', 'B']))->equals(new Namespaze(['A', 'B'])));

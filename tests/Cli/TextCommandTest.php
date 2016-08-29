@@ -6,6 +6,7 @@ namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser;
 use Mihaeu\PhpDependencies\Clazz;
+use Mihaeu\PhpDependencies\DependencyHelper;
 use Mihaeu\PhpDependencies\Namespaze;
 use Mihaeu\PhpDependencies\DependencyPair;
 use Mihaeu\PhpDependencies\DependencyPairCollection;
@@ -54,20 +55,16 @@ class TextCommandTest extends \PHPUnit_Framework_TestCase
 
     public function testPrintsDependencies()
     {
-        $dependencies = (new DependencyPairCollection())
-            ->add(new DependencyPair(
-                new Clazz('ClassA', new Namespaze(['A', 'a', '1'])),
-                new Clazz('ClassB', new Namespaze(['B', 'a', '1']))))
-            ->add(new DependencyPair(
-                new Clazz('ClassA', new Namespaze(['A', 'a', '1'])),
-                new Clazz('ClassC', new Namespaze(['C', 'a', '1']))))
-            ->add(new DependencyPair(
-                new Clazz('ClassB', new Namespaze(['B', 'a', '1'])),
-                new Clazz('ClassC', new Namespaze(['C', 'a', '1']))));
+        $dependencies = DependencyHelper::convert('
+            A\\a\\1\\ClassA --> B\\a\\1\\ClassB
+            A\\a\\1\\ClassA --> C\\a\\1\\ClassC
+            B\\a\\1\\ClassB --> C\\a\\1\\ClassC
+        ');
         $this->analyser->method('analyse')->willReturn($dependencies);
 
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
         $this->input->method('getOption')->willReturn(false, 0);
+        $this->input->method('getOptions')->willReturn(['internals' => false, 'vendor' => null, 'depth' => 0]);
 
         $this->output->expects($this->once())
             ->method('writeln')
@@ -81,21 +78,15 @@ class TextCommandTest extends \PHPUnit_Framework_TestCase
 
     public function testPrintsOnlyNamespacedDependencies()
     {
-        $dependencies = (new DependencyPairCollection())
-            ->add(new DependencyPair(
-                new Clazz('A', new Namespaze(['NamespaceA'])),
-                new Clazz('B', new Namespaze(['NamespaceB'])))
-            )->add(new DependencyPair(
-                new Clazz('A', new Namespaze(['NamespaceA'])),
-                new Clazz('C', new Namespaze(['NamespaceC'])))
-            )->add(new DependencyPair(
-                new Clazz('B', new Namespaze(['NamespaceB'])),
-                new Clazz('C', new Namespaze(['NamespaceC'])))
-            );
+        $dependencies = DependencyHelper::convert('
+            NamespaceA\\A --> NamespaceB\\B
+            NamespaceA\\A --> NamespaceC\\C
+            NamespaceB\\B --> NamespaceC\\C
+        ');
         $this->analyser->method('analyse')->willReturn($dependencies);
 
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
-        $this->input->method('getOption')->willReturn(false, 1);
+        $this->input->method('getOptions')->willReturn(['internals' => false, 'vendor' => null, 'depth' => 1]);
 
         $this->output->expects($this->once())
             ->method('writeln')
