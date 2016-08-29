@@ -22,9 +22,9 @@ class DependencyStructureMatrixHtmlFormatter implements Formatter
      */
     public function format(DependencyPairCollection $dependencyCollection) : string
     {
-        $dependencyArray = $this->dependencyStructureMatrixBuilder->buildMatrix($dependencyCollection);
-
-        return $this->buildHtmlTable($dependencyArray);
+        return $this->buildHtmlTable(
+            $this->dependencyStructureMatrixBuilder->buildMatrix($dependencyCollection)
+        );
     }
 
     /**
@@ -34,25 +34,48 @@ class DependencyStructureMatrixHtmlFormatter implements Formatter
      */
     private function buildHtmlTable(array $dependencyArray) : string
     {
-        $output = [
-            '<table><thead><tr><th>X</th><th>'.implode('</th><th>',
-                array_keys($dependencyArray)),
-        ];
-        $output[] = '</th></tr></thead><tbody>';
+        return '<table>'
+            .$this->tableHead($dependencyArray)
+            .$this->tableBody($dependencyArray)
+            .'</table>';
+    }
 
+    /**
+     * @param array $dependencyArray
+     *
+     * @return string
+     */
+    private function tableBody(array $dependencyArray)
+    {
+        $output = '<tbody>';
+        $numIndex = 1;
         foreach ($dependencyArray as $dependencyRow => $dependencies) {
-            $output[] = '<tr><td>'.$dependencyRow.'</td>';
+            $output .= "<tr><td>$numIndex: $dependencyRow</td>";
             foreach ($dependencies as $dependencyHeader => $count) {
                 if ($dependencyRow === $dependencyHeader) {
-                    $output[] = '<td>X</td>';
+                    $output .= '<td>X</td>';
                 } else {
-                    $output[] = '<td>'.$count.'</td>';
+                    $output .= '<td>' . $count . '</td>';
                 }
             }
-            $output[] = '</tr>';
+            $output .= '</tr>';
+            $numIndex += 1;
         }
-        $output[] = '</tbody></table>';
+        $output .= '</tbody>';
+        return $output;
+    }
 
-        return implode('', $output);
+    /**
+     * @param array $dependencyArray
+     *
+     * @return string
+     */
+    private function tableHead(array $dependencyArray)
+    {
+        $output = '<thead><tr><th>X</th>';
+        for ($i = 1, $len = count($dependencyArray); $i <= $len; $i += 1) {
+            $output .= "<th>$i</th>";
+        }
+        return $output . '</tr></thead>';
     }
 }

@@ -13,11 +13,11 @@ class DependencyStructureMatrixBuilder
      */
     public function buildMatrix(DependencyPairCollection $dependencyPairCollection) : array
     {
-        $fromDependencies = $dependencyPairCollection->fromDependencies();
-        $emptyDsm = $fromDependencies->reduce([], function (array $combined, Dependency $dependency) use ($fromDependencies) {
+        $dependencies = $dependencyPairCollection->allDependencies();
+        $emptyDsm = $dependencies->reduce([], function (array $combined, Dependency $dependency) use ($dependencies) {
             $combined[$dependency->toString()] = array_combine(
-                array_values($fromDependencies->toArray()),     // keys:    dependency name
-                array_pad([], $fromDependencies->count(), 0)    // values:  [0, 0, 0, ... , 0]
+                array_values($dependencies->toArray()),     // keys:    dependency name
+                array_pad([], $dependencies->count(), 0)    // values:  [0, 0, 0, ... , 0]
             );
 
             return $combined;

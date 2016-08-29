@@ -49,6 +49,24 @@ class DependencyPairCollection extends AbstractCollection
     }
 
     /**
+     * @return DependencyCollection
+     */
+    public function allDependencies() : DependencyCollection
+    {
+        return $this->reduce(new DependencyCollection(), function (DependencyCollection $dependencies, DependencyPair $dependency) {
+            if (!$dependencies->contains($dependency->from())) {
+                $dependencies = $dependencies->add($dependency->from());
+            }
+
+            if (!$dependencies->contains($dependency->to())) {
+                $dependencies = $dependencies->add($dependency->to());
+            }
+
+            return $dependencies;
+        });
+    }
+
+    /**
      * @return DependencyPairCollection
      */
     public function removeInternals() : DependencyPairCollection

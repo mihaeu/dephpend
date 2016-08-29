@@ -65,7 +65,7 @@ class DependencyPairCollectionTest extends \PHPUnit_Framework_TestCase
         }));
     }
 
-    public function testAllClasses()
+    public function testFromClasses()
     {
         $dependencies = (new DependencyPairCollection())
             ->add(new DependencyPair(new Clazz('From'), new Clazz('To')))
@@ -73,6 +73,19 @@ class DependencyPairCollectionTest extends \PHPUnit_Framework_TestCase
         $expected = (new DependencyCollection())
             ->add(new Clazz('From'));
         $this->assertEquals($expected, $dependencies->fromDependencies());
+    }
+
+    public function testAllClasses()
+    {
+        $dependencies = (new DependencyPairCollection())
+            ->add(new DependencyPair(new Clazz('From'), new Clazz('To')))
+            ->add(new DependencyPair(new Clazz('From'), new Clazz('ToAnother')));
+        $expected = (new DependencyCollection())
+            ->add(new Clazz('From'))
+            ->add(new Clazz('To'))
+            ->add(new Clazz('ToAnother'))
+        ;
+        $this->assertEquals($expected, $dependencies->allDependencies());
     }
 
     public function testRemovesInternals()

@@ -29,11 +29,11 @@ class DependencyStructureMatrixHtmlFormatterTest extends \PHPUnit_Framework_Test
             'C' => ['A' => 0, 'B' => 0, 'C' => 0]
         ]);
         $this->assertEquals('<table><thead>'
-            .'<tr><th>X</th><th>A</th><th>B</th><th>C</th></tr>'
+            .'<tr><th>X</th><th>1</th><th>2</th><th>3</th></tr>'
             .'</thead><tbody>'
-            .'<tr><td>A</td><td>X</td><td>1</td><td>1</td></tr>'
-            .'<tr><td>B</td><td>0</td><td>X</td><td>1</td></tr>'
-            .'<tr><td>C</td><td>0</td><td>0</td><td>X</td></tr>'
+            .'<tr><td>1: A</td><td>X</td><td>1</td><td>1</td></tr>'
+            .'<tr><td>2: B</td><td>0</td><td>X</td><td>1</td></tr>'
+            .'<tr><td>3: C</td><td>0</td><td>0</td><td>X</td></tr>'
             .'</tbody></table>',
             $this->dependencyStructureMatrixHtmlFormatter->format(new DependencyPairCollection())
         );
