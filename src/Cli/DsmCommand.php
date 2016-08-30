@@ -56,7 +56,10 @@ class DsmCommand extends BaseCommand
         $dependencies = $this->filterByInputOptions(
             $this->detectDependencies($input->getArgument('source')),
             $options
-        )->filterByDepth((int) $options['depth']);
-        $output->write($this->dependencyStructureMatrixHtmlFormatter->format($dependencies));
+        );
+        $output->write($this->dependencyStructureMatrixHtmlFormatter->format(
+            $dependencies,
+            (int) $options['depth']
+        ));
     }
 }

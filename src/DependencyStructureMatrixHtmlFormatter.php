@@ -20,10 +20,10 @@ class DependencyStructureMatrixHtmlFormatter implements Formatter
     /**
      * {@inheritdoc}
      */
-    public function format(DependencyPairCollection $dependencyCollection) : string
+    public function format(DependencyPairCollection $dependencyCollection, int $depth= 0) : string
     {
         return $this->buildHtmlTable(
-            $this->dependencyStructureMatrixBuilder->buildMatrix($dependencyCollection)
+            $this->dependencyStructureMatrixBuilder->buildMatrix($dependencyCollection, $depth)
         );
     }
 
