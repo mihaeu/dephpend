@@ -33,8 +33,10 @@ class TextCommand extends BaseCommand
         $this->ensureSourcesAreReadable($input->getArgument('source'));
 
         $dependencies = $this->detectDependencies($input->getArgument('source'));
+        $options = $input->getOptions();
         $output->writeln(
-            $this->filterByInputOptions($dependencies, $input->getOptions())
+            $this->filterByInputOptions($dependencies, $options)
+                ->filterByDepth((int) $options['depth'])
                 ->unique()
                 ->toString()
         );
