@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies;
 
+/**
+ * @covers Mihaeu\PhpDependencies\DependencyHelper
+ */
 class DependencyHelperTest extends \PHPUnit_Framework_TestCase
 {
     public function testConvert()
