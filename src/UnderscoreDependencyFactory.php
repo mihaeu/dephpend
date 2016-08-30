@@ -7,18 +7,38 @@ namespace Mihaeu\PhpDependencies;
 class UnderscoreDependencyFactory extends DependencyFactory
 {
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    public function createClazzFromStringArray(array $parts) : Clazz
+    protected function extractClazzPart(array $parts)
     {
-        if (count($parts) === 1) {
-            return parent::createClazzFromStringArray(explode('_', $parts[0]));
+        return parent::extractClazzPart(
+            $this->underscorePartsToNamespacedParts($parts)
+        );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function extractNamespaceParts(array $parts)
+    {
+        return parent::extractNamespaceParts(
+            $this->underscorePartsToNamespacedParts($parts)
+        );
+    }
+
+    /**
+     * @param string[] $parts
+     *
+     * @return string[]
+     */
+    private function underscorePartsToNamespacedParts(array $parts)
+    {
+        $newParts = [];
+        foreach ($parts as $underscorePart) {
+            foreach (explode('_', $underscorePart) as $part) {
+                $newParts[] = $part;
+            }
         }
-
-        $classParts = explode('_', $parts[count($parts) - 1]);
-        $partsWithoutClass = array_slice($parts, 0, -1);
-        $newParts = array_merge($partsWithoutClass, $classParts);
-
-        return parent::createClazzFromStringArray($newParts);
+        return $newParts;
     }
 }

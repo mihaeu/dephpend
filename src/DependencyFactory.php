@@ -11,7 +11,7 @@ class DependencyFactory
      *
      * @return Clazz
      */
-    public function createClazzFromStringArray(array $parts) : Clazz
+    final public function createClazzFromStringArray(array $parts) : Clazz
     {
         return new Clazz(
             $this->extractClazzPart($parts),
@@ -24,7 +24,7 @@ class DependencyFactory
      *
      * @return AbstractClazz
      */
-    public function createAbstractClazzFromStringArray(array $parts) : AbstractClazz
+    final public function createAbstractClazzFromStringArray(array $parts) : AbstractClazz
     {
         return new AbstractClazz(
             $this->extractClazzPart($parts),
@@ -37,7 +37,7 @@ class DependencyFactory
      *
      * @return Interfaze
      */
-    public function createInterfazeFromStringArray(array $parts) : Interfaze
+    final public function createInterfazeFromStringArray(array $parts) : Interfaze
     {
         return new Interfaze(
             $this->extractClazzPart($parts),
@@ -50,7 +50,7 @@ class DependencyFactory
      *
      * @return Trait_
      */
-    public function createTraitFromStringArray(array $parts) : Trait_
+    final public function createTraitFromStringArray(array $parts) : Trait_
     {
         return new Trait_(
             $this->extractClazzPart($parts),
@@ -63,7 +63,7 @@ class DependencyFactory
      *
      * @return array
      */
-    private function extractNamespaceParts(array $parts)
+    protected function extractNamespaceParts(array $parts)
     {
         return array_slice($parts, 0, -1);
     }
@@ -73,7 +73,7 @@ class DependencyFactory
      *
      * @return mixed
      */
-    private function extractClazzPart(array $parts)
+    protected function extractClazzPart(array $parts)
     {
         return array_slice($parts, -1)[0];
     }

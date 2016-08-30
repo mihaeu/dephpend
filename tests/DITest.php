@@ -26,6 +26,7 @@ class DITest extends \PHPUnit_Framework_TestCase
 
     public function testCreatesUnderscoreAnalyser()
     {
+        $this->markTestIncomplete('Should test whether the right factory is created or not');
         $this->assertInstanceOf(Analyser::class, (new DI())->analyser(true));
     }
 }

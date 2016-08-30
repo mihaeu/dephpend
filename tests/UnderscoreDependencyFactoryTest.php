@@ -45,4 +45,28 @@ class UnderscoreDependencyFactoryTest extends \PHPUnit_Framework_TestCase
             $this->clazzFactory->createClazzFromStringArray(['A', 'B_Test'])
         );
     }
+
+    public function testCreateAbstractClass()
+    {
+        $this->assertEquals(
+            new AbstractClazz('Test', new Namespaze(['A', 'B'])),
+            $this->clazzFactory->createAbstractClazzFromStringArray(['A', 'B_Test'])
+        );
+    }
+
+    public function testCreateInterface()
+    {
+        $this->assertEquals(
+            new Interfaze('Test', new Namespaze(['A', 'B'])),
+            $this->clazzFactory->createInterfazeFromStringArray(['A', 'B_Test'])
+        );
+    }
+
+    public function testCreateTrait()
+    {
+        $this->assertEquals(
+            new Trait_('Test', new Namespaze(['A', 'B'])),
+            $this->clazzFactory->createTraitFromStringArray(['A', 'B_Test'])
+        );
+    }
 }
