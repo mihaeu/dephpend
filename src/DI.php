@@ -33,7 +33,7 @@ class DI
      *
      * @return DependencyFactory
      */
-    private function clazzFactory(bool $withUnderscoreSupport = false) : DependencyFactory
+    public function dependencyFactory(bool $withUnderscoreSupport = false) : DependencyFactory
     {
         return $withUnderscoreSupport
             ? new UnderscoreDependencyFactory()
@@ -47,9 +47,9 @@ class DI
     {
         return  new Analyser(
             new NodeTraverser(),
-                new DependencyInspectionVisitor(
-                    $this->clazzFactory($withUnderscoreSupport)
-                )
-            );
+            new DependencyInspectionVisitor(
+                $this->dependencyFactory($withUnderscoreSupport)
+            )
+        );
     }
 }
