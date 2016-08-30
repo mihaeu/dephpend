@@ -60,18 +60,19 @@ class UmlCommand extends BaseCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $options = $input->getOptions();
         $this->ensureSourcesAreReadable($input->getArgument('source'));
-        $this->ensureOutputExists($input->getOption('output'));
-        $this->ensureDestinationIsWritable($input->getOption('output'));
-        $this->ensureOutputFormatIsValid($input->getOption('output'));
+        $this->ensureOutputExists($options['output']);
+        $this->ensureDestinationIsWritable($options['output']);
+        $this->ensureOutputFormatIsValid($options['output']);
 
         $dependencies = $this->filterByInputOptions(
             $this->detectDependencies($input->getArgument('source')),
-            $input->getOptions()
-        )->unique();
+            $options
+        )->filterByDepth((int) $options['depth'])->unique();
 
-        $destination = new \SplFileInfo($input->getOption('output'));
-        $this->plantUmlWrapper->generate($dependencies, $destination, $input->getOption('keep-uml'));
+        $destination = new \SplFileInfo($options['output']);
+        $this->plantUmlWrapper->generate($dependencies, $destination, $options['keep-uml']);
     }
 
     /**

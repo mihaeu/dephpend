@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser;
-use Mihaeu\PhpDependencies\Clazz;
-use Mihaeu\PhpDependencies\DependencyPair;
-use Mihaeu\PhpDependencies\DependencyPairCollection;
+use Mihaeu\PhpDependencies\DependencyHelper;
 use Mihaeu\PhpDependencies\DependencyStructureMatrixHtmlFormatter;
 use Mihaeu\PhpDependencies\Parser;
 use Mihaeu\PhpDependencies\PhpFileFinder;
@@ -60,11 +58,14 @@ class DsmCommandTest extends \PHPUnit_Framework_TestCase
     public function testHandsDependenciesToFormatter()
     {
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
-        $this->input->method('getOption')->willReturn('html', true, 0);
-        $this->input->method('getOptions')->willReturn(['internals' => false, 'filter-namespace' => null, 'depth' => 0]);
+        $this->input->method('getOptions')->willReturn([
+            'format' => 'html',
+            'internals' => false,
+            'filter-namespace' => null,
+            'depth' => 0
+        ]);
 
-        $dependencies = (new DependencyPairCollection())
-            ->add(new DependencyPair(new Clazz('A'), new Clazz('B')));
+        $dependencies = DependencyHelper::convert('A --> B');
         $this->analyser->method('analyse')->willReturn($dependencies);
 
         $this->dependencyStructureMatrixFormatter->expects($this->once())->method('format')->with($dependencies);
@@ -74,7 +75,7 @@ class DsmCommandTest extends \PHPUnit_Framework_TestCase
     public function testDoesNotAllowOtherFormats()
     {
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
-        $this->input->method('getOption')->willReturn('tiff');
+        $this->input->method('getOptions')->willReturn(['format' => 'tiff']);
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Output format is not allowed (html)');
         $this->dsmCommand->run($this->input, $this->output);

@@ -78,7 +78,7 @@ class UmlCommandTest extends \PHPUnit_Framework_TestCase
     public function testChecksIfDestinationIsWritable()
     {
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
-        $this->input->method('getOption')->willReturn('/sdfsdfsd');
+        $this->input->method('getOptions')->willReturn(['output' => '/sdfsdfsd']);
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Destination is not writable.');
         $this->umlCommand->run(
@@ -90,14 +90,13 @@ class UmlCommandTest extends \PHPUnit_Framework_TestCase
     public function testGenerateUml()
     {
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
-        $this->input->method('getOption')->willReturn(
-            '/tmp/test.png',    // output
-            '/tmp/test.png',    // output
-            '/tmp/test.png',    // output
-            '/tmp/test.png',    // output
-            false               // keep-uml
-        );
-        $this->input->method('getOptions')->willReturn(['internals' => false, 'filter-namespace' => null, 'depth' => 0]);
+        $this->input->method('getOptions')->willReturn([
+            'output' => '/tmp/test.png',
+            'keep-uml' => false,
+            'internals' => false,
+            'filter-namespace' => null,
+            'depth' => 0
+        ]);
 
         $this->plantUmlWrapper->expects($this->once())->method('generate');
         $this->umlCommand->run(
@@ -109,7 +108,9 @@ class UmlCommandTest extends \PHPUnit_Framework_TestCase
     public function testAcceptsOnlyAllowedFormats()
     {
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
-        $this->input->method('getOption')->willReturn(sys_get_temp_dir().'/test.bmp');
+        $this->input->method('getOptions')->willReturn([
+            'output' => sys_get_temp_dir().'/test.bmp'
+        ]);
 
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Output format is not allowed (png)');

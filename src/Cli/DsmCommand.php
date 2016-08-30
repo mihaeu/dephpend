@@ -49,13 +49,14 @@ class DsmCommand extends BaseCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $options = $input->getOptions();
         $this->ensureSourcesAreReadable($input->getArgument('source'));
-        $this->ensureOutputFormatIsValid($input->getOption('format'));
+        $this->ensureOutputFormatIsValid($options['format']);
 
         $dependencies = $this->filterByInputOptions(
             $this->detectDependencies($input->getArgument('source')),
-            $input->getOptions()
-        );
+            $options
+        )->filterByDepth((int) $options['depth']);
         $output->write($this->dependencyStructureMatrixHtmlFormatter->format($dependencies));
     }
 }
