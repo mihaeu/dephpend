@@ -140,4 +140,15 @@ class DependencyPairCollectionTest extends \PHPUnit_Framework_TestCase
         ');
         $this->assertEquals($expected, $dependencies->filterByNamespace('VendorA'));
     }
+
+    public function testFilterByDepth0ReturnsEqual()
+    {
+        $dependencies = DependencyHelper::convert('
+            VendorA\\A --> VendorB\\A
+            VendorA\\A --> VendorA\\C
+            VendorB\\B --> VendorA\\A
+            VendorC\\C --> VendorA\\A
+        ');
+        $this->assertEquals($dependencies, $dependencies->filterByDepth(0));
+    }
 }
