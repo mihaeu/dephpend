@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\DependencyStructureMatrixBuilder;
-use Mihaeu\PhpDependencies\DependencyStructureMatrixHtmlFormatter;
-use Mihaeu\PhpDependencies\DI;
-use Mihaeu\PhpDependencies\Metrics;
-use Mihaeu\PhpDependencies\PlantUmlFormatter;
-use Mihaeu\PhpDependencies\PlantUmlWrapper;
-use Mihaeu\PhpDependencies\ShellWrapper;
+use Mihaeu\PhpDependencies\Util\DI;
+use Mihaeu\PhpDependencies\Formatters\DependencyStructureMatrixBuilder;
+use Mihaeu\PhpDependencies\Formatters\DependencyStructureMatrixHtmlFormatter;
+use Mihaeu\PhpDependencies\Analyser\Metrics;
+use Mihaeu\PhpDependencies\Formatters\PlantUmlFormatter;
+use Mihaeu\PhpDependencies\OS\PlantUmlWrapper;
+use Mihaeu\PhpDependencies\OS\ShellWrapper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 

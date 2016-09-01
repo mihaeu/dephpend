@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies;
 
+use Mihaeu\PhpDependencies\Dependencies\Clazz;
+use Mihaeu\PhpDependencies\Dependencies\DependencyPair;
+use Mihaeu\PhpDependencies\Dependencies\DependencyPairCollection;
+use Mihaeu\PhpDependencies\Dependencies\Namespaze;
+
 /**
  * @covers Mihaeu\PhpDependencies\DependencyHelper
  */

@@ -2,7 +2,7 @@
 <?php declare(strict_types=1);
 
 use Mihaeu\PhpDependencies\Cli\Application;
-use Mihaeu\PhpDependencies\DI;
+use Mihaeu\PhpDependencies\Util\DI;
 
 require __DIR__.'/../vendor/autoload.php';
 

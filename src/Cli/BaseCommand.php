@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\Analyser;
-use Mihaeu\PhpDependencies\DependencyPairCollection;
-use Mihaeu\PhpDependencies\Parser;
-use Mihaeu\PhpDependencies\PhpFileCollection;
-use Mihaeu\PhpDependencies\PhpFileFinder;
+use Mihaeu\PhpDependencies\Analyser\Analyser;
+use Mihaeu\PhpDependencies\Analyser\Parser;
+use Mihaeu\PhpDependencies\Dependencies\DependencyPairCollection;
+use Mihaeu\PhpDependencies\OS\PhpFileCollection;
+use Mihaeu\PhpDependencies\OS\PhpFileFinder;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\Input;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 

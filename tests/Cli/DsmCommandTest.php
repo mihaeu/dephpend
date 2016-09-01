@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\Analyser;
+use Mihaeu\PhpDependencies\Analyser\Analyser;
+use Mihaeu\PhpDependencies\Analyser\Parser;
 use Mihaeu\PhpDependencies\DependencyHelper;
-use Mihaeu\PhpDependencies\DependencyStructureMatrixHtmlFormatter;
-use Mihaeu\PhpDependencies\Parser;
-use Mihaeu\PhpDependencies\PhpFileFinder;
+use Mihaeu\PhpDependencies\Formatters\DependencyStructureMatrixHtmlFormatter;
+use Mihaeu\PhpDependencies\OS\PhpFileFinder;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 

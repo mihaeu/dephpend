@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\DI;
+use Mihaeu\PhpDependencies\Util\DI;
 use Symfony\Component\Console\Input\Input;
 use Symfony\Component\Console\Output\Output;
 
