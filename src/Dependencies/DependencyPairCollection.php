@@ -117,6 +117,29 @@ class DependencyPairCollection extends AbstractCollection
         });
     }
 
+    /**
+     * @return DependencyPairCollection
+     */
+    public function filterClasses() : DependencyPairCollection
+    {
+        return $this->reduce(new self(), function (DependencyPairCollection $dependencies, DependencyPair $dependencyPair) {
+            $to = $dependencyPair->to();
+            if ($to->count() === 1) {
+                $to = new Namespaze([]);
+            } elseif (!$to instanceof Namespaze) {
+                $to = $to->reduceToDepth($to->count() - 1);
+            }
+
+            $from = $dependencyPair->from();
+            if ($from->count() === 1) {
+                $from = new Namespaze([]);
+            } elseif (!$from instanceof Namespaze) {
+                $from = $from->reduceToDepth($from->count() - 1);
+            }
+            return $dependencies->add(new DependencyPair($from, $to));
+        });
+    }
+
     private static $internals = [
 
         // classes

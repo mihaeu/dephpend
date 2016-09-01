@@ -86,7 +86,13 @@ abstract class BaseCommand extends Command
                 'filter-namespace',
                 null,
                 InputOption::VALUE_REQUIRED,
-                'Analyse only classes from this namespace'
+                'Analyse only classes from this namespace.'
+            )
+            ->addOption(
+                'no-classes',
+                null,
+                InputOption::VALUE_NONE,
+                'Remove all classes and analyse only namespaces.'
             )
         ;
     }
@@ -119,9 +125,6 @@ abstract class BaseCommand extends Command
 
     /**
      * @param string[] $sources
-     * @param bool $withInternals
-     * @param int $depth
-     * @param string $vendor
      *
      * @return DependencyPairCollection
      */
@@ -150,6 +153,10 @@ abstract class BaseCommand extends Command
 
         if ($options['filter-namespace']) {
             $dependencies = $dependencies->filterByNamespace($options['filter-namespace']);
+        }
+
+        if (isset($options['no-classes'])) {
+            $dependencies = $dependencies->filterClasses();
         }
 
         return $dependencies;

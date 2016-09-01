@@ -151,4 +151,17 @@ class DependencyPairCollectionTest extends \PHPUnit_Framework_TestCase
         ');
         $this->assertEquals($dependencies, $dependencies->filterByDepth(0));
     }
+    public function testRemoveClasses()
+    {
+        $this->assertEquals((new DependencyPairCollection())
+            ->add(new DependencyPair(new Namespaze(['VendorA']), new Namespaze(['VendorB'])))
+            ->add(new DependencyPair(new Namespaze(['VendorA']), new Namespaze(['VendorA'])))
+            ->add(new DependencyPair(new Namespaze(['VendorB']), new Namespaze(['VendorA'])))
+            ->add(new DependencyPair(new Namespaze(['VendorC']), new Namespaze([]))), DependencyHelper::convert('
+            VendorA\\A --> VendorB\\A
+            VendorA\\A --> VendorA\\C
+            VendorB\\B --> VendorA\\A
+            VendorC\\C --> B
+        ')->filterClasses());
+    }
 }
