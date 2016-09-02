@@ -155,7 +155,7 @@ abstract class BaseCommand extends Command
             $dependencies = $dependencies->filterByNamespace($options['filter-namespace']);
         }
 
-        if (isset($options['no-classes'])) {
+        if (isset($options['no-classes']) && $options['no-classes'] === true) {
             $dependencies = $dependencies->filterClasses();
         }
 
