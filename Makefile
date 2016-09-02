@@ -36,7 +36,7 @@ style:
 
 phar:
 	@composer update --no-dev
-	@$(PHP_NO_INI) box.phar build
+	@$(PHP) box.phar build
 	@composer update
 
 c: cov

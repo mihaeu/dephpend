@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8b6e590b9308811b7503967aea3efdf4",
-    "content-hash": "30f190b5237d721fe2816c0f98df83f1",
+    "hash": "04d80b7af1cb600267675e410590e548",
+    "content-hash": "5751d43c087212bc673d7c9a2b11edf2",
     "packages": [
         {
             "name": "mikey179/vfsStream",

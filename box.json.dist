@@ -1,6 +1,6 @@
 {
     "directories": ["src/", "vendor/"],
-    "main": "bin/php-dependencies",
-    "output": "build/php-dependencies.phar",
+    "main": "bin/dephpend",
+    "output": "build/dephpend.phar",
     "stub": true
 }

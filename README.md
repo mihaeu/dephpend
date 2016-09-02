@@ -1,4 +1,4 @@
-# ![logo](http://mike-on-a-bike.com/dephpend-logo.png) 
+# ![dePHPend logo](http://mike-on-a-bike.com/dephpend-logo.png) 
 
 > Detect flaws in your architecture, before they drag you down into the depths of dependency hell ...
 
@@ -33,54 +33,70 @@ With this information you can:
 
 When this is more mature, I'm going to sign the phar and set it up with [Phive](https://phar.io/).
 
-Until then just download the phar file by clicking [here](http://mike-on-a-bike.com/php-dependencies.phar) or use
+Until then just download the phar file by clicking [here](http://phar.dephpend.com/dephpend.phar) or use
 
 ```bash
-wget http://mike-on-a-bike.com/php-dependencies.phar
+wget http://phar.dephpend.com/dephpend.phar
 ```
 
 ### Others
 
 You could `git clone` or `composer require` this, but it's best to not mix tools and software dependencies (because those have dependencies on their own).
 
-## Usage 
+## Usage
+
+You should almost always run QA tools without XDebug (unless you need code coverage of course). You could use a separate `php.ini` where XDebug is not loaded and pass that to php or you just use the `-n` option (this will however not load any extensions). 
 
 ```
-# or bin/php-dependencies, depending on how you installed this
-$ php php-dependencies.phar                                                                                                 
-        _      _____  _    _ _____               _ 
-       | |    |  __ \| |  | |  __ \             | |
-     __| | ___| |__) | |__| | |__) |__ _ __   __| |
-    / _` |/ _ \  ___/|  __  |  ___/ _ \ '_ \ / _` |
-   | (_| |  __/ |    | |  | | |  |  __/ | | | (_| |
-    \__,_|\___|_|    |_|  |_|_|   \___|_| |_|\__,_|
-  
-  Usage:
-    command [options] [arguments]
-  
-  Options:
-    -h, --help            Display this help message
-    -q, --quiet           Do not output any message
-    -V, --version         Display this application version
-        --ansi            Force ANSI output
-        --no-ansi         Disable ANSI output
-    -n, --no-interaction  Do not ask any interactive question
-    -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
-  
-  Available commands:
-    dsm   Generate a Dependency Structure Matrix of your dependencies
-    help  Displays help for a command
-    list  Lists commands
-    text  Generate a Dependency Structure Matrix of your dependencies
-    uml   Generate a UML Class diagram of your dependencies
+# or bin/dephpend depending on how you installed this
+$ php -n dephpend.phar                                                                                                 
+      _      _____  _    _ _____               _ 
+     | |    |  __ \| |  | |  __ \             | |
+   __| | ___| |__) | |__| | |__) |__ _ __   __| |
+  / _` |/ _ \  ___/|  __  |  ___/ _ \ '_ \ / _` |
+ | (_| |  __/ |    | |  | | |  |  __/ | | | (_| |
+  \__,_|\___|_|    |_|  |_|_|   \___|_| |_|\__,_| version 0.1
+
+Usage:
+  command [options] [arguments]
+
+Options:
+  -h, --help            Display this help message
+  -q, --quiet           Do not output any message
+  -V, --version         Display this application version
+      --ansi            Force ANSI output
+      --no-ansi         Disable ANSI output
+  -n, --no-interaction  Do not ask any interactive question
+  -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Available commands:
+  dsm      Generate a Dependency Structure Matrix of your dependencies
+  help     Displays help for a command
+  list     Lists commands
+  metrics  Generate dependency metrics
+  text     Generate a Dependency Structure Matrix of your dependencies
+  uml      Generate a UML Class diagram of your dependencies
 ```
+
+### Filters
+
+Without filters the output for large apps is too bloated which is why I implemented a couple of filters to help you get the output you want:
+
+```bash
+      --internals                          Check for dependencies from internal PHP Classes like SplFileInfo.
+      --underscore-namespaces              Parse underscores in Class names as namespaces.
+      --filter-namespace=FILTER-NAMESPACE  Analyse only classes from this namespace.
+      --no-classes                         Remove all classes and analyse only namespaces.
+```
+
+For more info just run `php dephpend.phar help text`.
 
 ### Text
 
 For quick debugging use the `text` command. Say you want to find out which classes depend on XYZ and what XYZ depends on, you'd run: 
 
 ```bash
-bin/php-dependencies text src | grep XYZ
+php -n dephpend.phar text src | grep XYZ
 ```
 
 ### UML
@@ -90,7 +106,7 @@ Generates UML class or package diagrams of your source code. Requires [PlantUML]
 You can either run 
 
 ```bash
-bin/php-dependencies uml --output=uml.png src
+php -n dephpend.phar uml --output=uml.png src
 ``` 
 
 but most likely what you want to do is to use the `--depth[=DEPTH]` option. If your app has more than 20 classes, the UML will become messy if you don't use namespace instead of class level. Experiment with different depth values, but usually a depth of 2 or 3 is what you want.
@@ -102,9 +118,17 @@ If you've tried decrypting massive UML diagrams before, you know that they becom
 This feature is still under rework and right now it's not really fun to use. If you still want to try run 
 
 ```bash
-bin/php-dependencies dsm src > dependencies.html
+php -n dephpend.phar dsm src > dependencies.html
 ``` 
 or pipe it to something like [bcat](https://rtomayko.github.io/bcat/).
+
+### Metrics
+
+The most common package metrics have already been implemented, but there are more to come. Check them out by running the following command:
+
+```bash
+php -n dephpend.phar metrics src
+```
 
 ## How it all works
 
