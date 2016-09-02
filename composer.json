@@ -28,7 +28,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Mihaeu\\PhpDependencies\\": ["src/", "tests/"]
+            "Mihaeu\\PhpDependencies\\": ["src/", "tests/unit/"]
         }
     }
 }
