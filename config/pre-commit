@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# GIT PRE-COMMIT HOOK (copy to .git/hooks)
+# ----------------------------------------
+#
+# - checks all changed files for PSR-2 compatibility
+#   and aborts if any file doesn't comply
+# - checks code for code coverage and prints a warning
+#   if it is not within the threshold (but doesn't aborts)
+
+PHPCS_PATH="php -n vendor/bin/php-cs-fixer"
+
+# check style of changed files
+git diff-index --name-only --cached --diff-filter=ACMR HEAD -- \
+    | xargs -I {} $PHPCS_PATH fix --dry-run --level=psr2 --verbose {} || exit 1;
+
+# code coverage will only be checked, but won't stop the commit
+# (it will stop pushes)
+bin/check-code-cov
+
+exit 0

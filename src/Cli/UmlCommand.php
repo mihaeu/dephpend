@@ -1,13 +1,13 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\Analyser;
-use Mihaeu\PhpDependencies\Parser;
-use Mihaeu\PhpDependencies\PhpFileFinder;
-use Mihaeu\PhpDependencies\PlantUmlWrapper;
+use Mihaeu\PhpDependencies\Analyser\Analyser;
+use Mihaeu\PhpDependencies\Analyser\Parser;
+use Mihaeu\PhpDependencies\OS\PhpFileFinder;
+use Mihaeu\PhpDependencies\OS\PlantUmlWrapper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -60,23 +60,25 @@ class UmlCommand extends BaseCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $options = $input->getOptions();
         $this->ensureSourcesAreReadable($input->getArgument('source'));
-        $this->ensureOutputExists($input->getOption('output'));
-        $this->ensureDestinationIsWritable($input->getOption('output'));
-        $this->ensureOutputFormatIsValid($input->getOption('output'));
+        $this->ensureOutputExists($options['output']);
+        $this->ensureDestinationIsWritable($options['output']);
+        $this->ensureOutputFormatIsValid($options['output']);
 
-        $dependencies = $this->detectDependencies(
-            $input->getArgument('source'),
-            $input->getOption('internals'),
-            $input->getOption('only-namespaces')
-        );
+        $dependencies = $this->filterByInputOptions(
+            $this->detectDependencies($input->getArgument('source')),
+            $options
+        )->filterByDepth((int) $options['depth'])->unique();
 
-        $destination = new \SplFileInfo($input->getOption('output'));
-        $this->plantUmlWrapper->generate($dependencies, $destination, $input->getOption('keep-uml'));
+        $destination = new \SplFileInfo($options['output']);
+        $this->plantUmlWrapper->generate($dependencies, $destination, $options['keep-uml']);
     }
 
     /**
      * @param $outputOption
+     *
+     * @throws \InvalidArgumentException
      */
     private function ensureOutputExists($outputOption)
     {

@@ -1,13 +1,12 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\Analyser;
-use Mihaeu\PhpDependencies\Dependency;
-use Mihaeu\PhpDependencies\Parser;
-use Mihaeu\PhpDependencies\PhpFileFinder;
+use Mihaeu\PhpDependencies\Analyser\Analyser;
+use Mihaeu\PhpDependencies\Analyser\Parser;
+use Mihaeu\PhpDependencies\OS\PhpFileFinder;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -32,12 +31,13 @@ class TextCommand extends BaseCommand
     {
         $this->ensureSourcesAreReadable($input->getArgument('source'));
 
-        $this->detectDependencies(
-            $input->getArgument('source'),
-            $input->getOption('internals'),
-            $input->getOption('only-namespaces')
-        )->each(function (Dependency $dependency) use ($output) {
-            $output->writeln($dependency->toString());
-        });
+        $dependencies = $this->detectDependencies($input->getArgument('source'));
+        $options = $input->getOptions();
+        $output->writeln(
+            $this->filterByInputOptions($dependencies, $options)
+                ->filterByDepth((int) $options['depth'])
+                ->unique()
+                ->toString()
+        );
     }
 }

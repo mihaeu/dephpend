@@ -1,14 +1,14 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\Analyser;
-use Mihaeu\PhpDependencies\DependencyCollection;
-use Mihaeu\PhpDependencies\Parser;
-use Mihaeu\PhpDependencies\PhpFileCollection;
-use Mihaeu\PhpDependencies\PhpFileFinder;
+use Mihaeu\PhpDependencies\Analyser\Analyser;
+use Mihaeu\PhpDependencies\Analyser\Parser;
+use Mihaeu\PhpDependencies\Dependencies\DependencyPairCollection;
+use Mihaeu\PhpDependencies\OS\PhpFileCollection;
+use Mihaeu\PhpDependencies\OS\PhpFileFinder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -64,10 +64,35 @@ abstract class BaseCommand extends Command
                 'Check for dependencies from internal PHP Classes like SplFileInfo.'
             )
             ->addOption(
-                'only-namespaces',
+                'depth',
+                'd',
+                InputOption::VALUE_OPTIONAL,
+                'Output dependencies as packages instead of single classes.',
+                0
+            )
+            ->addOption(
+                'memory',
+                'm',
+                InputOption::VALUE_REQUIRED,
+                'Set maximum memory e.g. 2048M'
+            )
+            ->addOption(
+                'underscore-namespaces',
+                'u',
+                InputOption::VALUE_NONE,
+                'Parse underscores in Class names as namespaces.'
+            )
+            ->addOption(
+                'filter-namespace',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Analyse only classes from this namespace.'
+            )
+            ->addOption(
+                'no-classes',
                 null,
                 InputOption::VALUE_NONE,
-                'Output dependencies as packages instead of single classes.'
+                'Remove all classes and analyse only namespaces.'
             )
         ;
     }
@@ -99,6 +124,45 @@ abstract class BaseCommand extends Command
     }
 
     /**
+     * @param string[] $sources
+     *
+     * @return DependencyPairCollection
+     */
+    protected function detectDependencies(array $sources) : DependencyPairCollection
+    {
+        $files = array_reduce($sources, function (PhpFileCollection $collection, string $source) {
+            return $collection->addAll($this->phpFileFinder->find(new \SplFileInfo($source)));
+        }, new PhpFileCollection());
+
+        return $this->analyser->analyse(
+            $this->parser->parse($files)
+        );
+    }
+
+    /**
+     * @param DependencyPairCollection $dependencies
+     * @param string[] $options
+     *
+     * @return DependencyPairCollection
+     */
+    protected function filterByInputOptions(DependencyPairCollection $dependencies, array $options) : DependencyPairCollection
+    {
+        if (!$options['internals']) {
+            $dependencies = $dependencies->removeInternals();
+        }
+
+        if ($options['filter-namespace']) {
+            $dependencies = $dependencies->filterByNamespace($options['filter-namespace']);
+        }
+
+        if (isset($options['no-classes']) && $options['no-classes'] === true) {
+            $dependencies = $dependencies->filterClasses();
+        }
+
+        return $dependencies;
+    }
+
+    /**
      * @param string $destination
      *
      * @throws \Exception
@@ -108,28 +172,5 @@ abstract class BaseCommand extends Command
         if (!is_writable(dirname($destination))) {
             throw new \InvalidArgumentException('Destination is not writable.');
         }
-    }
-
-    /**
-     * @param string[] $sources
-     * @param bool     $withInternals
-     * @param bool     $onlyNamespaces
-     *
-     * @return DependencyCollection
-     */
-    protected function detectDependencies(array $sources, bool $withInternals = false, bool $onlyNamespaces = false) : DependencyCollection
-    {
-        $files = array_reduce($sources, function (PhpFileCollection $collection, string $source) {
-            return $collection->addAll($this->phpFileFinder->find(new \SplFileInfo($source)));
-        }, new PhpFileCollection());
-        $ast = $this->parser->parse($files);
-
-        $dependencies = $withInternals
-            ? $this->analyser->analyse($ast)
-            : $this->analyser->analyse($ast)->removeInternals();
-
-        return $onlyNamespaces
-            ? $dependencies->onlyNamespaces()
-            : $dependencies;
     }
 }
