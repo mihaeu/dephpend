@@ -23,10 +23,13 @@ class Ast implements \Iterator
     /**
      * @param PhpFile $file
      * @param Node[]  $node
+     *
+     * @return Ast
      */
-    public function add(PhpFile $file, array $node)
+    public function add(PhpFile $file, array $node) : self
     {
         $this->nodes->attach($file, $node);
+        return $this;
     }
 
     /**

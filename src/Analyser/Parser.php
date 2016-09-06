@@ -28,17 +28,8 @@ class Parser
      */
     public function parse(PhpFileCollection $files) : Ast
     {
-        $ast = new Ast();
-        $files->each(function (PhpFile $file) use ($ast) {
-            $node = $this->test($file->code());
-            $ast->add($file, $node);
+        return $files->reduce(new Ast(), function (Ast $ast, PhpFile $file) {
+            return $ast->add($file, $this->parser->parse($file->code()));
         });
-
-        return $ast;
-    }
-
-    private function test(string $bla)
-    {
-        return $this->parser->parse($bla);
     }
 }
