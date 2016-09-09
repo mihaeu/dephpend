@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Formatters;
 
 use Mihaeu\PhpDependencies\Dependencies\Dependency;
-use Mihaeu\PhpDependencies\Dependencies\DependencyCollection;
+use Mihaeu\PhpDependencies\Dependencies\DependencySet;
 use Mihaeu\PhpDependencies\Dependencies\DependencyPair;
 use Mihaeu\PhpDependencies\Dependencies\DependencyPairCollection;
 
@@ -33,12 +33,12 @@ class DependencyStructureMatrixBuilder
     /**
      * @param DependencyPairCollection $dependencyPairCollection
      *
-     * @return DependencyCollection
+     * @return DependencySet
      */
     private function allDependenciesReducedByDepth(DependencyPairCollection $dependencyPairCollection, int $depth)
     {
-        return $dependencyPairCollection->allDependencies()->reduce(new DependencyCollection(),
-            function (DependencyCollection $dependencyCollection, Dependency $dependency) use ($depth) {
+        return $dependencyPairCollection->allDependencies()->reduce(new DependencySet(),
+            function (DependencySet $dependencyCollection, Dependency $dependency) use ($depth) {
                 return $dependencyCollection->add($dependency->reduceToDepth($depth));
             }
         );

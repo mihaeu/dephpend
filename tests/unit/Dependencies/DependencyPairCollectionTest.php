@@ -72,7 +72,7 @@ class DependencyPairCollectionTest extends \PHPUnit_Framework_TestCase
         $dependencies = (new DependencyPairCollection())
             ->add(new DependencyPair(new Clazz('From'), new Clazz('To')))
             ->add(new DependencyPair(new Clazz('From'), new Clazz('ToAnother')));
-        $expected = (new DependencyCollection())
+        $expected = (new DependencySet())
             ->add(new Clazz('From'));
         $this->assertEquals($expected, $dependencies->fromDependencies());
     }
@@ -82,7 +82,7 @@ class DependencyPairCollectionTest extends \PHPUnit_Framework_TestCase
         $dependencies = (new DependencyPairCollection())
             ->add(new DependencyPair(new Clazz('From'), new Clazz('To')))
             ->add(new DependencyPair(new Clazz('From'), new Clazz('ToAnother')));
-        $expected = (new DependencyCollection())
+        $expected = (new DependencySet())
             ->add(new Clazz('From'))
             ->add(new Clazz('To'))
             ->add(new Clazz('ToAnother'))

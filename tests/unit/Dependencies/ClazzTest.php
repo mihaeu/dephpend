@@ -18,6 +18,11 @@ class ClazzTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Name', (new Clazz('Name'))->toString());
     }
 
+    public function testNamespace()
+    {
+        $this->assertEquals(new Namespaze(['A', 'a']), (new Clazz('Name', new Namespaze(['A', 'a'])))->namespaze());
+    }
+
     public function testToStringWithNamespace()
     {
         $this->assertEquals('A\\a\\ClassA', (new Clazz('ClassA', new Namespaze(['A', 'a']))));

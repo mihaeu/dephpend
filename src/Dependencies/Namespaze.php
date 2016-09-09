@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Dependencies;
 
+use Mihaeu\PhpDependencies\Exceptions\IndexOutOfBoundsException;
 use Mihaeu\PhpDependencies\Util\Util;
 
 class Namespaze implements Dependency
@@ -20,25 +21,14 @@ class Namespaze implements Dependency
         $this->parts = $parts;
     }
 
-    public function toString() : string
-    {
-        return implode('\\', $this->parts);
-    }
-
-    public function __toString() : string
-    {
-        return $this->toString();
-    }
-
     /**
      * @param array $parts
+     *
+     * @throws \InvalidArgumentException
      */
     private function ensureNamespaceIsValid(array $parts)
     {
-        if (Util::array_once($parts, function ($value, $index) {
-            return !is_string($value);
-        })
-        ) {
+        if ($this->arrayContainsOnlyStrings($parts)) {
             throw new \InvalidArgumentException('Invalid namespace');
         }
     }
@@ -46,6 +36,19 @@ class Namespaze implements Dependency
     public function count() : int
     {
         return count($this->parts);
+    }
+
+    public function namespaze() : Namespaze
+    {
+        return $this;
+    }
+
+    public function partByIndex(int $index) : Namespaze
+    {
+        if ($index < 0 || $index >= $this->count()) {
+            throw new IndexOutOfBoundsException('Namespace index out of range.');
+        }
+        return new Namespaze([$this->parts[$index]]);
     }
 
     public function reduceToDepth(int $maxDepth) : Dependency
@@ -65,5 +68,27 @@ class Namespaze implements Dependency
     public function equals(Dependency $other) : bool
     {
         return $this->toString() === $other->toString();
+    }
+
+    public function toString() : string
+    {
+        return implode('\\', $this->parts);
+    }
+
+    public function __toString() : string
+    {
+        return $this->toString();
+    }
+
+    /**
+     * @param array $parts
+     *
+     * @return bool
+     */
+    private function arrayContainsOnlyStrings(array $parts):bool
+    {
+        return Util::array_once($parts, function ($value, $index) {
+            return !is_string($value);
+        });
     }
 }

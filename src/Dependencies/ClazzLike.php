@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Dependencies;
 
+use PhpParser\Node\Name;
+
 abstract class ClazzLike implements Dependency
 {
     /** @var string */
@@ -41,6 +43,11 @@ abstract class ClazzLike implements Dependency
     public function __toString() : string
     {
         return $this->toString();
+    }
+
+    public function namespaze() : Namespaze
+    {
+        return $this->clazzNamespace;
     }
 
     public function hasNamespace() : bool

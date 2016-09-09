@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Analyser;
 
 use Mihaeu\PhpDependencies\OS\PhpFile;
-use Mihaeu\PhpDependencies\OS\PhpFileCollection;
+use Mihaeu\PhpDependencies\OS\PhpFileSet;
 use PhpParser\Parser as BaseParser;
 
 /**
@@ -28,7 +28,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $mockParser->expects($this->once())->method('parse')->with($code);
 
         $parser = new Parser($mockParser);
-        $files = (new PhpFileCollection())->add($mockFile);
+        $files = (new PhpFileSet())->add($mockFile);
         $ast = $parser->parse($files);
 //        $this->assertEquals([], $ast->get($mockFile));
     }

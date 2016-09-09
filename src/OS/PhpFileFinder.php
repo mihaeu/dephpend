@@ -6,16 +6,16 @@ namespace Mihaeu\PhpDependencies\OS;
 
 class PhpFileFinder
 {
-    public function find(\SplFileInfo $file) : PhpFileCollection
+    public function find(\SplFileInfo $file) : PhpFileSet
     {
         return $file->isDir()
             ? $this->findInDir($file)
-            : new PhpFileCollection();
+            : new PhpFileSet();
     }
 
-    private function findInDir(\SplFileInfo $dir) : PhpFileCollection
+    private function findInDir(\SplFileInfo $dir) : PhpFileSet
     {
-        $collection = new PhpFileCollection();
+        $collection = new PhpFileSet();
         $regexIterator = new \RegexIterator(
             new \RecursiveIteratorIterator(
                 new \RecursiveDirectoryIterator($dir->getPathname())

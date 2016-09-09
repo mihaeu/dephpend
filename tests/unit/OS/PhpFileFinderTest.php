@@ -27,7 +27,7 @@ class PhpFileFinderTest extends \PHPUnit_Framework_TestCase
             ],
         ]);
         $dir = new \SplFileInfo($mockDir->url());
-        $expected = (new PhpFileCollection())
+        $expected = (new PhpFileSet())
             ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/someFile.php')));
         $this->assertEquals($expected, $this->finder->find($dir));
     }
@@ -50,7 +50,7 @@ class PhpFileFinderTest extends \PHPUnit_Framework_TestCase
             ],
         ]);
         $dir = new \SplFileInfo($mockDir->url());
-        $expected = (new PhpFileCollection())
+        $expected = (new PhpFileSet())
             ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/someFile.php')))
             ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/fileInA.php')))
             ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/fileInB.php')))

@@ -7,7 +7,7 @@ namespace Mihaeu\PhpDependencies\Cli;
 use Mihaeu\PhpDependencies\Analyser\Analyser;
 use Mihaeu\PhpDependencies\Analyser\Parser;
 use Mihaeu\PhpDependencies\Dependencies\DependencyPairCollection;
-use Mihaeu\PhpDependencies\OS\PhpFileCollection;
+use Mihaeu\PhpDependencies\OS\PhpFileSet;
 use Mihaeu\PhpDependencies\OS\PhpFileFinder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -124,9 +124,9 @@ abstract class BaseCommand extends Command
      */
     protected function detectDependencies(array $sources) : DependencyPairCollection
     {
-        $files = array_reduce($sources, function (PhpFileCollection $collection, string $source) {
+        $files = array_reduce($sources, function (PhpFileSet $collection, string $source) {
             return $collection->addAll($this->phpFileFinder->find(new \SplFileInfo($source)));
-        }, new PhpFileCollection());
+        }, new PhpFileSet());
 
         return $this->analyser->analyse(
             $this->parser->parse($files)

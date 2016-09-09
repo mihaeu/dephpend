@@ -40,11 +40,11 @@ class DependencyPairCollection extends AbstractCollection
     }
 
     /**
-     * @return DependencyCollection
+     * @return DependencySet
      */
-    public function fromDependencies() : DependencyCollection
+    public function fromDependencies() : DependencySet
     {
-        return $this->reduce(new DependencyCollection(), function (DependencyCollection $clazzes, DependencyPair $dependency) {
+        return $this->reduce(new DependencySet(), function (DependencySet $clazzes, DependencyPair $dependency) {
             return $clazzes->contains($dependency->from())
                 ? $clazzes
                 : $clazzes->add($dependency->from());
@@ -52,11 +52,11 @@ class DependencyPairCollection extends AbstractCollection
     }
 
     /**
-     * @return DependencyCollection
+     * @return DependencySet
      */
-    public function allDependencies() : DependencyCollection
+    public function allDependencies() : DependencySet
     {
-        return $this->reduce(new DependencyCollection(), function (DependencyCollection $dependencies, DependencyPair $dependency) {
+        return $this->reduce(new DependencySet(), function (DependencySet $dependencies, DependencyPair $dependency) {
             if (!$dependencies->contains($dependency->from())) {
                 $dependencies = $dependencies->add($dependency->from());
             }
