@@ -15,4 +15,6 @@ interface Dependency extends \Countable
     public function toString() : string;
 
     public function namespaze() : Namespaze;
+
+    public function inNamespaze(Namespaze $other) : bool;
 }

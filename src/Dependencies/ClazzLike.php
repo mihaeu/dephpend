@@ -12,7 +12,7 @@ abstract class ClazzLike implements Dependency
     private $name;
 
     /** @var Namespaze */
-    private $clazzNamespace;
+    private $namespaze;
 
     /**
      * @param string    $name
@@ -24,7 +24,7 @@ abstract class ClazzLike implements Dependency
         if ($clazzNamespace === null) {
             $clazzNamespace = new Namespaze([]);
         }
-        $this->clazzNamespace = $clazzNamespace;
+        $this->namespaze = $clazzNamespace;
     }
 
     public function equals(Dependency $other) : bool
@@ -36,7 +36,7 @@ abstract class ClazzLike implements Dependency
     public function toString() : string
     {
         return $this->hasNamespace()
-            ? $this->clazzNamespace.'\\'.$this->name
+            ? $this->namespaze.'\\'.$this->name
             : $this->name;
     }
 
@@ -47,30 +47,35 @@ abstract class ClazzLike implements Dependency
 
     public function namespaze() : Namespaze
     {
-        return $this->clazzNamespace;
+        return $this->namespaze;
     }
 
     public function hasNamespace() : bool
     {
-        return $this->clazzNamespace->toString() !== '';
+        return $this->namespaze->toString() !== '';
     }
 
     public function count() : int
     {
-        return 1 + $this->clazzNamespace->count();
+        return 1 + $this->namespaze->count();
     }
 
     public function reduceToDepth(int $maxDepth) : Dependency
     {
         return $this->count() <= $maxDepth || $maxDepth === 0
             ? $this
-            : $this->clazzNamespace->reduceToDepth($maxDepth);
+            : $this->namespaze->reduceToDepth($maxDepth);
     }
 
     public function reduceDepthFromLeftBy(int $reduction) : Dependency
     {
         return $this->count() <= $reduction || $reduction === 0
             ? $this
-            : new Clazz($this->name, $this->clazzNamespace->reduceDepthFromLeftBy($reduction));
+            : new Clazz($this->name, $this->namespaze->reduceDepthFromLeftBy($reduction));
+    }
+
+    public function inNamespaze(Namespaze $other) : bool
+    {
+        return $this->namespaze->inNamespaze($other);
     }
 }

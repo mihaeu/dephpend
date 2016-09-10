@@ -28,7 +28,7 @@ class Namespaze implements Dependency
      */
     private function ensureNamespaceIsValid(array $parts)
     {
-        if ($this->arrayContainsOnlyStrings($parts)) {
+        if ($this->arrayContainsNotOnlyStrings($parts)) {
             throw new \InvalidArgumentException('Invalid namespace');
         }
     }
@@ -80,12 +80,19 @@ class Namespaze implements Dependency
         return $this->toString();
     }
 
+    public function inNamespaze(Namespaze $other) : bool
+    {
+        return $other->toString() !== ''
+            && $this->toString() !== ''
+            && strpos($other->toString(), $this->toString()) === 0;
+    }
+
     /**
      * @param array $parts
      *
      * @return bool
      */
-    private function arrayContainsOnlyStrings(array $parts):bool
+    private function arrayContainsNotOnlyStrings(array $parts):bool
     {
         return Util::array_once($parts, function ($value, $index) {
             return !is_string($value);
