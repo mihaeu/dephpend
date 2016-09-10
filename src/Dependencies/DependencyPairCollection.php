@@ -12,13 +12,12 @@ class DependencyPairCollection extends AbstractCollection
     /**
      * @param DependencyPair $dependency
      *
-     * @return DependencyPairCollection
+     * @return self
      */
-    public function add(DependencyPair $dependency) : DependencyPairCollection
+    public function add(DependencyPair $dependency) : self
     {
         $clone = clone $this;
-        if ($dependency->from()->equals($dependency->to())
-            || $this->contains($dependency)) {
+        if ($this->contains($dependency)) {
             return $clone;
         }
 
@@ -32,7 +31,7 @@ class DependencyPairCollection extends AbstractCollection
      */
     public function unique() : Collection
     {
-        return $this->reduce(new self(), function (DependencyPairCollection $dependencies, DependencyPair $dependency) {
+        return $this->reduce(new self(), function (self $dependencies, DependencyPair $dependency) {
             return $dependencies->contains($dependency)
                 ? $dependencies
                 : $dependencies->add($dependency);
@@ -57,59 +56,54 @@ class DependencyPairCollection extends AbstractCollection
     public function allDependencies() : DependencySet
     {
         return $this->reduce(new DependencySet(), function (DependencySet $dependencies, DependencyPair $dependency) {
-            if (!$dependencies->contains($dependency->from())) {
-                $dependencies = $dependencies->add($dependency->from());
-            }
-
-            if (!$dependencies->contains($dependency->to())) {
-                $dependencies = $dependencies->add($dependency->to());
-            }
-
-            return $dependencies;
+            return $dependencies
+                ->add($dependency->from())
+                ->addAll($dependency->to());
         });
     }
 
     /**
-     * @return DependencyPairCollection
+     * @return self
      */
-    public function removeInternals() : DependencyPairCollection
+    public function removeInternals() : self
     {
-        return $this->filter(function (DependencyPair $dependencyPair) {
-            return !in_array(
-                $dependencyPair->to()->toString(),
-                DependencyPairCollection::$internals, true
-            );
+        return $this->reduce(new self(), function (self $collection, DependencyPair $dependencyPair) {
+            return $collection->add(new DependencyPair($dependencyPair->from(), $dependencyPair->to()->filter(function (Dependency $dependency) {
+                return !in_array($dependency->toString(), self::$internals, true);
+            })));
         });
     }
 
     /**
      * @param string $namespace
      *
-     * @return DependencyPairCollection
+     * @return self
      */
-    public function filterByNamespace(string $namespace) : DependencyPairCollection
+    public function filterByNamespace(string $namespace) : self
     {
         $namespace = new Namespaze(array_filter(explode('\\', $namespace)));
-        return $this->reduce(new DependencyPairCollection(), function (DependencyPairCollection $dependencies, DependencyPair $dependencyPair) use ($namespace) {
-            if ($dependencyPair->from()->reduceToDepth($namespace->count())->equals($namespace)
-                && $dependencyPair->to()->reduceToDepth($namespace->count())->equals($namespace)) {
-                $dependencies = $dependencies->add(new DependencyPair(
-                    $dependencyPair->from()->reduceDepthFromLeftBy($namespace->count()),
-                    $dependencyPair->to()->reduceDepthFromLeftBy($namespace->count())
-                ));
+        return $this->reduce(new self(), function (self $collection, DependencyPair $dependencyPair) use ($namespace) {
+            if ($dependencyPair->from()->inNamespaze($namespace)) {
+                $reducedFrom = $dependencyPair->from()->reduceDepthFromLeftBy($namespace->count());
+                $reducedTo = $dependencyPair->to()->reduce(new DependencySet(), function (DependencySet $set, Dependency $dependency) use ($namespace) {
+                    if ($dependency->inNamespaze($namespace)) {
+                        return $set->add($dependency->reduceDepthFromLeftBy($namespace->count()));
+                    }
+                    return $set;
+                });
+                return $collection->add(new DependencyPair($reducedFrom, $reducedTo));
             }
-
-            return $dependencies;
+            return $collection;
         });
     }
 
-    public function filterByDepth(int $depth) : DependencyPairCollection
+    public function filterByDepth(int $depth) : self
     {
         if ($depth === 0) {
             return clone $this;
         }
 
-        return $this->reduce(new self(), function (DependencyPairCollection $dependencies, DependencyPair $dependencyPair) use ($depth) {
+        return $this->reduce(new self(), function (self $dependencies, DependencyPair $dependencyPair) use ($depth) {
             return $dependencies->add(new DependencyPair(
                 $dependencyPair->from()->reduceToDepth($depth),
                 $dependencyPair->to()->reduceToDepth($depth))
@@ -118,25 +112,18 @@ class DependencyPairCollection extends AbstractCollection
     }
 
     /**
-     * @return DependencyPairCollection
+     * @return self
      */
-    public function filterClasses() : DependencyPairCollection
+    public function filterClasses() : self
     {
-        return $this->reduce(new self(), function (DependencyPairCollection $dependencies, DependencyPair $dependencyPair) {
-            $to = $dependencyPair->to();
-            if ($to->count() === 1) {
-                $to = new Namespaze([]);
-            } elseif (!$to instanceof Namespaze) {
-                $to = $to->reduceToDepth($to->count() - 1);
-            }
+        return $this->reduce(new self(), function (self $dependencies, DependencyPair $dependencyPair) {
+            $to = $dependencyPair->to()->reduce(new DependencySet(), function (DependencySet $set, Dependency $dependency) {
+                return $dependency->namespaze()->count()
+                    ? $set->add($dependency->namespaze())
+                    : $set;
+            });
 
-            $from = $dependencyPair->from();
-            if ($from->count() === 1) {
-                $from = new Namespaze([]);
-            } elseif (!$from instanceof Namespaze) {
-                $from = $from->reduceToDepth($from->count() - 1);
-            }
-            return $dependencies->add(new DependencyPair($from, $to));
+            return $dependencies->add(new DependencyPair($dependencyPair->from()->namespaze(), $to));
         });
     }
 

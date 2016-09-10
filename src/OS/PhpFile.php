@@ -28,4 +28,17 @@ class PhpFile
     {
         return file_get_contents($this->file->getPathname());
     }
+
+    public function toString() : string
+    {
+        return (string) $this->file;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString() : string
+    {
+        return $this->toString();
+    }
 }

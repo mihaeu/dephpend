@@ -38,9 +38,4 @@ class PhpFileSet extends AbstractCollection
             return $file->equals($other);
         });
     }
-
-    public function equals(PhpFileSet $other) : bool
-    {
-        return $this->collection === $other->collection;
-    }
 }

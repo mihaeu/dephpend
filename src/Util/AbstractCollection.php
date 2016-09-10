@@ -24,6 +24,16 @@ abstract class AbstractCollection implements Collection
     }
 
     /**
+     * @param \Closure $closure
+     *
+     * @return bool
+     */
+    public function none(\Closure $closure) : bool
+    {
+        return !$this->any($closure);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function each(\Closure $closure)
@@ -97,5 +107,10 @@ abstract class AbstractCollection implements Collection
     public function __toString() : string
     {
         return $this->toString();
+    }
+
+    public function equals(Collection $other) : bool
+    {
+        return $this->toString() === $other->toString();
     }
 }

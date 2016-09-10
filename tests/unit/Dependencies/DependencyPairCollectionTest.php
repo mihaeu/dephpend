@@ -12,66 +12,52 @@ use Mihaeu\PhpDependencies\DependencyHelper;
  */
 class DependencyPairCollectionTest extends \PHPUnit_Framework_TestCase
 {
-    public function testCannotAddDuplicates()
-    {
-        $this->assertEmpty((new DependencyPairCollection())->add(
-            new DependencyPair(new Clazz('X'), new Clazz('X')))
-        );
-    }
-
     public function testReturnsTrueIfAnyMatches()
     {
-        $to = new Clazz('ToAnother');
-        $dependencies = (new DependencyPairCollection())
-            ->add(new DependencyPair(new Clazz('From'), new Clazz('To')))
-            ->add(new DependencyPair(new Clazz('From'), $to));
+        $to = DependencyHelper::dependencySet('To, ToAnother');
+        $dependencies = (new DependencyPairCollection())->add(new DependencyPair(new Clazz('Test'), $to));
         $this->assertTrue($dependencies->any(function (DependencyPair $dependency) use ($to) {
-            return $dependency->to() === $to || $dependency->from() === $to;
+            return $dependency->to()->equals($to);
         }));
     }
 
     public function testReturnsFalseIfNoneMatches()
     {
-        $dependencies = (new DependencyPairCollection())
-            ->add(new DependencyPair(new Clazz('From'), new Clazz('To')))
-            ->add(new DependencyPair(new Clazz('From'), new Clazz('ToAnother')));
+        $dependencies = (new DependencyPairCollection())->add(
+            new DependencyPair(new Clazz('Test'), DependencyHelper::dependencySet('To, ToAnother'))
+        );
         $this->assertFalse($dependencies->any(function (DependencyPair $dependency) {
-            return $dependency->to() === new Clazz('Test');
+            return $dependency->from() === new Clazz('Other');
         }));
     }
 
     public function testEach()
     {
+        $pair = DependencyHelper::dependencyPair('From --> To, ToAnother');
         $dependencies = (new DependencyPairCollection())
-            ->add(new DependencyPair(new Clazz('From'), new Clazz('To')));
-        $dependencies->each(function (DependencyPair $dependency) {
-            $this->assertEquals(new DependencyPair(new Clazz('From'), new Clazz('To')), $dependency);
+            ->add($pair);
+        $dependencies->each(function (DependencyPair $dependency) use ($pair) {
+            $this->assertEquals($pair, $dependency);
         });
     }
 
     public function testUniqueRemovesDuplicates()
     {
-        $dependencies = (new DependencyPairCollection())
-            ->add(new DependencyPair(new Clazz('From'), new Clazz('To')))
-            ->add(new DependencyPair(new Clazz('From'), new Clazz('To')));
+        $dependencies = DependencyHelper::convert('From --> To, To');
         $this->assertCount(1, $dependencies->unique());
     }
 
     public function testReduce()
     {
-        $dependencies = (new DependencyPairCollection())
-            ->add(new DependencyPair(new Clazz('From'), new Clazz('To')))
-            ->add(new DependencyPair(new Clazz('From'), new Clazz('ToAnother')));
-        $this->assertEquals('ToToAnother', $dependencies->reduce('', function (string $output, DependencyPair $dependency) {
+        $dependencies = DependencyHelper::convert('From --> To, ToAnother');
+        $this->assertEquals('To'.PHP_EOL.'ToAnother', $dependencies->reduce('', function (string $output, DependencyPair $dependency) {
             return $output.$dependency->to()->toString();
         }));
     }
 
     public function testFromClasses()
     {
-        $dependencies = (new DependencyPairCollection())
-            ->add(new DependencyPair(new Clazz('From'), new Clazz('To')))
-            ->add(new DependencyPair(new Clazz('From'), new Clazz('ToAnother')));
+        $dependencies = DependencyHelper::convert('From --> To, ToAnother');
         $expected = (new DependencySet())
             ->add(new Clazz('From'));
         $this->assertEquals($expected, $dependencies->fromDependencies());
@@ -79,35 +65,30 @@ class DependencyPairCollectionTest extends \PHPUnit_Framework_TestCase
 
     public function testAllClasses()
     {
-        $dependencies = (new DependencyPairCollection())
-            ->add(new DependencyPair(new Clazz('From'), new Clazz('To')))
-            ->add(new DependencyPair(new Clazz('From'), new Clazz('ToAnother')));
-        $expected = (new DependencySet())
-            ->add(new Clazz('From'))
-            ->add(new Clazz('To'))
-            ->add(new Clazz('ToAnother'))
+        $dependencies = DependencyHelper::convert('From --> To, ToAnother');
+        $expected = DependencyHelper::dependencySet('From, To, ToAnother');
         ;
         $this->assertEquals($expected, $dependencies->allDependencies());
     }
 
     public function testRemovesInternals()
     {
-        $dependencies = (new DependencyPairCollection())
-            ->add(new DependencyPair(new Clazz('From'), new Clazz('To')))
-            ->add(new DependencyPair(new Clazz('From'), new Clazz('SplFileInfo')));
+        $dependencies = DependencyHelper::convert('From --> To, SplFileInfo');
         $expected = (new DependencyPairCollection())
-            ->add(new DependencyPair(new Clazz('From'), new Clazz('To')));
+            ->add(DependencyHelper::dependencyPair('From --> To'));
         $this->assertEquals($expected, $dependencies->removeInternals());
     }
 
     public function testFilterByDepthOne()
     {
-        $dependencies = (new DependencyPairCollection())
-            ->add(new DependencyPair(new Clazz('From'), new Clazz('To', new Namespaze(['A', 'a']))))
-            ->add(new DependencyPair(new Clazz('FromOther', new Namespaze(['B', 'b'])), new Clazz('SplFileInfo')));
-        $expected = (new DependencyPairCollection())
-            ->add(new DependencyPair(new Clazz('From'), new Namespaze(['A'])))
-            ->add(new DependencyPair(new Namespaze(['B']), new Clazz('SplFileInfo')));
+        $dependencies = DependencyHelper::convert('
+            From --> A\\a\\To
+            B\\b\\FromOther --> SplFileInfo
+        ');
+        $expected = DependencyHelper::convert('
+            From --> _A
+            _B --> SplFileInfo
+        ');
         $actual = $dependencies->filterByDepth(1);
         $this->assertEquals($expected, $actual);
     }
@@ -117,12 +98,7 @@ class DependencyPairCollectionTest extends \PHPUnit_Framework_TestCase
         $dependencies = DependencyHelper::convert('
             VendorA\\ProjectA\\PathA\\From --> VendorB\\ProjectB\\PathB\\To
         ');
-        $expected = (new DependencyPairCollection())
-            ->add(new DependencyPair(
-                    new Namespaze(['VendorA', 'ProjectA', 'PathA']),
-                    new Namespaze(['VendorB', 'ProjectB', 'PathB'])
-            )
-        );
+        $expected = DependencyHelper::convert('_VendorA\\ProjectA\\PathA --> _VendorB\\ProjectB\\PathB');
         $actual = $dependencies->filterByDepth(3);
         $this->assertEquals($expected, $actual);
     }
@@ -130,8 +106,7 @@ class DependencyPairCollectionTest extends \PHPUnit_Framework_TestCase
     public function testFilterByVendor()
     {
         $dependencies = DependencyHelper::convert('
-            VendorA\\A --> VendorB\\A
-            VendorA\\A --> VendorA\\C
+            VendorA\\A --> VendorB\\A, VendorA\\C
             VendorB\\B --> VendorA\\A
             VendorC\\C --> VendorA\\A
         ');
@@ -153,15 +128,15 @@ class DependencyPairCollectionTest extends \PHPUnit_Framework_TestCase
     }
     public function testRemoveClasses()
     {
-        $this->assertEquals((new DependencyPairCollection())
-            ->add(new DependencyPair(new Namespaze(['VendorA']), new Namespaze(['VendorB'])))
-            ->add(new DependencyPair(new Namespaze(['VendorA']), new Namespaze(['VendorA'])))
-            ->add(new DependencyPair(new Namespaze(['VendorB']), new Namespaze(['VendorA'])))
-            ->add(new DependencyPair(new Namespaze(['VendorC']), new Namespaze([]))), DependencyHelper::convert('
-            VendorA\\A --> VendorB\\A
-            VendorA\\A --> VendorA\\C
+        $expected = DependencyHelper::convert('
+            _VendorA --> _VendorB
+            _VendorB --> _VendorA
+            _VendorC --> _');
+        $actual = DependencyHelper::convert('
+            VendorA\\A --> VendorB\\A, VendorA\\C
             VendorB\\B --> VendorA\\A
             VendorC\\C --> B
-        ')->filterClasses());
+        ')->filterClasses();
+        $this->assertEquals($expected, $actual);
     }
 }

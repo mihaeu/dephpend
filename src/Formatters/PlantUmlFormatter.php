@@ -14,7 +14,7 @@ class PlantUmlFormatter implements Formatter
      */
     public function format(DependencyPairCollection $dependencyCollection) : string
     {
-        return '@startuml'.PHP_EOL.$this->dependenciesInPlantUmlFormat($dependencyCollection).'@enduml';
+        return '@startuml'.PHP_EOL.$this->dependenciesInPlantUmlFormat($dependencyCollection).PHP_EOL.'@enduml';
     }
 
     /**
@@ -24,8 +24,6 @@ class PlantUmlFormatter implements Formatter
      */
     private function dependenciesInPlantUmlFormat(DependencyPairCollection $dependencyCollection) : string
     {
-        return $dependencyCollection->reduce('', function (string $output, DependencyPair $dependency) {
-            return $output.$dependency->from()->toString().' --|> '.$dependency->to()->toString().PHP_EOL;
-        });
+        return str_replace('-->', '--|>', $dependencyCollection->toString());
     }
 }

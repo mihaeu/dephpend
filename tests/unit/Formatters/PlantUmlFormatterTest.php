@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Formatters;
 
-use Mihaeu\PhpDependencies\Dependencies\Clazz;
-use Mihaeu\PhpDependencies\Dependencies\DependencyPair;
-use Mihaeu\PhpDependencies\Dependencies\DependencyPairCollection;
+use Mihaeu\PhpDependencies\DependencyHelper;
 
 /**
  * @covers Mihaeu\PhpDependencies\Formatters\PlantUmlFormatter
@@ -23,9 +21,7 @@ class PlantUmlFormatterTest extends \PHPUnit_Framework_TestCase
 
     public function testFormat()
     {
-        $dependencyCollection = (new DependencyPairCollection())
-            ->add(new DependencyPair(new Clazz('ClassA'), new Clazz('ClassB')))
-            ->add(new DependencyPair(new Clazz('ClassA'), new Clazz('ClassC')));
+        $dependencyCollection = DependencyHelper::convert('ClassA --> ClassB, ClassC');
         $this->assertEquals("@startuml\n"
             ."ClassA --|> ClassB\n"
             ."ClassA --|> ClassC\n"
