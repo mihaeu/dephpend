@@ -6,7 +6,7 @@ namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser\Analyser;
 use Mihaeu\PhpDependencies\Analyser\Parser;
-use Mihaeu\PhpDependencies\Dependencies\DependencyPairCollection;
+use Mihaeu\PhpDependencies\Dependencies\DependencyPairSet;
 use Mihaeu\PhpDependencies\OS\PhpFileSet;
 use Mihaeu\PhpDependencies\OS\PhpFileFinder;
 use Symfony\Component\Console\Command\Command;
@@ -120,9 +120,9 @@ abstract class BaseCommand extends Command
     /**
      * @param string[] $sources
      *
-     * @return DependencyPairCollection
+     * @return DependencyPairSet
      */
-    protected function detectDependencies(array $sources) : DependencyPairCollection
+    protected function detectDependencies(array $sources) : DependencyPairSet
     {
         $files = array_reduce($sources, function (PhpFileSet $collection, string $source) {
             return $collection->addAll($this->phpFileFinder->find(new \SplFileInfo($source)));
@@ -134,12 +134,12 @@ abstract class BaseCommand extends Command
     }
 
     /**
-     * @param DependencyPairCollection $dependencies
+     * @param DependencyPairSet $dependencies
      * @param string[] $options
      *
-     * @return DependencyPairCollection
+     * @return DependencyPairSet
      */
-    protected function filterByInputOptions(DependencyPairCollection $dependencies, array $options) : DependencyPairCollection
+    protected function filterByInputOptions(DependencyPairSet $dependencies, array $options) : DependencyPairSet
     {
         if (!$options['internals']) {
             $dependencies = $dependencies->removeInternals();

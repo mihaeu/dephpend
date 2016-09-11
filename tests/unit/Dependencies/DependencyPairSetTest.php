@@ -7,26 +7,35 @@ namespace Mihaeu\PhpDependencies\Dependencies;
 use Mihaeu\PhpDependencies\DependencyHelper;
 
 /**
- * @covers Mihaeu\PhpDependencies\Dependencies\DependencyPairCollection
+ * @covers Mihaeu\PhpDependencies\Dependencies\DependencyPairSet
  * @covers Mihaeu\PhpDependencies\Util\AbstractCollection
  */
-class DependencyPairCollectionTest extends \PHPUnit_Framework_TestCase
+class DependencyPairSetTest extends \PHPUnit_Framework_TestCase
 {
+    public function testNoDuplicates()
+    {
+        $set = DependencyHelper::convert('
+            A --> B
+            B --> C
+        ');
+        $this->assertEquals($set, $set->add(DependencyHelper::dependencyPair('B --> C')));
+    }
+
     public function testReturnsTrueIfAnyMatches()
     {
         $to = DependencyHelper::dependencySet('To, ToAnother');
-        $dependencies = (new DependencyPairCollection())->add(new DependencyPair(new Clazz('Test'), $to));
+        $dependencies = (new DependencyPairSet())->add(new DependencyPair(new Clazz('Test'), $to));
         $this->assertTrue($dependencies->any(function (DependencyPair $dependency) use ($to) {
             return $dependency->to()->equals($to);
         }));
     }
 
-    public function testReturnsFalseIfNoneMatches()
+    public function testReturnsTrueIfNoneMatches()
     {
-        $dependencies = (new DependencyPairCollection())->add(
+        $dependencies = (new DependencyPairSet())->add(
             new DependencyPair(new Clazz('Test'), DependencyHelper::dependencySet('To, ToAnother'))
         );
-        $this->assertFalse($dependencies->any(function (DependencyPair $dependency) {
+        $this->assertTrue($dependencies->none(function (DependencyPair $dependency) {
             return $dependency->from() === new Clazz('Other');
         }));
     }
@@ -34,7 +43,7 @@ class DependencyPairCollectionTest extends \PHPUnit_Framework_TestCase
     public function testEach()
     {
         $pair = DependencyHelper::dependencyPair('From --> To, ToAnother');
-        $dependencies = (new DependencyPairCollection())
+        $dependencies = (new DependencyPairSet())
             ->add($pair);
         $dependencies->each(function (DependencyPair $dependency) use ($pair) {
             $this->assertEquals($pair, $dependency);
@@ -74,7 +83,7 @@ class DependencyPairCollectionTest extends \PHPUnit_Framework_TestCase
     public function testRemovesInternals()
     {
         $dependencies = DependencyHelper::convert('From --> To, SplFileInfo');
-        $expected = (new DependencyPairCollection())
+        $expected = (new DependencyPairSet())
             ->add(DependencyHelper::dependencyPair('From --> To'));
         $this->assertEquals($expected, $dependencies->removeInternals());
     }

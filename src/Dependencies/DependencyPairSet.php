@@ -7,12 +7,12 @@ namespace Mihaeu\PhpDependencies\Dependencies;
 use Mihaeu\PhpDependencies\Util\AbstractCollection;
 use Mihaeu\PhpDependencies\Util\Collection;
 
-class DependencyPairCollection extends AbstractCollection
+class DependencyPairSet extends AbstractCollection
 {
     /**
      * @param DependencyPair $dependency
      *
-     * @return self
+     * @return DependencyPairSet
      */
     public function add(DependencyPair $dependency) : self
     {
@@ -63,7 +63,7 @@ class DependencyPairCollection extends AbstractCollection
     }
 
     /**
-     * @return self
+     * @return DependencyPairSet
      */
     public function removeInternals() : self
     {
@@ -77,7 +77,7 @@ class DependencyPairCollection extends AbstractCollection
     /**
      * @param string $namespace
      *
-     * @return self
+     * @return DependencyPairSet
      */
     public function filterByNamespace(string $namespace) : self
     {
@@ -112,7 +112,7 @@ class DependencyPairCollection extends AbstractCollection
     }
 
     /**
-     * @return self
+     * @return DependencyPairSet
      */
     public function filterClasses() : self
     {

@@ -8,7 +8,7 @@ use Mihaeu\PhpDependencies\Dependencies\Clazz;
 use Mihaeu\PhpDependencies\Dependencies\Dependency;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
 use Mihaeu\PhpDependencies\Dependencies\DependencyPair;
-use Mihaeu\PhpDependencies\Dependencies\DependencyPairCollection;
+use Mihaeu\PhpDependencies\Dependencies\DependencyPairSet;
 use Mihaeu\PhpDependencies\Dependencies\DependencySet;
 use Mihaeu\PhpDependencies\Dependencies\Namespaze;
 
@@ -23,16 +23,16 @@ class DependencyHelper
      *      DepA --> DepB, DepC
      *      DepC --> DepD, DepE
      *
-     * @return DependencyPairCollection
+     * @return DependencyPairSet
      *
      * @throws \InvalidArgumentException
      */
-    public static function convert(string $input) : DependencyPairCollection
+    public static function convert(string $input) : DependencyPairSet
     {
         $lines = preg_split('/\v+/', $input, -1, PREG_SPLIT_NO_EMPTY);
-        return array_reduce($lines, function (DependencyPairCollection $collection, string $line) {
+        return array_reduce($lines, function (DependencyPairSet $collection, string $line) {
             return preg_match('/^ +$/', $line) ? $collection : $collection->add(self::dependencyPair($line));
-        }, new DependencyPairCollection());
+        }, new DependencyPairSet());
     }
 
     /**

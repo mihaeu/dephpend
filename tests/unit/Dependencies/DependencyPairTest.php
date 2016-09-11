@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Dependencies;
 
+use Mihaeu\PhpDependencies\DependencyHelper;
+
 /**
  * @covers Mihaeu\PhpDependencies\Dependencies\DependencyPair
  *
@@ -32,5 +34,10 @@ class DependencyPairTest extends \PHPUnit_Framework_TestCase
             ->addDependency(new Clazz('X'))
             ->to()
         );
+    }
+
+    public function testAddChildren()
+    {
+        $this->assertEquals(DependencyHelper::dependencyPair('A --> B'), (new DependencyPair(new Clazz('A')))->addDependency(new Clazz('B')));
     }
 }

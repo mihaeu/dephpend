@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Formatters;
 
-use Mihaeu\PhpDependencies\Dependencies\DependencyPairCollection;
+use Mihaeu\PhpDependencies\Dependencies\DependencyPairSet;
 
 /**
  * @covers Mihaeu\PhpDependencies\Formatters\DependencyStructureMatrixHtmlFormatter
@@ -37,7 +37,7 @@ class DependencyStructureMatrixHtmlFormatterTest extends \PHPUnit_Framework_Test
             .'<tr><th>2: B</th><td>0</td><td>X</td><td>1</td></tr>'
             .'<tr><th>3: C</th><td>0</td><td>0</td><td>X</td></tr>'
             .'</tbody></table>',
-            $this->dependencyStructureMatrixHtmlFormatter->format(new DependencyPairCollection())
+            $this->dependencyStructureMatrixHtmlFormatter->format(new DependencyPairSet())
         );
     }
 }

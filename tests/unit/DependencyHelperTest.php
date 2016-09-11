@@ -6,7 +6,7 @@ namespace Mihaeu\PhpDependencies;
 
 use Mihaeu\PhpDependencies\Dependencies\Clazz;
 use Mihaeu\PhpDependencies\Dependencies\DependencyPair;
-use Mihaeu\PhpDependencies\Dependencies\DependencyPairCollection;
+use Mihaeu\PhpDependencies\Dependencies\DependencyPairSet;
 use Mihaeu\PhpDependencies\Dependencies\Namespaze;
 
 /**
@@ -16,7 +16,7 @@ class DependencyHelperTest extends \PHPUnit_Framework_TestCase
 {
     public function testConvert()
     {
-        $expected = (new DependencyPairCollection())
+        $expected = (new DependencyPairSet())
             ->add((new DependencyPair(new Clazz('DepA', new Namespaze(['A']))))
                 ->addDependency(new Clazz('DepB', new Namespaze(['B']))))
             ->add((new DependencyPair(new Clazz('DepC', new Namespaze(['C']))))
