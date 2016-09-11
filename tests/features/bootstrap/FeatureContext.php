@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
@@ -66,6 +68,23 @@ class FeatureContext implements Context, SnippetAcceptingContext
             'source'        => [$this->dir],
         ];
         $application->run(new ArrayInput($args), $output);
-        PHPUnit_Framework_Assert::assertContains($string->getRaw(), $output->fetch());
+
+        $expected = $string->getRaw();
+        $actual = $this->cleanOutput($output->fetch());
+        PHPUnit_Framework_Assert::assertEquals($expected, $actual);
+    }
+
+    /**
+     * @param string $output
+     *
+     * @return string
+     */
+    private function cleanOutput(string $output) : string
+    {
+        return trim(str_replace(
+            'You are running dePHPend with xdebug enabled. This has a major impact on runtime performance. See https://getcomposer.org/xdebug',
+            '',
+            $output
+        ));
     }
 }
