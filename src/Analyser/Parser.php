@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Analyser;
 
 use Mihaeu\PhpDependencies\OS\PhpFile;
-use Mihaeu\PhpDependencies\OS\PhpFileCollection;
+use Mihaeu\PhpDependencies\OS\PhpFileSet;
 use PhpParser\Parser as BaseParser;
 
 class Parser
@@ -22,23 +22,14 @@ class Parser
     }
 
     /**
-     * @param PhpFileCollection $files
+     * @param PhpFileSet $files
      *
      * @return Ast
      */
-    public function parse(PhpFileCollection $files) : Ast
+    public function parse(PhpFileSet $files) : Ast
     {
-        $ast = new Ast();
-        $files->each(function (PhpFile $file) use ($ast) {
-            $node = $this->test($file->code());
-            $ast->add($file, $node);
+        return $files->reduce(new Ast(), function (Ast $ast, PhpFile $file) {
+            return $ast->add($file, $this->parser->parse($file->code()));
         });
-
-        return $ast;
-    }
-
-    private function test(string $bla)
-    {
-        return $this->parser->parse($bla);
     }
 }

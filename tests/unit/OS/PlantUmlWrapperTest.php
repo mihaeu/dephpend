@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\OS;
 
-use Mihaeu\PhpDependencies\Dependencies\DependencyPairCollection;
+use Mihaeu\PhpDependencies\Dependencies\DependencyPairSet;
 use Mihaeu\PhpDependencies\Exceptions\PlantUmlNotInstalledException;
 use Mihaeu\PhpDependencies\Formatters\PlantUmlFormatter;
 
@@ -32,7 +32,7 @@ class PlantUmlWrapperTest extends \PHPUnit_Framework_TestCase
         $plantUml = new PlantUmlWrapper($this->plantUmlFormatter, $this->shellWrapper);
 
         $this->expectException(PlantUmlNotInstalledException::class);
-        $plantUml->generate(new DependencyPairCollection(), new \SplFileInfo(__FILE__));
+        $plantUml->generate(new DependencyPairSet(), new \SplFileInfo(__FILE__));
     }
 
     public function testDetectsIfPlantUmlIsInstalled()
@@ -44,7 +44,7 @@ class PlantUmlWrapperTest extends \PHPUnit_Framework_TestCase
     public function testGenerate()
     {
         $plantUml = new PlantUmlWrapper($this->plantUmlFormatter, $this->shellWrapper);
-        $plantUml->generate(new DependencyPairCollection(), new \SplFileInfo(sys_get_temp_dir().'/dependencies.png'), true);
+        $plantUml->generate(new DependencyPairSet(), new \SplFileInfo(sys_get_temp_dir().'/dependencies.png'), true);
         $this->assertFileExists(sys_get_temp_dir().'/dependencies.uml');
         unlink(sys_get_temp_dir().'/dependencies.uml');
     }
@@ -52,7 +52,7 @@ class PlantUmlWrapperTest extends \PHPUnit_Framework_TestCase
     public function testRemoveUml()
     {
         $plantUml = new PlantUmlWrapper($this->plantUmlFormatter, $this->shellWrapper);
-        $plantUml->generate(new DependencyPairCollection(), new \SplFileInfo(sys_get_temp_dir().'/dependencies.png'));
+        $plantUml->generate(new DependencyPairSet(), new \SplFileInfo(sys_get_temp_dir().'/dependencies.png'));
         $this->assertFileNotExists(sys_get_temp_dir().'/dependencies.uml');
     }
 }

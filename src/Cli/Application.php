@@ -33,7 +33,6 @@ class Application extends \Symfony\Component\Console\Application
     public function doRun(InputInterface $input, OutputInterface $output)
     {
         $this->printWarningIfXdebugIsEnabled($output);
-        $this->setMemoryLimit($input);
 
         $phpFileFinder = $this->dI->phpFileFinder();
         $parser = $this->dI->parser();
@@ -68,6 +67,8 @@ class Application extends \Symfony\Component\Console\Application
             new Metrics()
         ));
 
+        $this->add(new TestFeaturesCommand());
+
         return parent::doRun($input, $output);
     }
 
@@ -82,16 +83,6 @@ class Application extends \Symfony\Component\Console\Application
                 .' This has a major impact on runtime performance. '
                 .'See https://getcomposer.org/xdebug</>'
             );
-        }
-    }
-
-    /**
-     * @param InputInterface $input
-     */
-    private function setMemoryLimit(InputInterface $input)
-    {
-        if ($input->hasOption('memory') && $input->getOption('memory')) {
-            ini_set('memory_limit', $input->getOption('memory'));
         }
     }
 

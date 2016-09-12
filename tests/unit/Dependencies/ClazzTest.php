@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Dependencies;
 
 use Mihaeu\PhpDependencies\DependencyHelper as H;
+use Mihaeu\PhpDependencies\DependencyHelper;
 
 /**
  * @covers Mihaeu\PhpDependencies\Dependencies\Clazz
@@ -16,6 +17,11 @@ class ClazzTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals('Name', new Clazz('Name'));
         $this->assertEquals('Name', (new Clazz('Name'))->toString());
+    }
+
+    public function testNamespace()
+    {
+        $this->assertEquals(new Namespaze(['A', 'a']), (new Clazz('Name', new Namespaze(['A', 'a'])))->namespaze());
     }
 
     public function testToStringWithNamespace()
@@ -100,5 +106,16 @@ class ClazzTest extends \PHPUnit_Framework_TestCase
             H::clazz('A\\B\\C\\D'),
             H::clazz('A\\B\\C\\D')->reduceDepthFromLeftBy(5)
         );
+    }
+
+    public function testDetectsIfInOtherNamespace()
+    {
+        $this->assertTrue(DependencyHelper::clazz('A\\b\\T\\Test')->inNamespaze(new Namespaze(['A', 'b', 'T'])));
+        $this->assertTrue(DependencyHelper::clazz('A\\Test')->inNamespaze(new Namespaze(['A', 'b', 'T'])));
+    }
+
+    public function testDetectsIfNotInOtherNamespace()
+    {
+        $this->assertFalse(DependencyHelper::clazz('Global')->inNamespaze(DependencyHelper::namespaze('A\\b\\T')));
     }
 }

@@ -25,16 +25,6 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $this->application = new Application('', '', $this->dI);
     }
 
-    public function testSetMemoryLimit()
-    {
-        $input = $this->createMock(Input::class);
-        $input->method('hasOption')->willReturn(true);
-        $input->method('getOption')->willReturn('1234M');
-        $input->method('hasParameterOption')->willReturn(false);
-        $output = $this->createMock(Output::class);
-        $this->application->doRun($input, $output);
-        $this->assertEquals('1234M', ini_get('memory_limit'));
-    }
 
     public function testWarningIfXDebugEnabled()
     {

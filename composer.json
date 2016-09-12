@@ -1,6 +1,6 @@
 {
-    "name": "mihaeu/php-dependencies",
-    "description": "Static dependency analysis for PHP",
+    "name": "mihaeu/dePHPend",
+    "description": "Dependency analysis for PHP",
     "type": "library",
     "keywords": [
         "dependencies",

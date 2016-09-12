@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Analyser;
 
-use Mihaeu\PhpDependencies\Dependencies\DependencyPairCollection;
+use Mihaeu\PhpDependencies\Dependencies\DependencyPairSet;
 use Mihaeu\PhpDependencies\OS\PhpFile;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
@@ -33,11 +33,11 @@ class Analyser
     /**
      * @param Ast $ast
      *
-     * @return DependencyPairCollection
+     * @return DependencyPairSet
      */
-    public function analyse(Ast $ast) : DependencyPairCollection
+    public function analyse(Ast $ast) : DependencyPairSet
     {
-        $ast->each(function (PhpFile $file, array $nodes) {
+        $ast->each(function (array $nodes) {
             $this->nodeTraverser->traverse($nodes);
         });
 

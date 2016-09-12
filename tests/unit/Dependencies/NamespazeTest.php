@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Dependencies;
 
+use Mihaeu\PhpDependencies\Exceptions\IndexOutOfBoundsException;
+
 /**
  * @covers Mihaeu\PhpDependencies\Dependencies\Namespaze
  */
@@ -66,5 +68,41 @@ class NamespazeTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue((new Namespaze([]))->equals(new Namespaze([])));
         $this->assertFalse((new Namespaze(['A', 'B']))->equals(new Namespaze(['A'])));
         $this->assertFalse((new Namespaze(['A', 'B']))->equals(new Namespaze([])));
+    }
+
+    public function testPartsByIndexThrowsExceptionIfIndexToBig()
+    {
+        $this->expectException(IndexOutOfBoundsException::class);
+        (new Namespaze(['1']))->partByIndex(2);
+    }
+
+    public function testPartsByIndexThrowsExceptionIfIndexZero()
+    {
+        $this->expectException(IndexOutOfBoundsException::class);
+        (new Namespaze([]))->partByIndex(0);
+    }
+
+    public function testPartsByIndex()
+    {
+        $this->assertEquals(new Namespaze(['1']), (new Namespaze(['1', '2']))->partByIndex(0));
+        $this->assertEquals(new Namespaze(['2']), (new Namespaze(['1', '2']))->partByIndex(1));
+    }
+    
+    public function testNamespazeReturnsItself()
+    {
+        $this->assertEquals(new Namespaze(['1', '2']), (new Namespaze(['1', '2']))->namespaze());
+    }
+    
+    public function testDetectsIfInOtherNamespace()
+    {
+        $this->assertTrue((new Namespaze(['A', 'b', 'T']))->inNamespaze(new Namespaze(['A', 'b', 'T'])));
+        $this->assertTrue((new Namespaze(['A']))->inNamespaze(new Namespaze(['A', 'b', 'T'])));
+    }
+
+    public function testDetectsIfNotInOtherNamespace()
+    {
+        $this->assertFalse((new Namespaze(['XZY', 'b', 'T']))->inNamespaze(new Namespaze(['A', 'b', 'T'])));
+        $this->assertFalse((new Namespaze([]))->inNamespaze(new Namespaze(['A', 'b', 'T'])));
+        $this->assertFalse((new Namespaze(['XZY', 'b', 'T']))->inNamespaze(new Namespaze([])));
     }
 }

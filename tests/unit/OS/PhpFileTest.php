@@ -34,4 +34,9 @@ class PhpFileTest extends \PHPUnit_Framework_TestCase
         $file = new PhpFile(new \SplFileInfo($mockDir->url().'/someFile.php'));
         $this->assertEquals($code, $file->code());
     }
+
+    public function testToString()
+    {
+        $this->assertContains('PhpFileTest.php', (new PhpFile(new \SplFileInfo(__FILE__)))->__toString());
+    }
 }

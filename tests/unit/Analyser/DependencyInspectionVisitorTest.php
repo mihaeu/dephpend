@@ -9,7 +9,7 @@ use Mihaeu\PhpDependencies\Dependencies\Clazz;
 use Mihaeu\PhpDependencies\Dependencies\Dependency;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
 use Mihaeu\PhpDependencies\Dependencies\DependencyPair;
-use Mihaeu\PhpDependencies\Dependencies\DependencyPairCollection;
+use Mihaeu\PhpDependencies\Dependencies\DependencyPairSet;
 use Mihaeu\PhpDependencies\Dependencies\Interfaze;
 use Mihaeu\PhpDependencies\Dependencies\Namespaze;
 use Mihaeu\PhpDependencies\Dependencies\Trait_;
@@ -65,16 +65,18 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
      * for the right order (both from --> to or to --> from would be valid).
      * It only ensures that the dependency was picked up.
      *
-     * @param DependencyPairCollection $dependencies
+     * @param DependencyPairSet $dependencies
      * @param Dependency               $otherDependency
      *
      * @return bool
      */
-    private function dependenciesContain(DependencyPairCollection $dependencies, Dependency $otherDependency) : bool
+    private function dependenciesContain(DependencyPairSet $dependencies, Dependency $otherDependency) : bool
     {
         return $dependencies->any(function (DependencyPair $dependency) use ($otherDependency) {
             return $dependency->from()->equals($otherDependency)
-            || $dependency->to()->equals($otherDependency);
+            || $dependency->to()->any(function (Dependency $dependency) use ($otherDependency) {
+                return $dependency->equals($otherDependency);
+            });
         });
     }
 

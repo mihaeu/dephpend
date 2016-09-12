@@ -8,18 +8,18 @@ use Mihaeu\PhpDependencies\Dependencies\AbstractClazz;
 use Mihaeu\PhpDependencies\Dependencies\Clazz;
 use Mihaeu\PhpDependencies\Dependencies\Dependency;
 use Mihaeu\PhpDependencies\Dependencies\DependencyPair;
-use Mihaeu\PhpDependencies\Dependencies\DependencyPairCollection;
+use Mihaeu\PhpDependencies\Dependencies\DependencyPairSet;
 use Mihaeu\PhpDependencies\Dependencies\Interfaze;
 use Mihaeu\PhpDependencies\Dependencies\Trait_;
 
 class Metrics
 {
     /**
-     * @param DependencyPairCollection $dependencies
+     * @param DependencyPairSet $dependencies
      *
      * @return float Value from 0 (completely concrete) to 1 (completely abstract)
      */
-    public function abstractness(DependencyPairCollection $dependencies) : float
+    public function abstractness(DependencyPairSet $dependencies) : float
     {
         $abstractions = $this->abstractClassCount($dependencies)
             + $this->interfaceCount($dependencies)
@@ -31,28 +31,28 @@ class Metrics
         return $abstractions / $allClasses;
     }
 
-    public function classCount(DependencyPairCollection $dependencies) : int
+    public function classCount(DependencyPairSet $dependencies) : int
     {
         return $this->countFilteredItems($dependencies, function (Dependency $dependency) {
             return $dependency instanceof Clazz;
         });
     }
 
-    public function abstractClassCount(DependencyPairCollection $dependencies) : int
+    public function abstractClassCount(DependencyPairSet $dependencies) : int
     {
         return $this->countFilteredItems($dependencies, function (Dependency $dependency) {
             return $dependency instanceof AbstractClazz;
         });
     }
 
-    public function interfaceCount(DependencyPairCollection $dependencies) : int
+    public function interfaceCount(DependencyPairSet $dependencies) : int
     {
         return $this->countFilteredItems($dependencies, function (Dependency $dependency) {
             return $dependency instanceof Interfaze;
         });
     }
 
-    public function traitCount(DependencyPairCollection $dependencies) : int
+    public function traitCount(DependencyPairSet $dependencies) : int
     {
         return $this->countFilteredItems($dependencies, function (Dependency $dependency) {
             return $dependency instanceof Trait_;
@@ -62,11 +62,11 @@ class Metrics
     /**
      * Afferent coupling is an indicator for the responsibility of a package.
      *
-     * @param DependencyPairCollection $dependencies
+     * @param DependencyPairSet $dependencies
      *
      * @return array
      */
-    public function afferentCoupling(DependencyPairCollection $dependencies) : array
+    public function afferentCoupling(DependencyPairSet $dependencies) : array
     {
         $afferent = [];
         foreach ($dependencies->fromDependencies()->toArray() as $dependencyFrom) {
@@ -74,7 +74,9 @@ class Metrics
             $afferent[$dependencyFrom->toString()] = 0;
             foreach ($dependencies->toArray() as $dependencyPair) {
                 /** @var DependencyPair $dependencyPair */
-                if ($dependencyPair->to()->equals($dependencyFrom)) {
+                if ($dependencyPair->to()->any(function (Dependency $dependency) use ($dependencyFrom) {
+                    return $dependency->equals($dependencyFrom);
+                })) {
                     ++$afferent[$dependencyFrom->toString()];
                 }
             }
@@ -85,11 +87,11 @@ class Metrics
     /**
      * Efferent coupling is an indicator for how independent a package is.
      *
-     * @param DependencyPairCollection $dependencies
+     * @param DependencyPairSet $dependencies
      *
      * @return array
      */
-    public function efferentCoupling(DependencyPairCollection $dependencies) : array
+    public function efferentCoupling(DependencyPairSet $dependencies) : array
     {
         $efferent = [];
         foreach ($dependencies->fromDependencies()->toArray() as $dependencyFrom) {
@@ -109,11 +111,11 @@ class Metrics
     /**
      * Instability is an indicator for how resilient a package is towards change.
      *
-     * @param DependencyPairCollection $dependencyPairCollection
+     * @param DependencyPairSet $dependencyPairCollection
      *
      * @return array Key: Class Value: Range from 0 (completely stable) to 1 (completely unstable)
      */
-    public function instability(DependencyPairCollection $dependencyPairCollection) : array
+    public function instability(DependencyPairSet $dependencyPairCollection) : array
     {
         $ce = $this->efferentCoupling($dependencyPairCollection);
         $ca = $this->afferentCoupling($dependencyPairCollection);
@@ -127,7 +129,7 @@ class Metrics
         return $instability;
     }
 
-    private function countFilteredItems(DependencyPairCollection $dependencyPairCollection, \Closure $closure)
+    private function countFilteredItems(DependencyPairSet $dependencyPairCollection, \Closure $closure)
     {
         return $dependencyPairCollection->fromDependencies()->filter($closure)->count();
     }

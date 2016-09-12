@@ -6,8 +6,8 @@ namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser\Analyser;
 use Mihaeu\PhpDependencies\Analyser\Parser;
-use Mihaeu\PhpDependencies\Dependencies\DependencyPairCollection;
-use Mihaeu\PhpDependencies\OS\PhpFileCollection;
+use Mihaeu\PhpDependencies\Dependencies\DependencyPairSet;
+use Mihaeu\PhpDependencies\OS\PhpFileSet;
 use Mihaeu\PhpDependencies\OS\PhpFileFinder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -71,12 +71,6 @@ abstract class BaseCommand extends Command
                 0
             )
             ->addOption(
-                'memory',
-                'm',
-                InputOption::VALUE_REQUIRED,
-                'Set maximum memory e.g. 2048M'
-            )
-            ->addOption(
                 'underscore-namespaces',
                 'u',
                 InputOption::VALUE_NONE,
@@ -126,13 +120,13 @@ abstract class BaseCommand extends Command
     /**
      * @param string[] $sources
      *
-     * @return DependencyPairCollection
+     * @return DependencyPairSet
      */
-    protected function detectDependencies(array $sources) : DependencyPairCollection
+    protected function detectDependencies(array $sources) : DependencyPairSet
     {
-        $files = array_reduce($sources, function (PhpFileCollection $collection, string $source) {
+        $files = array_reduce($sources, function (PhpFileSet $collection, string $source) {
             return $collection->addAll($this->phpFileFinder->find(new \SplFileInfo($source)));
-        }, new PhpFileCollection());
+        }, new PhpFileSet());
 
         return $this->analyser->analyse(
             $this->parser->parse($files)
@@ -140,12 +134,12 @@ abstract class BaseCommand extends Command
     }
 
     /**
-     * @param DependencyPairCollection $dependencies
+     * @param DependencyPairSet $dependencies
      * @param string[] $options
      *
-     * @return DependencyPairCollection
+     * @return DependencyPairSet
      */
-    protected function filterByInputOptions(DependencyPairCollection $dependencies, array $options) : DependencyPairCollection
+    protected function filterByInputOptions(DependencyPairSet $dependencies, array $options) : DependencyPairSet
     {
         if (!$options['internals']) {
             $dependencies = $dependencies->removeInternals();

@@ -5,18 +5,18 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Formatters;
 
 use Mihaeu\PhpDependencies\Dependencies\Dependency;
-use Mihaeu\PhpDependencies\Dependencies\DependencyCollection;
+use Mihaeu\PhpDependencies\Dependencies\DependencySet;
 use Mihaeu\PhpDependencies\Dependencies\DependencyPair;
-use Mihaeu\PhpDependencies\Dependencies\DependencyPairCollection;
+use Mihaeu\PhpDependencies\Dependencies\DependencyPairSet;
 
 class DependencyStructureMatrixBuilder
 {
     /**
-     * @param DependencyPairCollection $dependencyPairCollection
+     * @param DependencyPairSet $dependencyPairCollection
      *
      * @return array
      */
-    public function buildMatrix(DependencyPairCollection $dependencyPairCollection, int $depth = 0) : array
+    public function buildMatrix(DependencyPairSet $dependencyPairCollection, int $depth = 0) : array
     {
         $dependencies = $this->allDependenciesReducedByDepth($dependencyPairCollection, $depth);
         $emptyDsm = $this->createEmptyDsm($dependencies);
@@ -31,14 +31,14 @@ class DependencyStructureMatrixBuilder
     }
 
     /**
-     * @param DependencyPairCollection $dependencyPairCollection
+     * @param DependencyPairSet $dependencyPairCollection
      *
-     * @return DependencyCollection
+     * @return DependencySet
      */
-    private function allDependenciesReducedByDepth(DependencyPairCollection $dependencyPairCollection, int $depth)
+    private function allDependenciesReducedByDepth(DependencyPairSet $dependencyPairCollection, int $depth)
     {
-        return $dependencyPairCollection->allDependencies()->reduce(new DependencyCollection(),
-            function (DependencyCollection $dependencyCollection, Dependency $dependency) use ($depth) {
+        return $dependencyPairCollection->allDependencies()->reduce(new DependencySet(),
+            function (DependencySet $dependencyCollection, Dependency $dependency) use ($depth) {
                 return $dependencyCollection->add($dependency->reduceToDepth($depth));
             }
         );

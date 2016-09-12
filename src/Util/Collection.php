@@ -16,6 +16,13 @@ interface Collection extends \Countable
     public function any(\Closure $closure) : bool;
 
     /**
+     * @param \Closure $closure
+     *
+     * @return bool
+     */
+    public function none(\Closure $closure) : bool;
+
+    /**
      * Applies $closure to each element.
      *
      * @param \Closure $closure
@@ -55,4 +62,16 @@ interface Collection extends \Countable
      * @return bool
      */
     public function contains($other) : bool;
+
+    /**
+     * @return string
+     */
+    public function toString() : string;
+
+    /**
+     * @param Collection $other
+     *
+     * @return bool
+     */
+    public function equals(Collection $other) : bool;
 }

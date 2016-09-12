@@ -70,12 +70,13 @@ Options:
   -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
 
 Available commands:
-  dsm      Generate a Dependency Structure Matrix of your dependencies
-  help     Displays help for a command
-  list     Lists commands
-  metrics  Generate dependency metrics
-  text     Generate a Dependency Structure Matrix of your dependencies
-  uml      Generate a UML Class diagram of your dependencies
+  dsm            Generate a Dependency Structure Matrix of your dependencies
+  help           Displays help for a command
+  list           Lists commands
+  metrics        Generate dependency metrics
+  test-features  Test support for dependency detection
+  text           Generate a Dependency Structure Matrix of your dependencies
+  uml            Generate a UML Class diagram of your dependencies
 ```
 
 ### Filters
@@ -138,6 +139,24 @@ Basically the process can be broken down into four steps (the actual work is a b
  - generate an abstract syntax tree using [php-parser]() by the awesome Nikita Popov
  - traverse the tree, gathering dependencies along the way
  - pass the information to a formatter
+
+## Supported Features
+
+Check out `tests/features` for examples of supported features or run `bin/dephpend test-features` for a list of supported detection features:
+
+```
+[✓]  creating objects
+[✓]  using traits
+[✓]  extending other classes
+[✓]  type hints in method arguments
+[✓]  implementing interfaces
+[✗]  return value of known method
+[✗]  method arguments and return value from doc
+[✗]  singleton
+[✗]  return values of methods
+[✗]  known variable passed into method without type hints
+[✗]  creating objects from strings
+```
 
 ## License
 
