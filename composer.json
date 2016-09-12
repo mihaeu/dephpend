@@ -1,6 +1,6 @@
 {
-    "name": "mihaeu/php-dependencies",
-    "description": "Static dependency analysis for PHP",
+    "name": "mihaeu/dePHPend",
+    "description": "Dependency analysis for PHP",
     "type": "library",
     "keywords": [
         "dependencies",
@@ -15,8 +15,7 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^5.5",
-        "friendsofphp/php-cs-fixer": "^1.11",
-        "behat/behat": "^3.1"
+        "friendsofphp/php-cs-fixer": "^1.11"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

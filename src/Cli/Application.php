@@ -67,6 +67,8 @@ class Application extends \Symfony\Component\Console\Application
             new Metrics()
         ));
 
+        $this->add(new TestFeaturesCommand());
+
         return parent::doRun($input, $output);
     }
 
