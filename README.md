@@ -2,7 +2,7 @@
 
 > Detect flaws in your architecture, before they drag you down into the depths of dependency hell ...
 
-[![Travis](https://img.shields.io/travis/mihaeu/php-dependencies.svg?maxAge=2592000)]() [![Coveralls](https://img.shields.io/coveralls/mihaeu/php-dependencies.svg?maxAge=2592000)]() ![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat) [![Gitter](https://img.shields.io/gitter/room/mihaeu/php-dependencies.svg?maxAge=2592000&style=flat)]()
+[![Build Status](https://travis-ci.org/mihaeu/php-dependencies.svg?branch=develop)](https://travis-ci.org/mihaeu/php-dependencies) [![Coverage Status](https://coveralls.io/repos/github/mihaeu/php-dependencies/badge.svg)](https://coveralls.io/github/mihaeu/php-dependencies) ![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat) [![Gitter](https://img.shields.io/gitter/room/mihaeu/php-dependencies.svg?maxAge=2592000&style=flat)](https://gitter.im/mihaeu/php-dependencies)
 
 > **DISCLAIMER**
 >
@@ -144,7 +144,7 @@ Basically the process can be broken down into four steps (the actual work is a b
 
 Check out `tests/features` for examples of supported features or run `bin/dephpend test-features` for a list of supported detection features:
 
-```
+```bash
 [✓]  creating objects
 [✓]  using traits
 [✓]  extending other classes
