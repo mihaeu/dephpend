@@ -10,7 +10,7 @@ class PhpFileFinder
     {
         return $file->isDir()
             ? $this->findInDir($file)
-            : new PhpFileSet();
+            : (new PhpFileSet())->add(new PhpFile($file));
     }
 
     private function findInDir(\SplFileInfo $dir) : PhpFileSet
