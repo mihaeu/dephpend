@@ -3086,7 +3086,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
         <span class="doc-title">dePHPend</span>
         <ul class="nav pull-right doc-info">
                     <li><p class="navbar-text">Michael Haeuslmann</p></li>
-                              <li><p class="navbar-text">Fri Sep  2 15:00:22 CEST 2016</p></li>
+                              <li><p class="navbar-text">Mon Sep 12 10:15:01 CEST 2016</p></li>
                   </ul>
       </div>
     </div>
@@ -3104,6 +3104,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
         <li><a href="#installation">Installation</a></li>
         <li><a href="#usage">Usage</a></li>
         <li><a href="#how-it-all-works">How it all works</a></li>
+        <li><a href="#supported-features">Supported Features</a></li>
         <li><a href="#license">License</a></li>
         </ul></li>
         </ul>
@@ -3160,12 +3161,13 @@ Options:
   -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
 
 Available commands:
-  dsm      Generate a Dependency Structure Matrix of your dependencies
-  help     Displays help for a command
-  list     Lists commands
-  metrics  Generate dependency metrics
-  text     Generate a Dependency Structure Matrix of your dependencies
-  uml      Generate a UML Class diagram of your dependencies</code></pre>
+  dsm            Generate a Dependency Structure Matrix of your dependencies
+  help           Displays help for a command
+  list           Lists commands
+  metrics        Generate dependency metrics
+  test-features  Test support for dependency detection
+  text           Generate a Dependency Structure Matrix of your dependencies
+  uml            Generate a UML Class diagram of your dependencies</code></pre>
 <h3 id="filters">Filters</h3>
 <p>Without filters the output for large apps is too bloated which is why I implemented a couple of filters to help you get the output you want:</p>
 <pre class="sourceCode bash"><code class="sourceCode bash">      <span class="kw">--internals</span>                          Check for dependencies from internal PHP Classes like SplFileInfo.
@@ -3197,6 +3199,19 @@ Available commands:
 <li>traverse the tree, gathering dependencies along the way</li>
 <li>pass the information to a formatter</li>
 </ul>
+<h2 id="supported-features">Supported Features</h2>
+<p>Check out <code>tests/features</code> for examples of supported features or run <code>bin/dephpend test-features</code> for a list of supported detection features:</p>
+<pre><code>[✓]  creating objects
+[✓]  using traits
+[✓]  extending other classes
+[✓]  type hints in method arguments
+[✓]  implementing interfaces
+[✗]  return value of known method
+[✗]  method arguments and return value from doc
+[✗]  singleton
+[✗]  return values of methods
+[✗]  known variable passed into method without type hints
+[✗]  creating objects from strings</code></pre>
 <h2 id="license">License</h2>
 <p>See <a href="LICENSE" class="uri">LICENSE</a> file</p>
             </div>
