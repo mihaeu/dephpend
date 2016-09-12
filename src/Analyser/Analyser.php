@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Analyser;
 
 use Mihaeu\PhpDependencies\Dependencies\DependencyPairSet;
-use Mihaeu\PhpDependencies\OS\PhpFile;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
 
@@ -15,7 +14,7 @@ class Analyser
     private $nodeTraverser;
 
     /** @var DependencyInspectionVisitor */
-    private $dependencyInspectionVisitor = null;
+    private $dependencyInspectionVisitor;
 
     /**
      * @param NodeTraverser               $nodeTraverser

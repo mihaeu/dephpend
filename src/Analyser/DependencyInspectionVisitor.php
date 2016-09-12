@@ -32,7 +32,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     private $tempDependencies;
 
     /** @var Clazz */
-    private $currentClass = null;
+    private $currentClass;
 
     /** @var Clazz */
     private $temporaryClass;
@@ -67,6 +67,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     public function beforeTraverse(array $nodes)
     {
         $this->currentClass = $this->temporaryClass;
+        return null;
     }
 
     /**
@@ -135,6 +136,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
             ));
             $this->tempDependencies = new DependencyPair($this->temporaryClass);
         }
+        return null;
     }
 
     /**

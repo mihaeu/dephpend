@@ -20,6 +20,7 @@ class MetricsCommand extends BaseCommand
      * @param PhpFileFinder $phpFileFinder
      * @param Parser $parser
      * @param Analyser $analyser
+     * @param Metrics $metrics
      */
     public function __construct(
         PhpFileFinder $phpFileFinder,

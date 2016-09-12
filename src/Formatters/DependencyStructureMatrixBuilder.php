@@ -13,6 +13,7 @@ class DependencyStructureMatrixBuilder
 {
     /**
      * @param DependencyPairSet $dependencyPairCollection
+     * @param int $depth
      *
      * @return array
      */
@@ -33,6 +34,7 @@ class DependencyStructureMatrixBuilder
     /**
      * @param DependencyPairSet $dependencyPairCollection
      *
+     * @param int $depth
      * @return DependencySet
      */
     private function allDependenciesReducedByDepth(DependencyPairSet $dependencyPairCollection, int $depth)

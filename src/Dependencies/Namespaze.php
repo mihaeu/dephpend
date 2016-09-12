@@ -94,7 +94,7 @@ class Namespaze implements Dependency
      */
     private function arrayContainsNotOnlyStrings(array $parts):bool
     {
-        return Util::array_once($parts, function ($value, $index) {
+        return Util::array_once($parts, function ($value) {
             return !is_string($value);
         });
     }

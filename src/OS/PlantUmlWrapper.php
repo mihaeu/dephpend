@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\OS;
 
-use Mihaeu\PhpDependencies\Dependencies\DependencyPairSet;
 use Mihaeu\PhpDependencies\Exceptions\PlantUmlNotInstalledException;
 use Mihaeu\PhpDependencies\Formatters\PlantUmlFormatter;
 use Mihaeu\PhpDependencies\Util\Collection;
@@ -28,9 +27,9 @@ class PlantUmlWrapper
     }
 
     /**
-     * @param DependencyPairSet $dependencyCollection
-     * @param \SplFileInfo             $destination
-     * @param bool                     $keepUml
+     * @param Collection    $dependencyCollection
+     * @param \SplFileInfo  $destination
+     * @param bool          $keepUml
      *
      * @throws PlantUmlNotInstalledException
      */

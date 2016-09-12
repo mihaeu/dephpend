@@ -15,9 +15,6 @@ use PhpParser\ParserFactory;
 
 class DI
 {
-    /** @var Analyser */
-    private $analyser;
-
     /**
      * @return PhpFileFinder
      */
@@ -47,6 +44,7 @@ class DI
     }
 
     /**
+     * @param bool $withUnderscoreSupport
      * @return Analyser
      */
     public function analyser(bool $withUnderscoreSupport = false) : Analyser

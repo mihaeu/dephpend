@@ -22,6 +22,7 @@ class Application extends \Symfony\Component\Console\Application
     /**
      * @param string $name
      * @param string $version
+     * @param DI $dI
      */
     public function __construct(string $name, string $version, DI $dI)
     {
