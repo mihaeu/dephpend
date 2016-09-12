@@ -11,6 +11,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
+// @codeCoverageIgnoreStart
 class TestFeaturesCommand extends Command
 {
     /**
@@ -102,3 +103,4 @@ class TestFeaturesCommand extends Command
         return implode(PHP_EOL, $expectations);
     }
 }
+// @codeCoverageIgnoreEnd
