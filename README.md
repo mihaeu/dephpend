@@ -2,7 +2,7 @@
 
 > Detect flaws in your architecture, before they drag you down into the depths of dependency hell ...
 
-[![Build Status](https://travis-ci.org/mihaeu/php-dependencies.svg?branch=develop)](https://travis-ci.org/mihaeu/php-dependencies) [![Coverage Status](https://coveralls.io/repos/github/mihaeu/php-dependencies/badge.svg)](https://coveralls.io/github/mihaeu/php-dependencies) ![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat) [![Gitter](https://img.shields.io/gitter/room/mihaeu/php-dependencies.svg?maxAge=2592000&style=flat)](https://gitter.im/mihaeu/php-dependencies)
+[![Build Status](https://travis-ci.org/mihaeu/dephpend.svg?branch=develop)](https://travis-ci.org/mihaeu/dephpend) [![Coverage Status](https://coveralls.io/repos/github/mihaeu/dephpend/badge.svg)](https://coveralls.io/github/mihaeu/dephpend) ![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat) [![Join the chat at https://gitter.im/dephpend/Lobby](https://badges.gitter.im/dephpend/Lobby.svg)](https://gitter.im/dephpend/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 > **DISCLAIMER**
 >
