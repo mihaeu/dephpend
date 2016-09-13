@@ -7,7 +7,7 @@ namespace Mihaeu\PhpDependencies\Analyser;
 use Mihaeu\PhpDependencies\Dependencies\AbstractClazz;
 use Mihaeu\PhpDependencies\Dependencies\Clazz;
 use Mihaeu\PhpDependencies\Dependencies\DependencyPair;
-use Mihaeu\PhpDependencies\Dependencies\DependencyPairSet;
+use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Dependencies\DependencySet;
 use Mihaeu\PhpDependencies\Dependencies\Interfaze;
 use Mihaeu\PhpDependencies\Dependencies\Trait_;
@@ -20,19 +20,19 @@ class MetricsTest extends \PHPUnit_Framework_TestCase
     /** @var Metrics */
     private $metrics;
 
-    /** @var DependencyPairSet */
+    /** @var DependencyMap */
     private $dependencies;
 
     public function setUp()
     {
-        $this->dependencies = (new DependencyPairSet())
-            ->add(new DependencyPair(new Clazz('A'),            (new DependencySet())->add(new Interfaze('B'))))
-            ->add(new DependencyPair(new Clazz('G'),            (new DependencySet())->add(new Interfaze('B'))))
-            ->add(new DependencyPair(new Clazz('R'),            (new DependencySet())->add(new Interfaze('B'))))
-            ->add(new DependencyPair(new Clazz('C'),            (new DependencySet())->add(new Trait_('F'))))
-            ->add(new DependencyPair(new AbstractClazz('D'),    (new DependencySet())->add(new Interfaze('E'))))
-            ->add(new DependencyPair(new Interfaze('B'),        (new DependencySet())->add(new Interfaze('E'))))
-            ->add(new DependencyPair(new Trait_('H'),           (new DependencySet())->add(new Interfaze('E'))))
+        $this->dependencies = (new DependencyMap())
+            ->add(new Clazz('A'),            new Interfaze('B'))
+            ->add(new Clazz('G'),            new Interfaze('B'))
+            ->add(new Clazz('R'),            new Interfaze('B'))
+            ->add(new Clazz('C'),            new Trait_('F'))
+            ->add(new AbstractClazz('D'),    new Interfaze('E'))
+            ->add(new Interfaze('B'),        new Interfaze('E'))
+            ->add(new Trait_('H'),           new Interfaze('E'))
         ;
         $this->metrics = new Metrics($this->dependencies);
     }

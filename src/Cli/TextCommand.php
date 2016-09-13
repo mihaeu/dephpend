@@ -36,7 +36,6 @@ class TextCommand extends BaseCommand
         $output->writeln(
             $this->filterByInputOptions($dependencies, $options)
                 ->filterByDepth((int) $options['depth'])
-                ->unique()
                 ->toString()
         );
     }

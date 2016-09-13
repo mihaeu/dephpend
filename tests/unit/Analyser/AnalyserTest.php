@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Analyser;
 
-use Mihaeu\PhpDependencies\Dependencies\DependencyPairSet;
+use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use PhpParser\NodeTraverser;
 
 /**
@@ -29,8 +29,8 @@ class AnalyserTest extends \PHPUnit_Framework_TestCase
 
     public function testAnalyse()
     {
-        $this->dependencyInspectionVisitor->method('dependencies')->willReturn(new DependencyPairSet());
+        $this->dependencyInspectionVisitor->method('dependencies')->willReturn(new DependencyMap());
         $dependencies = $this->analyser->analyse(new Ast());
-        $this->assertEquals(new DependencyPairSet(), $dependencies);
+        $this->assertEquals(new DependencyMap(), $dependencies);
     }
 }

@@ -69,7 +69,7 @@ class UmlCommand extends BaseCommand
         $dependencies = $this->filterByInputOptions(
             $this->detectDependencies($input->getArgument('source')),
             $options
-        )->filterByDepth((int) $options['depth'])->unique();
+        )->filterByDepth((int) $options['depth']);
 
         $destination = new \SplFileInfo($options['output']);
         $this->plantUmlWrapper->generate($dependencies, $destination, $options['keep-uml']);
