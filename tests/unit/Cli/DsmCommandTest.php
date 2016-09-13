@@ -65,7 +65,7 @@ class DsmCommandTest extends \PHPUnit_Framework_TestCase
             'depth' => 0
         ]);
 
-        $dependencies = DependencyHelper::convert('A --> B');
+        $dependencies = DependencyHelper::map('A --> B');
         $this->analyser->method('analyse')->willReturn($dependencies);
 
         $this->dependencyStructureMatrixFormatter->expects($this->once())->method('format')->with($dependencies);

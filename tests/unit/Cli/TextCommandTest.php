@@ -51,7 +51,7 @@ class TextCommandTest extends \PHPUnit_Framework_TestCase
 
     public function testPrintsDependencies()
     {
-        $dependencies = DependencyHelper::convert('
+        $dependencies = DependencyHelper::map('
             A\\a\\1\\ClassA --> B\\a\\1\\ClassB
             A\\a\\1\\ClassA --> C\\a\\1\\ClassC
             B\\a\\1\\ClassB --> C\\a\\1\\ClassC
@@ -74,7 +74,7 @@ class TextCommandTest extends \PHPUnit_Framework_TestCase
 
     public function testPrintsOnlyNamespacedDependencies()
     {
-        $dependencies = DependencyHelper::convert('
+        $dependencies = DependencyHelper::map('
             NamespaceA\\A --> NamespaceB\\B
             NamespaceA\\A --> NamespaceC\\C
             NamespaceB\\B --> NamespaceC\\C

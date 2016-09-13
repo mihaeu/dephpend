@@ -10,7 +10,7 @@ abstract class AbstractMap implements Collection
     protected $map = [];
 
     protected static $KEY = 'key';
-    protected static $VALUE = 'vale';
+    protected static $VALUE = 'value';
 
     /**
      * @inheritDoc
@@ -109,7 +109,7 @@ abstract class AbstractMap implements Collection
      */
     public function equals(Collection $other) : bool
     {
-        return $this instanceof $other && $this->map === $other->map;
+        return $this instanceof $other && $this->toString() === $other->toString();
     }
 
     /**

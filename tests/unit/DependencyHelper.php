@@ -15,7 +15,7 @@ class DependencyHelper
 {
     /**
      * Converts dependencies written in string format into a proper
-     * DependencyPairCollection.
+     * DependencyMap.
      *
      * @param string $input format:
      *
@@ -26,7 +26,7 @@ class DependencyHelper
      *
      * @throws \InvalidArgumentException
      */
-    public static function convert(string $input) : DependencyMap
+    public static function map(string $input) : DependencyMap
     {
         $lines = preg_split('/\v+/', $input, -1, PREG_SPLIT_NO_EMPTY);
         $array_reduce = array_reduce($lines,

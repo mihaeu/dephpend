@@ -19,7 +19,7 @@ class DependencyStructureMatrixBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testBuildMatrixFromClassesWithoutNamespaces()
     {
-        $dependencies = DependencyHelper::convert('
+        $dependencies = DependencyHelper::map('
             A --> D, B
             B --> D
             C --> A
@@ -35,7 +35,7 @@ class DependencyStructureMatrixBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testBuildMatrixFromClassesWithNamespaces()
     {
-        $dependencies = DependencyHelper::convert('
+        $dependencies = DependencyHelper::map('
             AA\\A --> DD\\D, BB\\B
             BB\\B --> DD\\D
             CC\\C --> AA\\A
