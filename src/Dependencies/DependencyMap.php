@@ -136,9 +136,12 @@ class DependencyMap extends AbstractMap
     {
         return trim($this->reduce('', function (string $carry, DependencySet $value, Dependency $key) {
             return $value->reduce($carry, function (string $carry, Dependency $value) use ($key) {
-                return $carry.$key.' --> '.$value.PHP_EOL;
+                return $value instanceof NullDependency
+                    ? $carry
+                    : $carry.$key->toString().' --> '.$value->toString().PHP_EOL;
             });
-        }));
+        })
+        );
     }
 
 

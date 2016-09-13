@@ -6,7 +6,6 @@ namespace Mihaeu\PhpDependencies\Analyser;
 
 use Mihaeu\PhpDependencies\Dependencies\Clazz;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
-use Mihaeu\PhpDependencies\Dependencies\DependencyPair;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Dependencies\DependencySet;
 use PhpParser\Node;

@@ -126,8 +126,8 @@ abstract class BaseCommand extends Command
      */
     protected function detectDependencies(array $sources) : DependencyMap
     {
-        $files = array_reduce($sources, function (PhpFileSet $collection, string $source) {
-            return $collection->addAll($this->phpFileFinder->find(new \SplFileInfo($source)));
+        $files = array_reduce($sources, function (PhpFileSet $set, string $source) {
+            return $set->addAll($this->phpFileFinder->find(new \SplFileInfo($source)));
         }, new PhpFileSet());
 
         return $this->analyser->analyse(
