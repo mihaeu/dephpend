@@ -6,9 +6,7 @@ namespace Mihaeu\PhpDependencies\Analyser;
 
 use Mihaeu\PhpDependencies\Dependencies\AbstractClazz;
 use Mihaeu\PhpDependencies\Dependencies\Clazz;
-use Mihaeu\PhpDependencies\Dependencies\DependencyPair;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
-use Mihaeu\PhpDependencies\Dependencies\DependencySet;
 use Mihaeu\PhpDependencies\Dependencies\Interfaze;
 use Mihaeu\PhpDependencies\Dependencies\Trait_;
 

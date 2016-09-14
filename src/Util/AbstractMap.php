@@ -18,8 +18,10 @@ abstract class AbstractMap implements Collection
     public function any(\Closure $closure) : bool
     {
         foreach ($this->map as $item) {
-            if ($closure($item[self::$VALUE], $item[self::$KEY]) === true) {
-                return true;
+            foreach ($item[self::$VALUE]->toArray() as $subItem) {
+                if ($closure($item[self::$KEY], $subItem) === true) {
+                    return true;
+                }
             }
         }
         return false;
@@ -39,7 +41,9 @@ abstract class AbstractMap implements Collection
     public function each(\Closure $closure)
     {
         foreach ($this->map as $item) {
-            $closure($item[self::$VALUE], $item[self::$KEY]);
+            foreach ($item[self::$VALUE]->toArray() as $subItem) {
+                $closure($item[self::$KEY], $subItem);
+            }
         }
     }
 
@@ -50,7 +54,9 @@ abstract class AbstractMap implements Collection
     {
         $xs = [];
         foreach ($this->map as $item) {
-            $xs[] = $closure($item[self::$VALUE], $item[self::$KEY]);
+            foreach ($item[self::$VALUE]->toArray() as $subItem) {
+                $xs[] = $closure($item[self::$KEY], $subItem);
+            }
         }
         return $xs;
     }
@@ -61,7 +67,9 @@ abstract class AbstractMap implements Collection
     public function reduce($initial, \Closure $closure)
     {
         foreach ($this->map as $key => $item) {
-            $initial = $closure($initial, $item[self::$VALUE], $item[self::$KEY]);
+            foreach ($item[self::$VALUE]->toArray() as $subItem) {
+                $initial = $closure($initial, $item[self::$KEY], $subItem);
+            }
         }
         return $initial;
     }
@@ -74,8 +82,10 @@ abstract class AbstractMap implements Collection
         $clone = clone $this;
         $clone->map = [];
         foreach ($this->map as $key => $item) {
-            if ($closure($item[self::$VALUE], $item[self::$KEY]) === true) {
-                $clone->map[$key] = $item;
+            foreach ($item[self::$VALUE]->toArray() as $subItem) {
+                if ($closure($item[self::$KEY], $subItem) === true) {
+                    $clone = $clone->add($item[self::$KEY], $subItem);
+                }
             }
         }
         return $clone;
@@ -94,9 +104,12 @@ abstract class AbstractMap implements Collection
      */
     public function contains($other) : bool
     {
-        return $this->any(function ($value, $key) use ($other) {
-            return $key instanceof $other && $key->equals($other);
-        });
+        foreach ($this->map as $key => $item) {
+            if ($item[self::$KEY] instanceof $other && $item[self::$KEY]->equals($other)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -109,7 +122,8 @@ abstract class AbstractMap implements Collection
      */
     public function equals(Collection $other) : bool
     {
-        return $this instanceof $other && $this->toString() === $other->toString();
+        return $this instanceof $other
+            && $this->toString() === $other->toString();
     }
 
     /**

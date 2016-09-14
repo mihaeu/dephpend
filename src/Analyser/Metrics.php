@@ -69,16 +69,13 @@ class Metrics
      */
     public function afferentCoupling(DependencyMap $map) : array
     {
-        return $map->reduce([], function (array $afferent, DependencySet $to, Dependency $from) use ($map) {
-            $afferent[$from->toString()] = 0;
-            return $map->reduce($afferent, function (array $afferent, DependencySet $to, Dependency $fromOther) use ($from) {
-                if ($to->any(function (Dependency $dependency) use ($from) {
-                    return $dependency->equals($from);
-                })) {
-                    ++$afferent[$from->toString()];
-                }
-                return $afferent;
+        return $map->fromDependencies()->reduce([], function (array $afferent, Dependency $from) use ($map) {
+            $afferent[$from->toString()] = $map->reduce(0, function (int $count, Dependency $fromOther, Dependency $to) use ($from) {
+                return $from->equals($to)
+                    ? $count + 1
+                    : $count;
             });
+            return $afferent;
         });
     }
 
@@ -91,8 +88,8 @@ class Metrics
      */
     public function efferentCoupling(DependencyMap $map) : array
     {
-        return $map->reduce([], function (array $efferent, DependencySet $to, Dependency $from) {
-            $efferent[$from->toString()] = $to->count();
+        return $map->reduce([], function (array $efferent, Dependency $from, Dependency $to) use ($map) {
+            $efferent[$from->toString()] = $map->get($from)->count();
             return $efferent;
         });
     }

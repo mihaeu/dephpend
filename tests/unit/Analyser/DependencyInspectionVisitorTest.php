@@ -73,11 +73,9 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
      */
     private function dependenciesContain(DependencyMap $dependencies, Dependency $otherDependency) : bool
     {
-        return $dependencies->any(function (DependencySet $to, Dependency $from) use ($otherDependency) {
+        return $dependencies->any(function (Dependency $from, Dependency $to) use ($otherDependency) {
             return $from->equals($otherDependency)
-            || $to->any(function (Dependency $dependency) use ($otherDependency) {
-                return $dependency->equals($otherDependency);
-            });
+                || $to->equals($otherDependency);
         });
     }
 

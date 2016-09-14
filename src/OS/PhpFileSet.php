@@ -21,8 +21,8 @@ class PhpFileSet extends AbstractCollection
 
     public function addAll(PhpFileSet $otherCollection) : PhpFileSet
     {
-        return $otherCollection->reduce(clone $this, function (self $carry, PhpFile $file) {
-            return $carry->add($file);
+        return $otherCollection->reduce(clone $this, function (self $set, PhpFile $file) {
+            return $set->add($file);
         });
     }
 

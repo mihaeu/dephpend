@@ -23,35 +23,33 @@ class DependencyMapTest extends \PHPUnit_Framework_TestCase
 
     public function testReturnsTrueIfAnyMatches()
     {
-        $to = DependencyHelper::dependencySet('To, ToAnother');
-        $dependencies = (new DependencyMap())->addSet(new Clazz('Test'), $to);
-        $this->assertTrue($dependencies->any(function (DependencySet $toDependencies, Dependency $fromDependency) use ($to) {
-            return $toDependencies->equals($to);
+        $toSet = DependencyHelper::dependencySet('To, ToAnother');
+        $dependencies = (new DependencyMap())->addSet(new Clazz('Test'), $toSet);
+        $this->assertTrue($dependencies->any(function (Dependency $from, Dependency $to) use ($toSet) {
+            return $toSet->contains($to);
         }));
     }
 
     public function testReturnsTrueIfNoneMatches()
     {
         $dependencies = (new DependencyMap())->addSet(new Clazz('Test'), DependencyHelper::dependencySet('To, ToAnother'));
-        $this->assertTrue($dependencies->none(function (DependencySet $toDependencies, Dependency $fromDependency) {
-            return $fromDependency === new Clazz('Other');
+        $this->assertTrue($dependencies->none(function (Dependency $from, Dependency $to) {
+            return $from === new Clazz('Other');
         }));
     }
 
     public function testEach()
     {
-        $to = DependencyHelper::dependencySet('To, ToAnother');
-        $dependencies = (new DependencyMap())->addSet(new Clazz('From'), $to);
-        $dependencies->each(function (DependencySet $toDependencies, Dependency $fromDependency) use ($to) {
-            $this->assertEquals($toDependencies, $to);
+        DependencyHelper::map('From --> To, ToAnother')->each(function (Dependency $from, Dependency $to) {
+            $this->assertTrue($from->equals(new Clazz('From')));
         });
     }
 
     public function testReduce()
     {
         $dependencies = DependencyHelper::map('From --> To, ToAnother');
-        $this->assertEquals('To'.PHP_EOL.'ToAnother', $dependencies->reduce('', function (string $output, DependencySet $toDependencies, Dependency $fromDependency) {
-            return $output.$toDependencies->toString();
+        $this->assertEquals('ToToAnother', $dependencies->reduce('', function (string $output, Dependency $from, Dependency $to) {
+            return $output.$to->toString();
         }));
     }
 
@@ -129,7 +127,7 @@ class DependencyMapTest extends \PHPUnit_Framework_TestCase
         $expected = DependencyHelper::map('
             _VendorA --> _VendorB
             _VendorB --> _VendorA
-            _VendorC --> _');
+        ');
         $actual = DependencyHelper::map('
             VendorA\\A --> VendorB\\A, VendorA\\C
             VendorB\\B --> VendorA\\A
@@ -156,7 +154,7 @@ class DependencyMapTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([new Clazz('A'), new Clazz('C')], DependencyHelper::map('
             A --> B
             C --> D
-        ')->mapToArray(function (DependencySet $to, Dependency $from) {
+        ')->mapToArray(function (Dependency $from, Dependency $to) {
             return $from;
         }));
     }
@@ -185,7 +183,7 @@ class DependencyMapTest extends \PHPUnit_Framework_TestCase
             DependencyHelper::map('
                 A --> B
                 C --> D
-            ')->filter(function (DependencySet $to, Dependency $from) {
+            ')->filter(function (Dependency $from, Dependency $to) {
                 return $from->equals(new Clazz('A'));
             })
         );

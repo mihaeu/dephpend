@@ -19,31 +19,12 @@ class DependencyStructureMatrixBuilder
      */
     public function buildMatrix(DependencyMap $map, int $depth = 0) : array
     {
-        $dependencies = $this->allDependenciesReducedByDepth($map, $depth);
-        $emptyDsm = $this->createEmptyDsm($dependencies);
-
-        return $map->reduce($emptyDsm, function (array $dsm, DependencySet $to, Dependency $from) use ($depth) {
-            $fromKey = $from->reduceToDepth($depth)->toString();
-            return $to->reduceToDepth($depth)->reduce($dsm, function (array $dsm, Dependency $to) use ($fromKey) {
-                $dsm[$fromKey][$to->toString()] += 1;
-                return $dsm;
-            });
+        $dependencies = $map->allDependencies()->reduceToDepth($depth);
+        $initial = $this->createEmptyDsm($dependencies);
+        return $map->reduce($initial, function (array $dsm, Dependency $from, Dependency $to) use ($depth) {
+            $dsm[$from->reduceToDepth($depth)->toString()][$to->reduceToDepth($depth)->toString()] += 1;
+            return $dsm;
         });
-    }
-
-    /**
-     * @param DependencyMap $dependencyPairCollection
-     *
-     * @param int $depth
-     * @return DependencySet
-     */
-    private function allDependenciesReducedByDepth(DependencyMap $dependencyPairCollection, int $depth)
-    {
-        return $dependencyPairCollection->allDependencies()->reduce(new DependencySet(),
-            function (DependencySet $dependencyCollection, Dependency $dependency) use ($depth) {
-                return $dependencyCollection->add($dependency->reduceToDepth($depth));
-            }
-        );
     }
 
     /**
