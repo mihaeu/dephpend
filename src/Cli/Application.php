@@ -11,6 +11,7 @@ use Mihaeu\PhpDependencies\Analyser\Metrics;
 use Mihaeu\PhpDependencies\Formatters\PlantUmlFormatter;
 use Mihaeu\PhpDependencies\OS\PlantUmlWrapper;
 use Mihaeu\PhpDependencies\OS\ShellWrapper;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -31,45 +32,21 @@ class Application extends \Symfony\Component\Console\Application
         parent::__construct($name, $version);
     }
 
+    /**
+     * Commands are added here instead of before executing run(), because
+     * we need access to command line options in order to inject the
+     * right dependencies.
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     *
+     * @return int
+     */
     public function doRun(InputInterface $input, OutputInterface $output)
     {
         $this->printWarningIfXdebugIsEnabled($output);
 
-        $phpFileFinder = $this->dI->phpFileFinder();
-        $parser = $this->dI->parser();
-        $analyser = $this->dI->analyser($this->isUnderscoreSupportRequired($input));
-
-        $this->add(new UmlCommand(
-            $phpFileFinder,
-            $parser,
-            $analyser,
-            new PlantUmlWrapper(new PlantUmlFormatter(), new ShellWrapper())
-        ));
-
-        $this->add(new DsmCommand(
-            $phpFileFinder,
-            $parser,
-            $analyser,
-            new DependencyStructureMatrixHtmlFormatter(
-                new DependencyStructureMatrixBuilder()
-            )
-        ));
-
-        $this->add(new TextCommand(
-            $phpFileFinder,
-            $parser,
-            $analyser
-        ));
-
-        $this->add(new MetricsCommand(
-            $phpFileFinder,
-            $parser,
-            $analyser,
-            new Metrics()
-        ));
-
-        $this->add(new TestFeaturesCommand());
-
+        $this->addCommands($this->createCommands($input));
         return parent::doRun($input, $output);
     }
 
@@ -95,5 +72,48 @@ class Application extends \Symfony\Component\Console\Application
     private function isUnderscoreSupportRequired(InputInterface $input)
     {
         return $input->hasParameterOption(array('--underscore-namespaces', '-u'), true);
+    }
+
+    /**
+     * @param InputInterface $input
+     *
+     * @return Command[]
+     *
+     * @throws \Symfony\Component\Console\Exception\LogicException
+     */
+    private function createCommands(InputInterface $input) : array
+    {
+        $phpFileFinder = $this->dI->phpFileFinder();
+        $parser = $this->dI->parser();
+        $analyser = $this->dI->analyser($this->isUnderscoreSupportRequired($input));
+
+        return [
+            new UmlCommand(
+                $phpFileFinder,
+                $parser,
+                $analyser,
+                new PlantUmlWrapper(new PlantUmlFormatter(), new ShellWrapper())
+            ),
+            new DsmCommand(
+                $phpFileFinder,
+                $parser,
+                $analyser,
+                new DependencyStructureMatrixHtmlFormatter(
+                    new DependencyStructureMatrixBuilder()
+                )
+            ),
+            new TextCommand(
+                $phpFileFinder,
+                $parser,
+                $analyser
+            ),
+            new MetricsCommand(
+                $phpFileFinder,
+                $parser,
+                $analyser,
+                new Metrics()
+            ),
+            new TestFeaturesCommand(),
+        ];
     }
 }

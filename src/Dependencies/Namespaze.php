@@ -84,7 +84,7 @@ class Namespaze implements Dependency
     {
         return $other->toString() !== ''
             && $this->toString() !== ''
-            && strpos($other->toString(), $this->toString()) === 0;
+            && strpos($this->toString(), $other->toString()) === 0;
     }
 
     /**

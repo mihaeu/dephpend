@@ -95,9 +95,12 @@ class DependencyMap extends AbstractMap
     {
         $namespace = new Namespaze(array_filter(explode('\\', $namespace)));
         return $this->reduce(new self(), function (self $map, Dependency $from, Dependency $to) use ($namespace) {
-            return $from->inNamespaze($namespace) && $to->inNamespaze($namespace)
-                ? $map->add($from->reduceDepthFromLeftBy($namespace->count()), $to->reduceDepthFromLeftBy($namespace->count()))
-                : $map;
+            $fromDependency = $from->reduceDepthFromLeftBy($namespace->count());
+            $toDependency = $to->reduceDepthFromLeftBy($namespace->count());
+            if ($from->inNamespaze($namespace) && $to->inNamespaze($namespace)) {
+                return $map->add($fromDependency, $toDependency);
+            }
+            return $map;
         });
     }
 
