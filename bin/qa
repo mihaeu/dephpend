@@ -3,11 +3,6 @@
 
 declare(strict_types=1);
 
-use Mihaeu\PhpDependencies\OS\PhpFile;
-use Mihaeu\PhpDependencies\OS\PhpFileFinder;
-
-require __DIR__.'/../vendor/autoload.php';
-
 define('UNIT_TESTS',    __DIR__.'/../tests/unit');
 define('PHPUNIT',       __DIR__.'/../vendor/bin/phpunit');
 define('UNIX',         stripos(PHP_OS, 'win') === false);
@@ -23,20 +18,15 @@ codeCoverageHasTobeWithinThreshold(95);
  * Test Definitions
  ******************************************************/
 
-/**
- * @return Closure
- */
 function everyTestHasToHaveTheCoversAnnotation()
 {
-    $fileSet = (new PhpFileFinder())->getAllPhpFilesFromSources([UNIT_TESTS]);
-    $status = $fileSet->none(function (PhpFile $file) {
-        return preg_match('/Test\.php$/', $file->toString())
-            && strpos($file->code(), '@covers') === false;
-    });
     $message = 'Every test has to use the @covers annotation';
-    $status
-        ? success($message)
-        : error($message);
+    foreach (findPhpFilesInDir(UNIT_TESTS) as $file) {
+        if (preg_match('/Test\.php$/', $file) && strpos(file_get_contents($file), '@covers') === false) {
+            error($message);
+        }
+    }
+    success($message);
 }
 
 function codeCoverageHasTobeWithinThreshold(int $threshold)
@@ -86,4 +76,25 @@ function error(string $message)
     UNIX === true
         ? print "\e[0K\r\x1b[31;01m✗ $message\x1b[0m".PHP_EOL
         : print "[ ] $message".PHP_EOL;
+}
+
+function findPhpFilesInDir(string $dir) : array
+{
+    $iterator = new \RegexIterator(
+        new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($dir)
+        ), '/^.+\.php$/i', \RecursiveRegexIterator::GET_MATCH
+    );
+    $files = [];
+    foreach ($iterator as $file) {
+        $files[$file[0]] = $file[0];
+    }
+    return $files;
+}
+
+function findPhpFilesInDirs(array $dirs) : array
+{
+    return array_reduce($dirs, function (array $files, string $dir) {
+        return array_merge($files, findPhpFilesInDir($dir));
+    }, []);
 }
