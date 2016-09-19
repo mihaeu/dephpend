@@ -9,24 +9,24 @@ use Mihaeu\PhpDependencies\Util\AbstractMap;
 class DependencyMap extends AbstractMap
 {
     /**
-     * @param Dependency $fromDependency
-     * @param Dependency $toDependency
+     * @param Dependency $from
+     * @param Dependency $to
      *
      * @return DependencyMap
      */
-    public function add(Dependency $fromDependency, Dependency $toDependency) : self
+    public function add(Dependency $from, Dependency $to) : self
     {
         $clone = clone $this;
-        if ($fromDependency->equals($toDependency)) {
+        if ($from->equals($to)) {
             return $clone;
         }
 
-        if (array_key_exists($fromDependency->toString(), $clone->map)) {
-            $clone->map[$fromDependency->toString()][self::$VALUE] = $clone->map[$fromDependency->toString()][self::$VALUE]->add($toDependency);
+        if (array_key_exists($from->toString(), $clone->map)) {
+            $clone->map[$from->toString()][self::$VALUE] = $clone->map[$from->toString()][self::$VALUE]->add($to);
         } else {
-            $clone->map[$fromDependency->toString()] = [
-                self::$KEY      => $fromDependency,
-                self::$VALUE    => (new DependencySet())->add($toDependency),
+            $clone->map[$from->toString()] = [
+                self::$KEY      => $from,
+                self::$VALUE    => (new DependencySet())->add($to),
             ];
         }
         return $clone;
@@ -94,14 +94,19 @@ class DependencyMap extends AbstractMap
     public function filterByNamespace(string $namespace) : self
     {
         $namespace = new Namespaze(array_filter(explode('\\', $namespace)));
-        return $this->reduce(new self(), function (self $map, Dependency $from, Dependency $to) use ($namespace) {
-            $fromDependency = $from->reduceDepthFromLeftBy($namespace->count());
-            $toDependency = $to->reduceDepthFromLeftBy($namespace->count());
-            if ($from->inNamespaze($namespace) && $to->inNamespaze($namespace)) {
+        return $this->reduce(new self(), $this->filterNamespaceFn($namespace));
+    }
+
+    private function filterNamespaceFn(Namespaze $namespaze) : \Closure
+    {
+        return function (self $map, Dependency $from, Dependency $to) use ($namespaze) {
+            $fromDependency = $from->reduceDepthFromLeftBy($namespaze->count());
+            $toDependency = $to->reduceDepthFromLeftBy($namespaze->count());
+            if ($from->inNamespaze($namespaze) && $to->inNamespaze($namespaze)) {
                 return $map->add($fromDependency, $toDependency);
             }
             return $map;
-        });
+        };
     }
 
     public function filterByDepth(int $depth) : self

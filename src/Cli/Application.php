@@ -41,6 +41,8 @@ class Application extends \Symfony\Component\Console\Application
      * @param OutputInterface $output
      *
      * @return int
+     *
+     * @throws \Symfony\Component\Console\Exception\LogicException
      */
     public function doRun(InputInterface $input, OutputInterface $output)
     {

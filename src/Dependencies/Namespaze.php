@@ -14,6 +14,8 @@ class Namespaze implements Dependency
 
     /**
      * @param \String[] $parts
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct(array $parts)
     {

@@ -6,7 +6,6 @@ namespace Mihaeu\PhpDependencies\Formatters;
 
 use Mihaeu\PhpDependencies\Dependencies\Dependency;
 use Mihaeu\PhpDependencies\Dependencies\DependencySet;
-use Mihaeu\PhpDependencies\Dependencies\DependencyPair;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 
 class DependencyStructureMatrixBuilder
@@ -19,8 +18,7 @@ class DependencyStructureMatrixBuilder
      */
     public function buildMatrix(DependencyMap $map, int $depth = 0) : array
     {
-        $dependencies = $map->allDependencies()->reduceToDepth($depth);
-        $initial = $this->createEmptyDsm($dependencies);
+        $initial = $this->createEmptyDsm($map->allDependencies()->reduceToDepth($depth));
         return $map->reduce($initial, function (array $dsm, Dependency $from, Dependency $to) use ($depth) {
             $dsm[$from->reduceToDepth($depth)->toString()][$to->reduceToDepth($depth)->toString()] += 1;
             return $dsm;

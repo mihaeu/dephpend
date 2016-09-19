@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\OS;
 
+use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Exceptions\PlantUmlNotInstalledException;
 use Mihaeu\PhpDependencies\Formatters\PlantUmlFormatter;
 use Mihaeu\PhpDependencies\Util\Collection;
@@ -27,17 +28,17 @@ class PlantUmlWrapper
     }
 
     /**
-     * @param Collection    $dependencyCollection
+     * @param DependencyMap $map
      * @param \SplFileInfo  $destination
      * @param bool          $keepUml
      *
      * @throws PlantUmlNotInstalledException
      */
-    public function generate(Collection $dependencyCollection, \SplFileInfo $destination, bool $keepUml = false)
+    public function generate(DependencyMap $map, \SplFileInfo $destination, bool $keepUml = false)
     {
         $this->ensurePlantUmlIsInstalled($this->shell);
 
-        $uml = $this->plantUmlFormatter->format($dependencyCollection);
+        $uml = $this->plantUmlFormatter->format($map);
         $umlDestination = preg_replace('/\.\w+$/', '.uml', $destination->getPathname());
         file_put_contents($umlDestination, str_replace('\\', '.', $uml));
         $this->shell->run('plantuml '.$umlDestination);

@@ -18,10 +18,12 @@ class UmlCommand extends BaseCommand
     private $plantUmlWrapper;
 
     /**
-     * @param PhpFileFinder   $phpFileFinder
-     * @param Parser          $parser
-     * @param Analyser        $analyser
+     * @param PhpFileFinder $phpFileFinder
+     * @param Parser $parser
+     * @param Analyser $analyser
      * @param PlantUmlWrapper $plantUmlWrapper
+     *
+     * @throws \Symfony\Component\Console\Exception\LogicException
      */
     public function __construct(
         PhpFileFinder $phpFileFinder,

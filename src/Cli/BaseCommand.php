@@ -126,12 +126,8 @@ abstract class BaseCommand extends Command
      */
     protected function detectDependencies(array $sources) : DependencyMap
     {
-        $files = array_reduce($sources, function (PhpFileSet $set, string $source) {
-            return $set->addAll($this->phpFileFinder->find(new \SplFileInfo($source)));
-        }, new PhpFileSet());
-
         return $this->analyser->analyse(
-            $this->parser->parse($files)
+            $this->parser->parse($this->getAllPhpFileFromSources($sources))
         );
     }
 
@@ -168,5 +164,18 @@ abstract class BaseCommand extends Command
         if (!is_writable(dirname($destination))) {
             throw new \InvalidArgumentException('Destination is not writable.');
         }
+    }
+
+    /**
+     * @param array $sources
+     *
+     * @return PhpFileSet
+     */
+    protected function getAllPhpFileFromSources(array $sources) : PhpFileSet
+    {
+        return array_reduce($sources,
+            function (PhpFileSet $set, string $source) {
+                return $set->addAll($this->phpFileFinder->find(new \SplFileInfo($source)));
+            }, new PhpFileSet());
     }
 }
