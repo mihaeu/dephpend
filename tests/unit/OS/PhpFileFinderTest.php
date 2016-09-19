@@ -79,4 +79,33 @@ class PhpFileFinderTest extends \PHPUnit_Framework_TestCase
         $dir = new \SplFileInfo($mockDir->url());
         $this->assertEmpty($this->finder->find($dir));
     }
+    
+    public function test()
+    {
+        $mockDir = vfsStream::setup('root', null, [
+            'root' => [
+                'someFile.php' => 'console.log("Hello World!");',
+                'dirA' => [
+                    'fileInA.php' => '',
+                ],
+                'dirB' => [
+                    'dirC' => [
+                        'fileInC.php' => '',
+                    ],
+                    'fileInB.php' => '',
+                    'fileInB2.php' => '',
+                ],
+            ],
+        ]);
+        $expected = (new PhpFileSet())
+            ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/fileInA.php')))
+            ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/fileInB.php')))
+            ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/fileInB2.php')))
+            ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/fileInC.php')));
+        $actual = $this->finder->getAllPhpFilesFromSources([
+            $mockDir->url().'/root/dirA',
+            $mockDir->url().'/root/dirB',
+        ]);
+        $this->assertEquals($expected, $actual);
+    }
 }

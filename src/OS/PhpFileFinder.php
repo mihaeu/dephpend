@@ -27,4 +27,18 @@ class PhpFileFinder
 
         return $collection;
     }
+
+    /**
+     * @param array $sources
+     *
+     * @return PhpFileSet
+     */
+    public function getAllPhpFilesFromSources(array $sources) : PhpFileSet
+    {
+        return array_reduce($sources,
+            function (PhpFileSet $set, string $source) {
+                return $set->addAll($this->find(new \SplFileInfo($source)));
+            }, new PhpFileSet()
+        );
+    }
 }
