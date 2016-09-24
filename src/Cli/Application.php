@@ -11,6 +11,7 @@ use Mihaeu\PhpDependencies\Analyser\Metrics;
 use Mihaeu\PhpDependencies\Formatters\PlantUmlFormatter;
 use Mihaeu\PhpDependencies\OS\PlantUmlWrapper;
 use Mihaeu\PhpDependencies\OS\ShellWrapper;
+use PhpParser\Error;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -49,7 +50,26 @@ class Application extends \Symfony\Component\Console\Application
         $this->printWarningIfXdebugIsEnabled($output);
 
         $this->addCommands($this->createCommands($input));
-        return parent::doRun($input, $output);
+        $status = 0;
+        try {
+            parent::doRun($input, $output);
+        } catch (Error $e) {
+            $output->writeln('<error>Sorry, we could not analyse your dependencies, '
+                .'because the sources contain syntax errors:'.PHP_EOL.PHP_EOL
+                .$e->getMessage().'<error>'
+            );
+        }
+//        catch (\Throwable $throwable) {
+//            $output->writeln('<error>Something happened that was not supposed to happen.'.PHP_EOL.PHP_EOL
+//                .'I would really appreciate it if you could let me know about it:'.PHP_EOL
+//                .'https://github.com/mihaeu/dephpend/issues/new'.PHP_EOL
+//                .PHP_EOL.
+//                $throwable->getMessage()
+//                .'<error>'
+//            );
+//
+//        }
+        return $status;
     }
 
     /**

@@ -26,18 +26,13 @@ class Parser
      * @param PhpFileSet $files
      *
      * @return Ast
+     *
+     * @throws \LogicException
      */
     public function parse(PhpFileSet $files) : Ast
     {
         return $files->reduce(new Ast(), function (Ast $ast, PhpFile $file) {
-            try {
-                $nodes = $this->parser->parse($file->code());
-            } catch (Error $e) {
-                echo 'Syntax error during inspection in file "'.$file.'"'.PHP_EOL
-                    .PHP_EOL.$e->getMessage().')'.PHP_EOL;
-                exit;
-            }
-            return $ast->add($file, $nodes);
+            return $ast->add($file, $this->parser->parse($file->code()));
         });
     }
 }
