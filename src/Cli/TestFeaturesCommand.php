@@ -81,7 +81,7 @@ class TestFeaturesCommand extends Command
     private function extractFeatureName(string $filename) : string
     {
         $matches = [];
-        preg_match_all('/((?:^|[A-Z])[a-z]+)/', $filename, $matches);
+        preg_match_all('/((?:^|[A-Z])[a-z0-9]+)/', $filename, $matches);
 
         return str_replace(['cli', ' feature'], '', strtolower(implode(' ', $matches[1])));
     }
