@@ -70,6 +70,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         } elseif ($node instanceof ClassMethodNode) {
             // @codeCoverageIgnoreEnd
             $this->addInjectedDependencies($node);
+            $this->addReturnType($node);
             // WEIRD BUG CAUSING XDEBUG TO NOT COVER ELSEIF ONLY ELSE IF
             // @codeCoverageIgnoreStart
         } elseif ($node instanceof UseNode) {
@@ -234,6 +235,18 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         foreach ($node->traits as $trait) {
             $this->tempDependencies = $this->tempDependencies->add(
                 $this->dependencyFactory->createTraitFromStringArray($trait->parts)
+            );
+        }
+    }
+
+    /**
+     * @param Node $node
+     */
+    protected function addReturnType(Node $node)
+    {
+        if ($node->returnType instanceof FullyQualifiedNameNode) {
+            $this->tempDependencies = $this->tempDependencies->add(
+                $this->dependencyFactory->createClazzFromStringArray($node->returnType->parts)
             );
         }
     }

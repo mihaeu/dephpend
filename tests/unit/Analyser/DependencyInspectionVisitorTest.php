@@ -262,6 +262,21 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         ));
     }
 
+    public function testReturnType()
+    {
+        $node = $this->createAndEnterCurrentClassNode();
+
+        $methodNode = new ClassMethod('');
+        $methodNode->returnType = new FullyQualifiedNameNode(['Namespace', 'Test']);
+        $this->dependencyInspectionVisitor->enterNode($methodNode);
+
+        $this->dependencyInspectionVisitor->leaveNode($node);
+        $this->assertTrue($this->dependenciesContain(
+            $this->dependencyInspectionVisitor->dependencies(),
+            new Clazz('Test', new Namespaze(['Namespace']))
+        ));
+    }
+
     public function testDetectsCallsOnStaticClasses()
     {
         $node = $this->createAndEnterCurrentClassNode();
