@@ -37,16 +37,16 @@ class TestFeaturesCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $files = new \RegexIterator(
-            new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(__DIR__.'/../../tests/features')
-            ), '/^.+Feature\.php$/i', \RecursiveRegexIterator::GET_MATCH
-        );
-        foreach ($files as $filename) {
-            $this->runTest($filename[0], $output);
+        $files = $this->fetchAllFeatureTests();
+        $results = $this->runAllTests($files);
+
+        usort($results, $this->sortSuccessFirst());
+        foreach ($results as $result) {
+            $output->writeln($result[1]);
         }
     }
 
-    public function runTest(string $filename, OutputInterface $output)
+    public function runTest(string $filename) : array
     {
         $application = new Application('', '', new DI());
         $application->setAutoExit(false);
@@ -59,9 +59,9 @@ class TestFeaturesCommand extends Command
 
         $expected = $this->getExpectations($filename);
         $actual = $this->cleanOutput($applicationOutput->fetch());
-        $expected === $actual
-            ? $output->writeln('<info>[✓] '.$this->extractFeatureName($filename).'<info>')
-            : $output->writeln('<error>[✗] '.$this->extractFeatureName($filename).'<error>');
+        return $expected === $actual
+            ? [true, '<info>[✓] '.$this->extractFeatureName($filename).'<info>']
+            : [false, '<error>[✗] '.$this->extractFeatureName($filename).'<error>'];
     }
 
     private function cleanOutput(string $output) : string
@@ -101,6 +101,42 @@ class TestFeaturesCommand extends Command
             $expectations[] = str_replace('# ', '', $line);
         }
         return implode(PHP_EOL, $expectations);
+    }
+
+    /**
+     *
+     * @return \RegexIterator
+     */
+    protected function fetchAllFeatureTests() : \RegexIterator
+    {
+        return new \RegexIterator(
+            new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(__DIR__ . '/../../tests/features')
+            ), '/^.+Feature\.php$/i', \RecursiveRegexIterator::GET_MATCH
+        );
+    }
+
+    /**
+     * @param $files
+     *
+     * @return array
+     */
+    protected function runAllTests($files) : array
+    {
+        return array_map(function ($filename) {
+            return $this->runTest($filename[0]);
+        }, iterator_to_array($files));
+    }
+
+    private function sortSuccessFirst() : \Closure
+    {
+        return function (array $x, array $y) {
+            if ($x[0] === true) {
+                return -1;
+            } elseif ($y[0] === true) {
+                return 1;
+            }
+            return 0;
+        };
     }
 }
 // @codeCoverageIgnoreEnd
