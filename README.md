@@ -1,4 +1,4 @@
-# ![dePHPend logo](http://mike-on-a-bike.com/dephpend-logo.png) 
+# ![dePHPend logo](https://mike-on-a-bike.com/dephpend-logo.png) 
 
 > Detect flaws in your architecture, before they drag you down into the depths of dependency hell ...
 
@@ -33,10 +33,10 @@ With this information you can:
 
 When this is more mature, I'm going to sign the phar and set it up with [Phive](https://phar.io/).
 
-Until then just download the phar file by clicking [here](http://phar.dephpend.com/dephpend.phar) or use
+Until then just download the phar file by clicking [here](https://phar.dephpend.com/dephpend.phar) or use
 
 ```bash
-wget http://phar.dephpend.com/dephpend.phar
+wget https://phar.dephpend.com/dephpend.phar
 ```
 
 ### Others
