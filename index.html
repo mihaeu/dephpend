@@ -3086,7 +3086,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
         <span class="doc-title">dePHPend</span>
         <ul class="nav pull-right doc-info">
                     <li><p class="navbar-text">Michael Haeuslmann</p></li>
-                              <li><p class="navbar-text">Mon Sep 12 10:15:01 CEST 2016</p></li>
+                              <li><p class="navbar-text">Sat Oct  1 15:45:27 CEST 2016</p></li>
                   </ul>
       </div>
     </div>
@@ -3099,7 +3099,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
           <li class="nav-header">Table of Contents</li>
         </ul>
         <ul>
-        <li><a href="#dephpend-logo"><img src="http://mike-on-a-bike.com/dephpend-logo.png" alt="dePHPend logo" /></a><ul>
+        <li><a href="#dephpend-logo"><img src="https://mike-on-a-bike.com/dephpend-logo.png" alt="dePHPend logo" /></a><ul>
         <li><a href="#what-it-does">What it does</a></li>
         <li><a href="#installation">Installation</a></li>
         <li><a href="#usage">Usage</a></li>
@@ -3111,11 +3111,11 @@ code > span.er { color: #ff0000; font-weight: bold; }
         </div>
       </div>
             <div class="span9">
-            <h1 id="dephpend-logo"><img src="http://mike-on-a-bike.com/dephpend-logo.png" alt="dePHPend logo" /></h1>
+            <h1 id="dephpend-logo"><img src="https://mike-on-a-bike.com/dephpend-logo.png" alt="dePHPend logo" /></h1>
 <blockquote>
 <p>Detect flaws in your architecture, before they drag you down into the depths of dependency hell ...</p>
 </blockquote>
-<p><a href=""><img src="https://img.shields.io/travis/mihaeu/php-dependencies.svg?maxAge=2592000" alt="Travis" /></a> <a href=""><img src="https://img.shields.io/coveralls/mihaeu/php-dependencies.svg?maxAge=2592000" alt="Coveralls" /></a> <img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat" alt="License MIT" /> <a href=""><img src="https://img.shields.io/gitter/room/mihaeu/php-dependencies.svg?maxAge=2592000&amp;style=flat" alt="Gitter" /></a></p>
+<p><a href="https://travis-ci.org/mihaeu/dephpend"><img src="https://travis-ci.org/mihaeu/dephpend.svg?branch=develop" alt="Build Status" /></a> <a href="https://coveralls.io/github/mihaeu/dephpend"><img src="https://coveralls.io/repos/github/mihaeu/dephpend/badge.svg" alt="Coverage Status" /></a> <img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat" alt="License MIT" /> <a href="https://gitter.im/dephpend/Lobby?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/dephpend/Lobby.svg" alt="Join the chat at https://gitter.im/dephpend/Lobby" /></a></p>
 <blockquote>
 <p><strong>DISCLAIMER</strong></p>
 <p>This project is in an early stage and many things aren't working as expected and lots of information is not being picked up yet. Star the project and check in every now and then, as development is very active. New major releases will be released at the end of every month.</p>
@@ -3133,8 +3133,8 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <h2 id="installation">Installation</h2>
 <h3 id="phar-recommended">Phar (recommended)</h3>
 <p>When this is more mature, I'm going to sign the phar and set it up with <a href="https://phar.io/">Phive</a>.</p>
-<p>Until then just download the phar file by clicking <a href="http://phar.dephpend.com/dephpend.phar">here</a> or use</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">wget</span> http://phar.dephpend.com/dephpend.phar</code></pre>
+<p>Until then just download the phar file by clicking <a href="https://phar.dephpend.com/dephpend.phar">here</a> or use</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">wget</span> https://phar.dephpend.com/dephpend.phar</code></pre>
 <h3 id="others">Others</h3>
 <p>You could <code>git clone</code> or <code>composer require</code> this, but it's best to not mix tools and software dependencies (because those have dependencies on their own).</p>
 <h2 id="usage">Usage</h2>
@@ -3201,17 +3201,17 @@ Available commands:
 </ul>
 <h2 id="supported-features">Supported Features</h2>
 <p>Check out <code>tests/features</code> for examples of supported features or run <code>bin/dephpend test-features</code> for a list of supported detection features:</p>
-<pre><code>[✓]  creating objects
-[✓]  using traits
-[✓]  extending other classes
-[✓]  type hints in method arguments
-[✓]  implementing interfaces
-[✗]  return value of known method
-[✗]  method arguments and return value from doc
-[✗]  singleton
-[✗]  return values of methods
-[✗]  known variable passed into method without type hints
-[✗]  creating objects from strings</code></pre>
+<pre class="sourceCode bash"><code class="sourceCode bash">[✓]  <span class="kw">creating</span> objects
+[✓]  <span class="kw">using</span> traits
+[✓]  <span class="kw">extending</span> other classes
+[✓]  <span class="kw">type</span> hints in method arguments
+[✓]  <span class="kw">implementing</span> interfaces
+[✗]  <span class="kw">return</span> value of known method
+[✗]  <span class="kw">method</span> arguments and return value from doc
+[✗]  <span class="kw">singleton</span>
+[✗]  <span class="kw">return</span> values of methods
+[✗]  <span class="kw">known</span> variable passed into method without type hints
+[✗]  <span class="kw">creating</span> objects from strings</code></pre>
 <h2 id="license">License</h2>
 <p>See <a href="LICENSE" class="uri">LICENSE</a> file</p>
             </div>
