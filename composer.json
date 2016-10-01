@@ -1,5 +1,5 @@
 {
-    "name": "mihaeu/dePHPend",
+    "name": "dephpend/dephpend",
     "description": "Dependency analysis for PHP",
     "type": "library",
     "keywords": [
