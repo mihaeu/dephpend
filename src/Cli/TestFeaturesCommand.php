@@ -66,11 +66,7 @@ class TestFeaturesCommand extends Command
 
     private function cleanOutput(string $output) : string
     {
-        return trim(str_replace(
-            'You are running dePHPend with xdebug enabled. This has a major impact on runtime performance. See https://getcomposer.org/xdebug',
-            '',
-            $output
-        ));
+        return trim(str_replace(Application::XDEBUG_WARNING, '', $output));
     }
 
     /**
@@ -80,9 +76,7 @@ class TestFeaturesCommand extends Command
      */
     private function extractFeatureName(string $filename) : string
     {
-        $matches = [];
         preg_match_all('/((?:^|[A-Z])[a-z0-9]+)/', $filename, $matches);
-
         return str_replace(['cli', ' feature'], '', strtolower(implode(' ', $matches[1])));
     }
 

@@ -7,7 +7,6 @@ namespace Mihaeu\PhpDependencies\Cli;
 use Mihaeu\PhpDependencies\Analyser\Analyser;
 use Mihaeu\PhpDependencies\Analyser\Parser;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
-use Mihaeu\PhpDependencies\OS\PhpFileSet;
 use Mihaeu\PhpDependencies\OS\PhpFileFinder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\LogicException;

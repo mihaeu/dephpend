@@ -18,6 +18,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Application extends \Symfony\Component\Console\Application
 {
+    const XDEBUG_WARNING = 'You are running dePHPend with xdebug enabled. This has a major impact on runtime performance. See https://getcomposer.org/xdebug';
+
     /** @var DI */
     private $dI;
 
@@ -59,16 +61,6 @@ class Application extends \Symfony\Component\Console\Application
                 .$e->getMessage().'<error>'
             );
         }
-//        catch (\Throwable $throwable) {
-//            $output->writeln('<error>Something happened that was not supposed to happen.'.PHP_EOL.PHP_EOL
-//                .'I would really appreciate it if you could let me know about it:'.PHP_EOL
-//                .'https://github.com/mihaeu/dephpend/issues/new'.PHP_EOL
-//                .PHP_EOL.
-//                $throwable->getMessage()
-//                .'<error>'
-//            );
-//
-//        }
         return $status;
     }
 
@@ -78,11 +70,7 @@ class Application extends \Symfony\Component\Console\Application
     private function printWarningIfXdebugIsEnabled(OutputInterface $output)
     {
         if (extension_loaded('xdebug')) {
-            $output->writeln(
-                '<fg=black;bg=yellow>You are running dePHPend with xdebug enabled.'
-                .' This has a major impact on runtime performance. '
-                .'See https://getcomposer.org/xdebug</>'
-            );
+            $output->writeln('<fg=black;bg=yellow>'.self::XDEBUG_WARNING.'</>');
         }
     }
 
