@@ -110,8 +110,9 @@ class ClazzTest extends \PHPUnit_Framework_TestCase
 
     public function testDetectsIfInOtherNamespace()
     {
-        $this->assertTrue(DependencyHelper::clazz('A\\b\\T\\Test')->inNamespaze(new Namespaze(['A', 'b', 'T'])));
-        $this->assertTrue(DependencyHelper::clazz('A\\Test')->inNamespaze(new Namespaze(['A', 'b', 'T'])));
+        $this->assertTrue(DependencyHelper::clazz('A\\b\\T\\Test')->inNamespaze(DependencyHelper::namespaze('A\\b')));
+        $this->assertTrue(DependencyHelper::clazz('A\\Test')->inNamespaze(DependencyHelper::namespaze('A')));
+        $this->assertTrue(DependencyHelper::clazz('Mihaeu\\PhpDependencies\\Util\\Collection')->inNamespaze(new Namespaze(['Mihaeu', 'PhpDependencies'])));
     }
 
     public function testDetectsIfNotInOtherNamespace()

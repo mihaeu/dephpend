@@ -14,8 +14,11 @@ PHPCS_PATH="php -n vendor/bin/php-cs-fixer"
 git diff-index --name-only --cached --diff-filter=ACMR HEAD -- \
     | xargs -I {} $PHPCS_PATH fix --dry-run --level=psr2 --verbose {} || exit 1;
 
+echo
+echo "Running QA ..."
 # code coverage will only be checked, but won't stop the commit
 # (it will stop pushes)
-bin/check-code-cov
+bin/qa
+echo
 
 exit 0

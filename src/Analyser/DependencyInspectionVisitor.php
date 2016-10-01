@@ -6,8 +6,8 @@ namespace Mihaeu\PhpDependencies\Analyser;
 
 use Mihaeu\PhpDependencies\Dependencies\Clazz;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
-use Mihaeu\PhpDependencies\Dependencies\DependencyPair;
-use Mihaeu\PhpDependencies\Dependencies\DependencyPairSet;
+use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
+use Mihaeu\PhpDependencies\Dependencies\DependencySet;
 use PhpParser\Node;
 use PhpParser\Node\Expr\MethodCall as MethodCallNode;
 use PhpParser\Node\Expr\StaticCall as StaticCallNode;
@@ -25,17 +25,14 @@ use PhpParser\NodeVisitorAbstract;
 
 class DependencyInspectionVisitor extends NodeVisitorAbstract
 {
-    /** @var DependencyPairSet */
+    /** @var DependencyMap */
     private $dependencies;
 
-    /** @var DependencyPair */
+    /** @var DependencySet */
     private $tempDependencies;
 
     /** @var Clazz */
-    private $currentClass = null;
-
-    /** @var Clazz */
-    private $temporaryClass;
+    private $currentClass;
 
     /** @var DependencyFactory */
     private $dependencyFactory;
@@ -46,27 +43,8 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     public function __construct(DependencyFactory $dependencyFactory)
     {
         $this->dependencyFactory = $dependencyFactory;
-
-        $this->dependencies = new DependencyPairSet();
-
-        $this->temporaryClass = $dependencyFactory->createClazzFromStringArray(['temporary class']);
-        $this->tempDependencies = new DependencyPair($this->temporaryClass);
-    }
-
-    /**
-     * This is called before any actual work is being done. The order in which
-     * the file will be traversed is not always as expected. We therefore
-     * might encounter a dependency before we actually know which class we are
-     * in. To get around this issue we will set the current node to temp
-     * and will update it later when we are done with the class.
-     *
-     * @param Node[] $nodes
-     *
-     * @return null|\PhpParser\Node[]|void
-     */
-    public function beforeTraverse(array $nodes)
-    {
-        $this->currentClass = $this->temporaryClass;
+        $this->dependencies = new DependencyMap();
+        $this->tempDependencies = new DependencySet();
     }
 
     /**
@@ -92,6 +70,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         } elseif ($node instanceof ClassMethodNode) {
             // @codeCoverageIgnoreEnd
             $this->addInjectedDependencies($node);
+            $this->addReturnType($node);
             // WEIRD BUG CAUSING XDEBUG TO NOT COVER ELSEIF ONLY ELSE IF
             // @codeCoverageIgnoreStart
         } elseif ($node instanceof UseNode) {
@@ -122,25 +101,27 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     {
         if ($node instanceof ClassLikeNode) {
             // not in class context
-            if ($this->currentClass->equals($this->temporaryClass)) {
-                $this->tempDependencies = new DependencyPair($this->temporaryClass);
+            if ($this->currentClass === null) {
+                $this->tempDependencies = new DependencySet();
                 return;
             }
 
             // by now the class should have been parsed so replace the
             // temporary class with the parsed class name
-            $this->dependencies = $this->dependencies->add(new DependencyPair(
+            $this->dependencies = $this->dependencies->addSet(
                 $this->currentClass,
-                $this->tempDependencies->to()
-            ));
-            $this->tempDependencies = new DependencyPair($this->temporaryClass);
+                $this->tempDependencies
+            );
+            $this->tempDependencies = new DependencySet();
+            $this->currentClass = null;
         }
+        return null;
     }
 
     /**
-     * @return DependencyPairSet
+     * @return DependencyMap
      */
-    public function dependencies() : DependencyPairSet
+    public function dependencies() : DependencyMap
     {
         return $this->dependencies;
     }
@@ -173,7 +154,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
             ? $node->extends
             : [$node->extends];
         foreach ($extendedClasses as $extendedClass) {
-            $this->tempDependencies = $this->tempDependencies->addDependency(
+            $this->tempDependencies = $this->tempDependencies->add(
                 $this->dependencyFactory->createClazzFromStringArray($extendedClass->parts)
             );
         }
@@ -185,7 +166,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     private function addImplementedInterfaceDependency(ClassNode $node)
     {
         foreach ($node->implements as $interfaceNode) {
-            $this->tempDependencies = $this->tempDependencies->addDependency(
+            $this->tempDependencies = $this->tempDependencies->add(
                 $this->dependencyFactory->createClazzFromStringArray($interfaceNode->parts)
             );
         }
@@ -196,7 +177,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
      */
     private function addInstantiationDependency(NewNode $node)
     {
-        $this->tempDependencies = $this->tempDependencies->addDependency(
+        $this->tempDependencies = $this->tempDependencies->add(
             $this->dependencyFactory->createClazzFromStringArray($node->class->parts)
         );
     }
@@ -209,7 +190,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         foreach ($node->params as $param) {
             /* @var \PhpParser\Node\Param */
             if (isset($param->type, $param->type->parts)) {
-                $this->tempDependencies = $this->tempDependencies->addDependency(
+                $this->tempDependencies = $this->tempDependencies->add(
                     $this->dependencyFactory->createClazzFromStringArray($param->type->parts)
                 );
             }
@@ -221,7 +202,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
      */
     private function addUseDependency(UseNode $node)
     {
-        $this->tempDependencies = $this->tempDependencies->addDependency(
+        $this->tempDependencies = $this->tempDependencies->add(
             $this->dependencyFactory->createClazzFromStringArray($node->uses[0]->name->parts)
         );
     }
@@ -231,7 +212,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
      */
     private function addStaticDependency(MethodCallNode $node)
     {
-        $this->tempDependencies = $this->tempDependencies->addDependency(
+        $this->tempDependencies = $this->tempDependencies->add(
             $this->dependencyFactory->createClazzFromStringArray($node->var->class->parts)
         );
     }
@@ -252,8 +233,20 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     private function addUseTraitDependency(Node $node)
     {
         foreach ($node->traits as $trait) {
-            $this->tempDependencies = $this->tempDependencies->addDependency(
+            $this->tempDependencies = $this->tempDependencies->add(
                 $this->dependencyFactory->createTraitFromStringArray($trait->parts)
+            );
+        }
+    }
+
+    /**
+     * @param Node $node
+     */
+    protected function addReturnType(Node $node)
+    {
+        if ($node->returnType instanceof FullyQualifiedNameNode) {
+            $this->tempDependencies = $this->tempDependencies->add(
+                $this->dependencyFactory->createClazzFromStringArray($node->returnType->parts)
             );
         }
     }

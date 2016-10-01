@@ -14,6 +14,8 @@ class Namespaze implements Dependency
 
     /**
      * @param \String[] $parts
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct(array $parts)
     {
@@ -84,7 +86,7 @@ class Namespaze implements Dependency
     {
         return $other->toString() !== ''
             && $this->toString() !== ''
-            && strpos($other->toString(), $this->toString()) === 0;
+            && strpos($this->toString(), $other->toString()) === 0;
     }
 
     /**
@@ -94,7 +96,7 @@ class Namespaze implements Dependency
      */
     private function arrayContainsNotOnlyStrings(array $parts):bool
     {
-        return Util::array_once($parts, function ($value, $index) {
+        return Util::array_once($parts, function ($value) {
             return !is_string($value);
         });
     }

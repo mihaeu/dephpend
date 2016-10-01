@@ -6,42 +6,23 @@ namespace Mihaeu\PhpDependencies\Formatters;
 
 use Mihaeu\PhpDependencies\Dependencies\Dependency;
 use Mihaeu\PhpDependencies\Dependencies\DependencySet;
-use Mihaeu\PhpDependencies\Dependencies\DependencyPair;
-use Mihaeu\PhpDependencies\Dependencies\DependencyPairSet;
+use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 
 class DependencyStructureMatrixBuilder
 {
     /**
-     * @param DependencyPairSet $dependencyPairCollection
+     * @param DependencyMap $map
+     * @param int $depth
      *
      * @return array
      */
-    public function buildMatrix(DependencyPairSet $dependencyPairCollection, int $depth = 0) : array
+    public function buildMatrix(DependencyMap $map, int $depth = 0) : array
     {
-        $dependencies = $this->allDependenciesReducedByDepth($dependencyPairCollection, $depth);
-        $emptyDsm = $this->createEmptyDsm($dependencies);
-
-        return $dependencyPairCollection->reduce($emptyDsm, function (array $dsm, DependencyPair $dependency) use ($depth) {
-            $from = $dependency->from()->reduceToDepth($depth)->toString();
-            $to = $dependency->to()->reduceToDepth($depth)->toString();
-            $dsm[$from][$to] += 1;
-
+        $initial = $this->createEmptyDsm($map->allDependencies()->reduceToDepth($depth));
+        return $map->reduce($initial, function (array $dsm, Dependency $from, Dependency $to) use ($depth) {
+            $dsm[$from->reduceToDepth($depth)->toString()][$to->reduceToDepth($depth)->toString()] += 1;
             return $dsm;
         });
-    }
-
-    /**
-     * @param DependencyPairSet $dependencyPairCollection
-     *
-     * @return DependencySet
-     */
-    private function allDependenciesReducedByDepth(DependencyPairSet $dependencyPairCollection, int $depth)
-    {
-        return $dependencyPairCollection->allDependencies()->reduce(new DependencySet(),
-            function (DependencySet $dependencyCollection, Dependency $dependency) use ($depth) {
-                return $dependencyCollection->add($dependency->reduceToDepth($depth));
-            }
-        );
     }
 
     /**
@@ -49,7 +30,7 @@ class DependencyStructureMatrixBuilder
      *
      * @return array
      */
-    private function createEmptyDsm($dependencies)
+    private function createEmptyDsm(DependencySet $dependencies)
     {
         return $dependencies->reduce([], function (array $combined, Dependency $dependency) use ($dependencies) {
             $combined[$dependency->toString()] = array_combine(

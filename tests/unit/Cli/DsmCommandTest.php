@@ -9,6 +9,7 @@ use Mihaeu\PhpDependencies\Analyser\Parser;
 use Mihaeu\PhpDependencies\DependencyHelper;
 use Mihaeu\PhpDependencies\Formatters\DependencyStructureMatrixHtmlFormatter;
 use Mihaeu\PhpDependencies\OS\PhpFileFinder;
+use Mihaeu\PhpDependencies\OS\PhpFileSet;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -42,6 +43,7 @@ class DsmCommandTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->phpFileFinder = $this->createMock(PhpFileFinder::class);
+        $this->phpFileFinder->method('find')->willReturn(new PhpFileSet());
         $this->parser = $this->createMock(Parser::class);
         $this->analyser = $this->createMock(Analyser::class);
         $this->dependencyStructureMatrixFormatter = $this->createMock(DependencyStructureMatrixHtmlFormatter::class);
@@ -65,7 +67,7 @@ class DsmCommandTest extends \PHPUnit_Framework_TestCase
             'depth' => 0
         ]);
 
-        $dependencies = DependencyHelper::convert('A --> B');
+        $dependencies = DependencyHelper::map('A --> B');
         $this->analyser->method('analyse')->willReturn($dependencies);
 
         $this->dependencyStructureMatrixFormatter->expects($this->once())->method('format')->with($dependencies);

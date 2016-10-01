@@ -4,38 +4,52 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Dependencies;
 
-use Mihaeu\PhpDependencies\Util\AbstractCollection;
-use Mihaeu\PhpDependencies\Util\Collection;
+use Mihaeu\PhpDependencies\Util\AbstractMap;
 
-class DependencyPairSet extends AbstractCollection
+class DependencyMap extends AbstractMap
 {
     /**
-     * @param DependencyPair $dependency
+     * @param Dependency $from
+     * @param Dependency $to
      *
-     * @return DependencyPairSet
+     * @return DependencyMap
      */
-    public function add(DependencyPair $dependency) : self
+    public function add(Dependency $from, Dependency $to) : self
     {
         $clone = clone $this;
-        if ($this->contains($dependency)) {
+        if ($from->equals($to)) {
             return $clone;
         }
 
-        $clone->collection[] = $dependency;
-
+        if (array_key_exists($from->toString(), $clone->map)) {
+            $clone->map[$from->toString()][self::$VALUE] = $clone->map[$from->toString()][self::$VALUE]->add($to);
+        } else {
+            $clone->map[$from->toString()] = [
+                self::$KEY      => $from,
+                self::$VALUE    => (new DependencySet())->add($to),
+            ];
+        }
         return $clone;
     }
 
-    /**
-     * @return Collection
-     */
-    public function unique() : Collection
+    public function addSet(Dependency $from, DependencySet $toSet) : self
     {
-        return $this->reduce(new self(), function (self $dependencies, DependencyPair $dependency) {
-            return $dependencies->contains($dependency)
-                ? $dependencies
-                : $dependencies->add($dependency);
-        });
+        $clone = clone $this;
+        if (!array_key_exists($from->toString(), $this->map)) {
+            $clone->map[$from->toString()] = [
+                self::$KEY      => $from,
+                self::$VALUE    => $toSet,
+            ];
+            return $clone;
+        }
+
+        $clone->map[$from->toString()][self::$VALUE] = $clone->get($from)->addAll($toSet);
+        return $clone;
+    }
+
+    public function get(Dependency $from) : DependencySet
+    {
+        return $this->map[$from->toString()][self::$VALUE];
     }
 
     /**
@@ -43,10 +57,8 @@ class DependencyPairSet extends AbstractCollection
      */
     public function fromDependencies() : DependencySet
     {
-        return $this->reduce(new DependencySet(), function (DependencySet $clazzes, DependencyPair $dependency) {
-            return $clazzes->contains($dependency->from())
-                ? $clazzes
-                : $clazzes->add($dependency->from());
+        return $this->reduce(new DependencySet(), function (DependencySet $set, Dependency $from, Dependency $to) {
+            return $set->add($from);
         });
     }
 
@@ -55,46 +67,46 @@ class DependencyPairSet extends AbstractCollection
      */
     public function allDependencies() : DependencySet
     {
-        return $this->reduce(new DependencySet(), function (DependencySet $dependencies, DependencyPair $dependency) {
+        return $this->reduce(new DependencySet(), function (DependencySet $dependencies, Dependency $from, Dependency $to) {
             return $dependencies
-                ->add($dependency->from())
-                ->addAll($dependency->to());
+                ->add($from)
+                ->add($to);
         });
     }
 
     /**
-     * @return DependencyPairSet
+     * @return DependencyMap
      */
     public function removeInternals() : self
     {
-        return $this->reduce(new self(), function (self $collection, DependencyPair $dependencyPair) {
-            return $collection->add(new DependencyPair($dependencyPair->from(), $dependencyPair->to()->filter(function (Dependency $dependency) {
-                return !in_array($dependency->toString(), self::$internals, true);
-            })));
+        return $this->reduce(new self(), function (self $map, Dependency $from, Dependency $to) {
+            return !in_array($to->toString(), self::$internals, true)
+                ? $map->add($from, $to)
+                : $map;
         });
     }
 
     /**
      * @param string $namespace
      *
-     * @return DependencyPairSet
+     * @return DependencyMap
      */
     public function filterByNamespace(string $namespace) : self
     {
         $namespace = new Namespaze(array_filter(explode('\\', $namespace)));
-        return $this->reduce(new self(), function (self $collection, DependencyPair $dependencyPair) use ($namespace) {
-            if ($dependencyPair->from()->inNamespaze($namespace)) {
-                $reducedFrom = $dependencyPair->from()->reduceDepthFromLeftBy($namespace->count());
-                $reducedTo = $dependencyPair->to()->reduce(new DependencySet(), function (DependencySet $set, Dependency $dependency) use ($namespace) {
-                    if ($dependency->inNamespaze($namespace)) {
-                        return $set->add($dependency->reduceDepthFromLeftBy($namespace->count()));
-                    }
-                    return $set;
-                });
-                return $collection->add(new DependencyPair($reducedFrom, $reducedTo));
+        return $this->reduce(new self(), $this->filterNamespaceFn($namespace));
+    }
+
+    private function filterNamespaceFn(Namespaze $namespaze) : \Closure
+    {
+        return function (self $map, Dependency $from, Dependency $to) use ($namespaze) {
+            $fromDependency = $from->reduceDepthFromLeftBy($namespaze->count());
+            $toDependency = $to->reduceDepthFromLeftBy($namespaze->count());
+            if ($from->inNamespaze($namespaze) && $to->inNamespaze($namespaze)) {
+                return $map->add($fromDependency, $toDependency);
             }
-            return $collection;
-        });
+            return $map;
+        };
     }
 
     public function filterByDepth(int $depth) : self
@@ -103,29 +115,40 @@ class DependencyPairSet extends AbstractCollection
             return clone $this;
         }
 
-        return $this->reduce(new self(), function (self $dependencies, DependencyPair $dependencyPair) use ($depth) {
-            return $dependencies->add(new DependencyPair(
-                $dependencyPair->from()->reduceToDepth($depth),
-                $dependencyPair->to()->reduceToDepth($depth))
+        return $this->reduce(new self(), function (self $dependencies, Dependency $from, Dependency $to) use ($depth) {
+            return $dependencies->add(
+                $from->reduceToDepth($depth),
+                $to->reduceToDepth($depth)
             );
         });
     }
 
     /**
-     * @return DependencyPairSet
+     * @return DependencyMap
      */
     public function filterClasses() : self
     {
-        return $this->reduce(new self(), function (self $dependencies, DependencyPair $dependencyPair) {
-            $to = $dependencyPair->to()->reduce(new DependencySet(), function (DependencySet $set, Dependency $dependency) {
-                return $dependency->namespaze()->count()
-                    ? $set->add($dependency->namespaze())
-                    : $set;
-            });
-
-            return $dependencies->add(new DependencyPair($dependencyPair->from()->namespaze(), $to));
+        return $this->reduce(new self(), function (self $map, Dependency $from, Dependency $to) {
+            if ($from->namespaze()->count() === 0 || $to->namespaze()->count() === 0) {
+                return $map;
+            }
+            return $map->add($from->namespaze(), $to->namespaze());
         });
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function toString() : string
+    {
+        return trim($this->reduce('', function (string $carry, Dependency $key, Dependency $value) {
+            return $value instanceof NullDependency
+                ? $carry
+                : $carry.$key->toString().' --> '.$value->toString().PHP_EOL;
+        })
+        );
+    }
+
 
     private static $internals = [
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Formatters;
 
-use Mihaeu\PhpDependencies\Dependencies\DependencyPairSet;
+use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 
 class DependencyStructureMatrixHtmlFormatter implements Formatter
 {
@@ -22,10 +22,10 @@ class DependencyStructureMatrixHtmlFormatter implements Formatter
     /**
      * {@inheritdoc}
      */
-    public function format(DependencyPairSet $dependencyCollection, int $depth= 0) : string
+    public function format(DependencyMap $map, int $depth = 0) : string
     {
         return $this->buildHtmlTable(
-            $this->dependencyStructureMatrixBuilder->buildMatrix($dependencyCollection, $depth)
+            $this->dependencyStructureMatrixBuilder->buildMatrix($map, $depth)
         );
     }
 

@@ -6,10 +6,10 @@ namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser\Analyser;
 use Mihaeu\PhpDependencies\Analyser\Parser;
-use Mihaeu\PhpDependencies\Dependencies\DependencyPairSet;
-use Mihaeu\PhpDependencies\OS\PhpFileSet;
+use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\OS\PhpFileFinder;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\LogicException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -31,10 +31,11 @@ abstract class BaseCommand extends Command
     protected $allowedFormats;
 
     /**
-     * @param string        $name
+     * @param string $name
      * @param PhpFileFinder $phpFileFinder
-     * @param Parser        $parser
-     * @param Analyser      $analyser
+     * @param Parser $parser
+     * @param Analyser $analyser
+     * @throws LogicException
      */
     public function __construct(
         string $name,
@@ -106,7 +107,7 @@ abstract class BaseCommand extends Command
     /**
      * @param string[] $sources
      *
-     * @throws \Exception
+     * @throws \InvalidArgumentException
      */
     protected function ensureSourcesAreReadable(array $sources)
     {
@@ -120,26 +121,22 @@ abstract class BaseCommand extends Command
     /**
      * @param string[] $sources
      *
-     * @return DependencyPairSet
+     * @return DependencyMap
      */
-    protected function detectDependencies(array $sources) : DependencyPairSet
+    protected function detectDependencies(array $sources) : DependencyMap
     {
-        $files = array_reduce($sources, function (PhpFileSet $collection, string $source) {
-            return $collection->addAll($this->phpFileFinder->find(new \SplFileInfo($source)));
-        }, new PhpFileSet());
-
         return $this->analyser->analyse(
-            $this->parser->parse($files)
+            $this->parser->parse($this->phpFileFinder->getAllPhpFilesFromSources($sources))
         );
     }
 
     /**
-     * @param DependencyPairSet $dependencies
+     * @param DependencyMap $dependencies
      * @param string[] $options
      *
-     * @return DependencyPairSet
+     * @return DependencyMap
      */
-    protected function filterByInputOptions(DependencyPairSet $dependencies, array $options) : DependencyPairSet
+    protected function filterByInputOptions(DependencyMap $dependencies, array $options) : DependencyMap
     {
         if (!$options['internals']) {
             $dependencies = $dependencies->removeInternals();

@@ -7,8 +7,7 @@ namespace Mihaeu\PhpDependencies;
 use Mihaeu\PhpDependencies\Dependencies\Clazz;
 use Mihaeu\PhpDependencies\Dependencies\Dependency;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
-use Mihaeu\PhpDependencies\Dependencies\DependencyPair;
-use Mihaeu\PhpDependencies\Dependencies\DependencyPairSet;
+use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Dependencies\DependencySet;
 use Mihaeu\PhpDependencies\Dependencies\Namespaze;
 
@@ -16,23 +15,29 @@ class DependencyHelper
 {
     /**
      * Converts dependencies written in string format into a proper
-     * DependencyPairCollection.
+     * DependencyMap.
      *
      * @param string $input format:
      *
      *      DepA --> DepB, DepC
      *      DepC --> DepD, DepE
      *
-     * @return DependencyPairSet
+     * @return DependencyMap
      *
      * @throws \InvalidArgumentException
      */
-    public static function convert(string $input) : DependencyPairSet
+    public static function map(string $input) : DependencyMap
     {
         $lines = preg_split('/\v+/', $input, -1, PREG_SPLIT_NO_EMPTY);
-        return array_reduce($lines, function (DependencyPairSet $collection, string $line) {
-            return preg_match('/^ +$/', $line) ? $collection : $collection->add(self::dependencyPair($line));
-        }, new DependencyPairSet());
+        $array_reduce = array_reduce($lines,
+            function (DependencyMap $map, string $line) {
+                if (empty(trim($line))) {
+                    return $map;
+                }
+                $dependencyPair = self::dependencyPair($line);
+                return $map->addSet($dependencyPair[0], $dependencyPair[1]);
+            }, new DependencyMap());
+        return $array_reduce;
     }
 
     /**
@@ -58,12 +63,12 @@ class DependencyHelper
     /**
      * @param string $input format: NamespaceA\\ClassA --> NamespaceB\\ClassB, NamespaceC\\ClassC
      *
-     * @return DependencyPair
+     * @return array
      */
-    public static function dependencyPair(string $input) : DependencyPair
+    public static function dependencyPair(string $input) : array
     {
         $tokens = explode('-->', str_replace(' ', '', $input));
-        return new DependencyPair(self::dependency($tokens[0]), self::dependencySet($tokens[1]));
+        return [self::dependency($tokens[0]), self::dependencySet($tokens[1])];
     }
 
     /**
@@ -73,10 +78,11 @@ class DependencyHelper
      */
     public static function dependencySet(string $input) : DependencySet
     {
-        if ($input === '_') {
-            return new DependencySet();
-        }
         $set = new DependencySet();
+        if ($input === '_') {
+            return $set;
+        }
+
         foreach (explode(',', $input) as $token) {
             $set = $set->add(self::dependency($token));
         }

@@ -96,7 +96,7 @@ class NamespazeTest extends \PHPUnit_Framework_TestCase
     public function testDetectsIfInOtherNamespace()
     {
         $this->assertTrue((new Namespaze(['A', 'b', 'T']))->inNamespaze(new Namespaze(['A', 'b', 'T'])));
-        $this->assertTrue((new Namespaze(['A']))->inNamespaze(new Namespaze(['A', 'b', 'T'])));
+        $this->assertTrue((new Namespaze(['A', 'b', 'T']))->inNamespaze(new Namespaze(['A'])));
     }
 
     public function testDetectsIfNotInOtherNamespace()

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Dependencies;
 
-use PhpParser\Node\Name;
-
 abstract class ClazzLike implements Dependency
 {
     /** @var string */

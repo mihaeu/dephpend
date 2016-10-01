@@ -20,6 +20,9 @@ class MetricsCommand extends BaseCommand
      * @param PhpFileFinder $phpFileFinder
      * @param Parser $parser
      * @param Analyser $analyser
+     * @param Metrics $metrics
+     *
+     * @throws \Symfony\Component\Console\Exception\LogicException
      */
     public function __construct(
         PhpFileFinder $phpFileFinder,
@@ -42,6 +45,8 @@ class MetricsCommand extends BaseCommand
 
     /**
      * {@inheritdoc}
+     *
+     * @throws \Symfony\Component\Console\Exception\InvalidArgumentException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

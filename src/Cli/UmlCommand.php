@@ -18,10 +18,12 @@ class UmlCommand extends BaseCommand
     private $plantUmlWrapper;
 
     /**
-     * @param PhpFileFinder   $phpFileFinder
-     * @param Parser          $parser
-     * @param Analyser        $analyser
+     * @param PhpFileFinder $phpFileFinder
+     * @param Parser $parser
+     * @param Analyser $analyser
      * @param PlantUmlWrapper $plantUmlWrapper
+     *
+     * @throws \Symfony\Component\Console\Exception\LogicException
      */
     public function __construct(
         PhpFileFinder $phpFileFinder,
@@ -69,7 +71,7 @@ class UmlCommand extends BaseCommand
         $dependencies = $this->filterByInputOptions(
             $this->detectDependencies($input->getArgument('source')),
             $options
-        )->filterByDepth((int) $options['depth'])->unique();
+        )->filterByDepth((int) $options['depth']);
 
         $destination = new \SplFileInfo($options['output']);
         $this->plantUmlWrapper->generate($dependencies, $destination, $options['keep-uml']);

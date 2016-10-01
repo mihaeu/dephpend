@@ -4,26 +4,25 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Formatters;
 
-use Mihaeu\PhpDependencies\Dependencies\DependencyPair;
-use Mihaeu\PhpDependencies\Dependencies\DependencyPairSet;
+use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 
 class PlantUmlFormatter implements Formatter
 {
     /**
      * {@inheritdoc}
      */
-    public function format(DependencyPairSet $dependencyCollection) : string
+    public function format(DependencyMap $map) : string
     {
-        return '@startuml'.PHP_EOL.$this->dependenciesInPlantUmlFormat($dependencyCollection).PHP_EOL.'@enduml';
+        return '@startuml'.PHP_EOL.$this->dependenciesInPlantUmlFormat($map).PHP_EOL.'@enduml';
     }
 
     /**
-     * @param DependencyPairSet $dependencyCollection
+     * @param DependencyMap $map
      *
      * @return mixed
      */
-    private function dependenciesInPlantUmlFormat(DependencyPairSet $dependencyCollection) : string
+    private function dependenciesInPlantUmlFormat(DependencyMap $map) : string
     {
-        return str_replace('-->', '--|>', $dependencyCollection->toString());
+        return str_replace('-->', '--|>', $map->toString());
     }
 }

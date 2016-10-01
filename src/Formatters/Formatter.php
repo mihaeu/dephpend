@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Formatters;
 
-use Mihaeu\PhpDependencies\Dependencies\DependencyPairSet;
+use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 
 interface Formatter
 {
     /**
-     * @param DependencyPairSet $dependencyCollection
+     * @param DependencyMap $map
      *
      * @return string
      */
-    public function format(DependencyPairSet $dependencyCollection) : string;
+    public function format(DependencyMap $map) : string;
 }

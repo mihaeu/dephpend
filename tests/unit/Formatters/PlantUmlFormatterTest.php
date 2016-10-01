@@ -21,7 +21,7 @@ class PlantUmlFormatterTest extends \PHPUnit_Framework_TestCase
 
     public function testFormat()
     {
-        $dependencyCollection = DependencyHelper::convert('ClassA --> ClassB, ClassC');
+        $dependencyCollection = DependencyHelper::map('ClassA --> ClassB, ClassC');
         $this->assertEquals("@startuml\n"
             ."ClassA --|> ClassB\n"
             ."ClassA --|> ClassC\n"

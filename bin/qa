@@ -1,0 +1,100 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+define('UNIT_TESTS',    __DIR__.'/../tests/unit');
+define('PHPUNIT',       __DIR__.'/../vendor/bin/phpunit');
+define('UNIX',         stripos(PHP_OS, 'win') === false);
+
+/*******************************************************
+ * Tests
+ ******************************************************/
+
+everyTestHasToHaveTheCoversAnnotation();
+codeCoverageHasTobeWithinThreshold(95);
+
+/*******************************************************
+ * Test Definitions
+ ******************************************************/
+
+function everyTestHasToHaveTheCoversAnnotation()
+{
+    $message = 'Every test has to use the @covers annotation';
+    foreach (findPhpFilesInDir(UNIT_TESTS) as $file) {
+        if (preg_match('/Test\.php$/', $file) && strpos(file_get_contents($file), '@covers') === false) {
+            error($message);
+        }
+    }
+    success($message);
+}
+
+function codeCoverageHasTobeWithinThreshold(int $threshold)
+{
+    if (UNIX) {
+        echo 'Checking line coverage ...';
+    }
+
+    $output = shell_exec(PHPUNIT.' --coverage-text --colors=never');
+    $lineCoverage = preg_replace('/
+        .+?         # ungreedy so that we check everything before the first occurrence (summary)
+        Lines:      # first occurrence of lines is for the summary
+        .+?         # again ungreedy, matches some whitespace
+        (\d+)\.     # extract only the part before the decimal point
+        .+          # match the rest for replacement
+        /xs', '$1', $output, 1);
+
+    if ((int) $lineCoverage === 100) {
+        success("Line coverage is 100%");
+    } elseif ((int) $lineCoverage >= $threshold) {
+        warning("Line coverage is only $lineCoverage% but should be $threshold%");
+    } else {
+        error("Line coverage has to be $threshold% but is $lineCoverage");
+    }
+}
+
+/*******************************************************
+ * Helper Functions
+ ******************************************************/
+
+function success(string $message)
+{
+    UNIX === true
+        ? print "\e[0K\r\x1b[32;01m✓ $message\x1b[0m".PHP_EOL
+        : print "[x] $message".PHP_EOL;
+}
+
+function warning(string $message)
+{
+    UNIX === true
+        ? print "\e[0K\r\x1b[33;01m! $message\x1b[0m".PHP_EOL
+        : print "[!] $message".PHP_EOL;
+}
+
+function error(string $message)
+{
+    UNIX === true
+        ? print "\e[0K\r\x1b[31;01m✗ $message\x1b[0m".PHP_EOL
+        : print "[ ] $message".PHP_EOL;
+}
+
+function findPhpFilesInDir(string $dir) : array
+{
+    $iterator = new \RegexIterator(
+        new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($dir)
+        ), '/^.+\.php$/i', \RecursiveRegexIterator::GET_MATCH
+    );
+    $files = [];
+    foreach ($iterator as $file) {
+        $files[$file[0]] = $file[0];
+    }
+    return $files;
+}
+
+function findPhpFilesInDirs(array $dirs) : array
+{
+    return array_reduce($dirs, function (array $files, string $dir) {
+        return array_merge($files, findPhpFilesInDir($dir));
+    }, []);
+}

@@ -6,6 +6,7 @@ namespace Mihaeu\PhpDependencies\Analyser;
 
 use Mihaeu\PhpDependencies\OS\PhpFile;
 use Mihaeu\PhpDependencies\OS\PhpFileSet;
+use PhpParser\Error;
 use PhpParser\Parser as BaseParser;
 
 class Parser
@@ -25,6 +26,8 @@ class Parser
      * @param PhpFileSet $files
      *
      * @return Ast
+     *
+     * @throws \LogicException
      */
     public function parse(PhpFileSet $files) : Ast
     {

@@ -59,6 +59,8 @@ interface Collection extends \Countable
     public function toArray() : array;
 
     /**
+     * @param $other
+     *
      * @return bool
      */
     public function contains($other) : bool;
