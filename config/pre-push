@@ -8,5 +8,5 @@
 #
 # (coding styles are already enforced for every commit)
 
-/home/mike/workspace/php-dependencies/bin/check-code-cov
+bin/check-code-cov
 exit $?
