@@ -53,7 +53,7 @@ class DsmCommand extends BaseCommand
         $this->ensureSourcesAreReadable($input->getArgument('source'));
         $this->ensureOutputFormatIsValid($options['format']);
 
-        $dependencies = $this->filterByInputOptions(
+        $dependencies = $this->preFilterByInputOptions(
             $this->detectDependencies($input->getArgument('source')),
             $options
         );

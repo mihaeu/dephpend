@@ -68,7 +68,7 @@ class UmlCommand extends BaseCommand
         $this->ensureDestinationIsWritable($options['output']);
         $this->ensureOutputFormatIsValid($options['output']);
 
-        $dependencies = $this->filterByInputOptions(
+        $dependencies = $this->preFilterByInputOptions(
             $this->detectDependencies($input->getArgument('source')),
             $options
         )->filterByDepth((int) $options['depth']);

@@ -51,7 +51,7 @@ class MetricsCommand extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $options = $input->getOptions();
-        $dependencies = $this->filterByInputOptions(
+        $dependencies = $this->preFilterByInputOptions(
             $this->detectDependencies($input->getArgument('source')),
             $options
         )->filterByDepth((int) $options['depth']);

@@ -225,4 +225,16 @@ class DependencyMapTest extends \PHPUnit_Framework_TestCase
             D --> E
         ')->contains(new Clazz('E')));
     }
+
+    public function testFilterFromDependencies()
+    {
+        $this->assertEquals(DependencyHelper::map('
+            Good\\A --> Bad\\B
+            Good\\B --> Good\\C
+        '), DependencyHelper::map('
+            Good\\A --> Bad\\B
+            Good\\B --> Good\\C
+            Bad\\B --> Good\\A
+        ')->filterByFromNamespace('Good'));
+    }
 }

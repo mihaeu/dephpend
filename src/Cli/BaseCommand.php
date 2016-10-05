@@ -81,7 +81,13 @@ abstract class BaseCommand extends Command
                 'filter-namespace',
                 null,
                 InputOption::VALUE_REQUIRED,
-                'Analyse only classes from this namespace.'
+                'Analyse only classes where both to and from are in this namespace.'
+            )
+            ->addOption(
+                'filter-from',
+                'f',
+                InputOption::VALUE_REQUIRED,
+                'Analyse only dependencies which originate from this namespace.'
             )
             ->addOption(
                 'no-classes',
@@ -131,15 +137,43 @@ abstract class BaseCommand extends Command
     }
 
     /**
+     * Pre-filters can safely be executed before every command as they only limit
+     * the selection of dependencies. They do NOT change the dependencies themselves.
+     *
      * @param DependencyMap $dependencies
      * @param string[] $options
      *
      * @return DependencyMap
      */
-    protected function filterByInputOptions(DependencyMap $dependencies, array $options) : DependencyMap
+    protected function preFilterByInputOptions(DependencyMap $dependencies, array $options) : DependencyMap
     {
         if (!$options['internals']) {
             $dependencies = $dependencies->removeInternals();
+        }
+
+        if (isset($options['filter-from'])) {
+            $dependencies = $dependencies->filterByFromNamespace($options['filter-from']);
+        }
+
+        return $dependencies;
+    }
+
+    /**
+     * Post-filters should be applied after analysing commands which depend on information
+     * that is more detailed than what is being displayed
+     *
+     * e.g. number of classes in a package would not work if the DependencyMap would
+     * be reduced to package level before analysing.
+     *
+     * @param DependencyMap $dependencies
+     * @param array $options
+     *
+     * @return DependencyMap
+     */
+    protected function postFilterByInputOptions(DependencyMap $dependencies, array $options) : DependencyMap
+    {
+        if ($options['depth'] > 0) {
+            $dependencies = $dependencies->filterByDepth($options['depth']);
         }
 
         if ($options['filter-namespace']) {
