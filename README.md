@@ -131,6 +131,14 @@ The most common package metrics have already been implemented, but there are mor
 php -n dephpend.phar metrics src
 ```
 
+## Examples
+
+### Architecture Timeline
+
+Executing dePHPend's metric command on every branch `g log --pretty=%H` and using `convert -delay 100 -loop 0 *.png dephpend-timeline.gif` you can create a nice animation detailing the evolution of your architecture:
+
+![dePHPend Timeline](https://dephpend.com/dephpend-timeline.gif)
+
 ## How it all works
 
 Basically the process can be broken down into four steps (the actual work is a bit more complicated and for those interested, I'll publish a paper about it, later this year):
