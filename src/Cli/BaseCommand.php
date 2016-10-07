@@ -173,7 +173,7 @@ abstract class BaseCommand extends Command
     protected function postFilterByInputOptions(DependencyMap $dependencies, array $options) : DependencyMap
     {
         if ($options['depth'] > 0) {
-            $dependencies = $dependencies->filterByDepth($options['depth']);
+            $dependencies = $dependencies->filterByDepth((int) $options['depth']);
         }
 
         if ($options['filter-namespace']) {

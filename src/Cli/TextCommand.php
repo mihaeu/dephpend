@@ -34,9 +34,10 @@ class TextCommand extends BaseCommand
         $dependencies = $this->detectDependencies($input->getArgument('source'));
         $options = $input->getOptions();
         $output->writeln(
-            $this->preFilterByInputOptions($dependencies, $options)
-                ->filterByDepth((int) $options['depth'])
-                ->toString()
+            $this->postFilterByInputOptions(
+                $this->preFilterByInputOptions($dependencies, $options),
+                $options
+            )->toString()
         );
     }
 }

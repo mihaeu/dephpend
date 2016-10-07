@@ -30,7 +30,7 @@ class DependencyStructureMatrixBuilderTest extends \PHPUnit_Framework_TestCase
             'B' => ['A' => 0, 'B' => 0, 'C' => 0, 'D' => 1],
             'C' => ['A' => 1, 'B' => 0, 'C' => 0, 'D' => 0],
             'D' => ['A' => 0, 'B' => 1, 'C' => 0, 'D' => 0],
-        ], $this->builder->buildMatrix($dependencies));
+        ], $this->builder->buildMatrix($dependencies, $dependencies));
     }
 
     public function testBuildMatrixFromClassesWithNamespaces()
@@ -46,6 +46,6 @@ class DependencyStructureMatrixBuilderTest extends \PHPUnit_Framework_TestCase
             'BB\\B' => ['AA\\A' => 0, 'BB\\B' => 0, 'CC\\C' => 0, 'DD\\D' => 1],
             'CC\\C' => ['AA\\A' => 1, 'BB\\B' => 0, 'CC\\C' => 0, 'DD\\D' => 0],
             'DD\\D' => ['AA\\A' => 0, 'BB\\B' => 1, 'CC\\C' => 0, 'DD\\D' => 0],
-        ], $this->builder->buildMatrix($dependencies));
+        ], $this->builder->buildMatrix($dependencies, $dependencies));
     }
 }

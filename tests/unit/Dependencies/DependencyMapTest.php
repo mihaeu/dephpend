@@ -107,7 +107,7 @@ class DependencyMapTest extends \PHPUnit_Framework_TestCase
             VendorC\\C --> VendorA\\A
         ');
         $expected = DependencyHelper::map('
-            A --> C
+            VendorA\\A --> VendorA\\C
         ');
         $this->assertEquals($expected, $dependencies->filterByNamespace('VendorA'));
     }

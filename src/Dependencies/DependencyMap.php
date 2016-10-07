@@ -110,13 +110,9 @@ class DependencyMap extends AbstractMap
     private function filterNamespaceFn(Namespaze $namespaze) : \Closure
     {
         return function (self $map, Dependency $from, Dependency $to) use ($namespaze) {
-            if ($from->inNamespaze($namespaze) && $to->inNamespaze($namespaze)) {
-                return $map->add(
-                    $from->reduceDepthFromLeftBy($namespaze->count()),
-                    $to->reduceDepthFromLeftBy($namespaze->count())
-                );
-            }
-            return $map;
+            return $from->inNamespaze($namespaze) && $to->inNamespaze($namespaze)
+                ? $map->add($from, $to)
+                : $map;
         };
     }
 

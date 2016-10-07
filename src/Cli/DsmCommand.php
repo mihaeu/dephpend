@@ -59,7 +59,7 @@ class DsmCommand extends BaseCommand
         );
         $output->write($this->dependencyStructureMatrixHtmlFormatter->format(
             $dependencies,
-            (int) $options['depth']
+            $this->postFilterByInputOptions($dependencies, $options)
         ));
     }
 }
