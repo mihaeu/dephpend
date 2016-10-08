@@ -4,13 +4,6 @@
 
 [![Build Status](https://travis-ci.org/mihaeu/dephpend.svg?branch=develop)](https://travis-ci.org/mihaeu/dephpend) [![Coverage Status](https://coveralls.io/repos/github/mihaeu/dephpend/badge.svg)](https://coveralls.io/github/mihaeu/dephpend) ![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat) [![Join the chat at https://gitter.im/dephpend/Lobby](https://badges.gitter.im/dephpend/Lobby.svg)](https://gitter.im/dephpend/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-> **DISCLAIMER**
->
-> This project is in an early stage and many things aren't working as expected
-> and lots of information is not being picked up yet. Star the project and check
-> in every now and then, as development is very active. New major releases will
-> be released at the end of every month.
-
 ## What it does
 
 dePHPend helps with bringing your PHP projects back in shape. Over the course
@@ -165,6 +158,12 @@ Check out `tests/features` for examples of supported features or run `bin/dephpe
 [✗]  known variable passed into method without type hints
 [✗]  creating objects from strings
 ```
+
+### Troubleshooting
+
+#### Not enough RAM
+
+The PHP-Parser can take up lots of RAM for big applications. You can adjust the RAM limit in your `php.ini`, but a safer solution would be to call dePHPend by adding `php -d memory_limit=512M dephpend.phar ...`.
 
 ## License
 
