@@ -23,7 +23,7 @@ class DependencyFilterTest extends \PHPUnit_Framework_TestCase
     {
         $dependencies = DependencyHelper::map('From --> To, SplFileInfo');
         $expected = (new DependencyMap())->add(new Clazz('From'), new Clazz('To'));
-        $this->assertEquals($expected, $this->filter->removeInternals()($dependencies));
+        $this->assertEquals($expected, $this->filter->removeInternals($dependencies));
     }
 
     public function testFilterByDepthOne()
@@ -36,7 +36,7 @@ class DependencyFilterTest extends \PHPUnit_Framework_TestCase
             From --> _A
             _B --> SplFileInfo
         ');
-        $actual = $this->filter->filterByDepth(1)($dependencies);
+        $actual = $this->filter->filterByDepth($dependencies, 1);
         $this->assertEquals($expected, $actual);
     }
 
@@ -46,7 +46,7 @@ class DependencyFilterTest extends \PHPUnit_Framework_TestCase
             VendorA\\ProjectA\\PathA\\From --> VendorB\\ProjectB\\PathB\\To
         ');
         $expected = DependencyHelper::map('_VendorA\\ProjectA\\PathA --> _VendorB\\ProjectB\\PathB');
-        $actual = $this->filter->filterByDepth(3)($dependencies);
+        $actual = $this->filter->filterByDepth($dependencies, 3);
         $this->assertEquals($expected, $actual);
     }
 
@@ -60,7 +60,7 @@ class DependencyFilterTest extends \PHPUnit_Framework_TestCase
         $expected = DependencyHelper::map('
             VendorA\\A --> VendorA\\C
         ');
-        $this->assertEquals($expected, $this->filter->filterByNamespace('VendorA')($dependencies));
+        $this->assertEquals($expected, $this->filter->filterByNamespace($dependencies, 'VendorA'));
     }
 
     public function testFilterByDepth0ReturnsEqual()
@@ -71,7 +71,7 @@ class DependencyFilterTest extends \PHPUnit_Framework_TestCase
             VendorB\\B --> VendorA\\A
             VendorC\\C --> VendorA\\A
         ');
-        $this->assertEquals($dependencies, $this->filter->filterByDepth(0)($dependencies));
+        $this->assertEquals($dependencies, $this->filter->filterByDepth($dependencies, 0));
     }
     public function testRemoveClasses()
     {
@@ -79,7 +79,7 @@ class DependencyFilterTest extends \PHPUnit_Framework_TestCase
             _VendorA --> _VendorB
             _VendorB --> _VendorA
         ');
-        $actual = $this->filter->filterClasses()(DependencyHelper::map('
+        $actual = $this->filter->filterClasses(DependencyHelper::map('
             VendorA\\A --> VendorB\\A, VendorA\\C
             VendorB\\B --> VendorA\\A
             VendorC\\C --> B
@@ -92,11 +92,11 @@ class DependencyFilterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(DependencyHelper::map('
             Good\\A --> Bad\\B
             Good\\B --> Good\\C
-        '), $this->filter->filterByFromNamespace('Good')(DependencyHelper::map('
+        '), $this->filter->filterByFromNamespace(DependencyHelper::map('
             Good\\A --> Bad\\B
             Good\\B --> Good\\C
             Bad\\B --> Good\\A
-        ')));
+        '), 'Good'));
     }
 
     public function testRunAllFilters()

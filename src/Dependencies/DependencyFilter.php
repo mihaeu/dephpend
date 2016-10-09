@@ -17,68 +17,54 @@ class DependencyFilter
         $this->internals = $internals;
     }
 
-    private function selectedFilters(array $options) : array
+    public function filterByOptions(DependencyMap $dependencies, array $options) : DependencyMap
     {
-        $filters = [];
         if (!$options['internals']) {
-            $filters[] = $this->removeInternals();
+            $dependencies = $this->removeInternals($dependencies);
         }
 
         if (isset($options['filter-from'])) {
-            $filters[] = $this->filterByFromNamespace($options['filter-from']);
+            $dependencies = $this->filterByFromNamespace($dependencies, $options['filter-from']);
         }
 
         if ($options['depth'] > 0) {
-            $filters[] = $this->filterByDepth((int) $options['depth']);
+            $dependencies = $this->filterByDepth($dependencies, (int) $options['depth']);
         }
 
         if ($options['filter-namespace']) {
-            $filters[] = $this->filterByNamespace($options['filter-namespace']);
+            $dependencies = $this->filterByNamespace($dependencies, $options['filter-namespace']);
         }
 
         if (isset($options['no-classes']) && $options['no-classes'] === true) {
-            $filters[] = $this->filterClasses();
+            $dependencies = $this->filterClasses($dependencies);
         }
 
-        return $filters;
+        return $dependencies;
     }
 
-    public function filterByOptions(DependencyMap $dependencies, array $options) : DependencyMap
+    public function removeInternals(DependencyMap $dependencies) : DependencyMap
     {
-        return array_reduce($this->selectedFilters($options), function (DependencyMap $dependencies, \Closure $filter) {
-            return $filter($dependencies);
-        }, $dependencies);
-    }
-
-    public function removeInternals() : \Closure
-    {
-        return function (DependencyMap $dependencies) : DependencyMap {
-            return $dependencies->reduce(new DependencyMap(), function (DependencyMap $map, Dependency $from, Dependency $to) {
-                return !in_array($to->toString(), $this->internals, true)
+        return $dependencies->reduce(new DependencyMap(), function (DependencyMap $map, Dependency $from, Dependency $to) {
+            return !in_array($to->toString(), $this->internals, true)
                     ? $map->add($from, $to)
                     : $map;
-            });
-        };
+        });
     }
 
-    public function filterByNamespace(string $namespace) : \Closure
+    public function filterByNamespace(DependencyMap $dependencies, string $namespace) : DependencyMap
     {
         $namespace = new Namespaze(array_filter(explode('\\', $namespace)));
-        return function (DependencyMap $dependencies) use ($namespace) : DependencyMap {
-            return $dependencies->reduce(new DependencyMap(), $this->filterNamespaceFn($namespace));
-        };
+        return $dependencies->reduce(new DependencyMap(), $this->filterNamespaceFn($namespace));
     }
 
-    public function filterByFromNamespace(string $namespace) : \Closure
+    public function filterByFromNamespace(DependencyMap $dependencies, string $namespace) : DependencyMap
     {
         $namespace = new Namespaze(array_filter(explode('\\', $namespace)));
-        return function (DependencyMap $dependencies) use ($namespace) : DependencyMap {
-            return $dependencies->reduce(new DependencyMap(), function (DependencyMap $map, Dependency $from, Dependency $to) use ($namespace) {
-                return $from->inNamespaze($namespace)
-                    ? $map->add($from, $to)
-                    : $map;
-            });
-        };
+        return $dependencies->reduce(new DependencyMap(), function (DependencyMap $map, Dependency $from, Dependency $to) use ($namespace) {
+            return $from->inNamespaze($namespace)
+                ? $map->add($from, $to)
+                : $map;
+        });
     }
 
     private function filterNamespaceFn(Namespaze $namespaze) : \Closure
@@ -90,31 +76,27 @@ class DependencyFilter
         };
     }
 
-    public function filterByDepth(int $depth) : \Closure
+    public function filterByDepth(DependencyMap $dependencies, int $depth) : DependencyMap
     {
-        return function (DependencyMap $dependencies) use ($depth) : DependencyMap {
-            if ($depth === 0) {
-                return clone $dependencies;
-            }
+        if ($depth === 0) {
+            return clone $dependencies;
+        }
 
-            return $dependencies->reduce(new DependencyMap(), function (DependencyMap $dependencies, Dependency $from, Dependency $to) use ($depth) {
-                return $dependencies->add(
-                    $from->reduceToDepth($depth),
-                    $to->reduceToDepth($depth)
-                );
-            });
-        };
+        return $dependencies->reduce(new DependencyMap(), function (DependencyMap $dependencies, Dependency $from, Dependency $to) use ($depth) {
+            return $dependencies->add(
+                $from->reduceToDepth($depth),
+                $to->reduceToDepth($depth)
+            );
+        });
     }
 
-    public function filterClasses() : \Closure
+    public function filterClasses(DependencyMap $dependencies) : DependencyMap
     {
-        return function (DependencyMap $dependencies) : DependencyMap {
-            return $dependencies->reduce(new DependencyMap(), function (DependencyMap $map, Dependency $from, Dependency $to) {
-                if ($from->namespaze()->count() === 0 || $to->namespaze()->count() === 0) {
-                    return $map;
-                }
-                return $map->add($from->namespaze(), $to->namespaze());
-            });
-        };
+        return $dependencies->reduce(new DependencyMap(), function (DependencyMap $map, Dependency $from, Dependency $to) {
+            if ($from->namespaze()->count() === 0 || $to->namespaze()->count() === 0) {
+                return $map;
+            }
+            return $map->add($from->namespaze(), $to->namespaze());
+        });
     }
 }
