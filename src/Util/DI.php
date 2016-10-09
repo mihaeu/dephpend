@@ -8,6 +8,7 @@ use Mihaeu\PhpDependencies\Analyser\Analyser;
 use Mihaeu\PhpDependencies\Analyser\DependencyInspectionVisitor;
 use Mihaeu\PhpDependencies\Analyser\Parser;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
+use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\Dependencies\UnderscoreDependencyFactory;
 use Mihaeu\PhpDependencies\OS\PhpFileFinder;
 use PhpParser\NodeTraverser;
@@ -15,6 +16,22 @@ use PhpParser\ParserFactory;
 
 class DI
 {
+    /** @var array */
+    private $internals;
+
+    /**
+     * @param array $internals
+     */
+    public function __construct(array $internals)
+    {
+        $this->internals = $internals;
+    }
+
+    public function dependencyFilter() : DependencyFilter
+    {
+        return new DependencyFilter($this->internals);
+    }
+
     /**
      * @return PhpFileFinder
      */

@@ -6,10 +6,10 @@ namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser\Analyser;
 use Mihaeu\PhpDependencies\Analyser\Parser;
+use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\OS\PhpFileFinder;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Exception\LogicException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -24,6 +24,9 @@ abstract class BaseCommand extends Command
     /** @var Analyser */
     protected $analyser;
 
+    /** @var DependencyFilter */
+    protected $dependencyFilter;
+
     /** @var string */
     protected $defaultFormat;
 
@@ -35,19 +38,21 @@ abstract class BaseCommand extends Command
      * @param PhpFileFinder $phpFileFinder
      * @param Parser $parser
      * @param Analyser $analyser
-     * @throws LogicException
+     * @param DependencyFilter $dependencyFilter
      */
     public function __construct(
         string $name,
         PhpFileFinder $phpFileFinder,
         Parser $parser,
-        Analyser $analyser
+        Analyser $analyser,
+        DependencyFilter $dependencyFilter
     ) {
         parent::__construct($name);
 
         $this->phpFileFinder = $phpFileFinder;
         $this->parser = $parser;
         $this->analyser = $analyser;
+        $this->dependencyFilter = $dependencyFilter;
     }
 
     protected function configure()
@@ -128,63 +133,16 @@ abstract class BaseCommand extends Command
      * @param string[] $sources
      *
      * @return DependencyMap
+     *
+     * @throws \LogicException
      */
     protected function detectDependencies(array $sources) : DependencyMap
     {
         return $this->analyser->analyse(
-            $this->parser->parse($this->phpFileFinder->getAllPhpFilesFromSources($sources))
+            $this->parser->parse(
+                $this->phpFileFinder->getAllPhpFilesFromSources($sources)
+            )
         );
-    }
-
-    /**
-     * Pre-filters can safely be executed before every command as they only limit
-     * the selection of dependencies. They do NOT change the dependencies themselves.
-     *
-     * @param DependencyMap $dependencies
-     * @param string[] $options
-     *
-     * @return DependencyMap
-     */
-    protected function preFilterByInputOptions(DependencyMap $dependencies, array $options) : DependencyMap
-    {
-        if (!$options['internals']) {
-            $dependencies = $dependencies->removeInternals();
-        }
-
-        if (isset($options['filter-from'])) {
-            $dependencies = $dependencies->filterByFromNamespace($options['filter-from']);
-        }
-
-        return $dependencies;
-    }
-
-    /**
-     * Post-filters should be applied after analysing commands which depend on information
-     * that is more detailed than what is being displayed
-     *
-     * e.g. number of classes in a package would not work if the DependencyMap would
-     * be reduced to package level before analysing.
-     *
-     * @param DependencyMap $dependencies
-     * @param array $options
-     *
-     * @return DependencyMap
-     */
-    protected function postFilterByInputOptions(DependencyMap $dependencies, array $options) : DependencyMap
-    {
-        if ($options['depth'] > 0) {
-            $dependencies = $dependencies->filterByDepth((int) $options['depth']);
-        }
-
-        if ($options['filter-namespace']) {
-            $dependencies = $dependencies->filterByNamespace($options['filter-namespace']);
-        }
-
-        if (isset($options['no-classes']) && $options['no-classes'] === true) {
-            $dependencies = $dependencies->filterClasses();
-        }
-
-        return $dependencies;
     }
 
     /**

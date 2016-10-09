@@ -6,6 +6,7 @@ namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser\Analyser;
 use Mihaeu\PhpDependencies\Analyser\Parser;
+use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\OS\PhpFileFinder;
 use Mihaeu\PhpDependencies\OS\PhpFileSet;
 use Mihaeu\PhpDependencies\OS\PlantUmlWrapper;
@@ -49,6 +50,7 @@ class UmlCommandTest extends \PHPUnit_Framework_TestCase
             $this->phpFileFinder,
             $this->parser,
             $this->analyser,
+            $this->createMock(DependencyFilter::class),
             $this->plantUmlWrapper
         );
         $this->input = $this->createMock(InputInterface::class);

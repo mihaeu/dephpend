@@ -6,6 +6,7 @@ namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser\Analyser;
 use Mihaeu\PhpDependencies\Analyser\Parser;
+use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\OS\PhpFileFinder;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -15,9 +16,10 @@ class TextCommand extends BaseCommand
     public function __construct(
         PhpFileFinder $phpFileFinder,
         Parser $parser,
-        Analyser $analyser)
+        Analyser $analyser,
+        DependencyFilter $dependencyFilter)
     {
-        parent::__construct('text', $phpFileFinder, $parser, $analyser);
+        parent::__construct('text', $phpFileFinder, $parser, $analyser, $dependencyFilter);
     }
 
     protected function configure()
@@ -33,11 +35,6 @@ class TextCommand extends BaseCommand
 
         $dependencies = $this->detectDependencies($input->getArgument('source'));
         $options = $input->getOptions();
-        $output->writeln(
-            $this->postFilterByInputOptions(
-                $this->preFilterByInputOptions($dependencies, $options),
-                $options
-            )->toString()
-        );
+        $output->writeln($this->dependencyFilter->filterByOptions($dependencies, $options)->toString());
     }
 }

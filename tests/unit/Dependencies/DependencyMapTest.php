@@ -14,11 +14,25 @@ class DependencyMapTest extends \PHPUnit_Framework_TestCase
 {
     public function testNoDuplicates()
     {
-        $set = DependencyHelper::map('
+        $map = DependencyHelper::map('
             A --> B
             B --> C
         ');
-        $this->assertEquals($set, $set->add(new Clazz('A'), new Clazz('B')));
+        $this->assertEquals($map, $map->add(new Clazz('A'), new Clazz('B')));
+    }
+    
+    public function testAddMoreDependenciesToExistingPair()
+    {
+        $map = DependencyHelper::map('A --> B');
+        $this->assertEquals(
+            DependencyHelper::map('A --> B, C, D'),
+            $map->addSet(new Clazz('A'), DependencyHelper::dependencySet('C, D'))
+        );
+    }
+
+    public function testDoesNotAcceptDependenciesMappingToThemselves()
+    {
+        $this->assertCount(0, DependencyHelper::map('')->add(new Clazz('A'), new Clazz('A')));
     }
 
     public function testReturnsTrueIfAnyMatches()
@@ -66,74 +80,6 @@ class DependencyMapTest extends \PHPUnit_Framework_TestCase
         $expected = DependencyHelper::dependencySet('From, To, ToAnother');
         ;
         $this->assertEquals($expected, $dependencies->allDependencies());
-    }
-
-    public function testRemovesInternals()
-    {
-        $dependencies = DependencyHelper::map('From --> To, SplFileInfo');
-        $expected = (new DependencyMap())->add(new Clazz('From'), new Clazz('To'));
-        $this->assertEquals($expected, $dependencies->removeInternals());
-    }
-
-    public function testFilterByDepthOne()
-    {
-        $dependencies = DependencyHelper::map('
-            From --> A\\a\\To
-            B\\b\\FromOther --> SplFileInfo
-        ');
-        $expected = DependencyHelper::map('
-            From --> _A
-            _B --> SplFileInfo
-        ');
-        $actual = $dependencies->filterByDepth(1);
-        $this->assertEquals($expected, $actual);
-    }
-
-    public function testFilterByDepthThree()
-    {
-        $dependencies = DependencyHelper::map('
-            VendorA\\ProjectA\\PathA\\From --> VendorB\\ProjectB\\PathB\\To
-        ');
-        $expected = DependencyHelper::map('_VendorA\\ProjectA\\PathA --> _VendorB\\ProjectB\\PathB');
-        $actual = $dependencies->filterByDepth(3);
-        $this->assertEquals($expected, $actual);
-    }
-
-    public function testFilterByVendor()
-    {
-        $dependencies = DependencyHelper::map('
-            VendorA\\A --> VendorB\\A, VendorA\\C
-            VendorB\\B --> VendorA\\A
-            VendorC\\C --> VendorA\\A
-        ');
-        $expected = DependencyHelper::map('
-            VendorA\\A --> VendorA\\C
-        ');
-        $this->assertEquals($expected, $dependencies->filterByNamespace('VendorA'));
-    }
-
-    public function testFilterByDepth0ReturnsEqual()
-    {
-        $dependencies = DependencyHelper::map('
-            VendorA\\A --> VendorB\\A
-            VendorA\\A --> VendorA\\C
-            VendorB\\B --> VendorA\\A
-            VendorC\\C --> VendorA\\A
-        ');
-        $this->assertEquals($dependencies, $dependencies->filterByDepth(0));
-    }
-    public function testRemoveClasses()
-    {
-        $expected = DependencyHelper::map('
-            _VendorA --> _VendorB
-            _VendorB --> _VendorA
-        ');
-        $actual = DependencyHelper::map('
-            VendorA\\A --> VendorB\\A, VendorA\\C
-            VendorB\\B --> VendorA\\A
-            VendorC\\C --> B
-        ')->filterClasses();
-        $this->assertEquals($expected, $actual);
     }
 
     public function testToString()
@@ -224,17 +170,5 @@ class DependencyMapTest extends \PHPUnit_Framework_TestCase
             A --> B, C, D
             D --> E
         ')->contains(new Clazz('E')));
-    }
-
-    public function testFilterFromDependencies()
-    {
-        $this->assertEquals(DependencyHelper::map('
-            Good\\A --> Bad\\B
-            Good\\B --> Good\\C
-        '), DependencyHelper::map('
-            Good\\A --> Bad\\B
-            Good\\B --> Good\\C
-            Bad\\B --> Good\\A
-        ')->filterByFromNamespace('Good'));
     }
 }

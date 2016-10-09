@@ -6,6 +6,7 @@ namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser\Analyser;
 use Mihaeu\PhpDependencies\Analyser\Parser;
+use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\DependencyHelper;
 use Mihaeu\PhpDependencies\OS\PhpFileFinder;
 use Mihaeu\PhpDependencies\OS\PhpFileSet;
@@ -36,16 +37,21 @@ class TextCommandTest extends \PHPUnit_Framework_TestCase
     /** @var Analyser|\PHPUnit_Framework_MockObject_MockObject */
     private $analyser;
 
+    /** @var DependencyFilter|\PHPUnit_Framework_MockObject_MockObject */
+    private $dependencyFilter;
+
     public function setUp()
     {
         $this->phpFileFinder = $this->createMock(PhpFileFinder::class);
         $this->phpFileFinder->method('find')->willReturn(new PhpFileSet());
         $this->parser = $this->createMock(Parser::class);
         $this->analyser = $this->createMock(Analyser::class);
+        $this->dependencyFilter = $this->createMock(DependencyFilter::class);
         $this->textCommand = new TextCommand(
             $this->phpFileFinder,
             $this->parser,
-            $this->analyser
+            $this->analyser,
+            $this->dependencyFilter
         );
         $this->input = $this->createMock(InputInterface::class);
         $this->output = $this->createMock(OutputInterface::class);
@@ -63,6 +69,7 @@ class TextCommandTest extends \PHPUnit_Framework_TestCase
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
         $this->input->method('getOption')->willReturn(false, 0);
         $this->input->method('getOptions')->willReturn(['internals' => false, 'filter-namespace' => null, 'depth' => 0]);
+        $this->dependencyFilter->method('filterByOptions')->willReturn($dependencies);
 
         $this->output->expects($this->once())
             ->method('writeln')
@@ -77,11 +84,11 @@ class TextCommandTest extends \PHPUnit_Framework_TestCase
     public function testPrintsOnlyNamespacedDependencies()
     {
         $dependencies = DependencyHelper::map('
-            NamespaceA\\A --> NamespaceB\\B
-            NamespaceA\\A --> NamespaceC\\C
-            NamespaceB\\B --> NamespaceC\\C
+            NamespaceA --> NamespaceB
+            NamespaceA --> NamespaceC
+            NamespaceB --> NamespaceC
         ');
-        $this->analyser->method('analyse')->willReturn($dependencies);
+        $this->dependencyFilter->method('filterByOptions')->willReturn($dependencies);
 
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
         $this->input->method('getOptions')->willReturn(['internals' => false, 'filter-namespace' => null, 'depth' => 1]);

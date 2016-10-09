@@ -6,6 +6,7 @@ namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser\Analyser;
 use Mihaeu\PhpDependencies\Analyser\Parser;
+use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\OS\PhpFileFinder;
 use Mihaeu\PhpDependencies\OS\PlantUmlWrapper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -21,17 +22,18 @@ class UmlCommand extends BaseCommand
      * @param PhpFileFinder $phpFileFinder
      * @param Parser $parser
      * @param Analyser $analyser
+     * @param DependencyFilter $dependencyFilter
      * @param PlantUmlWrapper $plantUmlWrapper
      *
-     * @throws \Symfony\Component\Console\Exception\LogicException
      */
     public function __construct(
         PhpFileFinder $phpFileFinder,
         Parser $parser,
         Analyser $analyser,
+        DependencyFilter $dependencyFilter,
         PlantUmlWrapper $plantUmlWrapper
     ) {
-        parent::__construct('uml', $phpFileFinder, $parser, $analyser);
+        parent::__construct('uml', $phpFileFinder, $parser, $analyser, $dependencyFilter);
 
         $this->plantUmlWrapper = $plantUmlWrapper;
 
@@ -71,10 +73,7 @@ class UmlCommand extends BaseCommand
         $dependencies = $this->detectDependencies($input->getArgument('source'));
         $destination = new \SplFileInfo($options['output']);
         $this->plantUmlWrapper->generate(
-            $this->postFilterByInputOptions(
-                $this->preFilterByInputOptions($dependencies, $options),
-                $options
-            ),
+            $this->dependencyFilter->filterByOptions($dependencies, $options),
             $destination,
             $options['keep-uml']
         );

@@ -6,6 +6,7 @@ namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser\Analyser;
 use Mihaeu\PhpDependencies\Analyser\Parser;
+use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\DependencyHelper;
 use Mihaeu\PhpDependencies\Formatters\DependencyStructureMatrixHtmlFormatter;
 use Mihaeu\PhpDependencies\OS\PhpFileFinder;
@@ -37,6 +38,9 @@ class DsmCommandTest extends \PHPUnit_Framework_TestCase
     /** @var Analyser|\PHPUnit_Framework_MockObject_MockObject */
     private $analyser;
 
+    /** @var DependencyFilter|\PHPUnit_Framework_MockObject_MockObject */
+    private $dependencyFilter;
+
     /** @var DependencyStructureMatrixHtmlFormatter|\PHPUnit_Framework_MockObject_MockObject */
     private $dependencyStructureMatrixFormatter;
 
@@ -47,10 +51,12 @@ class DsmCommandTest extends \PHPUnit_Framework_TestCase
         $this->parser = $this->createMock(Parser::class);
         $this->analyser = $this->createMock(Analyser::class);
         $this->dependencyStructureMatrixFormatter = $this->createMock(DependencyStructureMatrixHtmlFormatter::class);
+        $this->dependencyFilter = $this->createMock(DependencyFilter::class);
         $this->dsmCommand = new DsmCommand(
             $this->phpFileFinder,
             $this->parser,
             $this->analyser,
+            $this->dependencyFilter,
             $this->dependencyStructureMatrixFormatter
         );
         $this->input = $this->createMock(InputInterface::class);
@@ -64,13 +70,15 @@ class DsmCommandTest extends \PHPUnit_Framework_TestCase
             'format' => 'html',
             'internals' => false,
             'filter-namespace' => null,
-            'depth' => 0
+            'depth' => 0,
+            'no-classes' => true
         ]);
 
         $dependencies = DependencyHelper::map('A --> B');
         $this->analyser->method('analyse')->willReturn($dependencies);
+        $this->dependencyFilter->method('filterByOptions')->willReturn($dependencies);
 
-        $this->dependencyStructureMatrixFormatter->expects($this->once())->method('format')->with($dependencies);
+        $this->dependencyStructureMatrixFormatter->expects($this->once())->method('format')->with($dependencies, $dependencies);
         $this->dsmCommand->run($this->input, $this->output);
     }
 

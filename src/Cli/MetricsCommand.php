@@ -7,6 +7,7 @@ namespace Mihaeu\PhpDependencies\Cli;
 use Mihaeu\PhpDependencies\Analyser\Analyser;
 use Mihaeu\PhpDependencies\Analyser\Metrics;
 use Mihaeu\PhpDependencies\Analyser\Parser;
+use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\OS\PhpFileFinder;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -28,10 +29,11 @@ class MetricsCommand extends BaseCommand
         PhpFileFinder $phpFileFinder,
         Parser $parser,
         Analyser $analyser,
+        DependencyFilter $dependencyFilter,
         Metrics $metrics
     ) {
         $this->metrics = $metrics;
-        parent::__construct('metrics', $phpFileFinder, $parser, $analyser);
+        parent::__construct('metrics', $phpFileFinder, $parser, $analyser, $dependencyFilter);
     }
 
     protected function configure()
@@ -51,11 +53,9 @@ class MetricsCommand extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $options = $input->getOptions();
-        $dependencies = $this->postFilterByInputOptions(
-            $this->preFilterByInputOptions(
-                $this->detectDependencies($input->getArgument('source')),
-                $options
-            ), $options
+        $dependencies = $this->dependencyFilter->filterByOptions(
+            $this->detectDependencies($input->getArgument('source')),
+            $options
         );
         $output->writeln('Classes: '.$this->metrics->classCount($dependencies));
         $output->writeln('Abstract classes: '.$this->metrics->abstractClassCount($dependencies));

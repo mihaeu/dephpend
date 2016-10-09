@@ -7,6 +7,7 @@ namespace Mihaeu\PhpDependencies\Cli;
 use Mihaeu\PhpDependencies\Analyser\Analyser;
 use Mihaeu\PhpDependencies\Analyser\Metrics;
 use Mihaeu\PhpDependencies\Analyser\Parser;
+use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\OS\PhpFileFinder;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -47,6 +48,7 @@ class MetricsCommandTest extends \PHPUnit_Framework_TestCase
             $this->phpFileFinder,
             $this->parser,
             $this->analyser,
+            $this->createMock(DependencyFilter::class),
             $this->metrics
         );
         $this->input = $this->createMock(InputInterface::class);

@@ -4,6 +4,13 @@
 use Mihaeu\PhpDependencies\Cli\Application;
 use Mihaeu\PhpDependencies\Util\DI;
 
+// we need to get this before anything else is loaded
+$internals = array_merge(
+    get_declared_classes(),
+    get_declared_interfaces(),
+    get_declared_traits()
+);
+
 require __DIR__.'/../vendor/autoload.php';
 
 ini_set('xdebug.max_nesting_level', '3000');
@@ -16,5 +23,5 @@ $name = <<<EOT
  | (_| |  __/ |    | |  | | |  |  __/ | | | (_| |
   \__,_|\___|_|    |_|  |_|_|   \___|_| |_|\__,_|
 EOT;
-$application = new Application($name, '0.1', new DI());
+$application = new Application($name, '0.1', new DI($internals));
 $application->run();

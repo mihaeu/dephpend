@@ -96,18 +96,21 @@ class Application extends \Symfony\Component\Console\Application
         $phpFileFinder = $this->dI->phpFileFinder();
         $parser = $this->dI->parser();
         $analyser = $this->dI->analyser($this->isUnderscoreSupportRequired($input));
+        $filter = $this->dI->dependencyFilter();
 
         return [
             new UmlCommand(
                 $phpFileFinder,
                 $parser,
                 $analyser,
+                $filter,
                 new PlantUmlWrapper(new PlantUmlFormatter(), new ShellWrapper())
             ),
             new DsmCommand(
                 $phpFileFinder,
                 $parser,
                 $analyser,
+                $filter,
                 new DependencyStructureMatrixHtmlFormatter(
                     new DependencyStructureMatrixBuilder()
                 )
@@ -115,12 +118,14 @@ class Application extends \Symfony\Component\Console\Application
             new TextCommand(
                 $phpFileFinder,
                 $parser,
-                $analyser
+                $analyser,
+                $filter
             ),
             new MetricsCommand(
                 $phpFileFinder,
                 $parser,
                 $analyser,
+                $filter,
                 new Metrics()
             ),
             new TestFeaturesCommand(),
