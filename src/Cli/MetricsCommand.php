@@ -51,10 +51,12 @@ class MetricsCommand extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $options = $input->getOptions();
-        $dependencies = $this->preFilterByInputOptions(
-            $this->detectDependencies($input->getArgument('source')),
-            $options
-        )->filterByDepth((int) $options['depth']);
+        $dependencies = $this->postFilterByInputOptions(
+            $this->preFilterByInputOptions(
+                $this->detectDependencies($input->getArgument('source')),
+                $options
+            ), $options
+        );
         $output->writeln('Classes: '.$this->metrics->classCount($dependencies));
         $output->writeln('Abstract classes: '.$this->metrics->abstractClassCount($dependencies));
         $output->writeln('Interfaces: '.$this->metrics->interfaceCount($dependencies));

@@ -68,15 +68,16 @@ class UmlCommand extends BaseCommand
         $this->ensureDestinationIsWritable($options['output']);
         $this->ensureOutputFormatIsValid($options['output']);
 
-        $dependencies = $this->postFilterByInputOptions(
-            $this->preFilterByInputOptions(
-                $this->detectDependencies($input->getArgument('source')),
+        $dependencies = $this->detectDependencies($input->getArgument('source'));
+        $destination = new \SplFileInfo($options['output']);
+        $this->plantUmlWrapper->generate(
+            $this->postFilterByInputOptions(
+                $this->preFilterByInputOptions($dependencies, $options),
                 $options
             ),
-            $options
+            $destination,
+            $options['keep-uml']
         );
-        $destination = new \SplFileInfo($options['output']);
-        $this->plantUmlWrapper->generate($dependencies, $destination, $options['keep-uml']);
     }
 
     /**
