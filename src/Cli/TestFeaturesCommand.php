@@ -48,7 +48,7 @@ class TestFeaturesCommand extends Command
 
     public function runTest(string $filename) : array
     {
-        $application = new Application('', '', new DI());
+        $application = new Application('', '', new DI([]));
         $application->setAutoExit(false);
         $applicationOutput = new BufferedOutput();
         $args = [
