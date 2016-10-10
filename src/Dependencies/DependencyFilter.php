@@ -39,6 +39,10 @@ class DependencyFilter
             $dependencies = $this->filterClasses($dependencies);
         }
 
+        if (isset($options['exclude-regex'])) {
+            $dependencies = $this->excludeByRegex($dependencies, $options['exclude-regex']);
+        }
+
         return $dependencies;
     }
 
@@ -55,6 +59,15 @@ class DependencyFilter
     {
         $namespace = new Namespaze(array_filter(explode('\\', $namespace)));
         return $dependencies->reduce(new DependencyMap(), $this->filterNamespaceFn($namespace));
+    }
+
+    public function excludeByRegex(DependencyMap $dependencies, string $regex) : DependencyMap
+    {
+        return $dependencies->reduce(new DependencyMap(), function (DependencyMap $map, Dependency $from, Dependency $to) use ($regex) {
+            return preg_match($regex, $from->toString()) === 1 || preg_match($regex, $to->toString()) === 1
+                ? $map
+                : $map->add($from, $to);
+        });
     }
 
     public function filterByFromNamespace(DependencyMap $dependencies, string $namespace) : DependencyMap

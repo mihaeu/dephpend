@@ -107,15 +107,31 @@ class DependencyFilterTest extends \PHPUnit_Framework_TestCase
             'depth'             => 2,
             'filter-namespace'  => 'A',
             'no-classes'        => true,
+            'exclude-regex'     => '/Test/',
         ];
         $dependencies = DependencyHelper::map('
             A\\a\\z --> B\\b\\z
             A\\a\\z --> A\\b\\z
+            A\\a\\Test --> A\\b\\z
         ');
         $actual = $this->filter->filterByOptions($dependencies, $options);
         $expected = DependencyHelper::map('
             _A\\a --> _A\\b
         ');
         $this->assertEquals($expected, $actual);
+    }
+
+    public function excludeByRegex()
+    {
+        $this->assertEquals(DependencyHelper::map('
+            X --> Z
+        '), $this->filter->excludeByRegex(DependencyHelper::map('
+            Test\\A --> B
+            B --> Test\\C
+            B --> C\\Test
+            D --> Example
+            Example --> Test\\Test
+            X --> Z
+        '), '/(Test)|(Example)/'));
     }
 }

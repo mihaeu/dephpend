@@ -100,6 +100,12 @@ abstract class BaseCommand extends Command
                 InputOption::VALUE_NONE,
                 'Remove all classes and analyse only namespaces.'
             )
+            ->addOption(
+                'exclude-regex',
+                'e',
+                InputOption::VALUE_REQUIRED,
+                'Exclude all dependencies which match the (PREG) regular expression.'
+            )
         ;
     }
 
