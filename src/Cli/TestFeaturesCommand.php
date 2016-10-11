@@ -22,7 +22,6 @@ class TestFeaturesCommand extends Command
         parent::__construct('test-features');
     }
 
-
     protected function configure()
     {
         parent::configure();
