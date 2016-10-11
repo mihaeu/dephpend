@@ -281,7 +281,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
     {
         $node = $this->createAndEnterCurrentClassNode();
 
-        $staticCall = new StaticCall(new Name('Singleton'), 'Singleton');
+        $staticCall = new StaticCall(new FullyQualifiedNameNode('Singleton'), 'Singleton');
         $staticCall->class->parts = ['A', 'a', '1', 'Singleton'];
         $this->dependencyInspectionVisitor->enterNode($staticCall);
 

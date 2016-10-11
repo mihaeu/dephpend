@@ -78,7 +78,8 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
             // @codeCoverageIgnoreEnd
             $this->addUseDependency($node);
             // @codeCoverageIgnoreStart
-        } elseif ($node instanceof StaticCallNode) {
+        } elseif ($node instanceof StaticCallNode
+            && $node->class instanceof FullyQualifiedNameNode) {
             // @codeCoverageIgnoreEnd
             $this->addStaticDependency($node);
             // WEIRD BUG CAUSING XDEBUG TO NOT COVER ELSEIF ONLY ELSE IF
