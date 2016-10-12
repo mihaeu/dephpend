@@ -9,6 +9,7 @@ use Mihaeu\PhpDependencies\Analyser\Metrics;
 use Mihaeu\PhpDependencies\Analyser\Parser;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\OS\PhpFileFinder;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -57,13 +58,38 @@ class MetricsCommand extends BaseCommand
             $this->detectDependencies($input->getArgument('source')),
             $options
         );
-        $output->writeln('Classes: '.$this->metrics->classCount($dependencies));
-        $output->writeln('Abstract classes: '.$this->metrics->abstractClassCount($dependencies));
-        $output->writeln('Interfaces: '.$this->metrics->interfaceCount($dependencies));
-        $output->writeln('Traits: '.$this->metrics->traitCount($dependencies));
-        $output->writeln('Abstractness: '.$this->metrics->abstractness($dependencies));
-        $output->writeln('Afferent Coupling: '.PHP_EOL.print_r($this->metrics->afferentCoupling($dependencies), true));
-        $output->writeln('Efferent Coupling: '.PHP_EOL.print_r($this->metrics->efferentCoupling($dependencies), true));
-        $output->writeln('Instability: '.PHP_EOL.print_r($this->metrics->instability($dependencies), true));
+
+        $table = new Table($output);
+        $table->setRows([
+            ['Classes: ', $this->metrics->classCount($dependencies)],
+            ['Abstract classes: ', $this->metrics->abstractClassCount($dependencies)],
+            ['Interfaces: ', $this->metrics->interfaceCount($dependencies)],
+            ['Traits: ', $this->metrics->traitCount($dependencies)],
+            ['Abstractness: ', sprintf('%.3f', $this->metrics->abstractness($dependencies))],
+        ]);
+        $table->render();
+
+        $table = new Table($output);
+        $table->setHeaders(['', 'Afferent Coupling', 'Efferent Coupling', 'Instability']);
+        $table->setRows($this->combineMetrics(
+            $this->metrics->afferentCoupling($dependencies),
+            $this->metrics->efferentCoupling($dependencies),
+            $this->metrics->instability($dependencies)
+        ));
+        $table->render();
+    }
+
+    private function combineMetrics(array $ca, array $ce, array $instability) : array
+    {
+        $result = [];
+        foreach ($ca as $className => $caValue) {
+            $result[] = [
+                $className,
+                $caValue,
+                $ce[$className],
+                sprintf('%.2f', $instability[$className])
+            ];
+        }
+        return $result;
     }
 }

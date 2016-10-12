@@ -10,6 +10,7 @@ use Mihaeu\PhpDependencies\Analyser\Parser;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\OS\PhpFileFinder;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -62,13 +63,24 @@ class MetricsCommandTest extends \PHPUnit_Framework_TestCase
         $this->input->method('getOptions')->willReturn(['internals' => false, 'filter-namespace' => null, 'depth' => 0]);
 
         $this->metrics->method('classCount')->willReturn(1);
-        $this->metrics->method('abstractClassCount')->willReturn(1);
-        $this->metrics->method('interfaceCount')->willReturn(1);
-        $this->metrics->method('traitCount')->willReturn(1);
-        $this->metrics->method('abstractness')->willReturn(1);
+        $this->metrics->method('abstractClassCount')->willReturn(2);
+        $this->metrics->method('interfaceCount')->willReturn(3);
+        $this->metrics->method('traitCount')->willReturn(4);
+        $this->metrics->method('abstractness')->willReturn(5);
 
-        $this->output->expects($this->exactly(8))->method('writeln')->withAnyParameters();
-
-        $this->metricsCommand->run($this->input, $this->output);
+        $output = new BufferedOutput();
+        $this->metricsCommand->run($this->input, $output);
+        $this->assertEquals(
+'+--------------------+-------+
+| Classes:           | 1     |
+| Abstract classes:  | 2     |
+| Interfaces:        | 3     |
+| Traits:            | 4     |
+| Abstractness:      | 5.000 |
++--------------------+-------+
++--+-------------------+-------------------+-------------+
+|  | Afferent Coupling | Efferent Coupling | Instability |
++--+-------------------+-------------------+-------------+
+', $output->fetch());
     }
 }

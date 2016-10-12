@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Dependencies;
 
 use Mihaeu\PhpDependencies\Util\Functional;
-use function Mihaeu\PhpDependencies\Util\compose;
 
 class DependencyFilter
 {
