@@ -67,10 +67,19 @@ class DependencyMap extends AbstractMap
      */
     public function allDependencies() : DependencySet
     {
-        return $this->reduce(new DependencySet(), function (DependencySet $dependencies, Dependency $from, Dependency $to) {
-            return $dependencies
+        return $this->reduce(new DependencySet(), function (DependencySet $set, Dependency $from, Dependency $to) {
+            return $set
                 ->add($from)
                 ->add($to);
+        });
+    }
+
+    public function mapAllDependencies(\Closure $mappers) : DependencySet
+    {
+        return $this->reduce(new DependencySet(), function (DependencySet $set, Dependency $from, Dependency $to) use ($mappers) {
+            return $set
+                ->add($mappers($from))
+                ->add($mappers($to));
         });
     }
 

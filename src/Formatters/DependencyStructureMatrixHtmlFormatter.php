@@ -22,10 +22,10 @@ class DependencyStructureMatrixHtmlFormatter
     /**
      * {@inheritdoc}
      */
-    public function format(DependencyMap $all, DependencyMap $filtered) : string
+    public function format(DependencyMap $all, \Closure $mappers) : string
     {
         return $this->buildHtmlTable(
-            $this->dependencyStructureMatrixBuilder->buildMatrix($all, $filtered)
+            $this->dependencyStructureMatrixBuilder->buildMatrix($all, $mappers)
         );
     }
 

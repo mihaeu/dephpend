@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Dependencies;
 
 use Mihaeu\PhpDependencies\DependencyHelper;
+use Mihaeu\PhpDependencies\Util\Functional;
 
 /**
  * @covers Mihaeu\PhpDependencies\Dependencies\DependencyFilter
@@ -116,12 +117,12 @@ class DependencyFilterTest extends \PHPUnit_Framework_TestCase
         ');
         $actual = $this->filter->filterByOptions($dependencies, $options);
         $expected = DependencyHelper::map('
-            _A\\a --> _A\\b
+            A\\a\\z --> A\\b\\z
         ');
         $this->assertEquals($expected, $actual);
     }
 
-    public function excludeByRegex()
+    public function testExcludeByRegex()
     {
         $this->assertEquals(DependencyHelper::map('
             X --> Z
@@ -133,5 +134,11 @@ class DependencyFilterTest extends \PHPUnit_Framework_TestCase
             Example --> Test\\Test
             X --> Z
         '), '/(Test)|(Example)/'));
+    }
+
+    public function testPostFilters()
+    {
+        $filters = $this->filter->postFiltersByOptions(['no-classes' => true, 'depth' => 1]);
+        $this->assertEquals(new Namespaze(['A']), $filters(new Clazz('Test', new Namespaze(['A', 'a']))));
     }
 }

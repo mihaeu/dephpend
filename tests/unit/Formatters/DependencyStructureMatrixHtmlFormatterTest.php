@@ -37,7 +37,9 @@ class DependencyStructureMatrixHtmlFormatterTest extends \PHPUnit_Framework_Test
             .'<tr><th>2: B</th><td>0</td><td>X</td><td>1</td></tr>'
             .'<tr><th>3: C</th><td>0</td><td>0</td><td>X</td></tr>'
             .'</tbody></table>',
-            $this->dependencyStructureMatrixHtmlFormatter->format(new DependencyMap(), new DependencyMap())
+            $this->dependencyStructureMatrixHtmlFormatter->format(new DependencyMap(), function ($x) {
+                return $x;
+            })
         );
     }
 }

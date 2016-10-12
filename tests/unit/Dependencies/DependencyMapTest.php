@@ -171,4 +171,15 @@ class DependencyMapTest extends \PHPUnit_Framework_TestCase
             D --> E
         ')->contains(new Clazz('E')));
     }
+
+    public function testMapAllDependencies()
+    {
+        $map = DependencyHelper::map('
+            A\b --> C
+            Y --> Z\d
+        ');
+        $this->assertEquals(DependencyHelper::dependencySet('_A, _Z'), $map->mapAllDependencies(function (Dependency $dependency) {
+            return $dependency->namespaze();
+        }));
+    }
 }

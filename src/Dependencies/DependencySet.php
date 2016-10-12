@@ -16,7 +16,8 @@ class DependencySet extends AbstractCollection
     public function add(Dependency $dependency) : DependencySet
     {
         $clone = clone $this;
-        if ($this->contains($dependency)) {
+        if ($this->contains($dependency)
+            || $dependency->count() === 0) {
             return $clone;
         }
 

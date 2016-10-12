@@ -78,7 +78,7 @@ class DsmCommandTest extends \PHPUnit_Framework_TestCase
         $this->analyser->method('analyse')->willReturn($dependencies);
         $this->dependencyFilter->method('filterByOptions')->willReturn($dependencies);
 
-        $this->dependencyStructureMatrixFormatter->expects($this->once())->method('format')->with($dependencies, $dependencies);
+        $this->dependencyStructureMatrixFormatter->expects($this->once())->method('format')->with($dependencies);
         $this->dsmCommand->run($this->input, $this->output);
     }
 

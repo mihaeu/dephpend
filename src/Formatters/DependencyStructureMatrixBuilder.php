@@ -10,30 +10,13 @@ use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 
 class DependencyStructureMatrixBuilder
 {
-    /**
-     * @param DependencyMap $all
-     * @param DependencyMap $filtered
-     *
-     * @return array
-     */
-    public function buildMatrix(DependencyMap $all, DependencyMap $filtered) : array
+    public function buildMatrix(DependencyMap $dependencies, \Closure $mappers) : array
     {
-        $emptyDsm = $this->createEmptyDsm($filtered->allDependencies());
-        return $all->reduce($emptyDsm, function (array $dsm, Dependency $from, Dependency $to) use ($filtered) {
-            $filtered->each(function (Dependency $filteredFrom, Dependency $filteredTo) use (&$dsm, $from, $to) {
-                if ($this->inPackage($filteredFrom, $from) && $this->inPackage($filteredTo, $to)) {
-                    $dsm[$filteredFrom->toString()][$filteredTo->toString()] += 1;
-                }
-            });
+        $emptyDsm = $this->createEmptyDsm($dependencies->mapAllDependencies($mappers));
+        return $dependencies->reduce($emptyDsm, function (array $dsm, Dependency $from, Dependency $to) use ($mappers) : array {
+            $dsm[$mappers($from)->toString()][$mappers($to)->toString()] += 1;
             return $dsm;
         });
-    }
-
-    private function inPackage(Dependency $filtered, Dependency $original) : bool
-    {
-        return $filtered->namespaze()->count() === 0 && $original->namespaze()->count() === 0
-            ? $filtered->equals($original)
-            : $filtered->inNamespaze($original->namespaze());
     }
 
     /**

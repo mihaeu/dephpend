@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Dependencies;
 
+use Mihaeu\PhpDependencies\Util\Functional;
+use function Mihaeu\PhpDependencies\Util\compose;
+
 class DependencyFilter
 {
     /** @var array */
@@ -27,16 +30,8 @@ class DependencyFilter
             $dependencies = $this->filterByFromNamespace($dependencies, $options['filter-from']);
         }
 
-        if ($options['depth'] > 0) {
-            $dependencies = $this->filterByDepth($dependencies, (int) $options['depth']);
-        }
-
         if ($options['filter-namespace']) {
             $dependencies = $this->filterByNamespace($dependencies, $options['filter-namespace']);
-        }
-
-        if (isset($options['no-classes']) && $options['no-classes'] === true) {
-            $dependencies = $this->filterClasses($dependencies);
         }
 
         if (isset($options['exclude-regex'])) {
@@ -44,6 +39,19 @@ class DependencyFilter
         }
 
         return $dependencies;
+    }
+
+    public function postFiltersByOptions(array $options) : \Closure
+    {
+        $filters = [];
+        if ($options['depth'] > 0) {
+            $filters[] = $this->reduceDependencyByDepth((int) $options['depth']);
+        }
+
+        if (isset($options['no-classes']) && $options['no-classes'] === true) {
+            $filters[] = $this->reduceDependencyToNamespace();
+        }
+        return Functional::compose(...$filters);
     }
 
     public function removeInternals(DependencyMap $dependencies) : DependencyMap
@@ -111,5 +119,19 @@ class DependencyFilter
             }
             return $map->add($from->namespaze(), $to->namespaze());
         });
+    }
+
+    public function reduceDependencyToNamespace() : \Closure
+    {
+        return function (Dependency $dependency) : Dependency {
+            return $dependency->namespaze();
+        };
+    }
+
+    public function reduceDependencyByDepth(int $depth) : \Closure
+    {
+        return function (Dependency $dependency) use ($depth) : Dependency {
+            return $dependency->reduceToDepth($depth);
+        };
     }
 }
