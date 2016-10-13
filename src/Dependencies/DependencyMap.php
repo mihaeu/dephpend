@@ -92,7 +92,6 @@ class DependencyMap extends AbstractMap
             return $value instanceof NullDependency
                 ? $carry
                 : $carry.$key->toString().' --> '.$value->toString().PHP_EOL;
-        })
-        );
+        }));
     }
 }

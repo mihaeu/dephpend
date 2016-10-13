@@ -6,7 +6,9 @@ namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser\Analyser;
 use Mihaeu\PhpDependencies\Analyser\Parser;
+use Mihaeu\PhpDependencies\Dependencies\Dependency;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
+use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\OS\PhpFileFinder;
 use Mihaeu\PhpDependencies\OS\PlantUmlWrapper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -70,10 +72,19 @@ class UmlCommand extends BaseCommand
         $this->ensureDestinationIsWritable($options['output']);
         $this->ensureOutputFormatIsValid($options['output']);
 
-        $dependencies = $this->detectDependencies($input->getArgument('source'));
+        $mappers = $this->dependencyFilter->postFiltersByOptions($options);
+        $dependencies = $this->dependencyFilter->filterByOptions(
+            $this->detectDependencies($input->getArgument('source')),
+            $options
+        )->reduce(new DependencyMap(), function (DependencyMap $map, Dependency $from, Dependency $to) use ($mappers) {
+            return $map->add(
+                $mappers($from),
+                $mappers($to)
+            );
+        });
         $destination = new \SplFileInfo($options['output']);
         $this->plantUmlWrapper->generate(
-            $this->dependencyFilter->filterByOptions($dependencies, $options),
+            $dependencies,
             $destination,
             $options['keep-uml']
         );
