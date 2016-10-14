@@ -119,4 +119,11 @@ class ClazzTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertFalse(DependencyHelper::clazz('Global')->inNamespaze(DependencyHelper::namespaze('A\\b\\T')));
     }
+
+    public function testThrowsExceptionIfNameNotValid()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('');
+        new Clazz('Mihaeu\\Test');
+    }
 }

@@ -18,6 +18,8 @@ abstract class ClazzLike implements Dependency
      */
     public function __construct(string $name, Namespaze $clazzNamespace = null)
     {
+        $this->ensureClassNameIsValid($name);
+
         $this->name = $name;
         if ($clazzNamespace === null) {
             $clazzNamespace = new Namespaze([]);
@@ -70,6 +72,20 @@ abstract class ClazzLike implements Dependency
         return $this->count() <= $reduction || $reduction === 0
             ? $this
             : new Clazz($this->name, $this->namespaze->reduceDepthFromLeftBy($reduction));
+    }
+
+    /**
+     * @param string $name
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @see http://php.net/manual/en/language.oop5.basic.php#language.oop5.basic.class
+     */
+    private function ensureClassNameIsValid(string $name)
+    {
+        if (preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $name) !== 1) {
+            throw new \InvalidArgumentException('Class name "' . $name . '" is not valid.');
+        }
     }
 
     public function inNamespaze(Namespaze $other) : bool
