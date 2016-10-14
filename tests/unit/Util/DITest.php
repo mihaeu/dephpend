@@ -6,6 +6,7 @@ namespace Mihaeu\PhpDependencies\Util;
 
 use Mihaeu\PhpDependencies\Analyser\StaticAnalyser;
 use Mihaeu\PhpDependencies\Analyser\Parser;
+use Mihaeu\PhpDependencies\Analyser\XDebugFunctionTraceAnalyser;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\Dependencies\UnderscoreDependencyFactory;
@@ -31,9 +32,9 @@ class DITest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(Parser::class, (new DI([]))->parser());
     }
 
-    public function testCreatesAnalyser()
+    public function testCreatesStaticAnalyser()
     {
-        $this->assertInstanceOf(StaticAnalyser::class, (new DI([]))->analyser());
+        $this->assertInstanceOf(StaticAnalyser::class, (new DI([]))->staticAnalyser());
     }
 
     public function testCreatesDefaultDependencyFactory()
@@ -44,5 +45,10 @@ class DITest extends \PHPUnit_Framework_TestCase
     public function testCreatesUnderscoreDependencyFactory()
     {
         $this->assertInstanceOf(UnderscoreDependencyFactory::class, (new DI([]))->dependencyFactory(true));
+    }
+
+    public function testCreatesDynamicAnalyser()
+    {
+        $this->assertInstanceOf(XDebugFunctionTraceAnalyser::class, (new DI([]))->xDebugFunctionTraceAnalyser());
     }
 }

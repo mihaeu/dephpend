@@ -4,15 +4,19 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\Util\DI;
+use Mihaeu\PhpDependencies\Analyser\Metrics;
+use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Formatters\DependencyStructureMatrixBuilder;
 use Mihaeu\PhpDependencies\Formatters\DependencyStructureMatrixHtmlFormatter;
-use Mihaeu\PhpDependencies\Analyser\Metrics;
 use Mihaeu\PhpDependencies\Formatters\PlantUmlFormatter;
 use Mihaeu\PhpDependencies\OS\PlantUmlWrapper;
 use Mihaeu\PhpDependencies\OS\ShellWrapper;
+use Mihaeu\PhpDependencies\Util\DI;
+use Mihaeu\PhpDependencies\Util\Functional;
 use PhpParser\Error;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -20,17 +24,17 @@ class Application extends \Symfony\Component\Console\Application
 {
     const XDEBUG_WARNING = 'You are running dePHPend with xdebug enabled. This has a major impact on runtime performance. See https://getcomposer.org/xdebug';
 
-    /** @var DI */
-    private $dI;
-
     /**
      * @param string $name
      * @param string $version
      * @param DI $dI
+     *
+     * @throws \LogicException
      */
     public function __construct(string $name, string $version, DI $dI)
     {
-        $this->dI = $dI;
+        $this->setHelperSet($this->getDefaultHelperSet());
+        $this->addCommands($this->createCommands($dI, $this->createFakeInput()));
 
         parent::__construct($name, $version);
     }
@@ -50,8 +54,6 @@ class Application extends \Symfony\Component\Console\Application
     public function doRun(InputInterface $input, OutputInterface $output)
     {
         $this->printWarningIfXdebugIsEnabled($output);
-
-        $this->addCommands($this->createCommands($input));
 
         try {
             parent::doRun($input, $output);
@@ -86,50 +88,81 @@ class Application extends \Symfony\Component\Console\Application
     }
 
     /**
+     * @param DI $dI
      * @param InputInterface $input
      *
      * @return Command[]
      *
-     * @throws \Symfony\Component\Console\Exception\LogicException
+     * @throws \LogicException
      */
-    private function createCommands(InputInterface $input) : array
+    private function createCommands(DI $dI, InputInterface $input) : array
     {
-        $phpFileFinder = $this->dI->phpFileFinder();
-        $parser = $this->dI->parser();
-        $analyser = $this->dI->analyser($this->isUnderscoreSupportRequired($input));
-        $filter = $this->dI->dependencyFilter();
+        $phpFileFinder = $dI->phpFileFinder();
+        $parser = $dI->parser();
+        $analyser = $dI->staticAnalyser($this->isUnderscoreSupportRequired($input));
+        $filter = $dI->dependencyFilter();
+
+        // run static analysis
+        $dependencies =  $analyser->analyse(
+            $parser->parse(
+                $phpFileFinder->getAllPhpFilesFromSources($input->getArgument('source'))
+            )
+        );
+
+        // optional: analyse results of dynamic analysis and merge
+        if ($input->getOption('dynamic')) {
+            $traceFile = new \SplFileInfo($input->getOption('dynamic'));
+            $dependencies = $dependencies->addMap(
+                $dI->xDebugFunctionTraceAnalyser()->analyse($traceFile)
+            );
+        }
+
+        // apply pre-filters
+        $dependencies = $filter->filterByOptions($dependencies, $input->getOptions());
+        $postProcessors = $filter->postFiltersByOptions($input->getOptions());
 
         return [
             new UmlCommand(
-                $phpFileFinder,
-                $parser,
-                $analyser,
-                $filter,
+                $dependencies,
+                $postProcessors,
                 new PlantUmlWrapper(new PlantUmlFormatter(), new ShellWrapper())
             ),
             new DsmCommand(
-                $phpFileFinder,
-                $parser,
-                $analyser,
-                $filter,
+                $dependencies,
+                $postProcessors,
                 new DependencyStructureMatrixHtmlFormatter(
                     new DependencyStructureMatrixBuilder()
                 )
             ),
             new TextCommand(
-                $phpFileFinder,
-                $parser,
-                $analyser,
-                $filter
+                $dependencies,
+                $postProcessors
             ),
             new MetricsCommand(
-                $phpFileFinder,
-                $parser,
-                $analyser,
-                $filter,
+                $dependencies,
                 new Metrics()
             ),
             new TestFeaturesCommand(),
         ];
+    }
+
+    /**
+     * This is an ugly hack which is needed because of the late argument binding
+     * of the Symfony console component. We don't want to pass our DI around our
+     * application but we need input in order to make decisions for which
+     * dependencies to inject.
+     *
+     * In order to parse and validate input Symfony requires the definitions of
+     * a command. I use the TextCommand here because it contains all important
+     * definitions for all the other commands.
+     */
+    private function createFakeInput() : InputInterface
+    {
+        $textCommand = new TextCommand(new DependencyMap(), Functional::id());
+        $textCommand->mergeApplicationDefinition();
+        $argvInput = new ArgvInput(array_slice($_SERVER['argv'], 1),
+            $textCommand->getDefinition());
+        $textCommand->setDefinition(new InputDefinition());
+        return $argvInput;
     }
 }

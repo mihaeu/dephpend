@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\Analyser\StaticAnalyser;
-use Mihaeu\PhpDependencies\Analyser\Parser;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
+use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Formatters\DependencyStructureMatrixHtmlFormatter;
-use Mihaeu\PhpDependencies\OS\PhpFileFinder;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -19,13 +17,11 @@ class DsmCommand extends BaseCommand
     private $dependencyStructureMatrixHtmlFormatter;
 
     public function __construct(
-        PhpFileFinder $phpFileFinder,
-        Parser $parser,
-        StaticAnalyser $analyser,
-        DependencyFilter $dependencyFilter,
+        DependencyMap $dependencies,
+        \Closure $postProcessors,
         DependencyStructureMatrixHtmlFormatter $dependencyStructureMatrixFormatter)
     {
-        parent::__construct('dsm', $phpFileFinder, $parser, $analyser, $dependencyFilter);
+        parent::__construct('dsm', $dependencies, $postProcessors);
 
         $this->defaultFormat = 'html';
         $this->allowedFormats = [$this->defaultFormat];
@@ -55,10 +51,9 @@ class DsmCommand extends BaseCommand
         $this->ensureSourcesAreReadable($input->getArgument('source'));
         $this->ensureOutputFormatIsValid($options['format']);
 
-        $dependencies = $this->detectDependencies($input->getArgument('source'));
         $output->write($this->dependencyStructureMatrixHtmlFormatter->format(
-            $this->dependencyFilter->filterByOptions($dependencies, $options),
-            $this->dependencyFilter->postFiltersByOptions($options)
+            $this->dependencies,
+            $this->postProcessors
         ));
     }
 }

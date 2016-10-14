@@ -7,6 +7,7 @@ namespace Mihaeu\PhpDependencies\Util;
 use Mihaeu\PhpDependencies\Analyser\StaticAnalyser;
 use Mihaeu\PhpDependencies\Analyser\DependencyInspectionVisitor;
 use Mihaeu\PhpDependencies\Analyser\Parser;
+use Mihaeu\PhpDependencies\Analyser\XDebugFunctionTraceAnalyser;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\Dependencies\UnderscoreDependencyFactory;
@@ -64,7 +65,7 @@ class DI
      * @param bool $withUnderscoreSupport
      * @return StaticAnalyser
      */
-    public function analyser(bool $withUnderscoreSupport = false) : StaticAnalyser
+    public function staticAnalyser(bool $withUnderscoreSupport = false) : StaticAnalyser
     {
         return  new StaticAnalyser(
             new NodeTraverser(),
@@ -72,5 +73,10 @@ class DI
                 $this->dependencyFactory($withUnderscoreSupport)
             )
         );
+    }
+
+    public function xDebugFunctionTraceAnalyser() : XDebugFunctionTraceAnalyser
+    {
+        return new XDebugFunctionTraceAnalyser();
     }
 }

@@ -8,6 +8,7 @@ use Mihaeu\PhpDependencies\Analyser\StaticAnalyser;
 use Mihaeu\PhpDependencies\Analyser\Metrics;
 use Mihaeu\PhpDependencies\Analyser\Parser;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
+use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\OS\PhpFileFinder;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -30,26 +31,11 @@ class MetricsCommandTest extends \PHPUnit_Framework_TestCase
     /** @var OutputInterface|\PHPUnit_Framework_MockObject_MockObject */
     private $output;
 
-    /** @var PhpFileFinder|\PHPUnit_Framework_MockObject_MockObject */
-    private $phpFileFinder;
-
-    /** @var Parser|\PHPUnit_Framework_MockObject_MockObject */
-    private $parser;
-
-    /** @var StaticAnalyser|\PHPUnit_Framework_MockObject_MockObject */
-    private $analyser;
-
     public function setUp()
     {
-        $this->phpFileFinder = $this->createMock(PhpFileFinder::class);
-        $this->parser = $this->createMock(Parser::class);
-        $this->analyser = $this->createMock(StaticAnalyser::class);
         $this->metrics = $this->createMock(Metrics::class);
         $this->metricsCommand = new MetricsCommand(
-            $this->phpFileFinder,
-            $this->parser,
-            $this->analyser,
-            $this->createMock(DependencyFilter::class),
+            new DependencyMap(),
             $this->metrics
         );
         $this->input = $this->createMock(InputInterface::class);

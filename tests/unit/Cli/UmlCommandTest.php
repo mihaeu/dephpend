@@ -29,34 +29,15 @@ class UmlCommandTest extends \PHPUnit_Framework_TestCase
     /** @var OutputInterface|\PHPUnit_Framework_MockObject_MockObject */
     private $output;
 
-    /** @var PhpFileFinder|\PHPUnit_Framework_MockObject_MockObject */
-    private $phpFileFinder;
-
-    /** @var Parser|\PHPUnit_Framework_MockObject_MockObject */
-    private $parser;
-
-    /** @var StaticAnalyser|\PHPUnit_Framework_MockObject_MockObject */
-    private $analyser;
-
     /** @var PlantUmlWrapper|\PHPUnit_Framework_MockObject_MockObject */
     private $plantUmlWrapper;
 
-    /** @var DependencyFilter|\PHPUnit_Framework_MockObject_MockObject */
-    private $dependencyFilter;
-
     public function setUp()
     {
-        $this->phpFileFinder = $this->createMock(PhpFileFinder::class);
-        $this->phpFileFinder->method('find')->willReturn(new PhpFileSet());
-        $this->parser = $this->createMock(Parser::class);
-        $this->analyser = $this->createMock(StaticAnalyser::class);
         $this->plantUmlWrapper = $this->createMock(PlantUmlWrapper::class);
-        $this->dependencyFilter = $this->createMock(DependencyFilter::class);
         $this->umlCommand = new UmlCommand(
-            $this->phpFileFinder,
-            $this->parser,
-            $this->analyser,
-            $this->dependencyFilter,
+            new DependencyMap(),
+            Functional::id(),
             $this->plantUmlWrapper
         );
         $this->input = $this->createMock(InputInterface::class);
@@ -107,8 +88,6 @@ class UmlCommandTest extends \PHPUnit_Framework_TestCase
             'filter-namespace' => null,
             'depth' => 0
         ]);
-        $this->dependencyFilter->method('filterByOptions')->willReturn(new DependencyMap());
-
         $this->plantUmlWrapper->expects($this->once())->method('generate');
 
         $this->umlCommand->run(

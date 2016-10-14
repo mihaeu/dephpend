@@ -7,9 +7,11 @@ namespace Mihaeu\PhpDependencies\Cli;
 use Mihaeu\PhpDependencies\Analyser\StaticAnalyser;
 use Mihaeu\PhpDependencies\Analyser\Parser;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
+use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\DependencyHelper;
 use Mihaeu\PhpDependencies\OS\PhpFileFinder;
 use Mihaeu\PhpDependencies\OS\PhpFileSet;
+use Mihaeu\PhpDependencies\Util\Functional;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -28,31 +30,12 @@ class TextCommandTest extends \PHPUnit_Framework_TestCase
     /** @var OutputInterface|\PHPUnit_Framework_MockObject_MockObject */
     private $output;
 
-    /** @var PhpFileFinder|\PHPUnit_Framework_MockObject_MockObject */
-    private $phpFileFinder;
-
-    /** @var Parser|\PHPUnit_Framework_MockObject_MockObject */
-    private $parser;
-
-    /** @var StaticAnalyser|\PHPUnit_Framework_MockObject_MockObject */
-    private $analyser;
-
     /** @var DependencyFilter|\PHPUnit_Framework_MockObject_MockObject */
     private $dependencyFilter;
 
     public function setUp()
     {
-        $this->phpFileFinder = $this->createMock(PhpFileFinder::class);
-        $this->phpFileFinder->method('find')->willReturn(new PhpFileSet());
-        $this->parser = $this->createMock(Parser::class);
-        $this->analyser = $this->createMock(StaticAnalyser::class);
         $this->dependencyFilter = $this->createMock(DependencyFilter::class);
-        $this->textCommand = new TextCommand(
-            $this->phpFileFinder,
-            $this->parser,
-            $this->analyser,
-            $this->dependencyFilter
-        );
         $this->input = $this->createMock(InputInterface::class);
         $this->output = $this->createMock(OutputInterface::class);
     }
@@ -64,12 +47,11 @@ class TextCommandTest extends \PHPUnit_Framework_TestCase
             A\\a\\1\\ClassA --> C\\a\\1\\ClassC
             B\\a\\1\\ClassB --> C\\a\\1\\ClassC
         ');
-        $this->analyser->method('analyse')->willReturn($dependencies);
+        $command = new TextCommand($dependencies, Functional::id());
 
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
         $this->input->method('getOption')->willReturn(false, 0);
         $this->input->method('getOptions')->willReturn(['internals' => false, 'filter-namespace' => null, 'depth' => 0]);
-        $this->dependencyFilter->method('filterByOptions')->willReturn($dependencies);
 
         $this->output->expects($this->once())
             ->method('writeln')
@@ -78,7 +60,7 @@ class TextCommandTest extends \PHPUnit_Framework_TestCase
                 .'A\\a\\1\\ClassA --> C\\a\\1\\ClassC'.PHP_EOL
                 .'B\\a\\1\\ClassB --> C\\a\\1\\ClassC'
             );
-        $this->textCommand->run($this->input, $this->output);
+        $command->run($this->input, $this->output);
     }
 
     public function testPrintsOnlyNamespacedDependencies()
@@ -88,7 +70,7 @@ class TextCommandTest extends \PHPUnit_Framework_TestCase
             NamespaceA --> NamespaceC
             NamespaceB --> NamespaceC
         ');
-        $this->dependencyFilter->method('filterByOptions')->willReturn($dependencies);
+        $command = new TextCommand($dependencies, Functional::id());
 
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
         $this->input->method('getOptions')->willReturn(['internals' => false, 'filter-namespace' => null, 'depth' => 1]);
@@ -100,6 +82,6 @@ class TextCommandTest extends \PHPUnit_Framework_TestCase
                 .'NamespaceA --> NamespaceC'.PHP_EOL
                 .'NamespaceB --> NamespaceC'
             );
-        $this->textCommand->run($this->input, $this->output);
+        $command->run($this->input, $this->output);
     }
 }

@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\Analyser\StaticAnalyser;
 use Mihaeu\PhpDependencies\Analyser\Metrics;
-use Mihaeu\PhpDependencies\Analyser\Parser;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
-use Mihaeu\PhpDependencies\OS\PhpFileFinder;
+use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
+use Mihaeu\PhpDependencies\Util\Functional;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -19,22 +18,15 @@ class MetricsCommand extends BaseCommand
     private $metrics;
 
     /**
-     * @param PhpFileFinder $phpFileFinder
-     * @param Parser $parser
-     * @param StaticAnalyser $analyser
+     * @param DependencyMap $dependencies
      * @param Metrics $metrics
-     *
-     * @throws \Symfony\Component\Console\Exception\LogicException
      */
     public function __construct(
-        PhpFileFinder $phpFileFinder,
-        Parser $parser,
-        StaticAnalyser $analyser,
-        DependencyFilter $dependencyFilter,
+        DependencyMap $dependencies,
         Metrics $metrics
     ) {
         $this->metrics = $metrics;
-        parent::__construct('metrics', $phpFileFinder, $parser, $analyser, $dependencyFilter);
+        parent::__construct('metrics', $dependencies, Functional::id());
     }
 
     protected function configure()
@@ -53,28 +45,22 @@ class MetricsCommand extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $options = $input->getOptions();
-        $dependencies = $this->dependencyFilter->filterByOptions(
-            $this->detectDependencies($input->getArgument('source')),
-            $options
-        );
-
         $table = new Table($output);
         $table->setRows([
-            ['Classes: ', $this->metrics->classCount($dependencies)],
-            ['Abstract classes: ', $this->metrics->abstractClassCount($dependencies)],
-            ['Interfaces: ', $this->metrics->interfaceCount($dependencies)],
-            ['Traits: ', $this->metrics->traitCount($dependencies)],
-            ['Abstractness: ', sprintf('%.3f', $this->metrics->abstractness($dependencies))],
+            ['Classes: ', $this->metrics->classCount($this->dependencies)],
+            ['Abstract classes: ', $this->metrics->abstractClassCount($this->dependencies)],
+            ['Interfaces: ', $this->metrics->interfaceCount($this->dependencies)],
+            ['Traits: ', $this->metrics->traitCount($this->dependencies)],
+            ['Abstractness: ', sprintf('%.3f', $this->metrics->abstractness($this->dependencies))],
         ]);
         $table->render();
 
         $table = new Table($output);
         $table->setHeaders(['', 'Afferent Coupling', 'Efferent Coupling', 'Instability']);
         $table->setRows($this->combineMetrics(
-            $this->metrics->afferentCoupling($dependencies),
-            $this->metrics->efferentCoupling($dependencies),
-            $this->metrics->instability($dependencies)
+            $this->metrics->afferentCoupling($this->dependencies),
+            $this->metrics->efferentCoupling($this->dependencies),
+            $this->metrics->instability($this->dependencies)
         ));
         $table->render();
     }

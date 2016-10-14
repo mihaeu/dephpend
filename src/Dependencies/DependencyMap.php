@@ -84,6 +84,21 @@ class DependencyMap extends AbstractMap
     }
 
     /**
+     * This variant of reduce takes a \Closure which takes only a single Dependency
+     * (as opposed to a pair of $to and $from) and applies it to both $to and $from.
+     *
+     * @param \Closure $mappers
+     *
+     * @return DependencyMap
+     */
+    public function reduceEachDependency(\Closure $mappers) : DependencyMap
+    {
+        return $this->reduce(new self(), function (self $map, Dependency $from, Dependency $to) use ($mappers) {
+            return $map->add($mappers($from), $mappers($to));
+        });
+    }
+
+    /**
      * @inheritDoc
      */
     public function toString() : string

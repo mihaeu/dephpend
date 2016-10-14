@@ -195,4 +195,24 @@ class DependencyMapTest extends \PHPUnit_Framework_TestCase
             return $dependency->namespaze();
         }));
     }
+
+    public function testGet()
+    {
+        $this->assertEquals(
+            DependencyHelper::dependencySet('A, B, C'),
+            DependencyHelper::map('D --> A, B, C')->get(new Clazz('D'))
+        );
+    }
+
+    public function testReduceEachDependency()
+    {
+        $this->assertEquals(DependencyHelper::map('
+            _A --> _B, _C
+        '), DependencyHelper::map('
+            A\b --> B\d, C\d
+            A\a --> A\b
+        ')->reduceEachDependency(function (Dependency $dependency) {
+            return $dependency->namespaze();
+        }));
+    }
 }

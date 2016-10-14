@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
+use Mihaeu\PhpDependencies\Analyser\XDebugFunctionTraceAnalyser;
 use Mihaeu\PhpDependencies\Util\DI;
 use PhpParser\Error;
 use Symfony\Component\Console\Input\Input;
@@ -25,6 +26,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->dI = $this->createMock(DI::class);
+        $_SERVER['argv'] = ['', 'text', sys_get_temp_dir()];
         $this->application = new Application('', '', $this->dI);
     }
 
@@ -63,5 +65,19 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
             );
         }
         $this->application->doRun($input, $output);
+    }
+
+    public function testAddsDynamicDepencies()
+    {
+        $dI = $this->createMock(DI::class);
+        $dynamicAnalyser = $this->createMock(XDebugFunctionTraceAnalyser::class);
+        $dI->method('xDebugFunctionTraceAnalyser')->willReturn($dynamicAnalyser);
+        $_SERVER['argv'] = ['', 'text', sys_get_temp_dir(), '--dynamic='.sys_get_temp_dir()];
+
+        $input = $this->createMock(Input::class);
+        $input->method('hasParameterOption')->willReturn(false);
+        $output = $this->createMock(Output::class);
+        $dynamicAnalyser->expects($this->once())->method('analyse');
+        (new Application('', '', $dI))->doRun($input, $output);
     }
 }

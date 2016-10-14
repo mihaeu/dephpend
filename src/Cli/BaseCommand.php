@@ -4,28 +4,19 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\Analyser\StaticAnalyser;
-use Mihaeu\PhpDependencies\Analyser\Parser;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
-use Mihaeu\PhpDependencies\OS\PhpFileFinder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 abstract class BaseCommand extends Command
 {
-    /** @var PhpFileFinder */
-    protected $phpFileFinder;
+    /** @var DependencyMap */
+    protected $dependencies;
 
-    /** @var Parser */
-    protected $parser;
-
-    /** @var StaticAnalyser */
-    protected $analyser;
-
-    /** @var DependencyFilter */
-    protected $dependencyFilter;
+    /** @var \Closure */
+    protected $postProcessors;
 
     /** @var string */
     protected $defaultFormat;
@@ -35,24 +26,18 @@ abstract class BaseCommand extends Command
 
     /**
      * @param string $name
-     * @param PhpFileFinder $phpFileFinder
-     * @param Parser $parser
-     * @param StaticAnalyser $analyser
-     * @param DependencyFilter $dependencyFilter
+     * @param DependencyMap $dependencies
+     * @param \Closure $postProcessors
      */
     public function __construct(
         string $name,
-        PhpFileFinder $phpFileFinder,
-        Parser $parser,
-        StaticAnalyser $analyser,
-        DependencyFilter $dependencyFilter
+        DependencyMap $dependencies,
+        \Closure $postProcessors
     ) {
         parent::__construct($name);
 
-        $this->phpFileFinder = $phpFileFinder;
-        $this->parser = $parser;
-        $this->analyser = $analyser;
-        $this->dependencyFilter = $dependencyFilter;
+        $this->dependencies = $dependencies;
+        $this->postProcessors = $postProcessors;
     }
 
     protected function configure()
@@ -78,7 +63,7 @@ abstract class BaseCommand extends Command
             )
             ->addOption(
                 'underscore-namespaces',
-                'u',
+                null,
                 InputOption::VALUE_NONE,
                 'Parse underscores in Class names as namespaces.'
             )
@@ -139,22 +124,6 @@ abstract class BaseCommand extends Command
                 throw new \InvalidArgumentException('File/Directory does not exist or is not readable.');
             }
         }
-    }
-
-    /**
-     * @param string[] $sources
-     *
-     * @return DependencyMap
-     *
-     * @throws \LogicException
-     */
-    protected function detectDependencies(array $sources) : DependencyMap
-    {
-        return $this->analyser->analyse(
-            $this->parser->parse(
-                $this->phpFileFinder->getAllPhpFilesFromSources($sources)
-            )
-        );
     }
 
     /**

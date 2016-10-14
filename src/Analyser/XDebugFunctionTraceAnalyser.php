@@ -19,7 +19,7 @@ class XDebugFunctionTraceAnalyser
 
     public function analyse(\SplFileInfo $file) : DependencyMap
     {
-        $fileHandle = fopen($file->getPathname(), 'r');
+        $fileHandle = @fopen($file->getPathname(), 'r');
         if (!$fileHandle) {
             throw new \InvalidArgumentException('Unable to open trace file for reading');
         }

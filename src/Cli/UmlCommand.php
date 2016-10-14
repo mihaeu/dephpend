@@ -4,12 +4,8 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\Analyser\StaticAnalyser;
-use Mihaeu\PhpDependencies\Analyser\Parser;
-use Mihaeu\PhpDependencies\Dependencies\Dependency;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
-use Mihaeu\PhpDependencies\OS\PhpFileFinder;
 use Mihaeu\PhpDependencies\OS\PlantUmlWrapper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -21,21 +17,16 @@ class UmlCommand extends BaseCommand
     private $plantUmlWrapper;
 
     /**
-     * @param PhpFileFinder $phpFileFinder
-     * @param Parser $parser
-     * @param StaticAnalyser $analyser
-     * @param DependencyFilter $dependencyFilter
+     * @param DependencyMap $dependencies
+     * @param \Closure $postProcessors
      * @param PlantUmlWrapper $plantUmlWrapper
-     *
      */
     public function __construct(
-        PhpFileFinder $phpFileFinder,
-        Parser $parser,
-        StaticAnalyser $analyser,
-        DependencyFilter $dependencyFilter,
+        DependencyMap $dependencies,
+        \Closure $postProcessors,
         PlantUmlWrapper $plantUmlWrapper
     ) {
-        parent::__construct('uml', $phpFileFinder, $parser, $analyser, $dependencyFilter);
+        parent::__construct('uml', $dependencies, $postProcessors);
 
         $this->plantUmlWrapper = $plantUmlWrapper;
 
@@ -72,19 +63,9 @@ class UmlCommand extends BaseCommand
         $this->ensureDestinationIsWritable($options['output']);
         $this->ensureOutputFormatIsValid($options['output']);
 
-        $mappers = $this->dependencyFilter->postFiltersByOptions($options);
-        $dependencies = $this->dependencyFilter->filterByOptions(
-            $this->detectDependencies($input->getArgument('source')),
-            $options
-        )->reduce(new DependencyMap(), function (DependencyMap $map, Dependency $from, Dependency $to) use ($mappers) {
-            return $map->add(
-                $mappers($from),
-                $mappers($to)
-            );
-        });
         $destination = new \SplFileInfo($options['output']);
         $this->plantUmlWrapper->generate(
-            $dependencies,
+            $this->dependencies->reduceEachDependency($this->postProcessors),
             $destination,
             $options['keep-uml']
         );
