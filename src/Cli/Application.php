@@ -52,7 +52,7 @@ class Application extends \Symfony\Component\Console\Application
         $this->printWarningIfXdebugIsEnabled($output);
 
         $this->addCommands($this->createCommands($input));
-        $status = 0;
+
         try {
             parent::doRun($input, $output);
         } catch (Error $e) {
@@ -60,8 +60,9 @@ class Application extends \Symfony\Component\Console\Application
                 .'because the sources contain syntax errors:'.PHP_EOL.PHP_EOL
                 .$e->getMessage().'<error>'
             );
+            return 1;
         }
-        return $status;
+        return 0;
     }
 
     /**

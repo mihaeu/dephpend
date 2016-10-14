@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\Analyser\Analyser;
+use Mihaeu\PhpDependencies\Analyser\StaticAnalyser;
 use Mihaeu\PhpDependencies\Analyser\Parser;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
@@ -21,7 +21,7 @@ abstract class BaseCommand extends Command
     /** @var Parser */
     protected $parser;
 
-    /** @var Analyser */
+    /** @var StaticAnalyser */
     protected $analyser;
 
     /** @var DependencyFilter */
@@ -37,14 +37,14 @@ abstract class BaseCommand extends Command
      * @param string $name
      * @param PhpFileFinder $phpFileFinder
      * @param Parser $parser
-     * @param Analyser $analyser
+     * @param StaticAnalyser $analyser
      * @param DependencyFilter $dependencyFilter
      */
     public function __construct(
         string $name,
         PhpFileFinder $phpFileFinder,
         Parser $parser,
-        Analyser $analyser,
+        StaticAnalyser $analyser,
         DependencyFilter $dependencyFilter
     ) {
         parent::__construct($name);
@@ -105,6 +105,12 @@ abstract class BaseCommand extends Command
                 'e',
                 InputOption::VALUE_REQUIRED,
                 'Exclude all dependencies which match the (PREG) regular expression.'
+            )
+            ->addOption(
+                'dynamic',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Adds dependency information from dynamically analysed function traces, for more information check out https://dephpend.com'
             )
         ;
     }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\Analyser\Analyser;
+use Mihaeu\PhpDependencies\Analyser\StaticAnalyser;
 use Mihaeu\PhpDependencies\Analyser\Parser;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\Formatters\DependencyStructureMatrixHtmlFormatter;
@@ -21,7 +21,7 @@ class DsmCommand extends BaseCommand
     public function __construct(
         PhpFileFinder $phpFileFinder,
         Parser $parser,
-        Analyser $analyser,
+        StaticAnalyser $analyser,
         DependencyFilter $dependencyFilter,
         DependencyStructureMatrixHtmlFormatter $dependencyStructureMatrixFormatter)
     {

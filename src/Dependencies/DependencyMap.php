@@ -34,16 +34,9 @@ class DependencyMap extends AbstractMap
 
     public function addSet(Dependency $from, DependencySet $toSet) : self
     {
-        $clone = clone $this;
-        if (!array_key_exists($from->toString(), $this->map)) {
-            $clone->map[$from->toString()] = [
-                self::$KEY      => $from,
-                self::$VALUE    => $toSet,
-            ];
-            return $clone;
-        }
-
-        $clone->map[$from->toString()][self::$VALUE] = $clone->get($from)->addAll($toSet);
+        $clone = $toSet->reduce($this, function (DependencyMap $map, Dependency $to) use ($from) {
+            return $map->add($from, $to);
+        });
         return $clone;
     }
 

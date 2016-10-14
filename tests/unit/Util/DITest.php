@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Util;
 
-use Mihaeu\PhpDependencies\Analyser\Analyser;
+use Mihaeu\PhpDependencies\Analyser\StaticAnalyser;
 use Mihaeu\PhpDependencies\Analyser\Parser;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
@@ -33,7 +33,7 @@ class DITest extends \PHPUnit_Framework_TestCase
 
     public function testCreatesAnalyser()
     {
-        $this->assertInstanceOf(Analyser::class, (new DI([]))->analyser());
+        $this->assertInstanceOf(StaticAnalyser::class, (new DI([]))->analyser());
     }
 
     public function testCreatesDefaultDependencyFactory()

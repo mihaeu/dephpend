@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Util;
 
-use Mihaeu\PhpDependencies\Analyser\Analyser;
+use Mihaeu\PhpDependencies\Analyser\StaticAnalyser;
 use Mihaeu\PhpDependencies\Analyser\DependencyInspectionVisitor;
 use Mihaeu\PhpDependencies\Analyser\Parser;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
@@ -62,11 +62,11 @@ class DI
 
     /**
      * @param bool $withUnderscoreSupport
-     * @return Analyser
+     * @return StaticAnalyser
      */
-    public function analyser(bool $withUnderscoreSupport = false) : Analyser
+    public function analyser(bool $withUnderscoreSupport = false) : StaticAnalyser
     {
-        return  new Analyser(
+        return  new StaticAnalyser(
             new NodeTraverser(),
             new DependencyInspectionVisitor(
                 $this->dependencyFactory($withUnderscoreSupport)

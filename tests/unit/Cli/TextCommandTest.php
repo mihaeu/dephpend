@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\Analyser\Analyser;
+use Mihaeu\PhpDependencies\Analyser\StaticAnalyser;
 use Mihaeu\PhpDependencies\Analyser\Parser;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\DependencyHelper;
@@ -34,7 +34,7 @@ class TextCommandTest extends \PHPUnit_Framework_TestCase
     /** @var Parser|\PHPUnit_Framework_MockObject_MockObject */
     private $parser;
 
-    /** @var Analyser|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var StaticAnalyser|\PHPUnit_Framework_MockObject_MockObject */
     private $analyser;
 
     /** @var DependencyFilter|\PHPUnit_Framework_MockObject_MockObject */
@@ -45,7 +45,7 @@ class TextCommandTest extends \PHPUnit_Framework_TestCase
         $this->phpFileFinder = $this->createMock(PhpFileFinder::class);
         $this->phpFileFinder->method('find')->willReturn(new PhpFileSet());
         $this->parser = $this->createMock(Parser::class);
-        $this->analyser = $this->createMock(Analyser::class);
+        $this->analyser = $this->createMock(StaticAnalyser::class);
         $this->dependencyFilter = $this->createMock(DependencyFilter::class);
         $this->textCommand = new TextCommand(
             $this->phpFileFinder,

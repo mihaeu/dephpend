@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\Analyser\Analyser;
+use Mihaeu\PhpDependencies\Analyser\StaticAnalyser;
 use Mihaeu\PhpDependencies\Analyser\Parser;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
+use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\OS\PhpFileFinder;
 use Mihaeu\PhpDependencies\OS\PhpFileSet;
 use Mihaeu\PhpDependencies\OS\PlantUmlWrapper;
+use Mihaeu\PhpDependencies\Util\Functional;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -33,24 +35,28 @@ class UmlCommandTest extends \PHPUnit_Framework_TestCase
     /** @var Parser|\PHPUnit_Framework_MockObject_MockObject */
     private $parser;
 
-    /** @var Analyser|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var StaticAnalyser|\PHPUnit_Framework_MockObject_MockObject */
     private $analyser;
 
     /** @var PlantUmlWrapper|\PHPUnit_Framework_MockObject_MockObject */
     private $plantUmlWrapper;
+
+    /** @var DependencyFilter|\PHPUnit_Framework_MockObject_MockObject */
+    private $dependencyFilter;
 
     public function setUp()
     {
         $this->phpFileFinder = $this->createMock(PhpFileFinder::class);
         $this->phpFileFinder->method('find')->willReturn(new PhpFileSet());
         $this->parser = $this->createMock(Parser::class);
-        $this->analyser = $this->createMock(Analyser::class);
+        $this->analyser = $this->createMock(StaticAnalyser::class);
         $this->plantUmlWrapper = $this->createMock(PlantUmlWrapper::class);
+        $this->dependencyFilter = $this->createMock(DependencyFilter::class);
         $this->umlCommand = new UmlCommand(
             $this->phpFileFinder,
             $this->parser,
             $this->analyser,
-            $this->createMock(DependencyFilter::class),
+            $this->dependencyFilter,
             $this->plantUmlWrapper
         );
         $this->input = $this->createMock(InputInterface::class);
@@ -101,8 +107,10 @@ class UmlCommandTest extends \PHPUnit_Framework_TestCase
             'filter-namespace' => null,
             'depth' => 0
         ]);
+        $this->dependencyFilter->method('filterByOptions')->willReturn(new DependencyMap());
 
         $this->plantUmlWrapper->expects($this->once())->method('generate');
+
         $this->umlCommand->run(
             $this->input,
             $this->output

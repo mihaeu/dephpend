@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\Analyser\Analyser;
+use Mihaeu\PhpDependencies\Analyser\StaticAnalyser;
 use Mihaeu\PhpDependencies\Analyser\Metrics;
 use Mihaeu\PhpDependencies\Analyser\Parser;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
@@ -36,14 +36,14 @@ class MetricsCommandTest extends \PHPUnit_Framework_TestCase
     /** @var Parser|\PHPUnit_Framework_MockObject_MockObject */
     private $parser;
 
-    /** @var Analyser|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var StaticAnalyser|\PHPUnit_Framework_MockObject_MockObject */
     private $analyser;
 
     public function setUp()
     {
         $this->phpFileFinder = $this->createMock(PhpFileFinder::class);
         $this->parser = $this->createMock(Parser::class);
-        $this->analyser = $this->createMock(Analyser::class);
+        $this->analyser = $this->createMock(StaticAnalyser::class);
         $this->metrics = $this->createMock(Metrics::class);
         $this->metricsCommand = new MetricsCommand(
             $this->phpFileFinder,

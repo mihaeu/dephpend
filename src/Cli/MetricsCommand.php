@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\Analyser\Analyser;
+use Mihaeu\PhpDependencies\Analyser\StaticAnalyser;
 use Mihaeu\PhpDependencies\Analyser\Metrics;
 use Mihaeu\PhpDependencies\Analyser\Parser;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
@@ -21,7 +21,7 @@ class MetricsCommand extends BaseCommand
     /**
      * @param PhpFileFinder $phpFileFinder
      * @param Parser $parser
-     * @param Analyser $analyser
+     * @param StaticAnalyser $analyser
      * @param Metrics $metrics
      *
      * @throws \Symfony\Component\Console\Exception\LogicException
@@ -29,7 +29,7 @@ class MetricsCommand extends BaseCommand
     public function __construct(
         PhpFileFinder $phpFileFinder,
         Parser $parser,
-        Analyser $analyser,
+        StaticAnalyser $analyser,
         DependencyFilter $dependencyFilter,
         Metrics $metrics
     ) {
