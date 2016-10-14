@@ -16,6 +16,7 @@
     + [UML](#uml)
     + [Dependency Structure Matrix](#dependency-structure-matrix)
     + [Metrics](#metrics)
+    + [Dynamic Analysis](#dynamic-analysis)
   * [Examples](#examples)
     + [Architecture Constraints](#architecture-constraints)
     + [Architecture Timeline](#architecture-timeline)
@@ -118,6 +119,7 @@ Without filters the output for large apps is too bloated which is why I implemen
   -d, --depth[=DEPTH]                      Output dependencies as packages instead of single classes. [default: 0]
   -e, --exclude-regex=EXCLUDE-REGEX        Exclude all dependencies which match the (PREG) regular expression.
 
+      --dynamic=DYNAMIC                    Adds dependency information from dynamically analysed function traces, for more information check out https://dephpend.com
   -u, --underscore-namespaces              Parse underscores in Class names as namespaces.
       --internals                          Check for dependencies from internal PHP Classes like SplFileInfo.
 ```
@@ -172,6 +174,61 @@ php -n dephpend.phar metrics src
 ```
 
 This feature is not production ready and it's better to rely on [PHP Depend](https://pdepend.org) for this.
+
+### Dynamic Analysis
+
+If you want to analyse an old legacy application which makes little use of type hints and other static information and is therefore hard to analyse consider using dynamic analysis.
+
+dePHPend can analyse XDebug trace files and add that information to the static result.
+
+#### Setup
+
+Make sure you have XDebug installed and included in your `php.ini`. Also make sure to include the following in the XDebug section of your `php.ini`:
+
+```ini
+; you should already have this somewhere in your php.ini
+zend_extension=path-to-your-xdebug/xdebug.so
+
+[xdebug]
+...
+
+; add this for tracing function calls
+xdebug.auto_trace=1
+xdebug.collect_params=1
+xdebug.collect_return=3
+xdebug.collect_assignments=1
+xdebug.profiler_enable = 1
+xdebug.trace_format=1
+
+```
+
+This will slow down PHP A LOT so it is best to put it in a separate file like `php-with-traces.ini` and call dePHPend using `php -c /path/to/php-with-traces.ini`.
+
+#### Usage
+
+First create the sample data by running any PHP script (or website) with the above settings in your `php.ini` (set `xdebug.trace_options=1` if you want to track multiple calls, but this will make the trace file grow BIG).
+
+```bash
+# use your tests (but make sure to exclude unwanted data using filters)
+php -c php-with-traces.ini vendor/bin/phpunit
+
+# or using PHP's inbuilt server etc.
+php -c php-with-traces.ini -S localhost:8080
+```
+
+The better the sample run and the more of your application it covers, the better the results are going to be. After that process the trace file using the `--dynamic` option.
+
+```bash
+php -n dephpend.phar text src               \
+    --no-classes                            \
+    --filter-from=Mihaeu\\PhpDependencies   \
+    --exclude-regex='/(Test)|(Mock)/'       \
+    --dynamic=/tmp/traces.12345.xt          
+```
+
+You will probably always end up using filters like `--filter-from` because the dynamic parser parses everything not just the stuff from the directory provided. So all third party stuff is going to show up as well.
+
+The trace file, by default, will be in your system's temporary folder. This can be changed by setting `xdebug.trace_output_dir` and `xdebug.trace_output_name` in your `php.ini` ([see XDebug Function Traces](https://xdebug.org/docs/execution_trace)).
 
 ## Examples
 
