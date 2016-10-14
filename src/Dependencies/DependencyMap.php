@@ -32,6 +32,13 @@ class DependencyMap extends AbstractMap
         return $clone;
     }
 
+    public function addMap(self $other) : self
+    {
+        return $this->reduce($other, function (DependencyMap $map, Dependency $from, Dependency $to) {
+            return $map->add($from, $to);
+        });
+    }
+
     public function addSet(Dependency $from, DependencySet $toSet) : self
     {
         $clone = $toSet->reduce($this, function (DependencyMap $map, Dependency $to) use ($from) {

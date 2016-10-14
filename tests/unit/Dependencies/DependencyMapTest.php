@@ -20,7 +20,20 @@ class DependencyMapTest extends \PHPUnit_Framework_TestCase
         ');
         $this->assertEquals($map, $map->add(new Clazz('A'), new Clazz('B')));
     }
-    
+
+    public function testAddMapToMap()
+    {
+        $this->assertEquals(DependencyHelper::map('
+            A --> B, C
+            B --> C
+        '), DependencyHelper::map('
+            A --> B    
+        ')->addMap(DependencyHelper::map('
+            A --> B, C
+            B --> C
+        ')));
+    }
+
     public function testAddMoreDependenciesToExistingPair()
     {
         $map = DependencyHelper::map('A --> B');
