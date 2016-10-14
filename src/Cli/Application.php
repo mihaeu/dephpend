@@ -139,7 +139,7 @@ class Application extends \Symfony\Component\Console\Application
      */
     private function createFakeInput() : InputInterface
     {
-        if (count($_SERVER['argv']) < 2) {
+        if ($this->noCommandProvided()) {
             return new ArrayInput([]);
         }
         $textCommand = new TextCommand(new DependencyMap(), Functional::id());
@@ -158,7 +158,7 @@ class Application extends \Symfony\Component\Console\Application
      */
     private function analyzeDependencies(InputInterface $input, DI $dI) : DependencyMap
     {
-        if (count($_SERVER['argv']) < 2) {
+        if ($this->noCommandProvided()) {
             return new DependencyMap();
         }
 
@@ -188,8 +188,18 @@ class Application extends \Symfony\Component\Console\Application
 
     private function getPostProcessors(InputInterface $input, DependencyFilter $filter) : \Closure
     {
-        return count($_SERVER['argv']) < 2
+        return $this->noCommandProvided()
             ? Functional::id()
             : $filter->postFiltersByOptions($input->getOptions());
+    }
+
+    /**
+     *
+     * @return bool
+     */
+    private function noCommandProvided() : bool
+    {
+        return count($_SERVER['argv']) < 2
+            || $_SERVER['argv'][1] === 'help';
     }
 }
