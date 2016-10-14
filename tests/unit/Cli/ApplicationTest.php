@@ -80,4 +80,13 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $dynamicAnalyser->expects($this->once())->method('analyse');
         (new Application('', '', $dI))->doRun($input, $output);
     }
+
+    public function testDoesNotAnalyseAnythingWhenNotProvidingCommands()
+    {
+        $_SERVER['argv'] = [''];
+        $input = $this->createMock(Input::class);
+        $output = $this->createMock(Output::class);
+        $output->expects(self::once())->method('writeln');
+        (new Application('', '', $this->createMock(DI::class)))->doRun($input, $output);
+    }
 }

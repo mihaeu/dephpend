@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser\Metrics;
+use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Formatters\DependencyStructureMatrixBuilder;
 use Mihaeu\PhpDependencies\Formatters\DependencyStructureMatrixHtmlFormatter;
@@ -16,6 +17,7 @@ use Mihaeu\PhpDependencies\Util\Functional;
 use PhpParser\Error;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -97,29 +99,8 @@ class Application extends \Symfony\Component\Console\Application
      */
     private function createCommands(DI $dI, InputInterface $input) : array
     {
-        $phpFileFinder = $dI->phpFileFinder();
-        $parser = $dI->parser();
-        $analyser = $dI->staticAnalyser($this->isUnderscoreSupportRequired($input));
-        $filter = $dI->dependencyFilter();
-
-        // run static analysis
-        $dependencies =  $analyser->analyse(
-            $parser->parse(
-                $phpFileFinder->getAllPhpFilesFromSources($input->getArgument('source'))
-            )
-        );
-
-        // optional: analyse results of dynamic analysis and merge
-        if ($input->getOption('dynamic')) {
-            $traceFile = new \SplFileInfo($input->getOption('dynamic'));
-            $dependencies = $dependencies->addMap(
-                $dI->xDebugFunctionTraceAnalyser()->analyse($traceFile)
-            );
-        }
-
-        // apply pre-filters
-        $dependencies = $filter->filterByOptions($dependencies, $input->getOptions());
-        $postProcessors = $filter->postFiltersByOptions($input->getOptions());
+        $dependencies = $this->analyzeDependencies($input, $dI);
+        $postProcessors = $this->getPostProcessors($input, $dI->dependencyFilter());
 
         return [
             new UmlCommand(
@@ -158,11 +139,57 @@ class Application extends \Symfony\Component\Console\Application
      */
     private function createFakeInput() : InputInterface
     {
+        if (count($_SERVER['argv']) < 2) {
+            return new ArrayInput([]);
+        }
         $textCommand = new TextCommand(new DependencyMap(), Functional::id());
         $textCommand->mergeApplicationDefinition();
         $argvInput = new ArgvInput(array_slice($_SERVER['argv'], 1),
             $textCommand->getDefinition());
         $textCommand->setDefinition(new InputDefinition());
         return $argvInput;
+    }
+
+    /**
+     * @param InputInterface $input
+     * @param DI $dI
+     *
+     * @return DependencyMap
+     */
+    private function analyzeDependencies(InputInterface $input, DI $dI) : DependencyMap
+    {
+        if (count($_SERVER['argv']) < 2) {
+            return new DependencyMap();
+        }
+
+        $phpFileFinder = $dI->phpFileFinder();
+        $parser = $dI->parser();
+        $analyser = $dI->staticAnalyser($this->isUnderscoreSupportRequired($input));
+        $filter = $dI->dependencyFilter();
+
+        // run static analysis
+        $dependencies = $analyser->analyse(
+            $parser->parse(
+                $phpFileFinder->getAllPhpFilesFromSources($input->getArgument('source'))
+            )
+        );
+
+        // optional: analyse results of dynamic analysis and merge
+        if ($input->getOption('dynamic')) {
+            $traceFile = new \SplFileInfo($input->getOption('dynamic'));
+            $dependencies = $dependencies->addMap(
+                $dI->xDebugFunctionTraceAnalyser()->analyse($traceFile)
+            );
+        }
+
+        // apply pre-filters
+        return $filter->filterByOptions($dependencies, $input->getOptions());
+    }
+
+    private function getPostProcessors(InputInterface $input, DependencyFilter $filter) : \Closure
+    {
+        return count($_SERVER['argv']) < 2
+            ? Functional::id()
+            : $filter->postFiltersByOptions($input->getOptions());
     }
 }
