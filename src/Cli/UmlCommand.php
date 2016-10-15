@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\Analyser\Analyser;
-use Mihaeu\PhpDependencies\Analyser\Parser;
-use Mihaeu\PhpDependencies\OS\PhpFileFinder;
+use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
+use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\OS\PlantUmlWrapper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -18,20 +17,16 @@ class UmlCommand extends BaseCommand
     private $plantUmlWrapper;
 
     /**
-     * @param PhpFileFinder $phpFileFinder
-     * @param Parser $parser
-     * @param Analyser $analyser
+     * @param DependencyMap $dependencies
+     * @param \Closure $postProcessors
      * @param PlantUmlWrapper $plantUmlWrapper
-     *
-     * @throws \Symfony\Component\Console\Exception\LogicException
      */
     public function __construct(
-        PhpFileFinder $phpFileFinder,
-        Parser $parser,
-        Analyser $analyser,
+        DependencyMap $dependencies,
+        \Closure $postProcessors,
         PlantUmlWrapper $plantUmlWrapper
     ) {
-        parent::__construct('uml', $phpFileFinder, $parser, $analyser);
+        parent::__construct('uml', $dependencies, $postProcessors);
 
         $this->plantUmlWrapper = $plantUmlWrapper;
 
@@ -68,13 +63,12 @@ class UmlCommand extends BaseCommand
         $this->ensureDestinationIsWritable($options['output']);
         $this->ensureOutputFormatIsValid($options['output']);
 
-        $dependencies = $this->filterByInputOptions(
-            $this->detectDependencies($input->getArgument('source')),
-            $options
-        )->filterByDepth((int) $options['depth']);
-
         $destination = new \SplFileInfo($options['output']);
-        $this->plantUmlWrapper->generate($dependencies, $destination, $options['keep-uml']);
+        $this->plantUmlWrapper->generate(
+            $this->dependencies->reduceEachDependency($this->postProcessors),
+            $destination,
+            $options['keep-uml']
+        );
     }
 
     /**

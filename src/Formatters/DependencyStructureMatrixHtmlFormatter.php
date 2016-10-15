@@ -6,7 +6,7 @@ namespace Mihaeu\PhpDependencies\Formatters;
 
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 
-class DependencyStructureMatrixHtmlFormatter implements Formatter
+class DependencyStructureMatrixHtmlFormatter
 {
     /** @var DependencyStructureMatrixBuilder */
     private $dependencyStructureMatrixBuilder;
@@ -22,10 +22,10 @@ class DependencyStructureMatrixHtmlFormatter implements Formatter
     /**
      * {@inheritdoc}
      */
-    public function format(DependencyMap $map, int $depth = 0) : string
+    public function format(DependencyMap $all, \Closure $mappers) : string
     {
         return $this->buildHtmlTable(
-            $this->dependencyStructureMatrixBuilder->buildMatrix($map, $depth)
+            $this->dependencyStructureMatrixBuilder->buildMatrix($all, $mappers)
         );
     }
 
@@ -39,7 +39,74 @@ class DependencyStructureMatrixHtmlFormatter implements Formatter
         return '<table>'
             .$this->tableHead($dependencyArray)
             .$this->tableBody($dependencyArray)
-            .'</table>';
+            ."</table><script>
+['forEach', 'map', 'filter', 'reduce', 'reduceRight', 'every', 'some'].forEach(
+    function(p) {
+    NodeList.prototype[p] = HTMLCollection.prototype[p] = Array.prototype[p];
+});
+document.getElementsByTagName('td').forEach(x => (x.innerText === '0' || x.innerText === 'X') && (x.style.color = 'lightgray'));
+            const max = document.getElementsByTagName('td').map(x => x.innerText === 'X' ? 0 : parseInt(x.innerText, 10)).reduce((prev, cur) => prev > cur ? prev : cur);
+            document.getElementsByTagName('td').forEach(x => x.innerText !== '0' && x.innerText !== 'X' && (x.className += ' weight-'+ Math.ceil(x.innerText / (max/10))));
+            </script>
+            <style>
+table {
+    border-collapse: collapse;
+}
+
+table, td, th {
+    border: 1px solid #333; 
+}
+
+td, th {
+    vertical-align: middle; 
+    height: 20px;
+}
+
+td { 
+    width: 20px;
+    text-align: center;
+}
+
+.weight-1 {
+	background-color: #ffffff;
+}
+
+.weight-2 {
+	background-color: #ffffe6;
+}
+
+.weight-3 {
+	background-color: #ffffcc;
+}
+
+.weight-4 {
+	background-color: #ffffb3;
+}
+
+.weight-5 {
+	background-color: #ffff99;
+}
+
+.weight-6 {
+	background-color: #ffff80;
+}
+
+.weight-7 {
+	background-color: #ffff66;
+}
+
+.weight-8 {
+	background-color: #ffff4d;
+}
+
+.weight-9 {
+	background-color: #ffff33;
+}
+
+.weight-10 {
+	background-color: #ffff1a;
+}
+            </style>";
     }
 
     /**

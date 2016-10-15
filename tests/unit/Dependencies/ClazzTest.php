@@ -13,6 +13,11 @@ use Mihaeu\PhpDependencies\DependencyHelper;
  */
 class ClazzTest extends \PHPUnit_Framework_TestCase
 {
+    public function testAcceptsUtf8Name()
+    {
+        $this->assertEquals('á', (new Clazz('á'))->toString());
+    }
+
     public function testHasValue()
     {
         $this->assertEquals('Name', new Clazz('Name'));
@@ -118,5 +123,12 @@ class ClazzTest extends \PHPUnit_Framework_TestCase
     public function testDetectsIfNotInOtherNamespace()
     {
         $this->assertFalse(DependencyHelper::clazz('Global')->inNamespaze(DependencyHelper::namespaze('A\\b\\T')));
+    }
+
+    public function testThrowsExceptionIfNameNotValid()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('');
+        new Clazz('Mihaeu\\Test');
     }
 }

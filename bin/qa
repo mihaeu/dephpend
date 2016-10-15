@@ -3,6 +3,7 @@
 
 declare(strict_types=1);
 
+define('SRC',           __DIR__.'/../src');
 define('UNIT_TESTS',    __DIR__.'/../tests/unit');
 define('PHPUNIT',       __DIR__.'/../vendor/bin/phpunit');
 define('UNIX',         stripos(PHP_OS, 'win') === false);
@@ -11,22 +12,56 @@ define('UNIX',         stripos(PHP_OS, 'win') === false);
  * Tests
  ******************************************************/
 
-everyTestHasToHaveTheCoversAnnotation();
-codeCoverageHasTobeWithinThreshold(95);
+$result =
+    everyTestHasToHaveTheCoversAnnotation()
+    + noDebugStatements()
+    + codeCoverageHasTobeWithinThreshold(95)
+    + featureTestsPass();
+
+exit($result);
 
 /*******************************************************
  * Test Definitions
  ******************************************************/
 
+function featureTestsPass()
+{
+    exec(PHPUNIT.' tests/feature', $output, $statusCode);
+    $statusCode === 0
+        ? success('All feature tests passed')
+        : error('Some feature tests failed');
+    return $statusCode;
+}
+
+function noDebugStatements()
+{
+    $count = 0;
+    foreach (array_merge(findPhpFilesInDir(SRC), findPhpFilesInDir(UNIT_TESTS)) as $file) {
+        if (preg_match('/(var_dump)|(print_r)/', file_get_contents($file))) {
+            error('Debug statement in '.$file.'.');
+            ++$count;
+        }
+    }
+    if ($count === 0) {
+        success('No debug statements found');
+    }
+    return $count;
+}
+
 function everyTestHasToHaveTheCoversAnnotation()
 {
+    $count = 0;
     $message = 'Every test has to use the @covers annotation';
     foreach (findPhpFilesInDir(UNIT_TESTS) as $file) {
         if (preg_match('/Test\.php$/', $file) && strpos(file_get_contents($file), '@covers') === false) {
             error($message);
+            ++$count;
         }
     }
-    success($message);
+    if ($count === 0) {
+        success($message);
+    }
+    return $count;
 }
 
 function codeCoverageHasTobeWithinThreshold(int $threshold)
@@ -46,10 +81,13 @@ function codeCoverageHasTobeWithinThreshold(int $threshold)
 
     if ((int) $lineCoverage === 100) {
         success("Line coverage is 100%");
+        return 0;
     } elseif ((int) $lineCoverage >= $threshold) {
         warning("Line coverage is only $lineCoverage% but should be $threshold%");
+        return 1;
     } else {
         error("Line coverage has to be $threshold% but is $lineCoverage");
+        return 1;
     }
 }
 

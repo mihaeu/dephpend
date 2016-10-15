@@ -4,12 +4,27 @@
 
 [![Build Status](https://travis-ci.org/mihaeu/dephpend.svg?branch=develop)](https://travis-ci.org/mihaeu/dephpend) [![Coverage Status](https://coveralls.io/repos/github/mihaeu/dephpend/badge.svg)](https://coveralls.io/github/mihaeu/dephpend) ![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat) [![Join the chat at https://gitter.im/dephpend/Lobby](https://badges.gitter.im/dephpend/Lobby.svg)](https://gitter.im/dephpend/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-> **DISCLAIMER**
->
-> This project is in an early stage and many things aren't working as expected
-> and lots of information is not being picked up yet. Star the project and check
-> in every now and then, as development is very active. New major releases will
-> be released at the end of every month.
+  * [What it does](#what-it-does)
+  * [Installation](#installation)
+    + [Phar](#phar)
+      - [Phive](#phive)
+      - [Manual download](#manual-download)
+    + [Others](#others)
+  * [Usage](#usage)
+    + [Filters](#filters)
+    + [Text](#text)
+    + [UML](#uml)
+    + [Dependency Structure Matrix](#dependency-structure-matrix)
+    + [Metrics](#metrics)
+    + [Dynamic Analysis](#dynamic-analysis)
+  * [Examples](#examples)
+    + [Architecture Constraints](#architecture-constraints)
+    + [Architecture Timeline](#architecture-timeline)
+  * [How it all works](#how-it-all-works)
+  * [Supported Features](#supported-features)
+  * [Troubleshooting](#troubleshooting)
+    + [Not enough RAM](#not-enough-ram)
+  * [License](#license)
 
 ## What it does
 
@@ -24,24 +39,38 @@ With this information you can:
 
  - get a quick overview of how an application is structured
  - start refactoring where it's needed the most
- - track architecture violations (maybe your view shouldn't be telling the model what to do?)
+ - track architecture violations 
+    (maybe your view shouldn't be telling the model what to do?)
  - find out why your changes are breaking tests
 
 ## Installation
 
-### Phar (recommended)
+### Phar
 
-When this is more mature, I'm going to sign the phar and set it up with [Phive](https://phar.io/).
+#### Phive
 
-Until then just download the phar file by clicking [here](https://phar.dephpend.com/dephpend.phar) or use
+[Phive](https://phar.io) is the preferred method of installing QA tools which are not linked directly to your code. If you've never heard about it, I'd recommend you check it out. Once installed simply use:
+
+```bash
+phive install dephpend
+
+# or
+
+phive install -copy dephpend
+```
+
+#### Manual download
+
+Download the phar file by clicking [here](https://phar.dephpend.com/dephpend.phar) or use
 
 ```bash
 wget https://phar.dephpend.com/dephpend.phar
 ```
+(for old releases use http://phar.dephpend.com/)
 
 ### Others
 
-You could `git clone` or `composer require` this, but it's best to not mix tools and software dependencies (because those have dependencies on their own).
+You could `git clone` or `composer require` this, but it's best to not mix tools and software dependencies (because those have dependencies of their own).
 
 ## Usage
 
@@ -55,7 +84,7 @@ $ php -n dephpend.phar
    __| | ___| |__) | |__| | |__) |__ _ __   __| |
   / _` |/ _ \  ___/|  __  |  ___/ _ \ '_ \ / _` |
  | (_| |  __/ |    | |  | | |  |  __/ | | | (_| |
-  \__,_|\___|_|    |_|  |_|_|   \___|_| |_|\__,_| version 0.1
+  \__,_|\___|_|    |_|  |_|_|   \___|_| |_|\__,_| version 0.2
 
 Usage:
   command [options] [arguments]
@@ -84,10 +113,15 @@ Available commands:
 Without filters the output for large apps is too bloated which is why I implemented a couple of filters to help you get the output you want:
 
 ```bash
-      --internals                          Check for dependencies from internal PHP Classes like SplFileInfo.
-      --underscore-namespaces              Parse underscores in Class names as namespaces.
-      --filter-namespace=FILTER-NAMESPACE  Analyse only classes from this namespace.
       --no-classes                         Remove all classes and analyse only namespaces.
+  -f, --filter-from=FILTER-FROM            Analyse only dependencies which originate from this namespace.
+      --filter-namespace=FILTER-NAMESPACE  Analyse only classes where both to and from are in this namespace.
+  -d, --depth[=DEPTH]                      Output dependencies as packages instead of single classes. [default: 0]
+  -e, --exclude-regex=EXCLUDE-REGEX        Exclude all dependencies which match the (PREG) regular expression.
+
+      --dynamic=DYNAMIC                    Adds dependency information from dynamically analysed function traces, for more information check out https://dephpend.com
+  -u, --underscore-namespaces              Parse underscores in Class names as namespaces.
+      --internals                          Check for dependencies from internal PHP Classes like SplFileInfo.
 ```
 
 For more info just run `php dephpend.phar help text`.
@@ -98,6 +132,9 @@ For quick debugging use the `text` command. Say you want to find out which class
 
 ```bash
 php -n dephpend.phar text src | grep XYZ
+
+# or for more complex applications increase memory limit and use filters
+php -n -d memory_limit=1000M dephpend.phar text symfony --no-classes --depth 3 --exclude-regex='/Test/'
 ```
 
 ### UML
@@ -108,18 +145,23 @@ You can either run
 
 ```bash
 php -n dephpend.phar uml --output=uml.png src
+
+# or for post-processing
+php -n dephpend.phar uml --output=uml.png --keep-uml src
 ``` 
 
-but most likely what you want to do is to use the `--depth[=DEPTH]` option. If your app has more than 20 classes, the UML will become messy if you don't use namespace instead of class level. Experiment with different depth values, but usually a depth of 2 or 3 is what you want.
+but most likely what you want to do is to use the `--no-classes` and `--depth[=DEPTH]` option. If your app has more than 20 classes, the UML will become messy if you don't use namespace instead of class level. Experiment with different depth values, but usually a depth of 2 or 3 is what you want.
 
 ### Dependency Structure Matrix
 
 If you've tried decrypting massive UML diagrams before, you know that they become very hard to interpret for large applications. DSMs allow you to get a quick overview of your application and where dependency hotspots are.
 
-This feature is still under rework and right now it's not really fun to use. If you still want to try run 
+This feature is still under construction and right now it's not really fun to use. If you still want to try run 
 
 ```bash
 php -n dephpend.phar dsm src > dependencies.html
+
+php -n dephpend.phar dsm src --no-classes | bcat
 ``` 
 or pipe it to something like [bcat](https://rtomayko.github.io/bcat/).
 
@@ -130,6 +172,92 @@ The most common package metrics have already been implemented, but there are mor
 ```bash
 php -n dephpend.phar metrics src
 ```
+
+This feature is not production ready and it's better to rely on [PHP Depend](https://pdepend.org) for this.
+
+### Dynamic Analysis
+
+If you want to analyse an old legacy application which makes little use of type hints and other static information and is therefore hard to analyse consider using dynamic analysis.
+
+dePHPend can analyse XDebug trace files and add that information to the static result.
+
+#### Setup
+
+Make sure you have XDebug installed and included in your `php.ini`. Also make sure to include the following in the XDebug section of your `php.ini`:
+
+```ini
+; you should already have this somewhere in your php.ini
+zend_extension=path-to-your-xdebug/xdebug.so
+
+[xdebug]
+...
+
+; add this for tracing function calls
+xdebug.auto_trace=1
+xdebug.collect_params=1
+xdebug.collect_return=3
+xdebug.collect_assignments=1
+xdebug.profiler_enable = 1
+xdebug.trace_format=1
+
+```
+
+This will slow down PHP A LOT so it is best to put it in a separate file like `php-with-traces.ini` and call dePHPend using `php -c /path/to/php-with-traces.ini`.
+
+#### Usage
+
+First create the sample data by running any PHP script (or website) with the above settings in your `php.ini` (set `xdebug.trace_options=1` if you want to track multiple calls, but this will make the trace file grow BIG).
+
+```bash
+# use your tests (but make sure to exclude unwanted data using filters)
+php -c php-with-traces.ini vendor/bin/phpunit
+
+# or using PHP's inbuilt server etc.
+php -c php-with-traces.ini -S localhost:8080
+```
+
+The better the sample run and the more of your application it covers, the better the results are going to be. After that process the trace file using the `--dynamic` option.
+
+```bash
+php -n dephpend.phar text src               \
+    --no-classes                            \
+    --filter-from=Mihaeu\\PhpDependencies   \
+    --exclude-regex='/(Test)|(Mock)/'       \
+    --dynamic=/tmp/traces.12345.xt          
+```
+
+You will probably always end up using filters like `--filter-from` because the dynamic parser parses everything not just the stuff from the directory provided. So all third party stuff is going to show up as well.
+
+The trace file, by default, will be in your system's temporary folder. This can be changed by setting `xdebug.trace_output_dir` and `xdebug.trace_output_name` in your `php.ini` ([see XDebug Function Traces](https://xdebug.org/docs/execution_trace)).
+
+## Examples
+
+### Architecture Constraints
+
+Using the `text` command it is fairly straightforward to create a script which validates your architecture:
+
+```php
+#/usr/bin/env php
+<?php
+
+$output = shell_exec('php -n dephpend.phar text src --no-classes');
+$constraints = [
+    'OS --> .*Analyser',
+    'Analyser --> .*OS',
+];
+if (preg_match('/('.implode(')|(', $constraints).')/', $output)) {
+    echo 'Architecture violation'.PHP_EOL;
+    exit(1);
+}
+```
+
+Save this in your `.git/hooks/pre-commit` or `.git/hooks/pre-push` and you'll never violate your project managers trust again. You could also include this on every Travis or Jenkins CI build, but I prefer to not bother the CI when I can check it myself.
+
+### Architecture Timeline
+
+Executing dePHPend's metric command on every branch `g log --pretty=%H` and using `convert -delay 100 -loop 0 *.png dephpend-timeline.gif` you can create a nice animation detailing the evolution of your architecture:
+
+![dePHPend Timeline](https://dephpend.com/dephpend-timeline.gif)
 
 ## How it all works
 
@@ -149,14 +277,21 @@ Check out `tests/features` for examples of supported features or run `bin/dephpe
 [✓]  using traits
 [✓]  extending other classes
 [✓]  type hints in method arguments
+[✓]  param return throws in doc comment
 [✓]  implementing interfaces
+[✓]  php7 return value declaration
+[✓]  call to static method
 [✗]  return value of known method
 [✗]  method arguments and return value from doc
-[✗]  singleton
-[✗]  return values of methods
 [✗]  known variable passed into method without type hints
 [✗]  creating objects from strings
 ```
+
+## Troubleshooting
+
+### Not enough RAM
+
+The PHP-Parser can take up lots of RAM for big applications. You can adjust the RAM limit in your `php.ini`, but a safer solution would be to call dePHPend by adding `php -n -d memory_limit=1024M dephpend.phar ...`.
 
 ## License
 

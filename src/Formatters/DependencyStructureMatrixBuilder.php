@@ -10,17 +10,18 @@ use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 
 class DependencyStructureMatrixBuilder
 {
-    /**
-     * @param DependencyMap $map
-     * @param int $depth
-     *
-     * @return array
-     */
-    public function buildMatrix(DependencyMap $map, int $depth = 0) : array
+    public function buildMatrix(DependencyMap $dependencies, \Closure $mappers) : array
     {
-        $initial = $this->createEmptyDsm($map->allDependencies()->reduceToDepth($depth));
-        return $map->reduce($initial, function (array $dsm, Dependency $from, Dependency $to) use ($depth) {
-            $dsm[$from->reduceToDepth($depth)->toString()][$to->reduceToDepth($depth)->toString()] += 1;
+        $emptyDsm = $this->createEmptyDsm($dependencies->mapAllDependencies($mappers));
+        return $dependencies->reduce($emptyDsm, function (array $dsm, Dependency $from, Dependency $to) use ($mappers) : array {
+            $from = $mappers($from)->toString();
+            $to = $mappers($to)->toString();
+            if ($from === $to
+                || strlen($from) === 0
+                || strlen($to) === 0) {
+                return $dsm;
+            }
+            $dsm[$from][$to] += 1;
             return $dsm;
         });
     }

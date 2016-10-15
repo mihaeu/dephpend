@@ -30,14 +30,16 @@ class DependencyStructureMatrixHtmlFormatterTest extends \PHPUnit_Framework_Test
             'B' => ['A' => 0, 'B' => 0, 'C' => 1],
             'C' => ['A' => 0, 'B' => 0, 'C' => 0]
         ]);
-        $this->assertEquals('<table><thead>'
+        $this->assertContains('<table><thead>'
             .'<tr><th>X</th><th>1</th><th>2</th><th>3</th></tr>'
             .'</thead><tbody>'
             .'<tr><th>1: A</th><td>X</td><td>1</td><td>1</td></tr>'
             .'<tr><th>2: B</th><td>0</td><td>X</td><td>1</td></tr>'
             .'<tr><th>3: C</th><td>0</td><td>0</td><td>X</td></tr>'
             .'</tbody></table>',
-            $this->dependencyStructureMatrixHtmlFormatter->format(new DependencyMap())
+            $this->dependencyStructureMatrixHtmlFormatter->format(new DependencyMap(), function ($x) {
+                return $x;
+            })
         );
     }
 }

@@ -8,7 +8,7 @@ use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
 
-class Analyser
+class StaticAnalyser
 {
     /** @var NodeTraverser */
     private $nodeTraverser;

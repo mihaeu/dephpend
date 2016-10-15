@@ -9,11 +9,11 @@ use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Dependencies\DependencySet;
 use PhpParser\Node;
-use PhpParser\Node\Expr\MethodCall as MethodCallNode;
+use PhpParser\Node\Expr\New_ as NewNode;
+use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Expr\StaticCall as StaticCallNode;
 use PhpParser\Node\Name as NameNode;
 use PhpParser\Node\Name\FullyQualified as FullyQualifiedNameNode;
-use PhpParser\Node\Expr\New_ as NewNode;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\ClassLike as ClassLikeNode;
 use PhpParser\Node\Stmt\ClassMethod as ClassMethodNode;
@@ -76,9 +76,10 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         } elseif ($node instanceof UseNode) {
             // @codeCoverageIgnoreEnd
             $this->addUseDependency($node);
-        } elseif ($node instanceof MethodCallNode
-            && $node->var instanceof StaticCallNode
-            && $node->var->class instanceof NameNode) {
+            // @codeCoverageIgnoreStart
+        } elseif ($node instanceof StaticCallNode
+            && $node->class instanceof FullyQualifiedNameNode) {
+            // @codeCoverageIgnoreEnd
             $this->addStaticDependency($node);
             // WEIRD BUG CAUSING XDEBUG TO NOT COVER ELSEIF ONLY ELSE IF
             // @codeCoverageIgnoreStart
@@ -208,12 +209,12 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     }
 
     /**
-     * @param MethodCallNode $node
+     * @param StaticCallNode $node
      */
-    private function addStaticDependency(MethodCallNode $node)
+    private function addStaticDependency(StaticCall $node)
     {
         $this->tempDependencies = $this->tempDependencies->add(
-            $this->dependencyFactory->createClazzFromStringArray($node->var->class->parts)
+            $this->dependencyFactory->createClazzFromStringArray($node->class->parts)
         );
     }
 

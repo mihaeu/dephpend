@@ -6,7 +6,7 @@ namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Util\DI;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -21,7 +21,6 @@ class TestFeaturesCommand extends Command
     {
         parent::__construct('test-features');
     }
-
 
     protected function configure()
     {
@@ -48,14 +47,11 @@ class TestFeaturesCommand extends Command
 
     public function runTest(string $filename) : array
     {
-        $application = new Application('', '', new DI());
+        $_SERVER['argv'] = [0, 'text', $filename];
+        $application = new Application('', '', new DI([]));
         $application->setAutoExit(false);
         $applicationOutput = new BufferedOutput();
-        $args = [
-            'command'       => 'text',
-            'source'        => [$filename],
-        ];
-        $application->run(new ArrayInput($args), $applicationOutput);
+        $application->doRun(new ArgvInput($_SERVER['argv']), $applicationOutput);
 
         $expected = $this->getExpectations($filename);
         $actual = $this->cleanOutput($applicationOutput->fetch());
@@ -104,7 +100,7 @@ class TestFeaturesCommand extends Command
     protected function fetchAllFeatureTests() : \RegexIterator
     {
         return new \RegexIterator(
-            new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(__DIR__ . '/../../tests/features')
+            new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(__DIR__ . '/../../tests/samples')
             ), '/^.+Feature\.php$/i', \RecursiveRegexIterator::GET_MATCH
         );
     }

@@ -8,11 +8,11 @@ use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use PhpParser\NodeTraverser;
 
 /**
- * @covers Mihaeu\PhpDependencies\Analyser\Analyser
+ * @covers Mihaeu\PhpDependencies\Analyser\StaticAnalyser
  */
-class AnalyserTest extends \PHPUnit_Framework_TestCase
+class StaticAnalyserTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var Analyser */
+    /** @var StaticAnalyser */
     private $analyser;
 
     /** @var DependencyInspectionVisitor|\PHPUnit_Framework_MockObject_MockObject */
@@ -24,7 +24,7 @@ class AnalyserTest extends \PHPUnit_Framework_TestCase
         $nodeTraverser = $this->createMock(NodeTraverser::class);
         $this->dependencyInspectionVisitor = $this->createMock(DependencyInspectionVisitor::class);
 
-        $this->analyser = new Analyser($nodeTraverser, $this->dependencyInspectionVisitor);
+        $this->analyser = new StaticAnalyser($nodeTraverser, $this->dependencyInspectionVisitor);
     }
 
     public function testAnalyse()

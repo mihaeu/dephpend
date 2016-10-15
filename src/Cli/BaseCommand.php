@@ -4,25 +4,19 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\Analyser\Analyser;
-use Mihaeu\PhpDependencies\Analyser\Parser;
+use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
-use Mihaeu\PhpDependencies\OS\PhpFileFinder;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Exception\LogicException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 abstract class BaseCommand extends Command
 {
-    /** @var PhpFileFinder */
-    protected $phpFileFinder;
+    /** @var DependencyMap */
+    protected $dependencies;
 
-    /** @var Parser */
-    protected $parser;
-
-    /** @var Analyser */
-    protected $analyser;
+    /** @var \Closure */
+    protected $postProcessors;
 
     /** @var string */
     protected $defaultFormat;
@@ -32,22 +26,18 @@ abstract class BaseCommand extends Command
 
     /**
      * @param string $name
-     * @param PhpFileFinder $phpFileFinder
-     * @param Parser $parser
-     * @param Analyser $analyser
-     * @throws LogicException
+     * @param DependencyMap $dependencies
+     * @param \Closure $postProcessors
      */
     public function __construct(
         string $name,
-        PhpFileFinder $phpFileFinder,
-        Parser $parser,
-        Analyser $analyser
+        DependencyMap $dependencies,
+        \Closure $postProcessors
     ) {
         parent::__construct($name);
 
-        $this->phpFileFinder = $phpFileFinder;
-        $this->parser = $parser;
-        $this->analyser = $analyser;
+        $this->dependencies = $dependencies;
+        $this->postProcessors = $postProcessors;
     }
 
     protected function configure()
@@ -73,7 +63,7 @@ abstract class BaseCommand extends Command
             )
             ->addOption(
                 'underscore-namespaces',
-                'u',
+                null,
                 InputOption::VALUE_NONE,
                 'Parse underscores in Class names as namespaces.'
             )
@@ -81,13 +71,31 @@ abstract class BaseCommand extends Command
                 'filter-namespace',
                 null,
                 InputOption::VALUE_REQUIRED,
-                'Analyse only classes from this namespace.'
+                'Analyse only classes where both to and from are in this namespace.'
+            )
+            ->addOption(
+                'filter-from',
+                'f',
+                InputOption::VALUE_REQUIRED,
+                'Analyse only dependencies which originate from this namespace.'
             )
             ->addOption(
                 'no-classes',
                 null,
                 InputOption::VALUE_NONE,
                 'Remove all classes and analyse only namespaces.'
+            )
+            ->addOption(
+                'exclude-regex',
+                'e',
+                InputOption::VALUE_REQUIRED,
+                'Exclude all dependencies which match the (PREG) regular expression.'
+            )
+            ->addOption(
+                'dynamic',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Adds dependency information from dynamically analysed function traces, for more information check out https://dephpend.com'
             )
         ;
     }
@@ -116,41 +124,6 @@ abstract class BaseCommand extends Command
                 throw new \InvalidArgumentException('File/Directory does not exist or is not readable.');
             }
         }
-    }
-
-    /**
-     * @param string[] $sources
-     *
-     * @return DependencyMap
-     */
-    protected function detectDependencies(array $sources) : DependencyMap
-    {
-        return $this->analyser->analyse(
-            $this->parser->parse($this->phpFileFinder->getAllPhpFilesFromSources($sources))
-        );
-    }
-
-    /**
-     * @param DependencyMap $dependencies
-     * @param string[] $options
-     *
-     * @return DependencyMap
-     */
-    protected function filterByInputOptions(DependencyMap $dependencies, array $options) : DependencyMap
-    {
-        if (!$options['internals']) {
-            $dependencies = $dependencies->removeInternals();
-        }
-
-        if ($options['filter-namespace']) {
-            $dependencies = $dependencies->filterByNamespace($options['filter-namespace']);
-        }
-
-        if (isset($options['no-classes']) && $options['no-classes'] === true) {
-            $dependencies = $dependencies->filterClasses();
-        }
-
-        return $dependencies;
     }
 
     /**
