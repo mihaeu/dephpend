@@ -2,6 +2,18 @@
 
 When submitting pull requests please follow the following guidelines:
 
+## QA
+
+There are a few QA tests which every commit has to pass. Please install the following Git hooks:
+
+```bash
+# from project root
+cp config/pre-commit .git/hooks/
+cp config/pre-push .git/hooks/
+```
+
+These hooks enforce coding style, code coverage, use of @covers annotation and checks for debug statements. On `pre-commit` only coding style is enforced, on `pre-push` everything has to pass.
+
 ## Git Commit Messages
 
 1. Separate subject from body with a blank line
@@ -17,3 +29,10 @@ Reference: [How to Write a Git Commit Message by Chris Beams](http://chris.beams
 ## Coding Style
 
 [PSR-2](http://www.php-fig.org/psr/psr-2/)
+
+## Type Safety
+
+ - PHP is a dynamic language and that is great for many things
+ - BUT with great power comes great responsibility
+ - so please use type hints where ever possible 
+ - functional methods (each, reduce, map, ...) are preferable to loops
