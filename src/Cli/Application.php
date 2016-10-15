@@ -124,19 +124,18 @@ class Application extends \Symfony\Component\Console\Application
      * dependencies to inject.
      *
      * In order to parse and validate input Symfony requires the definitions of
-     * a command. I use the TextCommand here because it contains all important
-     * definitions for all the other commands.
+     * a command.
      */
     private function createFakeInput() : InputInterface
     {
         if ($this->noDephpendCommandProvided()) {
             return new ArrayInput([]);
         }
-        $textCommand = new TextCommand(new DependencyMap(), Functional::id());
-        $textCommand->mergeApplicationDefinition();
+        $command = $this->createFakeCommand($_SERVER['argv'][1]);
+        $command->mergeApplicationDefinition();
         $argvInput = new ArgvInput(array_slice($_SERVER['argv'], 1),
-            $textCommand->getDefinition());
-        $textCommand->setDefinition(new InputDefinition());
+            $command->getDefinition());
+        $command->setDefinition(new InputDefinition());
         return $argvInput;
     }
 
@@ -192,5 +191,32 @@ class Application extends \Symfony\Component\Console\Application
             || $_SERVER['argv'][1] === 'help'
             || $_SERVER['argv'][1] === 'test-features'
             || $_SERVER['argv'][1] === 'list';
+    }
+
+    private function createFakeCommand(string $command) : Command
+    {
+        if ($command === 'dsm') {
+            return new DsmCommand(
+                new DependencyMap(),
+                Functional::id(),
+                new DependencyStructureMatrixHtmlFormatter(
+                    new DependencyStructureMatrixBuilder()
+                )
+            );
+        }
+        if ($command === 'uml') {
+            return new UmlCommand(
+                new DependencyMap(),
+                Functional::id(),
+                new PlantUmlWrapper(new PlantUmlFormatter(), new ShellWrapper())
+            );
+        }
+        if ($command === 'metrics') {
+            return new MetricsCommand(
+                new DependencyMap(),
+                new Metrics()
+            );
+        }
+        new TextCommand(new DependencyMap(), Functional::id());
     }
 }
