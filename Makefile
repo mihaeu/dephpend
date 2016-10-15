@@ -13,7 +13,13 @@ autoload:
 	composer dumpautoload
 
 test:
-	$(PHP) $(PHPUNIT) -c phpunit.xml.dist tests
+	$(PHP) $(PHPUNIT) -c phpunit.xml.dist
+
+feature:
+	@$(PHP) $(PHPUNIT) tests/feature --testdox\
+     | sed 's/\[x\]/$(OK_COLOR)$\[x]$(NO_COLOR)/' \
+     | sed -r 's/(\[ \].+)/$(ERROR_COLOR)\1$(NO_COLOR)/' \
+     | sed -r 's/(^[^ ].+)/$(WARN_COLOR)\1$(NO_COLOR)/'
 
 testdox:
 	@$(PHP_NO_INI) $(PHPUNIT) -c phpunit.xml.dist --testdox tests \
@@ -46,3 +52,5 @@ d: testdox
 s: style
 
 t: test
+
+f: feature
