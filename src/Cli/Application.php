@@ -80,16 +80,6 @@ class Application extends \Symfony\Component\Console\Application
     }
 
     /**
-     * @param InputInterface $input
-     *
-     * @return bool
-     */
-    private function isUnderscoreSupportRequired(InputInterface $input)
-    {
-        return $input->hasParameterOption(array('--underscore-namespaces', '-u'), true);
-    }
-
-    /**
      * @param DI $dI
      * @param InputInterface $input
      *
@@ -162,15 +152,12 @@ class Application extends \Symfony\Component\Console\Application
             return new DependencyMap();
         }
 
-        $phpFileFinder = $dI->phpFileFinder();
-        $parser = $dI->parser();
-        $analyser = $dI->staticAnalyser($this->isUnderscoreSupportRequired($input));
         $filter = $dI->dependencyFilter();
 
         // run static analysis
-        $dependencies = $analyser->analyse(
-            $parser->parse(
-                $phpFileFinder->getAllPhpFilesFromSources($input->getArgument('source'))
+        $dependencies = $dI->staticAnalyser()->analyse(
+            $dI->parser()->parse(
+                $dI->phpFileFinder()->getAllPhpFilesFromSources($input->getArgument('source'))
             )
         );
 

@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Util;
 
-use Mihaeu\PhpDependencies\Analyser\StaticAnalyser;
 use Mihaeu\PhpDependencies\Analyser\DependencyInspectionVisitor;
 use Mihaeu\PhpDependencies\Analyser\Parser;
+use Mihaeu\PhpDependencies\Analyser\StaticAnalyser;
 use Mihaeu\PhpDependencies\Analyser\XDebugFunctionTraceAnalyser;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
-use Mihaeu\PhpDependencies\Dependencies\UnderscoreDependencyFactory;
 use Mihaeu\PhpDependencies\OS\PhpFileFinder;
 use PhpParser\NodeTraverser;
 use PhpParser\ParserFactory;
@@ -50,27 +49,22 @@ class DI
     }
 
     /**
-     * @param bool $withUnderscoreSupport
-     *
      * @return DependencyFactory
      */
-    public function dependencyFactory(bool $withUnderscoreSupport = false) : DependencyFactory
+    public function dependencyFactory() : DependencyFactory
     {
-        return $withUnderscoreSupport
-            ? new UnderscoreDependencyFactory()
-            : new DependencyFactory();
+        return new DependencyFactory();
     }
 
     /**
-     * @param bool $withUnderscoreSupport
      * @return StaticAnalyser
      */
-    public function staticAnalyser(bool $withUnderscoreSupport = false) : StaticAnalyser
+    public function staticAnalyser() : StaticAnalyser
     {
         return  new StaticAnalyser(
             new NodeTraverser(),
             new DependencyInspectionVisitor(
-                $this->dependencyFactory($withUnderscoreSupport)
+                $this->dependencyFactory()
             )
         );
     }

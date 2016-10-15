@@ -21,6 +21,10 @@ class DependencyFilter
 
     public function filterByOptions(DependencyMap $dependencies, array $options) : DependencyMap
     {
+        if (isset($options['underscore-namespaces'])) {
+            $dependencies = $this->mapNamespaces($dependencies);
+        }
+
         if (!$options['internals']) {
             $dependencies = $this->removeInternals($dependencies);
         }
@@ -132,5 +136,19 @@ class DependencyFilter
         return function (Dependency $dependency) use ($depth) : Dependency {
             return $dependency->reduceToDepth($depth);
         };
+    }
+
+    public function mapNamespaces(DependencyMap $dependencies) : DependencyMap
+    {
+        return $dependencies->reduceEachDependency(function (Dependency $dependency) {
+            if (strpos($dependency->toString(), '_') === false) {
+                return $dependency;
+            }
+            if ($dependency instanceof Namespaze) {
+                return new Namespaze(explode('_', $dependency->toString()));
+            }
+            $parts = explode('_', $dependency->toString());
+            return new Clazz($parts[count($parts) - 1], new Namespaze(array_slice($parts, 0, -1)));
+        });
     }
 }

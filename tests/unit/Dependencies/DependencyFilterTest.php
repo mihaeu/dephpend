@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Dependencies;
 
 use Mihaeu\PhpDependencies\DependencyHelper;
-use Mihaeu\PhpDependencies\Util\Functional;
 
 /**
  * @covers Mihaeu\PhpDependencies\Dependencies\DependencyFilter
@@ -39,6 +38,22 @@ class DependencyFilterTest extends \PHPUnit_Framework_TestCase
         ');
         $actual = $this->filter->filterByDepth($dependencies, 1);
         $this->assertEquals($expected, $actual);
+    }
+
+    public function testMapUnderscoreNamespaces()
+    {
+        $this->assertEquals(
+            DependencyHelper::map('
+                A\\b\\c --> D\\e\\f
+                F\\a --> D\\b
+                _A\\b --> _B\\c
+            '),
+            $this->filter->mapNamespaces(DependencyHelper::map('
+                A_b_c --> D_e_f
+                F_a --> D_b
+                _A_b --> _B_c
+            '))
+        );
     }
 
     public function testFilterByDepthThree()
@@ -103,21 +118,24 @@ class DependencyFilterTest extends \PHPUnit_Framework_TestCase
     public function testRunAllFilters()
     {
         $options = [
-            'internals'         => false,
-            'filter-from'       => 'A',
-            'depth'             => 2,
-            'filter-namespace'  => 'A',
-            'no-classes'        => true,
-            'exclude-regex'     => '/Test/',
+            'internals'             => false,
+            'filter-from'           => 'A',
+            'depth'                 => 2,
+            'filter-namespace'      => 'A',
+            'no-classes'            => true,
+            'exclude-regex'         => '/Test/',
+            'underscore-namespaces' => true,
         ];
         $dependencies = DependencyHelper::map('
             A\\a\\z --> B\\b\\z
             A\\a\\z --> A\\b\\z
             A\\a\\Test --> A\\b\\z
+            A_b_c --> A_b_z
         ');
         $actual = $this->filter->filterByOptions($dependencies, $options);
         $expected = DependencyHelper::map('
             A\\a\\z --> A\\b\\z
+            A\\b\\c --> A\\b\\z
         ');
         $this->assertEquals($expected, $actual);
     }

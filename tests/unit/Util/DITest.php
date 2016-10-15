@@ -42,11 +42,6 @@ class DITest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(DependencyFactory::class, (new DI([]))->dependencyFactory());
     }
 
-    public function testCreatesUnderscoreDependencyFactory()
-    {
-        $this->assertInstanceOf(UnderscoreDependencyFactory::class, (new DI([]))->dependencyFactory(true));
-    }
-
     public function testCreatesDynamicAnalyser()
     {
         $this->assertInstanceOf(XDebugFunctionTraceAnalyser::class, (new DI([]))->xDebugFunctionTraceAnalyser());
