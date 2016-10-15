@@ -1,0 +1,61 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+if (count($argv) < 2) {
+    echo <<<EOT
+php-trace
+
+Usage:
+    php-trace <other args>
+    php-trace --dynamic="/path/to/tracefile.xt" <other args>
+
+EOT;
+    exit;
+}
+
+if (!extension_loaded('xdebug')) {
+    throw new LogicException('XDebug extension has not been loaded.');
+}
+
+$command = PHP_BINARY
+    .' -d xdebug.auto_trace=1'
+    .' -d xdebug.collect_params=1'
+    .' -d xdebug.collect_return=1'
+    .' -d xdebug.collect_assignments=1'
+    .' -d xdebug.profiler_enable=1'
+    .' -d xdebug.trace_format=1'
+    .' -d xdebug.profiler_append=1'
+    .customTraceOutput()
+    .implode(' ', $argv);
+
+echo shell_exec($command);
+
+
+function customTraceOutput() : string
+{
+    global $argv;
+
+    if (strpos(implode('', $argv), '--dynamic') !== false) {
+        $filename = preg_replace('/^.*--dynamic="?([^\s]+)"?.*$/', '$1',
+            implode(' ', $argv));
+
+        if (!is_writable(dirname($filename))) {
+            throw new InvalidArgumentException('Cannot write ' . basename($filename) . ' to ' . dirname($filename));
+        }
+
+        if (preg_match('/\.xt$/', $filename) === 0) {
+            throw new InvalidArgumentException('Filename has to use the .xt extension.');
+        }
+
+        $argv = array_filter(array_slice($argv, 1), function (string $arg) {
+            return strpos($arg, '--dynamic') === false;
+        });
+
+        return ' -d xdebug.trace_output_dir="'.dirname($filename). '"'
+        .' -d xdebug.trace_output_name="'.basename($filename, '.xt').'" ';
+    }
+    
+    return '';
+}
