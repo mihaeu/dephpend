@@ -115,6 +115,21 @@ class DependencyFilterTest extends \PHPUnit_Framework_TestCase
         '), 'Good'));
     }
 
+    public function testThrowsExceptionForBadRegex()
+    {
+        $options = [
+            'internals'             => false,
+            'filter-from'           => 'A',
+            'depth'                 => 2,
+            'filter-namespace'      => 'A',
+            'no-classes'            => true,
+            'exclude-regex'         => 'Missing brackets',
+            'underscore-namespaces' => true,
+        ];
+        $this->expectException(\InvalidArgumentException::class);
+        $this->filter->filterByOptions(new DependencyMap(), $options);
+    }
+
     public function testRunAllFilters()
     {
         $options = [

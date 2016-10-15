@@ -21,7 +21,7 @@ class DependencyFilter
 
     public function filterByOptions(DependencyMap $dependencies, array $options) : DependencyMap
     {
-        if (isset($options['underscore-namespaces'])) {
+        if (isset($options['underscore-namespaces']) && $options['underscore-namespaces'] === true) {
             $dependencies = $this->mapNamespaces($dependencies);
         }
 
@@ -38,6 +38,10 @@ class DependencyFilter
         }
 
         if (isset($options['exclude-regex'])) {
+            $regexOk = @preg_match($options['exclude-regex'], '');
+            if ($regexOk === false) {
+                throw new \InvalidArgumentException('Regular expression ('.$options['exclude-regex'].') is not valid.');
+            }
             $dependencies = $this->excludeByRegex($dependencies, $options['exclude-regex']);
         }
 
