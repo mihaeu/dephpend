@@ -3086,7 +3086,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
         <span class="doc-title">dePHPend</span>
         <ul class="nav pull-right doc-info">
                     <li><p class="navbar-text">Michael Haeuslmann</p></li>
-                              <li><p class="navbar-text">Sat Oct  1 15:45:27 CEST 2016</p></li>
+                              <li><p class="navbar-text">Sat Oct 15 17:34:30 IRST 2016</p></li>
                   </ul>
       </div>
     </div>
@@ -3103,8 +3103,10 @@ code > span.er { color: #ff0000; font-weight: bold; }
         <li><a href="#what-it-does">What it does</a></li>
         <li><a href="#installation">Installation</a></li>
         <li><a href="#usage">Usage</a></li>
+        <li><a href="#examples">Examples</a></li>
         <li><a href="#how-it-all-works">How it all works</a></li>
         <li><a href="#supported-features">Supported Features</a></li>
+        <li><a href="#troubleshooting">Troubleshooting</a></li>
         <li><a href="#license">License</a></li>
         </ul></li>
         </ul>
@@ -3116,10 +3118,37 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <p>Detect flaws in your architecture, before they drag you down into the depths of dependency hell ...</p>
 </blockquote>
 <p><a href="https://travis-ci.org/mihaeu/dephpend"><img src="https://travis-ci.org/mihaeu/dephpend.svg?branch=develop" alt="Build Status" /></a> <a href="https://coveralls.io/github/mihaeu/dephpend"><img src="https://coveralls.io/repos/github/mihaeu/dephpend/badge.svg" alt="Coverage Status" /></a> <img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat" alt="License MIT" /> <a href="https://gitter.im/dephpend/Lobby?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/dephpend/Lobby.svg" alt="Join the chat at https://gitter.im/dephpend/Lobby" /></a></p>
-<blockquote>
-<p><strong>DISCLAIMER</strong></p>
-<p>This project is in an early stage and many things aren't working as expected and lots of information is not being picked up yet. Star the project and check in every now and then, as development is very active. New major releases will be released at the end of every month.</p>
-</blockquote>
+<ul>
+<li><a href="#what-it-does">What it does</a></li>
+<li><a href="#installation">Installation</a>
+<ul>
+<li><a href="#phar">Phar</a></li>
+<li><a href="#phive">Phive</a></li>
+<li><a href="#manual-download">Manual download</a></li>
+<li><a href="#others">Others</a></li>
+</ul></li>
+<li><a href="#usage">Usage</a>
+<ul>
+<li><a href="#filters">Filters</a></li>
+<li><a href="#text">Text</a></li>
+<li><a href="#uml">UML</a></li>
+<li><a href="#dependency-structure-matrix">Dependency Structure Matrix</a></li>
+<li><a href="#metrics">Metrics</a></li>
+<li><a href="#dynamic-analysis">Dynamic Analysis</a></li>
+</ul></li>
+<li><a href="#examples">Examples</a>
+<ul>
+<li><a href="#architecture-constraints">Architecture Constraints</a></li>
+<li><a href="#architecture-timeline">Architecture Timeline</a></li>
+</ul></li>
+<li><a href="#how-it-all-works">How it all works</a></li>
+<li><a href="#supported-features">Supported Features</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a>
+<ul>
+<li><a href="#not-enough-ram">Not enough RAM</a></li>
+</ul></li>
+<li><a href="#license">License</a></li>
+</ul>
 <h2 id="what-it-does">What it does</h2>
 <p>dePHPend helps with bringing your PHP projects back in shape. Over the course of a project, we usually keep adding more and more dependencies. Often hidden behind singletons or service locators, these dependencies can quickly become a maintenance (and testing!) nightmare.</p>
 <p>dePHPend analyses your app and attempts to find everything you depend on.</p>
@@ -3131,12 +3160,20 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li>find out why your changes are breaking tests</li>
 </ul>
 <h2 id="installation">Installation</h2>
-<h3 id="phar-recommended">Phar (recommended)</h3>
-<p>When this is more mature, I'm going to sign the phar and set it up with <a href="https://phar.io/">Phive</a>.</p>
-<p>Until then just download the phar file by clicking <a href="https://phar.dephpend.com/dephpend.phar">here</a> or use</p>
+<h3 id="phar">Phar</h3>
+<h4 id="phive">Phive</h4>
+<p><a href="https://phar.io">Phive</a> is the preferred method of installing QA tools which are not linked directly to your code. If you've never heard about it, I'd recommend you check it out. Once installed simply use:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">phive</span> install dephpend
+
+<span class="co"># or</span>
+
+<span class="kw">phive</span> install -copy dephpend</code></pre>
+<h4 id="manual-download">Manual download</h4>
+<p>Download the phar file by clicking <a href="https://phar.dephpend.com/dephpend.phar">here</a> or use</p>
 <pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">wget</span> https://phar.dephpend.com/dephpend.phar</code></pre>
+<p>(for old releases use http://phar.dephpend.com/)</p>
 <h3 id="others">Others</h3>
-<p>You could <code>git clone</code> or <code>composer require</code> this, but it's best to not mix tools and software dependencies (because those have dependencies on their own).</p>
+<p>You could <code>git clone</code> or <code>composer require</code> this, but it's best to not mix tools and software dependencies (because those have dependencies of their own).</p>
 <h2 id="usage">Usage</h2>
 <p>You should almost always run QA tools without XDebug (unless you need code coverage of course). You could use a separate <code>php.ini</code> where XDebug is not loaded and pass that to php or you just use the <code>-n</code> option (this will however not load any extensions).</p>
 <pre><code># or bin/dephpend depending on how you installed this
@@ -3146,7 +3183,7 @@ $ php -n dephpend.phar
    __| | ___| |__) | |__| | |__) |__ _ __   __| |
   / _` |/ _ \  ___/|  __  |  ___/ _ \ &#39;_ \ / _` |
  | (_| |  __/ |    | |  | | |  |  __/ | | | (_| |
-  \__,_|\___|_|    |_|  |_|_|   \___|_| |_|\__,_| version 0.1
+  \__,_|\___|_|    |_|  |_|_|   \___|_| |_|\__,_| version 0.2
 
 Usage:
   command [options] [arguments]
@@ -3170,27 +3207,97 @@ Available commands:
   uml            Generate a UML Class diagram of your dependencies</code></pre>
 <h3 id="filters">Filters</h3>
 <p>Without filters the output for large apps is too bloated which is why I implemented a couple of filters to help you get the output you want:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">      <span class="kw">--internals</span>                          Check for dependencies from internal PHP Classes like SplFileInfo.
-      <span class="kw">--underscore-namespaces</span>              Parse underscores in Class names as namespaces.
-      <span class="kw">--filter-namespace</span>=FILTER-NAMESPACE  Analyse only classes from this namespace.
-      <span class="kw">--no-classes</span>                         Remove all classes and analyse only namespaces.</code></pre>
+<pre class="sourceCode bash"><code class="sourceCode bash">      <span class="kw">--no-classes</span>                         Remove all classes and analyse only namespaces.
+  <span class="kw">-f</span>, --filter-from=FILTER-FROM            Analyse only dependencies which originate from this namespace.
+      <span class="kw">--filter-namespace</span>=FILTER-NAMESPACE  Analyse only classes where both to and from are in this namespace.
+  <span class="kw">-d</span>, --depth[=DEPTH]                      Output dependencies as packages instead of single classes. [default: 0]
+  <span class="kw">-e</span>, --exclude-regex=EXCLUDE-REGEX        Exclude all dependencies which match the (PREG) <span class="kw">regular</span> expression.
+
+      <span class="kw">--dynamic</span>=DYNAMIC                    Adds dependency information from dynamically analysed function traces, for more information check out https://dephpend.com
+  <span class="kw">-u</span>, --underscore-namespaces              Parse underscores in Class names as namespaces.
+      <span class="kw">--internals</span>                          Check for dependencies from internal PHP Classes like SplFileInfo.</code></pre>
 <p>For more info just run <code>php dephpend.phar help text</code>.</p>
 <h3 id="text">Text</h3>
 <p>For quick debugging use the <code>text</code> command. Say you want to find out which classes depend on XYZ and what XYZ depends on, you'd run:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">php</span> -n dephpend.phar text src <span class="kw">|</span> <span class="kw">grep</span> XYZ</code></pre>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">php</span> -n dephpend.phar text src <span class="kw">|</span> <span class="kw">grep</span> XYZ
+
+<span class="co"># or for more complex applications increase memory limit and use filters</span>
+<span class="kw">php</span> -n -d memory_limit=1000M dephpend.phar text symfony --no-classes --depth 3 --exclude-regex=<span class="st">&#39;/Test/&#39;</span></code></pre>
 <h3 id="uml">UML</h3>
 <p>Generates UML class or package diagrams of your source code. Requires <a href="http://plantuml.com/">PlantUML</a> to be installed.</p>
 <p>You can either run</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">php</span> -n dephpend.phar uml --output=uml.png src</code></pre>
-<p>but most likely what you want to do is to use the <code>--depth[=DEPTH]</code> option. If your app has more than 20 classes, the UML will become messy if you don't use namespace instead of class level. Experiment with different depth values, but usually a depth of 2 or 3 is what you want.</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">php</span> -n dephpend.phar uml --output=uml.png src
+
+<span class="co"># or for post-processing</span>
+<span class="kw">php</span> -n dephpend.phar uml --output=uml.png --keep-uml src</code></pre>
+<p>but most likely what you want to do is to use the <code>--no-classes</code> and <code>--depth[=DEPTH]</code> option. If your app has more than 20 classes, the UML will become messy if you don't use namespace instead of class level. Experiment with different depth values, but usually a depth of 2 or 3 is what you want.</p>
 <h3 id="dependency-structure-matrix">Dependency Structure Matrix</h3>
 <p>If you've tried decrypting massive UML diagrams before, you know that they become very hard to interpret for large applications. DSMs allow you to get a quick overview of your application and where dependency hotspots are.</p>
-<p>This feature is still under rework and right now it's not really fun to use. If you still want to try run</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">php</span> -n dephpend.phar dsm src <span class="kw">&gt;</span> dependencies.html</code></pre>
+<p>This feature is still under construction and right now it's not really fun to use. If you still want to try run</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">php</span> -n dephpend.phar dsm src <span class="kw">&gt;</span> dependencies.html
+
+<span class="kw">php</span> -n dephpend.phar dsm src --no-classes <span class="kw">|</span> <span class="kw">bcat</span></code></pre>
 <p>or pipe it to something like <a href="https://rtomayko.github.io/bcat/">bcat</a>.</p>
 <h3 id="metrics">Metrics</h3>
 <p>The most common package metrics have already been implemented, but there are more to come. Check them out by running the following command:</p>
 <pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">php</span> -n dephpend.phar metrics src</code></pre>
+<p>This feature is not production ready and it's better to rely on <a href="https://pdepend.org">PHP Depend</a> for this.</p>
+<h3 id="dynamic-analysis">Dynamic Analysis</h3>
+<p>If you want to analyse an old legacy application which makes little use of type hints and other static information and is therefore hard to analyse consider using dynamic analysis.</p>
+<p>dePHPend can analyse XDebug trace files and add that information to the static result.</p>
+<h4 id="setup">Setup</h4>
+<p>Make sure you have XDebug installed and included in your <code>php.ini</code>. Also make sure to include the following in the XDebug section of your <code>php.ini</code>:</p>
+<pre class="sourceCode ini"><code class="sourceCode ini"><span class="co">; you should already have this somewhere in your php.ini</span>
+<span class="dt">zend_extension</span><span class="ot">=</span><span class="st">path-to-your-xdebug/xdebug.so</span>
+
+<span class="kw">[xdebug]</span>
+<span class="dt">...</span>
+
+<span class="co">; add this for tracing function calls</span>
+<span class="dt">xdebug.auto_trace</span><span class="ot">=</span><span class="dv">1</span>
+<span class="dt">xdebug.collect_params</span><span class="ot">=</span><span class="dv">1</span>
+<span class="dt">xdebug.collect_return</span><span class="ot">=</span><span class="dv">3</span>
+<span class="dt">xdebug.collect_assignments</span><span class="ot">=</span><span class="dv">1</span>
+<span class="dt">xdebug.profiler_enable </span><span class="ot">=</span><span class="st"> </span><span class="dv">1</span>
+<span class="dt">xdebug.trace_format</span><span class="ot">=</span><span class="dv">1</span></code></pre>
+<p>This will slow down PHP A LOT so it is best to put it in a separate file like <code>php-with-traces.ini</code> and call dePHPend using <code>php -c /path/to/php-with-traces.ini</code>.</p>
+<h4 id="usage-1">Usage</h4>
+<p>First create the sample data by running any PHP script (or website) with the above settings in your <code>php.ini</code> (set <code>xdebug.trace_options=1</code> if you want to track multiple calls, but this will make the trace file grow BIG).</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># use your tests (but make sure to exclude unwanted data using filters)</span>
+<span class="kw">php</span> -c php-with-traces.ini vendor/bin/phpunit
+
+<span class="co"># or using PHP&#39;s inbuilt server etc.</span>
+<span class="kw">php</span> -c php-with-traces.ini -S localhost:8080</code></pre>
+<p>The better the sample run and the more of your application it covers, the better the results are going to be. After that process the trace file using the <code>--dynamic</code> option.</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">php</span> -n dephpend.phar text src               \
+    --no-classes                            \
+    --filter-from=Mihaeu<span class="dt">\\</span>PhpDependencies   \
+    --exclude-regex=<span class="st">&#39;/(Test)|(Mock)/&#39;</span>       \
+    --dynamic=/tmp/traces.12345.xt          </code></pre>
+<p>You will probably always end up using filters like <code>--filter-from</code> because the dynamic parser parses everything not just the stuff from the directory provided. So all third party stuff is going to show up as well.</p>
+<p>The trace file, by default, will be in your system's temporary folder. This can be changed by setting <code>xdebug.trace_output_dir</code> and <code>xdebug.trace_output_name</code> in your <code>php.ini</code> (<a href="https://xdebug.org/docs/execution_trace">see XDebug Function Traces</a>).</p>
+<h2 id="examples">Examples</h2>
+<h3 id="architecture-constraints">Architecture Constraints</h3>
+<p>Using the <code>text</code> command it is fairly straightforward to create a script which validates your architecture:</p>
+<pre class="sourceCode php"><code class="sourceCode php"><span class="co">#/usr/bin/env php</span>
+&lt;<span class="ot">?</span>php
+
+<span class="kw">$output</span> = <span class="fu">shell_exec</span><span class="ot">(</span><span class="st">&#39;php -n dephpend.phar text src --no-classes&#39;</span><span class="ot">);</span>
+<span class="kw">$constraints</span> = <span class="ot">[</span>
+    <span class="st">&#39;OS --&gt; .*Analyser&#39;</span><span class="ot">,</span>
+    <span class="st">&#39;Analyser --&gt; .*OS&#39;</span><span class="ot">,</span>
+<span class="ot">];</span>
+<span class="kw">if</span> <span class="ot">(</span><span class="fu">preg_match</span><span class="ot">(</span><span class="st">&#39;/(&#39;</span>.<span class="fu">implode</span><span class="ot">(</span><span class="st">&#39;)|(&#39;</span><span class="ot">,</span> <span class="kw">$constraints</span><span class="ot">)</span>.<span class="st">&#39;)/&#39;</span><span class="ot">,</span> <span class="kw">$output</span><span class="ot">))</span> {
+    <span class="fu">echo</span> <span class="st">&#39;Architecture violation&#39;</span>.<span class="kw">PHP_EOL</span><span class="ot">;</span>
+    <span class="fu">exit</span><span class="ot">(</span><span class="dv">1</span><span class="ot">);</span>
+}</code></pre>
+<p>Save this in your <code>.git/hooks/pre-commit</code> or <code>.git/hooks/pre-push</code> and you'll never violate your project managers trust again. You could also include this on every Travis or Jenkins CI build, but I prefer to not bother the CI when I can check it myself.</p>
+<h3 id="architecture-timeline">Architecture Timeline</h3>
+<p>Executing dePHPend's metric command on every branch <code>g log --pretty=%H</code> and using <code>convert -delay 100 -loop 0 *.png dephpend-timeline.gif</code> you can create a nice animation detailing the evolution of your architecture:</p>
+<div class="figure">
+<img src="https://dephpend.com/dephpend-timeline.gif" alt="dePHPend Timeline" />
+<p class="caption">dePHPend Timeline</p>
+</div>
 <h2 id="how-it-all-works">How it all works</h2>
 <p>Basically the process can be broken down into four steps (the actual work is a bit more complicated and for those interested, I'll publish a paper about it, later this year):</p>
 <ul>
@@ -3205,13 +3312,17 @@ Available commands:
 [✓]  <span class="kw">using</span> traits
 [✓]  <span class="kw">extending</span> other classes
 [✓]  <span class="kw">type</span> hints in method arguments
+[✓]  <span class="kw">param</span> return throws in doc comment
 [✓]  <span class="kw">implementing</span> interfaces
+[✓]  <span class="kw">php7</span> return value declaration
+[✓]  <span class="kw">call</span> to static method
 [✗]  <span class="kw">return</span> value of known method
 [✗]  <span class="kw">method</span> arguments and return value from doc
-[✗]  <span class="kw">singleton</span>
-[✗]  <span class="kw">return</span> values of methods
 [✗]  <span class="kw">known</span> variable passed into method without type hints
 [✗]  <span class="kw">creating</span> objects from strings</code></pre>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="not-enough-ram">Not enough RAM</h3>
+<p>The PHP-Parser can take up lots of RAM for big applications. You can adjust the RAM limit in your <code>php.ini</code>, but a safer solution would be to call dePHPend by adding <code>php -n -d memory_limit=1024M dephpend.phar ...</code>.</p>
 <h2 id="license">License</h2>
 <p>See <a href="LICENSE" class="uri">LICENSE</a> file</p>
             </div>
