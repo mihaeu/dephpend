@@ -7,7 +7,6 @@ namespace Mihaeu\PhpDependencies\Cli;
 use Mihaeu\PhpDependencies\Util\DI;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -101,7 +100,7 @@ class TestFeaturesCommand extends Command
     protected function fetchAllFeatureTests() : \RegexIterator
     {
         return new \RegexIterator(
-            new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(__DIR__ . '/../../tests/features')
+            new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(__DIR__ . '/../../tests/samples')
             ), '/^.+Feature\.php$/i', \RecursiveRegexIterator::GET_MATCH
         );
     }
