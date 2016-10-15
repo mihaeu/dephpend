@@ -8,5 +8,5 @@
 #
 # (coding styles are already enforced for every commit)
 
-bin/check-code-cov
+bin/qa
 exit $?
