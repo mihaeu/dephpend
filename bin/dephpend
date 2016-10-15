@@ -24,5 +24,5 @@ $name = <<<EOT
   \__,_|\___|_|    |_|  |_|_|   \___|_| |_|\__,_|
 EOT;
 
-$application = new Application($name, '0.1', new DI($internals), $argv);
+$application = new Application($name, '0.2', new DI($internals), $argv);
 $application->run();
