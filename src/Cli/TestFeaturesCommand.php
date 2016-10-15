@@ -6,6 +6,7 @@ namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Util\DI;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -47,14 +48,11 @@ class TestFeaturesCommand extends Command
 
     public function runTest(string $filename) : array
     {
+        $_SERVER['argv'] = [0, 'text', $filename];
         $application = new Application('', '', new DI([]));
         $application->setAutoExit(false);
         $applicationOutput = new BufferedOutput();
-        $args = [
-            'command'       => 'text',
-            'source'        => [$filename],
-        ];
-        $application->run(new ArrayInput($args), $applicationOutput);
+        $application->doRun(new ArgvInput($_SERVER['argv']), $applicationOutput);
 
         $expected = $this->getExpectations($filename);
         $actual = $this->cleanOutput($applicationOutput->fetch());

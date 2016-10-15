@@ -145,6 +145,8 @@ class Application extends \Symfony\Component\Console\Application
      * @param DI $dI
      *
      * @return DependencyMap
+     *
+     * @throws \LogicException
      */
     private function analyzeDependencies(InputInterface $input, DI $dI) : DependencyMap
     {
@@ -188,6 +190,7 @@ class Application extends \Symfony\Component\Console\Application
     {
         return count($_SERVER['argv']) < 2
             || $_SERVER['argv'][1] === 'help'
+            || $_SERVER['argv'][1] === 'test-features'
             || $_SERVER['argv'][1] === 'list';
     }
 }
