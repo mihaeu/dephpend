@@ -15,13 +15,23 @@ define('UNIX',         stripos(PHP_OS, 'win') === false);
 $result =
     everyTestHasToHaveTheCoversAnnotation()
     + noDebugStatements()
-    + codeCoverageHasTobeWithinThreshold(95);
+    + codeCoverageHasTobeWithinThreshold(95)
+    + featureTestsPass();
 
 exit($result);
 
 /*******************************************************
  * Test Definitions
  ******************************************************/
+
+function featureTestsPass()
+{
+    exec(PHPUNIT.' tests/feature', $output, $statusCode);
+    $statusCode === 0
+        ? success('All feature tests passed')
+        : error('Some feature tests failed');
+    return $statusCode;
+}
 
 function noDebugStatements()
 {
