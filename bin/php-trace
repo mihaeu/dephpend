@@ -26,7 +26,7 @@ $command = PHP_BINARY
     .' -d xdebug.collect_assignments=1'
     .' -d xdebug.profiler_enable=1'
     .' -d xdebug.trace_format=1'
-    .' -d xdebug.profiler_append=1'
+    .' -d xdebug.trace_options=1'
     .customTraceOutput()
     .implode(' ', $argv);
 
