@@ -14,7 +14,14 @@ class DependencyStructureMatrixBuilder
     {
         $emptyDsm = $this->createEmptyDsm($dependencies->mapAllDependencies($mappers));
         return $dependencies->reduce($emptyDsm, function (array $dsm, Dependency $from, Dependency $to) use ($mappers) : array {
-            $dsm[$mappers($from)->toString()][$mappers($to)->toString()] += 1;
+            $from = $mappers($from)->toString();
+            $to = $mappers($to)->toString();
+            if ($from === $to
+                || strlen($from) === 0
+                || strlen($to) === 0) {
+                return $dsm;
+            }
+            $dsm[$from][$to] += 1;
             return $dsm;
         });
     }
