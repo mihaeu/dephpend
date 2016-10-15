@@ -217,6 +217,6 @@ class Application extends \Symfony\Component\Console\Application
                 new Metrics()
             );
         }
-        new TextCommand(new DependencyMap(), Functional::id());
+        return new TextCommand(new DependencyMap(), Functional::id());
     }
 }
