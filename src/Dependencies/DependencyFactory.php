@@ -9,14 +9,19 @@ class DependencyFactory
     /**
      * @param array $parts
      *
-     * @return Clazz
+     * @return Dependency
      */
-    final public function createClazzFromStringArray(array $parts) : Clazz
+    final public function createClazzFromStringArray(array $parts) : Dependency
     {
-        return new Clazz(
-            $this->extractClazzPart($parts),
-            new Namespaze($this->extractNamespaceParts($parts))
-        );
+        try {
+            $clazz = new Clazz(
+                $this->extractClazzPart($parts),
+                new Namespaze($this->extractNamespaceParts($parts))
+            );
+        } catch (\InvalidArgumentException $exception) {
+            $clazz = new NullDependency();
+        }
+        return $clazz;
     }
 
     /**
@@ -65,7 +70,9 @@ class DependencyFactory
      */
     protected function extractNamespaceParts(array $parts)
     {
-        return array_slice($parts, 0, -1);
+        return array_map(function (string $part) {
+            return trim($part);
+        }, array_slice($parts, 0, -1));
     }
 
     /**
@@ -75,6 +82,6 @@ class DependencyFactory
      */
     protected function extractClazzPart(array $parts)
     {
-        return array_slice($parts, -1)[0];
+        return trim(array_slice($parts, -1)[0]);
     }
 }

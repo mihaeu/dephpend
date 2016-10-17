@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Analyser;
 
 use Mihaeu\PhpDependencies\Dependencies\Clazz;
+use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Dependencies\DependencySet;
 use Mihaeu\PhpDependencies\Dependencies\Namespaze;
@@ -16,6 +17,17 @@ class XDebugFunctionTraceAnalyser
 {
     const PARAMETER_START_INDEX = 11;
     const FUNCTION_NAME_INDEX = 5;
+
+    /** @var DependencyFactory */
+    private $dependencyFactory;
+
+    /**
+     * @param DependencyFactory $dependencyFactory
+     */
+    public function __construct(DependencyFactory $dependencyFactory)
+    {
+        $this->dependencyFactory = $dependencyFactory;
+    }
 
     public function analyse(\SplFileInfo $file) : DependencyMap
     {
@@ -73,10 +85,7 @@ class XDebugFunctionTraceAnalyser
     {
         $classWithoutMethod = preg_split('/(->)|(::)/', $tokens[self::FUNCTION_NAME_INDEX]);
         $classParts = explode("\\", $classWithoutMethod[0]);
-        return new Clazz(
-            $classParts[count($classParts) - 1],
-            new Namespaze(array_slice($classParts, 0, -1))
-        );
+        return $this->dependencyFactory->createClazzFromStringArray($classParts);
     }
 
     private function extractToSet(array $tokens) : DependencySet
@@ -87,10 +96,7 @@ class XDebugFunctionTraceAnalyser
             }
 
             $classParts = explode('\\', str_replace('class ', '', $token));
-            return $set->add(new Clazz(
-                $classParts[count($classParts) - 1],
-                new Namespaze(array_slice($classParts, 0, -1))
-            ));
+            return $set->add($this->dependencyFactory->createClazzFromStringArray($classParts));
         }, new DependencySet());
     }
 }
