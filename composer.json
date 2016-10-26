@@ -7,6 +7,7 @@
         "dependency",
         "analysis"
     ],
+    "homepage": "https://dephpend.com",
     "bin": ["bin/dephpend"],
     "require": {
         "php": "^7.0",
@@ -32,5 +33,13 @@
             "Mihaeu\\PhpDependencies\\": ["src/", "tests/unit/"],
             "Mihaeu\\PhpDependencies\\Tests\\Feature\\": ["tests/feature/"]
         }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.2.x-dev"
+        }
+    },
+    "support": {
+        "issues": "https://github.com/mihaeu/dephpend/issues"
     }
 }
