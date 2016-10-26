@@ -70,7 +70,7 @@ wget https://phar.dephpend.com/dephpend.phar
 
 ### Others
 
-You could `git clone` or `composer require` this, but it's best to not mix tools and software dependencies (because those have dependencies of their own).
+You could `git clone` or `composer require dephpend/dephpend:dev-master` this, but it's best to not mix tools and software dependencies (because those have dependencies of their own).
 
 ## Usage
 
