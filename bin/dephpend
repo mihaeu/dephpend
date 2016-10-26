@@ -11,7 +11,14 @@ $internals = array_merge(
     get_declared_traits()
 );
 
-require __DIR__.'/../vendor/autoload.php';
+if (file_exists(__DIR__.'/../vendor/autoload.php')) {
+    require __DIR__.'/../vendor/autoload.php';
+} elseif (file_exists(__DIR__.'/../../../vendor/autoload.php')) {
+    require __DIR__.'/../../../vendor/autoload.php';
+} else {
+    echo 'Run composer install in order to install the necessary dependencies.'.PHP_EOL;
+    exit(1);
+}
 
 ini_set('xdebug.max_nesting_level', '3000');
 
