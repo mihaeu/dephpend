@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\OS;
 
+use Mihaeu\PhpDependencies\Exceptions\FileDoesNotExistException;
+use Mihaeu\PhpDependencies\Exceptions\FileIsNotReadableException;
 use org\bovigo\vfs\vfsStream;
 
 /**
  * @covers Mihaeu\PhpDependencies\OS\PhpFile
+ * @covers Mihaeu\PhpDependencies\Exceptions\FileIsNotReadableException
+ * @covers Mihaeu\PhpDependencies\Exceptions\FileDoesNotExistException
  */
 class PhpFileTest extends \PHPUnit_Framework_TestCase
 {
@@ -38,5 +42,20 @@ class PhpFileTest extends \PHPUnit_Framework_TestCase
     public function testToString()
     {
         $this->assertContains('PhpFileTest.php', (new PhpFile(new \SplFileInfo(__FILE__)))->__toString());
+    }
+
+    public function testThrowsExceptionsIfFileDoesNotExist()
+    {
+        $this->expectException(FileDoesNotExistException::class);
+        new PhpFile(new \SplFileInfo('akdsjajdlsad'));
+    }
+
+    public function testThrowsExceptionIfFileIsNotReadable()
+    {
+        touch(sys_get_temp_dir().'/unreadable');
+        chmod(sys_get_temp_dir().'/unreadable', 0000);
+
+        $this->expectException(FileIsNotReadableException::class);
+        new PhpFile(new \SplFileInfo(sys_get_temp_dir() . '/unreadable'));
     }
 }

@@ -28,7 +28,7 @@ class PhpFileFinderTest extends \PHPUnit_Framework_TestCase
         ]);
         $dir = new \SplFileInfo($mockDir->url());
         $expected = (new PhpFileSet())
-            ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/someFile.php')));
+            ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/root/someFile.php')));
         $this->assertEquals($expected, $this->finder->find($dir));
     }
 
@@ -51,11 +51,11 @@ class PhpFileFinderTest extends \PHPUnit_Framework_TestCase
         ]);
         $dir = new \SplFileInfo($mockDir->url());
         $expected = (new PhpFileSet())
-            ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/someFile.php')))
-            ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/fileInA.php')))
-            ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/fileInB.php')))
-            ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/fileInB2.php')))
-            ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/fileInC.php')));
+            ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/root/someFile.php')))
+            ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/root/dirA/fileInA.php')))
+            ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/root/dirA/dirB/fileInB.php')))
+            ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/root/dirA/dirB/fileInB2.php')))
+            ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/root/dirA/dirB/dirC/fileInC.php')));
         $this->assertEquals($expected, $this->finder->find($dir));
     }
 
@@ -80,7 +80,7 @@ class PhpFileFinderTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($this->finder->find($dir));
     }
     
-    public function test()
+    public function testFindFilesInDeeplyNestedDirectory()
     {
         $mockDir = vfsStream::setup('root', null, [
             'root' => [
@@ -98,10 +98,10 @@ class PhpFileFinderTest extends \PHPUnit_Framework_TestCase
             ],
         ]);
         $expected = (new PhpFileSet())
-            ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/fileInA.php')))
-            ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/fileInB.php')))
-            ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/fileInB2.php')))
-            ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/fileInC.php')));
+            ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/root/dirA/fileInA.php')))
+            ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/root/dirB/fileInB.php')))
+            ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/root/dirB/fileInB2.php')))
+            ->add(new PhpFile(new \SplFileInfo($mockDir->url().'/root/dirB/dirC/fileInC.php')));
         $actual = $this->finder->getAllPhpFilesFromSources([
             $mockDir->url().'/root/dirA',
             $mockDir->url().'/root/dirB',

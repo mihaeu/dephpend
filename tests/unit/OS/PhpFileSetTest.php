@@ -57,8 +57,8 @@ class PhpFileSetTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertCount(3, (new PhpFileSet())
             ->add(new PhpFile(new \SplFileInfo(__DIR__)))
-            ->add(new PhpFile(new \SplFileInfo(__DIR__.'/../composer.json')))
-            ->add(new PhpFile(new \SplFileInfo(__DIR__.'/../composer.lock'))));
+            ->add(new PhpFile(new \SplFileInfo(__DIR__.'/../../../composer.json')))
+            ->add(new PhpFile(new \SplFileInfo(__DIR__.'/../../../composer.lock'))));
     }
 
     public function testEach()
