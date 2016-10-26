@@ -8,7 +8,7 @@
         "analysis"
     ],
     "homepage": "https://dephpend.com",
-    "bin": ["bin/dephpend"],
+    "bin": ["bin/dephpend", "bin/php-trace"],
     "require": {
         "php": "^7.0",
         "nikic/php-parser": "^2.1",

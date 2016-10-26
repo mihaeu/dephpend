@@ -13,10 +13,10 @@ $internals = array_merge(
 
 if (file_exists(__DIR__.'/../vendor/autoload.php')) {
     require __DIR__.'/../vendor/autoload.php';
-} elseif (file_exists(__DIR__.'/../../../vendor/autoload.php')) {
-    require __DIR__.'/../../../vendor/autoload.php';
+} elseif (file_exists(__DIR__.'/../../../autoload.php')) {
+    require __DIR__.'/../../../autoload.php';
 } else {
-    echo 'Run composer install in order to install the necessary dependencies.'.PHP_EOL;
+    echo 'Run "composer install" in order to install the necessary dependencies.'.PHP_EOL;
     exit(1);
 }
 
