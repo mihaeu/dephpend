@@ -4,27 +4,29 @@
 
 [![Build Status](https://travis-ci.org/mihaeu/dephpend.svg?branch=develop)](https://travis-ci.org/mihaeu/dephpend) [![Coverage Status](https://coveralls.io/repos/github/mihaeu/dephpend/badge.svg)](https://coveralls.io/github/mihaeu/dephpend) ![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat) [![Join the chat at https://gitter.im/dephpend/Lobby](https://badges.gitter.im/dephpend/Lobby.svg)](https://gitter.im/dephpend/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-  * [What it does](#what-it-does)
-  * [Installation](#installation)
-    + [Phar](#phar)
-      - [Phive](#phive)
-      - [Manual download](#manual-download)
-    + [Others](#others)
-  * [Usage](#usage)
+  - [What it does](#what-it-does)
+  - [Installation](#installation)
+    + [Phive](#phive)
+    + [Composer](#composer)
+    + [Manual .phar download](#manual-phar-download)
+    + [Git](#git)
+  - [Usage](#usage)
     + [Filters](#filters)
     + [Text](#text)
     + [UML](#uml)
     + [Dependency Structure Matrix](#dependency-structure-matrix)
     + [Metrics](#metrics)
     + [Dynamic Analysis](#dynamic-analysis)
-  * [Examples](#examples)
+      * [Setup](#setup)
+      * [Usage](#usage-1)
+  - [Examples](#examples)
     + [Architecture Constraints](#architecture-constraints)
     + [Architecture Timeline](#architecture-timeline)
-  * [How it all works](#how-it-all-works)
-  * [Supported Features](#supported-features)
-  * [Troubleshooting](#troubleshooting)
+  - [How it all works](#how-it-all-works)
+  - [Supported Features](#supported-features)
+  - [Troubleshooting](#troubleshooting)
     + [Not enough RAM](#not-enough-ram)
-  * [License](#license)
+  - [License](#license)
 
 ## What it does
 
@@ -45,9 +47,7 @@ With this information you can:
 
 ## Installation
 
-### Phar
-
-#### Phive
+### Phive
 
 [Phive](https://phar.io) is the preferred method of installing QA tools which are not linked directly to your code. If you've never heard about it, I'd recommend you check it out. Once installed simply use:
 
@@ -59,18 +59,33 @@ phive install dephpend
 phive install -copy dephpend
 ```
 
-#### Manual download
+### Composer
+
+You can install dePHPend globally, but this might lead to problems if other globally installed QA tools use different versions of PhpParser for instance.
+
+```bash
+composer global require dephpend/dephpend:dev-master
+```
+
+### Manual .phar download
 
 Download the phar file by clicking [here](https://phar.dephpend.com/dephpend.phar) or use
 
 ```bash
 wget https://phar.dephpend.com/dephpend.phar
 ```
-(for old releases use http://phar.dephpend.com/)
+(for old releases use https://phar.dephpend.com/)
 
-### Others
+### Git
 
-You could `git clone` or `composer require dephpend/dephpend:dev-master` this, but it's best to not mix tools and software dependencies (because those have dependencies of their own).
+```bash
+git clone git@github.com:mihaeu/dephpend.git
+#or
+git clone https://github.com/mihaeu/dephpend.git
+
+cd dephpend
+composer install
+```
 
 ## Usage
 
