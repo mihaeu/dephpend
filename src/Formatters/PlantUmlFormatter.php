@@ -13,7 +13,9 @@ class PlantUmlFormatter implements Formatter
      */
     public function format(DependencyMap $map) : string
     {
-        return '@startuml'.PHP_EOL.$this->dependenciesInPlantUmlFormat($map).PHP_EOL.'@enduml';
+        return '@startuml'.PHP_EOL
+            .$this->dependenciesInPlantUmlFormat($map).PHP_EOL
+            .'@enduml';
     }
 
     /**
@@ -23,6 +25,10 @@ class PlantUmlFormatter implements Formatter
      */
     private function dependenciesInPlantUmlFormat(DependencyMap $map) : string
     {
-        return str_replace('-->', '--|>', $map->toString());
+        return str_replace(
+            ['-->', '\\'],
+            ['--|>', '.'],
+            $map->toString()
+        );
     }
 }
