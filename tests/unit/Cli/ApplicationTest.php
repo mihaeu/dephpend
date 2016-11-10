@@ -86,8 +86,8 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $_SERVER['argv'] = [''];
         $input = $this->createMock(Input::class);
         $output = $this->createMock(Output::class);
-        $output->expects(self::once())->method('writeln');
-        (new Application('', '', $this->createMock(DI::class)))->doRun($input, $output);
+        $returnCode = (new Application('', '', $this->createMock(DI::class)))->doRun($input, $output);
+        $this->assertEquals(0, $returnCode);
     }
 
     public function testValidatesDsmInput()
@@ -95,8 +95,8 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $_SERVER['argv'] = ['', 'dsm', sys_get_temp_dir(), '--format=html'];
         $input = $this->createMock(Input::class);
         $output = $this->createMock(Output::class);
-        $output->expects(self::once())->method('writeln');
-        (new Application('', '', $this->createMock(DI::class)))->doRun($input, $output);
+        $returnCode = (new Application('', '', $this->createMock(DI::class)))->doRun($input, $output);
+        $this->assertEquals(0, $returnCode);
     }
 
     public function testValidatesUmlInput()
@@ -104,8 +104,8 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $_SERVER['argv'] = ['', 'uml', sys_get_temp_dir(), '--output=test.png'];
         $input = $this->createMock(Input::class);
         $output = $this->createMock(Output::class);
-        $output->expects(self::once())->method('writeln');
-        (new Application('', '', $this->createMock(DI::class)))->doRun($input, $output);
+        $returnCode = (new Application('', '', $this->createMock(DI::class)))->doRun($input, $output);
+        $this->assertEquals(0, $returnCode);
     }
 
     public function testValidatesMetricInput()
@@ -113,7 +113,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $_SERVER['argv'] = ['', 'metrics', sys_get_temp_dir()];
         $input = $this->createMock(Input::class);
         $output = $this->createMock(Output::class);
-        $output->expects(self::once())->method('writeln');
-        (new Application('', '', $this->createMock(DI::class)))->doRun($input, $output);
+        $returnCode = (new Application('', '', $this->createMock(DI::class)))->doRun($input, $output);
+        $this->assertEquals(0, $returnCode);
     }
 }
