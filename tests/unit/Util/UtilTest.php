@@ -29,4 +29,11 @@ class UtilTest extends \PHPUnit_Framework_TestCase
             return $value === 'xxx';
         }));
     }
+
+    public function testReduceArrayWithKeys()
+    {
+        $this->assertEquals('0a1b2c3d', Util::reduce(['a', 'b', 'c', 'd'], function (string $carry, int $index, string $value) {
+            return $carry.$index.$value;
+        }, ''));
+    }
 }

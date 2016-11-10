@@ -45,12 +45,12 @@ class Namespaze implements Dependency
         return $this;
     }
 
-    public function partByIndex(int $index) : Namespaze
+    /**
+     * @return string[]
+     */
+    public function parts() : array
     {
-        if ($index < 0 || $index >= $this->count()) {
-            throw new IndexOutOfBoundsException('Namespace index out of range.');
-        }
-        return new Namespaze([$this->parts[$index]]);
+        return $this->parts;
     }
 
     public function reduceToDepth(int $maxDepth) : Dependency

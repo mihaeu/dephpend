@@ -73,19 +73,19 @@ class NamespazeTest extends \PHPUnit_Framework_TestCase
     public function testPartsByIndexThrowsExceptionIfIndexToBig()
     {
         $this->expectException(IndexOutOfBoundsException::class);
-        (new Namespaze(['1']))->partByIndex(2);
+        (new Namespaze(['1']))->parts()[2];
     }
 
     public function testPartsByIndexThrowsExceptionIfIndexZero()
     {
         $this->expectException(IndexOutOfBoundsException::class);
-        (new Namespaze([]))->partByIndex(0);
+        (new Namespaze([]))->parts()[0];
     }
 
     public function testPartsByIndex()
     {
-        $this->assertEquals(new Namespaze(['1']), (new Namespaze(['1', '2']))->partByIndex(0));
-        $this->assertEquals(new Namespaze(['2']), (new Namespaze(['1', '2']))->partByIndex(1));
+        $this->assertEquals(new Namespaze(['1']), (new Namespaze(['1', '2']))->parts()[0]);
+        $this->assertEquals(new Namespaze(['2']), (new Namespaze(['1', '2']))->parts()[1]);
     }
     
     public function testNamespazeReturnsItself()
