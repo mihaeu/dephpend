@@ -6,6 +6,7 @@ declare(strict_types=1);
 define('SRC',           __DIR__.'/../src');
 define('UNIT_TESTS',    __DIR__.'/../tests/unit');
 define('PHPUNIT',       __DIR__.'/../vendor/bin/phpunit');
+define('PHP_CS_FIXER',  'php -n '.__DIR__.'/../vendor/bin/php-cs-fixer');
 define('UNIX',         stripos(PHP_OS, 'win') === false);
 
 /*******************************************************
@@ -16,13 +17,25 @@ $result =
     everyTestHasToHaveTheCoversAnnotation()
     + noDebugStatements()
     + codeCoverageHasTobeWithinThreshold(95)
-    + featureTestsPass();
-
+    + featureTestsPass()
+;
+exec('notify-send '.($result === 0
+    ? '"Success!"'
+    : '"Failed :("'));
 exit($result);
 
 /*******************************************************
  * Test Definitions
  ******************************************************/
+
+function psr2Compliance()
+{
+    exec(PHP_CS_FIXER.' fix --dry-run --level=psr2 '.SRC, $output, $srcStatus);
+    exec(PHP_CS_FIXER.' fix --dry-run --level=psr2 '.SRC, $output, $testStatus);
+    $srcStatus === 0 ? success('Sources are PSR-2 compliant') : error('Sources are not PSR-2 compliant');
+    $testStatus === 0 ? success('Tests are PSR-2 compliant') : error('Tests are not PSR-2 compliant');
+    return $srcStatus + $testStatus;
+}
 
 function featureTestsPass()
 {
