@@ -83,7 +83,7 @@ function codeCoverageHasTobeWithinThreshold(int $threshold)
         success("Line coverage is 100%");
         return 0;
     } elseif ((int) $lineCoverage >= $threshold) {
-        warning("Line coverage is only $lineCoverage% but should be $threshold%");
+        warning("Line coverage is only $lineCoverage% but should be 100%");
         return 1;
     } else {
         error("Line coverage has to be $threshold% but is $lineCoverage");
