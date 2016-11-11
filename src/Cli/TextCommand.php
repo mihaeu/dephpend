@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

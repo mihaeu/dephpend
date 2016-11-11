@@ -55,8 +55,12 @@ class Namespaze implements Dependency
 
     public function reduceToDepth(int $maxDepth) : Dependency
     {
-        return $this->count() <= $maxDepth || $maxDepth === 0
-            ? $this
+        if ($maxDepth === 0 || $this->count() === $maxDepth) {
+            return $this;
+        }
+
+        return $this->count() < $maxDepth
+            ? new NullDependency()
             : new self(array_slice($this->parts, 0, $maxDepth));
     }
 

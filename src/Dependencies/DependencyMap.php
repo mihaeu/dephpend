@@ -17,7 +17,7 @@ class DependencyMap extends AbstractMap
     public function add(Dependency $from, Dependency $to) : self
     {
         $clone = clone $this;
-        if ($from->equals($to)) {
+        if ($from->equals($to) || $from->count() === 0 || $to->count() === 0) {
             return $clone;
         }
 
@@ -104,7 +104,7 @@ class DependencyMap extends AbstractMap
     public function toString() : string
     {
         return trim($this->reduce('', function (string $carry, Dependency $key, Dependency $value) {
-            return $value instanceof NullDependency
+            return $value instanceof NullDependency || $key instanceof NullDependency
                 ? $carry
                 : $carry.$key->toString().' --> '.$value->toString().PHP_EOL;
         }));

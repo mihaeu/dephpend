@@ -37,6 +37,11 @@ class NamespazeTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(2, new Namespaze(['A', 'B']));
     }
 
+    public function testReducingDepthLowerThanPossibleProducesNullDependency()
+    {
+        $this->assertInstanceOf(NullDependency::class, (new Namespaze(['Test']))->reduceToDepth(3));
+    }
+
     public function testReduceToMaxDepth()
     {
         $this->assertEquals(new Namespaze(['A', 'B']), (new Namespaze(['A', 'B', 'C', 'D']))->reduceToDepth(2));
