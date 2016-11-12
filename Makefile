@@ -43,6 +43,7 @@ style:
 phar:
 	@composer update --no-dev
 	@$(PHP) box.phar build
+	@chmod +x build/dephpend.phar
 	@composer update
 
 c: cov
