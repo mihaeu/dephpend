@@ -116,4 +116,13 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $returnCode = (new Application('', '', $this->createMock(DI::class)))->doRun($input, $output);
         $this->assertEquals(0, $returnCode);
     }
+
+    public function testValidatesDotInput()
+    {
+        $_SERVER['argv'] = ['', 'dot', sys_get_temp_dir()];
+        $input = $this->createMock(Input::class);
+        $output = $this->createMock(Output::class);
+        $returnCode = (new Application('', '', $this->createMock(DI::class)))->doRun($input, $output);
+        $this->assertEquals(0, $returnCode);
+    }
 }

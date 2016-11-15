@@ -14,7 +14,7 @@ class DotFormatter implements Formatter
     {
         return 'digraph generated_by_dePHPend {'.PHP_EOL
             .$map->reduceEachDependency($mappers ?? Functional::id())->reduce('', function (string $carry, Dependency $from, Dependency $to) {
-                return $carry."\t".$from->toString().' -> '.$to->toString().PHP_EOL;
+                return $carry."\t\"".str_replace('\\', '.', $from->toString().'" -> "'.$to->toString().'"').PHP_EOL;
             })
             .'}';
     }
