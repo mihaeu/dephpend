@@ -215,4 +215,26 @@ class DependencyMapTest extends \PHPUnit_Framework_TestCase
             return $dependency->namespaze();
         }));
     }
+
+    public function testDoesNotPrintNullDependenciesInKey()
+    {
+        $map = (new DependencyMap())->add(new NullDependency(), new Clazz('A'));
+        $this->assertEmpty($map->toString());
+    }
+
+    public function testDoesNotPrintNullDependenciesInValue()
+    {
+        $map = (new DependencyMap())->add(new Clazz('A'), new NullDependency());
+        $this->assertEmpty($map->toString());
+    }
+
+    public function testCannotAddEmptyNamespaceAsFrom()
+    {
+        $this->assertEmpty((new DependencyMap())->add(new Clazz('A'), new Namespaze([])));
+    }
+
+    public function testCannotAddEmptyNamespaceAsTo()
+    {
+        $this->assertEmpty((new DependencyMap())->add(new Namespaze([]), new Clazz('A')));
+    }
 }

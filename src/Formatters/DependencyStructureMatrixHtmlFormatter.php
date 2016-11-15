@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Formatters;
 
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
+use Mihaeu\PhpDependencies\Util\Functional;
 
-class DependencyStructureMatrixHtmlFormatter
+class DependencyStructureMatrixHtmlFormatter implements Formatter
 {
     /** @var DependencyStructureMatrixBuilder */
     private $dependencyStructureMatrixBuilder;
@@ -22,10 +23,10 @@ class DependencyStructureMatrixHtmlFormatter
     /**
      * {@inheritdoc}
      */
-    public function format(DependencyMap $all, \Closure $mappers) : string
+    public function format(DependencyMap $all, \Closure $mappers = null) : string
     {
         return $this->buildHtmlTable(
-            $this->dependencyStructureMatrixBuilder->buildMatrix($all, $mappers)
+            $this->dependencyStructureMatrixBuilder->buildMatrix($all, $mappers ?? Functional::id())
         );
     }
 

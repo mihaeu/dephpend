@@ -71,6 +71,6 @@ class DI
 
     public function xDebugFunctionTraceAnalyser() : XDebugFunctionTraceAnalyser
     {
-        return new XDebugFunctionTraceAnalyser();
+        return new XDebugFunctionTraceAnalyser($this->dependencyFactory());
     }
 }

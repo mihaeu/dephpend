@@ -9,7 +9,9 @@ use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Formatters\DependencyStructureMatrixBuilder;
 use Mihaeu\PhpDependencies\Formatters\DependencyStructureMatrixHtmlFormatter;
+use Mihaeu\PhpDependencies\Formatters\DotFormatter;
 use Mihaeu\PhpDependencies\Formatters\PlantUmlFormatter;
+use Mihaeu\PhpDependencies\OS\DotWrapper;
 use Mihaeu\PhpDependencies\OS\PlantUmlWrapper;
 use Mihaeu\PhpDependencies\OS\ShellWrapper;
 use Mihaeu\PhpDependencies\Util\DI;
@@ -97,6 +99,11 @@ class Application extends \Symfony\Component\Console\Application
                 $dependencies,
                 $postProcessors,
                 new PlantUmlWrapper(new PlantUmlFormatter(), new ShellWrapper())
+            ),
+            new DotCommand(
+                $dependencies,
+                $postProcessors,
+                new DotWrapper(new DotFormatter(), new ShellWrapper())
             ),
             new DsmCommand(
                 $dependencies,
@@ -215,6 +222,13 @@ class Application extends \Symfony\Component\Console\Application
             return new MetricsCommand(
                 new DependencyMap(),
                 new Metrics()
+            );
+        }
+        if ($command === 'dot') {
+            return new DotCommand(
+                new DependencyMap(),
+                Functional::id(),
+                new DotWrapper(new DotFormatter(), new ShellWrapper())
             );
         }
         return new TextCommand(new DependencyMap(), Functional::id());

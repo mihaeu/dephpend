@@ -17,6 +17,14 @@ class DependencyFactoryTest extends \PHPUnit_Framework_TestCase
         $this->clazzFactory = new DependencyFactory();
     }
 
+    public function testInvalidClassReturnsNullDependency()
+    {
+        $this->assertInstanceOf(
+            NullDependency::class,
+            $this->clazzFactory->createClazzFromStringArray(['/'])
+        );
+    }
+
     public function testCreatesClazzWithEmptyNamespace()
     {
         $this->assertEquals(new Clazz('Test', new Namespaze([])), $this->clazzFactory->createClazzFromStringArray(['Test']));

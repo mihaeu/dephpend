@@ -38,10 +38,7 @@ class DependencyFilter
         }
 
         if (isset($options['exclude-regex'])) {
-            $regexOk = @preg_match($options['exclude-regex'], '');
-            if ($regexOk === false) {
-                throw new \InvalidArgumentException('Regular expression ('.$options['exclude-regex'].') is not valid.');
-            }
+            $this->ensureRegexIsValid($options['exclude-regex']);
             $dependencies = $this->excludeByRegex($dependencies, $options['exclude-regex']);
         }
 
@@ -154,5 +151,14 @@ class DependencyFilter
             $parts = explode('_', $dependency->toString());
             return new Clazz($parts[count($parts) - 1], new Namespaze(array_slice($parts, 0, -1)));
         });
+    }
+
+    private function ensureRegexIsValid(string $regex)
+    {
+        if (@preg_match($regex, '') === false) {
+            throw new \InvalidArgumentException(
+                'Regular expression ('.$regex.') is not valid.'
+            );
+        }
     }
 }

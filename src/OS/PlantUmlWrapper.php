@@ -7,7 +7,6 @@ namespace Mihaeu\PhpDependencies\OS;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Exceptions\PlantUmlNotInstalledException;
 use Mihaeu\PhpDependencies\Formatters\PlantUmlFormatter;
-use Mihaeu\PhpDependencies\Util\Collection;
 
 class PlantUmlWrapper
 {
@@ -38,9 +37,8 @@ class PlantUmlWrapper
     {
         $this->ensurePlantUmlIsInstalled($this->shell);
 
-        $uml = $this->plantUmlFormatter->format($map);
         $umlDestination = preg_replace('/\.\w+$/', '.uml', $destination->getPathname());
-        file_put_contents($umlDestination, str_replace('\\', '.', $uml));
+        file_put_contents($umlDestination, $this->plantUmlFormatter->format($map));
         $this->shell->run('plantuml '.$umlDestination);
 
         if ($keepUml === false) {

@@ -25,4 +25,22 @@ class Util
 
         return false;
     }
+
+    /**
+     * PHP's array_reduce does not provide access to the key. This function
+     * does the same as array produce, while providing access to the key.
+     *
+     * @param array $xs
+     * @param \Closure $fn (mixed $carry, int|string $key, mixed $value)
+     * @param $initial
+     *
+     * @return mixed
+     */
+    public static function reduce(array $xs, \Closure $fn, $initial)
+    {
+        foreach ($xs as $key => $value) {
+            $initial = $fn($initial, $key, $value);
+        }
+        return $initial;
+    }
 }

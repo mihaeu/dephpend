@@ -2,6 +2,7 @@
 
 namespace Mihaeu\PhpDependencies\Analyser;
 
+use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
 use Mihaeu\PhpDependencies\DependencyHelper;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -18,7 +19,7 @@ class XDebugFunctionTraceAnalyserTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->xDebugFunctionTraceAnalyser = new XDebugFunctionTraceAnalyser();
+        $this->xDebugFunctionTraceAnalyser = new XDebugFunctionTraceAnalyser($this->createMock(DependencyFactory::class));
         $this->tempFile = new \SplFileInfo(sys_get_temp_dir().'/'.'dephpend-trace.sample');
     }
 

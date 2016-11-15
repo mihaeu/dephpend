@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\OS;
 
+use Mihaeu\PhpDependencies\Exceptions\FileDoesNotExistException;
+use Mihaeu\PhpDependencies\Exceptions\FileIsNotReadableException;
+
 class PhpFile
 {
     /** @var \SplFileObject */
@@ -11,6 +14,8 @@ class PhpFile
 
     public function __construct(\SplFileInfo $file)
     {
+        $this->ensureFileExists($file);
+        $this->ensureFileIsReadable($file);
         $this->file = $file;
     }
 
@@ -26,7 +31,7 @@ class PhpFile
 
     public function code()
     {
-        return file_get_contents($this->file->getPathname());
+        return @file_get_contents($this->file->getPathname());
     }
 
     public function toString() : string
@@ -40,5 +45,19 @@ class PhpFile
     public function __toString() : string
     {
         return $this->toString();
+    }
+
+    private function ensureFileExists(\SplFileInfo $file)
+    {
+        if (!$file->isFile() && !$file->isDir()) {
+            throw new FileDoesNotExistException($file);
+        }
+    }
+
+    private function ensureFileIsReadable(\SplFileInfo $file)
+    {
+        if (!$file->isReadable()) {
+            throw new FileIsNotReadableException($file);
+        }
     }
 }

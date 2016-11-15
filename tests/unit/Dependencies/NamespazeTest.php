@@ -37,6 +37,11 @@ class NamespazeTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(2, new Namespaze(['A', 'B']));
     }
 
+    public function testReducingDepthLowerThanPossibleProducesNullDependency()
+    {
+        $this->assertInstanceOf(NullDependency::class, (new Namespaze(['Test']))->reduceToDepth(3));
+    }
+
     public function testReduceToMaxDepth()
     {
         $this->assertEquals(new Namespaze(['A', 'B']), (new Namespaze(['A', 'B', 'C', 'D']))->reduceToDepth(2));
@@ -70,22 +75,10 @@ class NamespazeTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse((new Namespaze(['A', 'B']))->equals(new Namespaze([])));
     }
 
-    public function testPartsByIndexThrowsExceptionIfIndexToBig()
-    {
-        $this->expectException(IndexOutOfBoundsException::class);
-        (new Namespaze(['1']))->partByIndex(2);
-    }
-
-    public function testPartsByIndexThrowsExceptionIfIndexZero()
-    {
-        $this->expectException(IndexOutOfBoundsException::class);
-        (new Namespaze([]))->partByIndex(0);
-    }
-
     public function testPartsByIndex()
     {
-        $this->assertEquals(new Namespaze(['1']), (new Namespaze(['1', '2']))->partByIndex(0));
-        $this->assertEquals(new Namespaze(['2']), (new Namespaze(['1', '2']))->partByIndex(1));
+        $this->assertEquals(new Namespaze(['1']), (new Namespaze(['1', '2']))->parts()[0]);
+        $this->assertEquals(new Namespaze(['2']), (new Namespaze(['1', '2']))->parts()[1]);
     }
     
     public function testNamespazeReturnsItself()
