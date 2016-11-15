@@ -212,7 +212,6 @@ xdebug.auto_trace=1
 xdebug.collect_params=1
 xdebug.collect_return=3
 xdebug.collect_assignments=1
-xdebug.profiler_enable = 1
 xdebug.trace_format=1
 
 ```
