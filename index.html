@@ -3086,7 +3086,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
         <span class="doc-title">dePHPend</span>
         <ul class="nav pull-right doc-info">
                     <li><p class="navbar-text">Michael Haeuslmann</p></li>
-                              <li><p class="navbar-text">Sat Oct 15 17:34:30 IRST 2016</p></li>
+                              <li><p class="navbar-text">Tue Nov 15 11:08:56 CET 2016</p></li>
                   </ul>
       </div>
     </div>
@@ -3122,10 +3122,10 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#what-it-does">What it does</a></li>
 <li><a href="#installation">Installation</a>
 <ul>
-<li><a href="#phar">Phar</a></li>
 <li><a href="#phive">Phive</a></li>
-<li><a href="#manual-download">Manual download</a></li>
-<li><a href="#others">Others</a></li>
+<li><a href="#composer">Composer</a></li>
+<li><a href="#manual-phar-download">Manual .phar download</a></li>
+<li><a href="#git">Git</a></li>
 </ul></li>
 <li><a href="#usage">Usage</a>
 <ul>
@@ -3135,6 +3135,8 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#dependency-structure-matrix">Dependency Structure Matrix</a></li>
 <li><a href="#metrics">Metrics</a></li>
 <li><a href="#dynamic-analysis">Dynamic Analysis</a></li>
+<li><a href="#setup">Setup</a></li>
+<li><a href="#usage-1">Usage</a></li>
 </ul></li>
 <li><a href="#examples">Examples</a>
 <ul>
@@ -3160,20 +3162,27 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li>find out why your changes are breaking tests</li>
 </ul>
 <h2 id="installation">Installation</h2>
-<h3 id="phar">Phar</h3>
-<h4 id="phive">Phive</h4>
+<h3 id="phive">Phive</h3>
 <p><a href="https://phar.io">Phive</a> is the preferred method of installing QA tools which are not linked directly to your code. If you've never heard about it, I'd recommend you check it out. Once installed simply use:</p>
 <pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">phive</span> install dephpend
 
 <span class="co"># or</span>
 
 <span class="kw">phive</span> install -copy dephpend</code></pre>
-<h4 id="manual-download">Manual download</h4>
+<h3 id="composer">Composer</h3>
+<p>You can install dePHPend globally, but this might lead to problems if other globally installed QA tools use different versions of PhpParser for instance.</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">composer</span> global require dephpend/dephpend:dev-master</code></pre>
+<h3 id="manual-.phar-download">Manual .phar download</h3>
 <p>Download the phar file by clicking <a href="https://phar.dephpend.com/dephpend.phar">here</a> or use</p>
 <pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">wget</span> https://phar.dephpend.com/dephpend.phar</code></pre>
-<p>(for old releases use http://phar.dephpend.com/)</p>
-<h3 id="others">Others</h3>
-<p>You could <code>git clone</code> or <code>composer require</code> this, but it's best to not mix tools and software dependencies (because those have dependencies of their own).</p>
+<p>(for old releases use https://phar.dephpend.com/)</p>
+<h3 id="git">Git</h3>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">git</span> clone git@github.com:mihaeu/dephpend.git
+<span class="co">#or</span>
+<span class="kw">git</span> clone https://github.com/mihaeu/dephpend.git
+
+<span class="kw">cd</span> dephpend
+<span class="kw">composer</span> install</code></pre>
 <h2 id="usage">Usage</h2>
 <p>You should almost always run QA tools without XDebug (unless you need code coverage of course). You could use a separate <code>php.ini</code> where XDebug is not loaded and pass that to php or you just use the <code>-n</code> option (this will however not load any extensions).</p>
 <pre><code># or bin/dephpend depending on how you installed this
@@ -3183,7 +3192,7 @@ $ php -n dephpend.phar
    __| | ___| |__) | |__| | |__) |__ _ __   __| |
   / _` |/ _ \  ___/|  __  |  ___/ _ \ &#39;_ \ / _` |
  | (_| |  __/ |    | |  | | |  |  __/ | | | (_| |
-  \__,_|\___|_|    |_|  |_|_|   \___|_| |_|\__,_| version 0.2
+  \__,_|\___|_|    |_|  |_|_|   \___|_| |_|\__,_| version 0.3
 
 Usage:
   command [options] [arguments]
@@ -3258,7 +3267,6 @@ Available commands:
 <span class="dt">xdebug.collect_params</span><span class="ot">=</span><span class="dv">1</span>
 <span class="dt">xdebug.collect_return</span><span class="ot">=</span><span class="dv">3</span>
 <span class="dt">xdebug.collect_assignments</span><span class="ot">=</span><span class="dv">1</span>
-<span class="dt">xdebug.profiler_enable </span><span class="ot">=</span><span class="st"> </span><span class="dv">1</span>
 <span class="dt">xdebug.trace_format</span><span class="ot">=</span><span class="dv">1</span></code></pre>
 <p>This will slow down PHP A LOT so it is best to put it in a separate file like <code>php-with-traces.ini</code> and call dePHPend using <code>php -c /path/to/php-with-traces.ini</code>.</p>
 <h4 id="usage-1">Usage</h4>
