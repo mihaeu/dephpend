@@ -6,7 +6,7 @@ use Mihaeu\PhpDependencies\DependencyHelper;
 use Mihaeu\PhpDependencies\Formatters\DotFormatter;
 
 /**
- * @covers unit\Formatters\DotFormatter
+ * @covers Mihaeu\PhpDependencies\Formatters\DotFormatter
  */
 class DotFormatterTest extends \PHPUnit_Framework_TestCase
 {
