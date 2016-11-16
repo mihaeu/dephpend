@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.3.1] - 2016-11-16
+### Fixed
+ - default options like --help not working
+
 ## [0.3.0] - 2016-11-15
 ### Added
  - dot command for layered dependency graphs
@@ -30,6 +34,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
  - first tagged release
  - uml, text, dsm and metrics command
 
-[Unreleased]: https://github.com/mihaeu/dephpend/compare/0.3.0...HEAD
+[Unreleased]: https://github.com/mihaeu/dephpend/compare/0.3.1...HEAD
+[0.3.1]: https://github.com/mihaeu/dephpend/compare/0.3.0...0.3.1
 [0.3.0]: https://github.com/mihaeu/dephpend/compare/0.2.0...0.3.0
 [0.2.0]: https://github.com/mihaeu/dephpend/compare/0.1.0...0.2.0
