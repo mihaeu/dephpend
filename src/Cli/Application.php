@@ -135,13 +135,19 @@ class Application extends \Symfony\Component\Console\Application
      */
     private function createFakeInput() : InputInterface
     {
+        $this->changeHelpOptionToHelpCommandIfSet();
+
         if ($this->noDephpendCommandProvided()) {
             return new ArrayInput([]);
         }
+
         $command = $this->createFakeCommand($_SERVER['argv'][1]);
         $command->mergeApplicationDefinition();
-        $argvInput = new ArgvInput(array_slice($_SERVER['argv'], 1),
-            $command->getDefinition());
+
+        $definition = $command->getDefinition();
+        $definition->addOptions($this->getDefaultInputDefinition()->getOptions());
+
+        $argvInput = new ArgvInput(array_slice($_SERVER['argv'], 1), $definition);
         $command->setDefinition(new InputDefinition());
         return $argvInput;
     }
@@ -232,5 +238,27 @@ class Application extends \Symfony\Component\Console\Application
             );
         }
         return new TextCommand(new DependencyMap(), Functional::id());
+    }
+
+    private function changeHelpOptionToHelpCommandIfSet()
+    {
+        foreach ($_SERVER['argv'] as $argv) {
+            if ($argv === '--help' || $argv === '-h') {
+                $_SERVER['argv'] = count($_SERVER['argv']) > 2
+                    ? ['', 'help', $this->findCommand()]
+                    : [''];
+                return;
+            }
+        }
+    }
+
+    private function findCommand() : string
+    {
+        foreach (array_slice($_SERVER['argv'], 1) as $argv) {
+            if (strpos($argv, '-') !== 0) {
+                return $argv;
+            }
+        }
+        return '';
     }
 }

@@ -7,7 +7,10 @@ namespace Mihaeu\PhpDependencies\Cli;
 use Mihaeu\PhpDependencies\Analyser\XDebugFunctionTraceAnalyser;
 use Mihaeu\PhpDependencies\Util\DI;
 use PhpParser\Error;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\Input;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\Output;
 
 /**
@@ -124,5 +127,41 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $output = $this->createMock(Output::class);
         $returnCode = (new Application('', '', $this->createMock(DI::class)))->doRun($input, $output);
         $this->assertEquals(0, $returnCode);
+    }
+
+    public function testCommandWithHelpOptionProvidesHelpForCommand()
+    {
+        $_SERVER['argv'] = ['', 'dot', '--help'];
+        $input = new ArgvInput();
+        $output = new BufferedOutput();
+        (new Application('', '', $this->createMock(DI::class)))->doRun($input, $output);
+        $this->assertContains('dot [options]', $output->fetch());
+    }
+    
+    public function testNoCommandWithHelpOptionWritesHelp()
+    {
+        $_SERVER['argv'] = ['', '--help'];
+        $input = $this->createMock(Input::class);
+        $output = new BufferedOutput();
+        (new Application('', '', $this->createMock(DI::class)))->doRun($input, $output);
+        $this->assertContains('command [options]', $output->fetch());
+    }
+
+    public function testHelpOptionBeforeCommandPrintsHelp()
+    {
+        $_SERVER['argv'] = ['', '--help', 'text'];
+        $input = new ArgvInput();
+        $output = new BufferedOutput();
+        (new Application('', '', $this->createMock(DI::class)))->doRun($input, $output);
+        $this->assertContains('text [options]', $output->fetch());
+    }
+
+    public function testHelpOptionWithAnsiOptionPrintsHelp()
+    {
+        $_SERVER['argv'] = ['', '--help', '--ansi'];
+        $input = new ArgvInput();
+        $output = new BufferedOutput();
+        (new Application('', '', $this->createMock(DI::class)))->doRun($input, $output);
+        $this->assertContains('help [options]', $output->fetch());
     }
 }
