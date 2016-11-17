@@ -12,7 +12,9 @@ all: autoload tests testdox cov
 autoload:
 	composer dumpautoload
 
-test:
+test: unit feature
+
+unit:
 	$(PHP) $(PHPUNIT) -c phpunit.xml.dist
 
 feature:
