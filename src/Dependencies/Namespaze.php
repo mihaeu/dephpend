@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Dependencies;
 
-use Mihaeu\PhpDependencies\Exceptions\IndexOutOfBoundsException;
 use Mihaeu\PhpDependencies\Util\Util;
 
 class Namespaze implements Dependency

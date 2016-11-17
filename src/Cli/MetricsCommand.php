@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser\Metrics;
-use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
+
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Util\Functional;
 use Symfony\Component\Console\Helper\Table;

@@ -57,7 +57,7 @@ class DependencyMap extends AbstractMap
      */
     public function fromDependencies() : DependencySet
     {
-        return $this->reduce(new DependencySet(), function (DependencySet $set, Dependency $from, Dependency $to) {
+        return $this->reduce(new DependencySet(), function (DependencySet $set, Dependency $from) {
             return $set->add($from);
         });
     }
