@@ -21,7 +21,7 @@ class DependencyStructureMatrixBuilder
                 || strlen($to) === 0) {
                 return $dsm;
             }
-            $dsm[$from][$to] += 1;
+            $dsm[$to][$from] += 1;
             return $dsm;
         });
     }
