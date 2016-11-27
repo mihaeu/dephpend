@@ -29,8 +29,7 @@ abstract class ClazzLike implements Dependency
 
     public function equals(Dependency $other) : bool
     {
-        return $this->toString() === $other->toString()
-            && $this instanceof $other;
+        return $this->toString() === $other->toString();
     }
 
     public function toString() : string

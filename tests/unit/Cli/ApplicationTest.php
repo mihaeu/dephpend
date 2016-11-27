@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser\XDebugFunctionTraceAnalyser;
-use Mihaeu\PhpDependencies\Util\DI;
+use Mihaeu\PhpDependencies\DI\DI;
 use PhpParser\Error;
 use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\Input;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\Output;

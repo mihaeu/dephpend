@@ -39,6 +39,11 @@ class ClazzTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue((new Clazz('A'))->equals(new Clazz('A')));
     }
 
+    public function testEqualsIgnoresType()
+    {
+        $this->assertTrue((new Clazz('A'))->equals(new Interfaze('A')));
+    }
+
     public function testDetectsIfClassHasNamespace()
     {
         $this->assertTrue((new Clazz('Class', new Namespaze(['A'])))->hasNamespace());

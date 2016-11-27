@@ -15,30 +15,30 @@ class UmlTest extends \PHPUnit_Framework_TestCase
 @startuml
 namespace Mihaeu {
 namespace PhpDependencies {
-namespace Util {
-}
-namespace Analyser {
+namespace OS {
 }
 namespace Dependencies {
 }
-namespace OS {
+namespace Exceptions {
+}
+namespace Formatters {
+}
+namespace Util {
 }
 }
-}
-namespace PhpParser {
 }
 
-Mihaeu.PhpDependencies.Util --|> Mihaeu.PhpDependencies.Analyser
-Mihaeu.PhpDependencies.Util --|> Mihaeu.PhpDependencies.Dependencies
-Mihaeu.PhpDependencies.Util --|> Mihaeu.PhpDependencies.OS
-Mihaeu.PhpDependencies.Util --|> PhpParser
+Mihaeu.PhpDependencies.OS --|> Mihaeu.PhpDependencies.Dependencies
+Mihaeu.PhpDependencies.OS --|> Mihaeu.PhpDependencies.Exceptions
+Mihaeu.PhpDependencies.OS --|> Mihaeu.PhpDependencies.Formatters
+Mihaeu.PhpDependencies.OS --|> Mihaeu.PhpDependencies.Util
 @enduml
 EOT;
 
         $tempFilePng = sys_get_temp_dir().'/dephpend-uml-test.png';
         $tempFileUml = sys_get_temp_dir().'/dephpend-uml-test.uml';
         shell_exec(self::DEPHPEND.' uml '.self::SRC.' --no-classes --keep-uml '
-            .'--output="'.$tempFilePng.'" -f Mihaeu\\\\PhpDependencies\\\\Util');
+            .'--output="'.$tempFilePng.'" -f Mihaeu\\\\PhpDependencies\\\\OS');
         $this->assertEquals(
             $expected,
             file_get_contents($tempFileUml)

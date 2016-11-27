@@ -2,7 +2,7 @@
 <?php declare(strict_types=1);
 
 use Mihaeu\PhpDependencies\Cli\Application;
-use Mihaeu\PhpDependencies\Util\DI;
+use Mihaeu\PhpDependencies\DI\DI;
 
 // we need to get this before anything else is loaded
 $internals = array_merge(

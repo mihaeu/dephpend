@@ -14,7 +14,7 @@ use Mihaeu\PhpDependencies\Formatters\PlantUmlFormatter;
 use Mihaeu\PhpDependencies\OS\DotWrapper;
 use Mihaeu\PhpDependencies\OS\PlantUmlWrapper;
 use Mihaeu\PhpDependencies\OS\ShellWrapper;
-use Mihaeu\PhpDependencies\Util\DI;
+use Mihaeu\PhpDependencies\DI\DI;
 use Mihaeu\PhpDependencies\Util\Functional;
 use PhpParser\Error;
 use Symfony\Component\Console\Command\Command;

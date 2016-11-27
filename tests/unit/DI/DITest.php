@@ -2,18 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Mihaeu\PhpDependencies\Util;
+namespace Mihaeu\PhpDependencies\DI;
 
-use Mihaeu\PhpDependencies\Analyser\StaticAnalyser;
 use Mihaeu\PhpDependencies\Analyser\Parser;
+use Mihaeu\PhpDependencies\Analyser\StaticAnalyser;
 use Mihaeu\PhpDependencies\Analyser\XDebugFunctionTraceAnalyser;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
-use Mihaeu\PhpDependencies\Dependencies\UnderscoreDependencyFactory;
 use Mihaeu\PhpDependencies\OS\PhpFileFinder;
 
 /**
- * @covers Mihaeu\PhpDependencies\Util\DI
+ * @covers Mihaeu\PhpDependencies\DI\DI
  */
 class DITest extends \PHPUnit_Framework_TestCase
 {

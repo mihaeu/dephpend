@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Mihaeu\PhpDependencies\Util;
+namespace Mihaeu\PhpDependencies\DI;
 
 use Mihaeu\PhpDependencies\Analyser\DependencyInspectionVisitor;
 use Mihaeu\PhpDependencies\Analyser\Parser;
