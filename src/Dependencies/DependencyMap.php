@@ -17,7 +17,10 @@ class DependencyMap extends AbstractMap
     public function add(Dependency $from, Dependency $to) : self
     {
         $clone = clone $this;
-        if ($from->equals($to) || $from->count() === 0 || $to->count() === 0) {
+        if ($from->equals($to)
+            || $from->count() === 0
+            || $to->count() === 0
+            || $to->toString() === 'self') {
             return $clone;
         }
 
