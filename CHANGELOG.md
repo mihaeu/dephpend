@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
  - PHP 7.1 support
+ - add detection of instanceof comparison
  - switch DSM column and row (like NDepend)
 
 ## [0.3.1] - 2016-11-16

@@ -9,6 +9,7 @@ use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Dependencies\DependencySet;
 use PhpParser\Node;
+use PhpParser\Node\Expr\Instanceof_ as InstanceofNode;
 use PhpParser\Node\Expr\New_ as NewNode;
 use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Expr\StaticCall as StaticCallNode;
@@ -86,6 +87,10 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         } elseif ($node instanceof UseTraitNode) {
             // @codeCoverageIgnoreEnd
             $this->addUseTraitDependency($node);
+            // @codeCoverageIgnoreStart
+        } elseif ($node instanceof InstanceofNode) {
+            // @codeCoverageIgnoreEnd
+            $this->addInstanceofDependency($node);
         }
     }
 
@@ -134,7 +139,9 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     {
         if ($node instanceof InterfaceNode) {
             $this->currentClass = $this->dependencyFactory->createInterfazeFromStringArray($node->namespacedName->parts);
+            // @codeCoverageIgnoreStart
         } elseif ($node instanceof TraitNode) {
+            // @codeCoverageIgnoreEnd
             $this->currentClass = $this->dependencyFactory->createTraitFromStringArray($node->namespacedName->parts);
         } else {
             $this->currentClass = $node->isAbstract()
@@ -248,6 +255,18 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         if ($node->returnType instanceof FullyQualifiedNameNode) {
             $this->tempDependencies = $this->tempDependencies->add(
                 $this->dependencyFactory->createClazzFromStringArray($node->returnType->parts)
+            );
+        }
+    }
+
+    /**
+     * @param Node $node
+     */
+    private function addInstanceofDependency(Node $node)
+    {
+        if ($node->class instanceof FullyQualifiedNameNode) {
+            $this->tempDependencies = $this->tempDependencies->add(
+                $this->dependencyFactory->createClazzFromStringArray($node->class->parts)
             );
         }
     }

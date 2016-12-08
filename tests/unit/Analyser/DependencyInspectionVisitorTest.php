@@ -14,6 +14,8 @@ use Mihaeu\PhpDependencies\Dependencies\DependencySet;
 use Mihaeu\PhpDependencies\Dependencies\Interfaze;
 use Mihaeu\PhpDependencies\Dependencies\Namespaze;
 use Mihaeu\PhpDependencies\Dependencies\Trait_;
+use PhpParser\Node\Expr\Array_;
+use PhpParser\Node\Expr\Instanceof_;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\New_ as NewNode;
 use PhpParser\Node\Expr\StaticCall;
@@ -362,6 +364,22 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
             new Trait_('Test3', new Namespaze(['C']))
+        ));
+    }
+
+    public function testUseInstanceofComparison()
+    {
+        $node = $this->createAndEnterCurrentClassNode();
+
+        $useTraitNode = new Instanceof_(new Array_(), new FullyQualifiedNameNode('Test'));
+        $this->dependencyInspectionVisitor->enterNode($useTraitNode);
+        $this->dependencyInspectionVisitor->leaveNode($useTraitNode);
+
+        $this->dependencyInspectionVisitor->leaveNode($node);
+
+        $this->assertTrue($this->dependenciesContain(
+            $this->dependencyInspectionVisitor->dependencies(),
+            new Clazz('Test')
         ));
     }
 }
