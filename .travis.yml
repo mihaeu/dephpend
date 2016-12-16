@@ -6,7 +6,7 @@ php:
 
 before_script:
     - composer install --prefer-dist
-    - composer require "satooshi/php-coveralls:^1.0"
+    - wget https://github.com/satooshi/php-coveralls/releases/download/v1.0.1/coveralls.phar
 
 script:
     - mkdir -p build/logs
@@ -14,7 +14,7 @@ script:
     - vendor/bin/phpunit -c phpunit.xml.dist --coverage-text --coverage-clover ./build/logs/clover.xml
 
 after_script:
-    - php vendor/bin/coveralls -v
+    - php coveralls.phar -v
 
 branches:
   only:
