@@ -7,7 +7,6 @@ namespace Mihaeu\PhpDependencies\Analyser;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\OS\PhpFileSet;
 use PhpParser\NodeTraverser;
-use PhpParser\Parser;
 
 /**
  * @covers Mihaeu\PhpDependencies\Analyser\StaticAnalyser

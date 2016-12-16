@@ -7,7 +7,6 @@ namespace Mihaeu\PhpDependencies\Analyser;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\OS\PhpFile;
 use Mihaeu\PhpDependencies\OS\PhpFileSet;
-use PhpParser\Parser;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
 
@@ -30,8 +29,7 @@ class StaticAnalyser
         NodeTraverser $nodeTraverser,
         DependencyInspectionVisitor $dependencyInspectionVisitor,
         Parser $parser
-    )
-    {
+    ) {
         $this->dependencyInspectionVisitor = $dependencyInspectionVisitor;
 
         $this->nodeTraverser = $nodeTraverser;
