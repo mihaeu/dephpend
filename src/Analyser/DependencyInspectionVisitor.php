@@ -16,7 +16,6 @@ use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Expr\StaticCall as StaticCallNode;
 use PhpParser\Node\Name as NameNode;
 use PhpParser\Node\Name;
-use PhpParser\Node\Name\FullyQualified as FullyQualifiedNameNode;
 use PhpParser\Node\Stmt\Catch_ as CatchNode;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\ClassLike as ClassLikeNode;
@@ -67,7 +66,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
                 $this->addImplementedInterfaceDependency($node);
             }
         } elseif ($node instanceof NewNode
-            && $node->class instanceof FullyQualifiedNameNode) {
+            && $node->class instanceof NameNode) {
             $this->addName($node->class);
             // WEIRD BUG CAUSING XDEBUG TO NOT COVER ELSEIF ONLY ELSE IF
             // @codeCoverageIgnoreStart
@@ -84,7 +83,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
             }
             // @codeCoverageIgnoreStart
         } elseif ($node instanceof StaticCallNode
-            && $node->class instanceof FullyQualifiedNameNode) {
+            && $node->class instanceof NameNode) {
             // @codeCoverageIgnoreEnd
             $this->addStaticDependency($node);
             // WEIRD BUG CAUSING XDEBUG TO NOT COVER ELSEIF ONLY ELSE IF
@@ -244,7 +243,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
      */
     protected function addReturnType(Node $node)
     {
-        if ($node->returnType instanceof FullyQualifiedNameNode) {
+        if ($node->returnType instanceof NameNode) {
             $this->tempDependencies = $this->tempDependencies->add(
                 $this->dependencyFactory->createClazzFromStringArray($node->returnType->parts)
             );
@@ -256,7 +255,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
      */
     private function addInstanceofDependency(Node $node)
     {
-        if ($node->class instanceof FullyQualifiedNameNode) {
+        if ($node->class instanceof NameNode) {
             $this->tempDependencies = $this->tempDependencies->add(
                 $this->dependencyFactory->createClazzFromStringArray($node->class->parts)
             );
