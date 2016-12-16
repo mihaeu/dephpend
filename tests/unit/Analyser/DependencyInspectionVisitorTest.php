@@ -15,13 +15,16 @@ use Mihaeu\PhpDependencies\Dependencies\Interfaze;
 use Mihaeu\PhpDependencies\Dependencies\Namespaze;
 use Mihaeu\PhpDependencies\Dependencies\Trait_;
 use PhpParser\Node\Expr\Array_;
+use PhpParser\Node\Expr\ClassConstFetch;
 use PhpParser\Node\Expr\Instanceof_;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\New_ as NewNode;
 use PhpParser\Node\Expr\StaticCall;
+use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Name;
 use PhpParser\Node\Name\FullyQualified as FullyQualifiedNameNode;
 use PhpParser\Node\Param;
+use PhpParser\Node\Stmt\Catch_;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Interface_ as InterfaceNode;
@@ -252,8 +255,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $node = $this->createAndEnterCurrentClassNode();
 
         $use = new \stdClass();
-        $use->name = new \stdClass();
-        $use->name->parts = ['A', 'a', '1', 'Test'];
+        $use->name = new Name(['A', 'a', '1', 'Test']);
         $useNode = new UseNode([$use]);
         $this->dependencyInspectionVisitor->enterNode($useNode);
 
@@ -326,8 +328,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $node = $this->createAndEnterCurrentClassNode();
 
         $useTraitNode = new TraitUse(['Trait']);
-        $useTraitNode->traits = [new \stdClass()];
-        $useTraitNode->traits[0]->parts = ['A', 'Test'];
+        $useTraitNode->traits = [new Name(['A', 'Test'])];
 
         $this->dependencyInspectionVisitor->enterNode($useTraitNode);
         $this->dependencyInspectionVisitor->leaveNode($useTraitNode);
@@ -344,10 +345,11 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $node = $this->createAndEnterCurrentClassNode();
 
         $useTraitNode = new TraitUse(['Trait']);
-        $useTraitNode->traits = [new \stdClass(), new \stdClass(), new \stdClass()];
-        $useTraitNode->traits[0]->parts = ['A', 'Test'];
-        $useTraitNode->traits[1]->parts = ['B', 'Test2'];
-        $useTraitNode->traits[2]->parts = ['C', 'Test3'];
+        $useTraitNode->traits = [
+            new Name(['A', 'Test']),
+            new Name(['B', 'Test2']),
+            new Name(['C', 'Test3']),
+        ];
 
         $this->dependencyInspectionVisitor->enterNode($useTraitNode);
         $this->dependencyInspectionVisitor->leaveNode($useTraitNode);
@@ -380,6 +382,61 @@ class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
             new Clazz('Test')
+        ));
+    }
+
+    public function testDetectsCatchNode()
+    {
+        $node = $this->createAndEnterCurrentClassNode();
+
+        $catchNode = new Catch_([new Name(['AnException'])], new Variable('e'));
+        $this->dependencyInspectionVisitor->enterNode($catchNode);
+        $this->dependencyInspectionVisitor->leaveNode($catchNode);
+
+        $this->dependencyInspectionVisitor->leaveNode($node);
+
+        $this->assertTrue($this->dependenciesContain(
+            $this->dependencyInspectionVisitor->dependencies(),
+            new Clazz('AnException')
+        ));
+    }
+
+    public function testDetectsPhp71MultipleCatchNodes()
+    {
+        $node = $this->createAndEnterCurrentClassNode();
+
+        $catchNode = new Catch_([
+            new Name(['AnException']),
+            new Name(['AnotherException']),
+        ], new Variable('e'));
+        $this->dependencyInspectionVisitor->enterNode($catchNode);
+        $this->dependencyInspectionVisitor->leaveNode($catchNode);
+
+        $this->dependencyInspectionVisitor->leaveNode($node);
+
+        $this->assertTrue($this->dependenciesContain(
+            $this->dependencyInspectionVisitor->dependencies(),
+            new Clazz('AnException')
+        ));
+        $this->assertTrue($this->dependenciesContain(
+            $this->dependencyInspectionVisitor->dependencies(),
+            new Clazz('AnotherException')
+        ));
+    }
+
+    public function testDetectsFetchClassNode()
+    {
+        $node = $this->createAndEnterCurrentClassNode();
+
+        $catchNode = new ClassConstFetch(new Name('StaticTest'), 'test');
+        $this->dependencyInspectionVisitor->enterNode($catchNode);
+        $this->dependencyInspectionVisitor->leaveNode($catchNode);
+
+        $this->dependencyInspectionVisitor->leaveNode($node);
+
+        $this->assertTrue($this->dependenciesContain(
+            $this->dependencyInspectionVisitor->dependencies(),
+            new Clazz('StaticTest')
         ));
     }
 }

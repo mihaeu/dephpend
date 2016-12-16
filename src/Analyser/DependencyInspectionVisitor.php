@@ -11,10 +11,13 @@ use Mihaeu\PhpDependencies\Dependencies\DependencySet;
 use PhpParser\Node;
 use PhpParser\Node\Expr\Instanceof_ as InstanceofNode;
 use PhpParser\Node\Expr\New_ as NewNode;
+use PhpParser\Node\Expr\ClassConstFetch as FetchClassConstantNode;
 use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Expr\StaticCall as StaticCallNode;
 use PhpParser\Node\Name as NameNode;
+use PhpParser\Node\Name;
 use PhpParser\Node\Name\FullyQualified as FullyQualifiedNameNode;
+use PhpParser\Node\Stmt\Catch_ as CatchNode;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\ClassLike as ClassLikeNode;
 use PhpParser\Node\Stmt\ClassMethod as ClassMethodNode;
@@ -65,7 +68,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
             }
         } elseif ($node instanceof NewNode
             && $node->class instanceof FullyQualifiedNameNode) {
-            $this->addInstantiationDependency($node);
+            $this->addName($node->class);
             // WEIRD BUG CAUSING XDEBUG TO NOT COVER ELSEIF ONLY ELSE IF
             // @codeCoverageIgnoreStart
         } elseif ($node instanceof ClassMethodNode) {
@@ -76,7 +79,9 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
             // @codeCoverageIgnoreStart
         } elseif ($node instanceof UseNode) {
             // @codeCoverageIgnoreEnd
-            $this->addUseDependency($node);
+            foreach ($node->uses as $use) {
+                $this->addName($use->name);
+            }
             // @codeCoverageIgnoreStart
         } elseif ($node instanceof StaticCallNode
             && $node->class instanceof FullyQualifiedNameNode) {
@@ -86,12 +91,31 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
             // @codeCoverageIgnoreStart
         } elseif ($node instanceof UseTraitNode) {
             // @codeCoverageIgnoreEnd
-            $this->addUseTraitDependency($node);
+            foreach ($node->traits as $trait) {
+                $this->addName($trait);
+            }
             // @codeCoverageIgnoreStart
         } elseif ($node instanceof InstanceofNode) {
             // @codeCoverageIgnoreEnd
             $this->addInstanceofDependency($node);
+            // @codeCoverageIgnoreStart
+        } elseif ($node instanceof FetchClassConstantNode) {
+            // @codeCoverageIgnoreEnd
+            $this->addName($node->class);
+            // @codeCoverageIgnoreStart
+        } elseif ($node instanceof CatchNode) {
+            // @codeCoverageIgnoreEnd
+            foreach ($node->types as $name) {
+                $this->addName($name);
+            }
         }
+    }
+
+    public function addName(Name $name)
+    {
+        $this->tempDependencies = $this->tempDependencies->add(
+            $this->dependencyFactory->createClazzFromStringArray($name->parts)
+        );
     }
 
     /**
@@ -181,16 +205,6 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     }
 
     /**
-     * @param NewNode $node
-     */
-    private function addInstantiationDependency(NewNode $node)
-    {
-        $this->tempDependencies = $this->tempDependencies->add(
-            $this->dependencyFactory->createClazzFromStringArray($node->class->parts)
-        );
-    }
-
-    /**
      * @param ClassMethodNode $node
      */
     private function addInjectedDependencies(ClassMethodNode $node)
@@ -203,16 +217,6 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
                 );
             }
         }
-    }
-
-    /**
-     * @param UseNode $node
-     */
-    private function addUseDependency(UseNode $node)
-    {
-        $this->tempDependencies = $this->tempDependencies->add(
-            $this->dependencyFactory->createClazzFromStringArray($node->uses[0]->name->parts)
-        );
     }
 
     /**
@@ -233,18 +237,6 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     private function isSubclass(ClassLikeNode $node)
     {
         return !empty($node->extends);
-    }
-
-    /**
-     * @param Node $node
-     */
-    private function addUseTraitDependency(Node $node)
-    {
-        foreach ($node->traits as $trait) {
-            $this->tempDependencies = $this->tempDependencies->add(
-                $this->dependencyFactory->createTraitFromStringArray($trait->parts)
-            );
-        }
     }
 
     /**
