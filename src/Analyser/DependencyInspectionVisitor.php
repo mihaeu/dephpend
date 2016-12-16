@@ -98,7 +98,8 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
             // @codeCoverageIgnoreEnd
             $this->addInstanceofDependency($node);
             // @codeCoverageIgnoreStart
-        } elseif ($node instanceof FetchClassConstantNode) {
+        } elseif ($node instanceof FetchClassConstantNode
+            && !$node->class instanceof Node\Expr\Variable) {
             // @codeCoverageIgnoreEnd
             $this->addName($node->class);
             // @codeCoverageIgnoreStart
@@ -128,23 +129,38 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
      */
     public function leaveNode(Node $node)
     {
-        if ($node instanceof ClassLikeNode) {
-            // not in class context
-            if ($this->currentClass === null) {
-                $this->tempDependencies = new DependencySet();
-                return;
-            }
-
-            // by now the class should have been parsed so replace the
-            // temporary class with the parsed class name
-            $this->dependencies = $this->dependencies->addSet(
-                $this->currentClass,
-                $this->tempDependencies
-            );
-            $this->tempDependencies = new DependencySet();
-            $this->currentClass = null;
+        if (!$node instanceof ClassLikeNode) {
+            return null;
         }
-        return null;
+
+        // not in class context
+        if ($this->currentClass === null) {
+            $this->tempDependencies = new DependencySet();
+            return;
+        }
+
+        // by now the class should have been parsed so replace the
+        // temporary class with the parsed class name
+
+        $this->dependencies = $this->dependencies->addSet(
+            $this->currentClass,
+            $this->tempDependencies
+        );
+        $this->tempDependencies = new DependencySet();
+        $this->currentClass = null;
+    }
+
+    /**
+     * Reset state when parsing a new AST.
+     *
+     * @param Node[] $nodes
+     *
+     * @return null|Node[]|void
+     */
+    public function beforeTraverse(array $nodes)
+    {
+        $this->tempDependencies = new DependencySet();
+        $this->currentClass = null;
     }
 
     /**

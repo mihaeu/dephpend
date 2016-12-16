@@ -20,7 +20,8 @@ class DependencyMap extends AbstractMap
         if ($from->equals($to)
             || $from->count() === 0
             || $to->count() === 0
-            || $to->toString() === 'self') {
+            || $to->toString() === 'self'
+            || $to->toString() === 'parent') {
             return $clone;
         }
 
@@ -55,9 +56,6 @@ class DependencyMap extends AbstractMap
         return $this->map[$from->toString()][self::$VALUE];
     }
 
-    /**
-     * @return DependencySet
-     */
     public function fromDependencies() : DependencySet
     {
         return $this->reduce(new DependencySet(), function (DependencySet $set, Dependency $from) {
@@ -65,9 +63,6 @@ class DependencyMap extends AbstractMap
         });
     }
 
-    /**
-     * @return DependencySet
-     */
     public function allDependencies() : DependencySet
     {
         return $this->reduce(new DependencySet(), function (DependencySet $set, Dependency $from, Dependency $to) {
@@ -101,9 +96,6 @@ class DependencyMap extends AbstractMap
         });
     }
 
-    /**
-     * @inheritDoc
-     */
     public function toString() : string
     {
         return trim($this->reduce('', function (string $carry, Dependency $key, Dependency $value) {

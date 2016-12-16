@@ -170,9 +170,7 @@ class Application extends \Symfony\Component\Console\Application
 
         // run static analysis
         $dependencies = $dI->staticAnalyser()->analyse(
-            $dI->parser()->parse(
-                $dI->phpFileFinder()->getAllPhpFilesFromSources($input->getArgument('source'))
-            )
+            $dI->phpFileFinder()->getAllPhpFilesFromSources($input->getArgument('source'))
         );
 
         // optional: analyse results of dynamic analysis and merge

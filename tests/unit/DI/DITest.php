@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\DI;
 
-use Mihaeu\PhpDependencies\Analyser\Parser;
 use Mihaeu\PhpDependencies\Analyser\StaticAnalyser;
 use Mihaeu\PhpDependencies\Analyser\XDebugFunctionTraceAnalyser;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\OS\PhpFileFinder;
+use PhpParser\Parser;
 
 /**
  * @covers Mihaeu\PhpDependencies\DI\DI

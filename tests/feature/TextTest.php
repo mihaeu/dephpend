@@ -13,8 +13,7 @@ class TextTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             'Mihaeu\PhpDependencies\Analyser --> Mihaeu\PhpDependencies\Dependencies'.PHP_EOL
-            .'Mihaeu\PhpDependencies\Analyser --> Mihaeu\PhpDependencies\OS'.PHP_EOL
-            .'Mihaeu\PhpDependencies\Analyser --> Mihaeu\PhpDependencies\Util'.PHP_EOL,
+            .'Mihaeu\PhpDependencies\Analyser --> Mihaeu\PhpDependencies\OS'.PHP_EOL,
             shell_exec(self::DEPHPEND.' text '.self::SRC
                 .' --no-classes -f Mihaeu\\\\PhpDependencies\\\\Analyser -e "/Parser/"'));
     }
