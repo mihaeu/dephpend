@@ -148,8 +148,8 @@ For quick debugging use the `text` command. Say you want to find out which class
 ```bash
 php -n dephpend.phar text src | grep XYZ
 
-# or for more complex applications increase memory limit and use filters
-php -n -d memory_limit=1000M dephpend.phar text symfony --no-classes --depth 3 --exclude-regex='/Test/'
+# or for more complex applications use filters
+php -n dephpend.phar text symfony --no-classes --depth 3 --exclude-regex='/Test/'
 ```
 
 ### UML
