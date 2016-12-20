@@ -13,13 +13,13 @@ use PhpParser\NodeVisitor\NameResolver;
 class StaticAnalyser
 {
     /** @var NodeTraverser */
-    private $nodeTraverser;
+    protected $nodeTraverser;
 
     /** @var DependencyInspectionVisitor */
-    private $dependencyInspectionVisitor;
+    protected $dependencyInspectionVisitor;
 
     /** @var Parser */
-    private $parser;
+    protected $parser;
 
     /**
      * @param NodeTraverser               $nodeTraverser
@@ -43,7 +43,7 @@ class StaticAnalyser
     {
         $files->each(function (PhpFile $file) {
             $this->nodeTraverser->traverse(
-                $this->parser->parse($file->code())
+                $this->parser->parse($file)
             );
         });
 

@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\DI;
 
+use Mihaeu\PhpDependencies\Analyser\CachedParser;
 use Mihaeu\PhpDependencies\Analyser\DefaultParser;
 use Mihaeu\PhpDependencies\Analyser\DependencyInspectionVisitor;
+use Mihaeu\PhpDependencies\Analyser\FileCache;
 use Mihaeu\PhpDependencies\Analyser\Parser;
 use Mihaeu\PhpDependencies\Analyser\StaticAnalyser;
 use Mihaeu\PhpDependencies\Analyser\XDebugFunctionTraceAnalyser;
@@ -46,7 +48,11 @@ class DI
      */
     public function parser() : Parser
     {
-        return new DefaultParser((new ParserFactory())->create(ParserFactory::PREFER_PHP7));
+        //        return new DefaultParser((new ParserFactory())->create(ParserFactory::PREFER_PHP7));
+        return new CachedParser(
+            new FileCache(),
+            (new ParserFactory())->create(ParserFactory::PREFER_PHP7)
+        );
     }
 
     /**

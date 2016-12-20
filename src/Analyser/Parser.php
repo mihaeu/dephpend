@@ -2,7 +2,9 @@
 
 namespace Mihaeu\PhpDependencies\Analyser;
 
+use Mihaeu\PhpDependencies\OS\PhpFile;
+
 interface Parser
 {
-    public function parse(string $code) : array;
+    public function parse(PhpFile $file) : array;
 }
