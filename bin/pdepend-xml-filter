@@ -1,0 +1,54 @@
+#!/usr/bin/env php
+<?php
+
+if (!isset($argv[1]) || !is_readable($argv[1])) {
+    $doc = <<<EOT
+PHP_Depend Filter (by dePHPend)
+
+Expects pdepend.phar to be in the directory from
+which this script is being called.
+
+Usage:
+  php pdepend-xml-filter <DIR>
+
+EOT;
+    die($doc);
+}
+
+exec('php -n pdepend.phar --dependency-xml='.__DIR__.'/pdepend.xml '.$argv[1]);
+$pdependResultArray = file(__DIR__.'/pdepend.xml', FILE_IGNORE_NEW_LINES);
+unlink(__DIR__.'/pdepend.xml');
+
+$inPackage = '';
+$inClass = '';
+$inEfferent = false;
+$dependencies = [];
+foreach ($pdependResultArray as $line) {
+    if (preg_match('/<package name="([^"]+?)">/', $line, $matches) === 1) {
+        $inPackage = $matches[1];
+    }
+
+    if (preg_match('/<(?:class|interface) name="([^"]+?)">/', $line, $matches) === 1) {
+        $inClass = $inPackage.'\\'.$matches[1];
+        $dependencies[$inClass] = [];
+    }
+
+    if ($inEfferent && preg_match('/<type namespace="([^"]+?)" name="([^"]+?)"\/>/',
+            $line, $matches)) {
+        $dependencies[$inClass][] = $matches[1].'\\'.$matches[2];
+    }
+
+    if (strpos($line, '<efferent>') !== false) {
+        $inEfferent = true;
+    }
+    if (strpos($line, '</efferent>') !== false) {
+        $inEfferent = false;
+    }
+}
+
+foreach ($dependencies as $from => $tos) {
+    foreach ($tos as $to) {
+        echo $from.' --> '.$to.PHP_EOL;
+    }
+}
+//var_dump($dependencies);
