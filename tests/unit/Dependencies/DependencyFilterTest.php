@@ -56,6 +56,20 @@ class DependencyFilterTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testMapUnderscoreNamespacesAlreadyNamespace()
+    {
+        $this->assertEquals(
+            DependencyHelper::map('
+                VendorA\\Tests\\DDC1209_1 --> a\\To
+                A\\__b__\\c --> D\\e\\f
+            '),
+            $this->filter->mapNamespaces(DependencyHelper::map('
+                VendorA\\Tests\\DDC1209_1 --> a\\To
+                A\\__b__\\c --> D\\e\\f
+            '))
+        );
+    }
+
     public function testFilterByDepthThree()
     {
         $dependencies = DependencyHelper::map('

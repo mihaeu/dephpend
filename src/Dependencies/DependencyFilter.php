@@ -145,6 +145,10 @@ class DependencyFilter
             if (strpos($dependency->toString(), '_') === false) {
                 return $dependency;
             }
+            // do not change class which already use namespace
+            if (strpos($dependency->toString(), '\\') !== false) {
+                return $dependency;
+            }
             if ($dependency instanceof Namespaze) {
                 return new Namespaze(explode('_', $dependency->toString()));
             }
