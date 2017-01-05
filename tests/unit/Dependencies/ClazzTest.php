@@ -110,6 +110,14 @@ class ClazzTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @see https://github.com/mihaeu/dephpend/issues/22
+     */
+    public function testAcceptsNumbersAsFirstCharacterInName()
+    {
+        $this->assertEquals('Vendor\\1Sub\\2Factor', new Clazz('2Factor', new Namespaze(['Vendor', '1Sub'])));
+    }
+
     public function testCannotLeftReduceClassWithNamespaceByMoreThanItsLength()
     {
         $this->assertEquals(
