@@ -103,4 +103,9 @@ class Namespaze implements Dependency
             return !is_string($value);
         });
     }
+
+    public function isNamespaced(): bool
+    {
+        return count($this->parts) > 0;
+    }
 }

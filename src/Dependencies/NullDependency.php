@@ -44,11 +44,13 @@ class NullDependency implements Dependency
         return false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function count()
     {
         return 0;
+    }
+
+    public function isNamespaced(): bool
+    {
+        return false;
     }
 }

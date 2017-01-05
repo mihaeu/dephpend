@@ -16,5 +16,7 @@ interface Dependency extends \Countable
 
     public function namespaze() : Namespaze;
 
+    public function isNamespaced() : bool;
+
     public function inNamespaze(Namespaze $other) : bool;
 }

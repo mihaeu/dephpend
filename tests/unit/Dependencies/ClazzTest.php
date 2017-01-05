@@ -110,6 +110,14 @@ class ClazzTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @see https://github.com/mihaeu/dephpend/issues/22
+     */
+    public function testAcceptsNumbersAsFirstCharacterInName()
+    {
+        $this->assertEquals('Vendor\\1Sub\\2Factor', new Clazz('2Factor', new Namespaze(['Vendor', '1Sub'])));
+    }
+
     public function testCannotLeftReduceClassWithNamespaceByMoreThanItsLength()
     {
         $this->assertEquals(
@@ -135,5 +143,15 @@ class ClazzTest extends \PHPUnit_Framework_TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('');
         new Clazz('Mihaeu\\Test');
+    }
+
+    public function testDetectsIfClassIsNotNamespaced()
+    {
+        $this->assertFalse((new Clazz('NoNamespace'))->isNamespaced());
+    }
+
+    public function testDetectsIfClassIsNamespaced()
+    {
+        $this->assertTrue((new Clazz('HasNamespace', new Namespaze(['Vendor'])))->isNamespaced());
     }
 }
