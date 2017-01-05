@@ -144,4 +144,14 @@ class ClazzTest extends \PHPUnit_Framework_TestCase
         $this->expectExceptionMessage('');
         new Clazz('Mihaeu\\Test');
     }
+
+    public function testDetectsIfClassIsNotNamespaced()
+    {
+        $this->assertFalse((new Clazz('NoNamespace'))->isNamespaced());
+    }
+
+    public function testDetectsIfClassIsNamespaced()
+    {
+        $this->assertTrue((new Clazz('HasNamespace', new Namespaze(['Vendor'])))->isNamespaced());
+    }
 }

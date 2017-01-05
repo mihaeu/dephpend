@@ -89,4 +89,9 @@ abstract class ClazzLike implements Dependency
     {
         return $this->namespaze->inNamespaze($other);
     }
+
+    public function isNamespaced() : bool
+    {
+        return $this->namespaze->count() > 0;
+    }
 }

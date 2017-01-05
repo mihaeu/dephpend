@@ -48,4 +48,9 @@ class NullDependencyTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertCount(0, new NullDependency());
     }
+    
+    public function testIsNotNamespaced()
+    {
+        $this->assertFalse((new NullDependency())->isNamespaced());
+    }
 }
