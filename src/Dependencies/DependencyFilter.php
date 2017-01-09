@@ -145,6 +145,9 @@ class DependencyFilter
             if (strpos($dependency->toString(), '_') === false) {
                 return $dependency;
             }
+            if ($dependency->isNamespaced()) {
+                return $dependency;
+            }
             if ($dependency instanceof Namespaze) {
                 return new Namespaze(explode('_', $dependency->toString()));
             }

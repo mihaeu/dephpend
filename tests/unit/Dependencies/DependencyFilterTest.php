@@ -46,12 +46,24 @@ class DependencyFilterTest extends \PHPUnit_Framework_TestCase
             DependencyHelper::map('
                 A\\b\\c --> D\\e\\f
                 F\\a --> D\\b
-                _A\\b --> _B\\c
             '),
             $this->filter->mapNamespaces(DependencyHelper::map('
                 A_b_c --> D_e_f
                 F_a --> D_b
-                _A_b --> _B_c
+            '))
+        );
+    }
+
+    public function testMapUnderscoreNamespacesAlreadyNamespace()
+    {
+        $this->assertEquals(
+            DependencyHelper::map('
+                VendorA\\Tests\\DDC1209_1 --> a\\To
+                A\\__b__\\c --> D\\e\\f
+            '),
+            $this->filter->mapNamespaces(DependencyHelper::map('
+                VendorA\\Tests\\DDC1209_1 --> a\\To
+                A\\__b__\\c --> D\\e\\f
             '))
         );
     }
