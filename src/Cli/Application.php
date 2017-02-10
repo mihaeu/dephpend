@@ -242,9 +242,7 @@ class Application extends \Symfony\Component\Console\Application
     {
         foreach ($_SERVER['argv'] as $argv) {
             if ($argv === '--help' || $argv === '-h') {
-                $_SERVER['argv'] = count($_SERVER['argv']) > 2
-                    ? ['', 'help', $this->findCommand()]
-                    : [''];
+                $_SERVER['argv'] = ['', 'help', $this->findCommand()];
                 return;
             }
         }
