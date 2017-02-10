@@ -20,7 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @covers Mihaeu\PhpDependencies\Cli\DsmCommand
  * @covers Mihaeu\PhpDependencies\Cli\BaseCommand
  */
-class DsmCommandTest extends \PHPUnit_Framework_TestCase
+class DsmCommandTest extends \PHPUnit\Framework\TestCase
 {
     /** @var DsmCommand */
     private $dsmCommand;

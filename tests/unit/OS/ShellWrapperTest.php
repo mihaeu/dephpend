@@ -7,7 +7,7 @@ namespace Mihaeu\PhpDependencies\OS;
 /**
  * @covers Mihaeu\PhpDependencies\OS\ShellWrapper
  */
-class ShellWrapperTest extends \PHPUnit_Framework_TestCase
+class ShellWrapperTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Echo is installed on all Windows, Linux and Mac machines and should never fail.

@@ -12,7 +12,7 @@ use Mihaeu\PhpDependencies\Dependencies\Namespaze;
 /**
  * @covers Mihaeu\PhpDependencies\DependencyHelper
  */
-class DependencyHelperTest extends \PHPUnit_Framework_TestCase
+class DependencyHelperTest extends \PHPUnit\Framework\TestCase
 {
     public function testConvert()
     {

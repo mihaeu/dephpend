@@ -10,7 +10,7 @@ use Mihaeu\PhpDependencies\DependencyHelper;
  * @covers Mihaeu\PhpDependencies\Dependencies\DependencyMap
  * @covers Mihaeu\PhpDependencies\Util\AbstractMap
  */
-class DependencyMapTest extends \PHPUnit_Framework_TestCase
+class DependencyMapTest extends \PHPUnit\Framework\TestCase
 {
     public function testNoDuplicates()
     {

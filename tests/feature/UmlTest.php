@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\tests\feature;
 
-class UmlTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class UmlTest extends TestCase
 {
     const DEPHPEND = PHP_BINARY.' -n '.__DIR__.'/../../bin/dephpend';
     const SRC = __DIR__.'/../../src';

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\tests\feature;
 
-class DsmTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class DsmTest extends TestCase
 {
     const DEPHPEND = PHP_BINARY.' -n '.__DIR__.'/../../bin/dephpend';
     const SRC = __DIR__.'/../../src';

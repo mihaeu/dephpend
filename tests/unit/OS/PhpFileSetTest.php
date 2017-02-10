@@ -10,7 +10,7 @@ use Mihaeu\PhpDependencies\Exceptions\IndexOutOfBoundsException;
  * @covers Mihaeu\PhpDependencies\OS\PhpFileSet
  * @covers Mihaeu\PhpDependencies\Util\AbstractCollection
  */
-class PhpFileSetTest extends \PHPUnit_Framework_TestCase
+class PhpFileSetTest extends \PHPUnit\Framework\TestCase
 {
     public function testEquals()
     {

@@ -9,7 +9,7 @@ use org\bovigo\vfs\vfsStream;
 /**
  * @covers Mihaeu\PhpDependencies\OS\PhpFileFinder
  */
-class PhpFileFinderTest extends \PHPUnit_Framework_TestCase
+class PhpFileFinderTest extends \PHPUnit\Framework\TestCase
 {
     /** @var PhpFileFinder */
     private $finder;

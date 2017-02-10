@@ -9,7 +9,7 @@ use Mihaeu\PhpDependencies\DependencyHelper;
 /**
  * @covers Mihaeu\PhpDependencies\Dependencies\DependencyFilter
  */
-class DependencyFilterTest extends \PHPUnit_Framework_TestCase
+class DependencyFilterTest extends \PHPUnit\Framework\TestCase
 {
     /** @var DependencyFilter */
     private $filter;

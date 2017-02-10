@@ -14,7 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * @covers Mihaeu\PhpDependencies\Cli\DotCommand
  */
-class DotCommandTest extends \PHPUnit_Framework_TestCase
+class DotCommandTest extends \PHPUnit\Framework\TestCase
 {
     /** @var DotCommand */
     private $dotCommand;

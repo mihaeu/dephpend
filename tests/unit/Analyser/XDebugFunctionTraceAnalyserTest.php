@@ -9,7 +9,7 @@ use Symfony\Component\Finder\SplFileInfo;
 /**
  * @covers Mihaeu\PhpDependencies\Analyser\XDebugFunctionTraceAnalyser
  */
-class XDebugFunctionTraceAnalyserTest extends \PHPUnit_Framework_TestCase
+class XDebugFunctionTraceAnalyserTest extends \PHPUnit\Framework\TestCase
 {
     /** @var XDebugFunctionTraceAnalyser */
     private $xDebugFunctionTraceAnalyser;

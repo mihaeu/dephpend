@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\tests\feature;
 
-class MetricsTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class MetricsTest extends TestCase
 {
     const DEPHPEND = PHP_BINARY.' -n '.__DIR__.'/../../bin/dephpend';
     const SRC = __DIR__.'/../../src';

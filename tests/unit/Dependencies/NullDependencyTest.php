@@ -7,7 +7,7 @@ namespace Mihaeu\PhpDependencies\Dependencies;
 /**
  * @covers Mihaeu\PhpDependencies\Dependencies\NullDependency
  */
-class NullDependencyTest extends \PHPUnit_Framework_TestCase
+class NullDependencyTest extends \PHPUnit\Framework\TestCase
 {
     public function testReduceToDepth()
     {

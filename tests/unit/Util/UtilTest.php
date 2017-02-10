@@ -7,7 +7,7 @@ namespace Mihaeu\PhpDependencies\Util;
 /**
  * @covers Mihaeu\PhpDependencies\Util\Util
  */
-class UtilTest extends \PHPUnit_Framework_TestCase
+class UtilTest extends \PHPUnit\Framework\TestCase
 {
     public function testArrayMatchesAtLeastOnce()
     {

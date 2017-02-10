@@ -10,7 +10,7 @@ use Mihaeu\PhpDependencies\DependencyHelper;
  * @covers Mihaeu\PhpDependencies\Dependencies\DependencySet
  * @covers Mihaeu\PhpDependencies\Util\AbstractCollection
  */
-class DependencySetTest extends \PHPUnit_Framework_TestCase
+class DependencySetTest extends \PHPUnit\Framework\TestCase
 {
     public function testAdd()
     {

@@ -13,7 +13,7 @@ use Mihaeu\PhpDependencies\Dependencies\Trait_;
 /**
  * @covers Mihaeu\PhpDependencies\Analyser\Metrics
  */
-class MetricsTest extends \PHPUnit_Framework_TestCase
+class MetricsTest extends \PHPUnit\Framework\TestCase
 {
     /** @var Metrics */
     private $metrics;

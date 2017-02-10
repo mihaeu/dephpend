@@ -12,7 +12,7 @@ use org\bovigo\vfs\vfsStream;
 /**
  * @covers Mihaeu\PhpDependencies\OS\DotWrapper
  */
-class DotWrapperTest extends \PHPUnit_Framework_TestCase
+class DotWrapperTest extends \PHPUnit\Framework\TestCase
 {
     /** @var ShellWrapper|\PHPUnit_Framework_MockObject_MockObject */
     private $shellWrapper;

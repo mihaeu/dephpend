@@ -14,7 +14,7 @@ use Mihaeu\PhpDependencies\OS\PhpFileFinder;
 /**
  * @covers Mihaeu\PhpDependencies\DI\DI
  */
-class DITest extends \PHPUnit_Framework_TestCase
+class DITest extends \PHPUnit\Framework\TestCase
 {
     public function testCreatesDependencyFilter()
     {

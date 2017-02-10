@@ -17,7 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * @covers Mihaeu\PhpDependencies\Cli\MetricsCommand
  */
-class MetricsCommandTest extends \PHPUnit_Framework_TestCase
+class MetricsCommandTest extends \PHPUnit\Framework\TestCase
 {
     /** @var MetricsCommand */
     private $metricsCommand;

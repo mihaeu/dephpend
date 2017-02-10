@@ -56,7 +56,7 @@ use PhpParser\Node\Stmt\Trait_ as TraitNode;
  *
  * @covers Mihaeu\PhpDependencies\Analyser\DependencyInspectionVisitor
  */
-class DependencyInspectionVisitorTest extends \PHPUnit_Framework_TestCase
+class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
 {
     /** @var DependencyInspectionVisitor */
     private $dependencyInspectionVisitor;

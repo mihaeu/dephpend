@@ -9,7 +9,7 @@ use Mihaeu\PhpDependencies\DependencyHelper;
 /**
  * @covers Mihaeu\PhpDependencies\Formatters\PlantUmlFormatter
  */
-class PlantUmlFormatterTest extends \PHPUnit_Framework_TestCase
+class PlantUmlFormatterTest extends \PHPUnit\Framework\TestCase
 {
     /** @var PlantUmlFormatter */
     private $plantUmlFormatter;

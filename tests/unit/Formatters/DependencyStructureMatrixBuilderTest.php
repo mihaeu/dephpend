@@ -8,7 +8,7 @@ use Mihaeu\PhpDependencies\Util\Functional;
 /**
  * @covers Mihaeu\PhpDependencies\Formatters\DependencyStructureMatrixBuilder
  */
-class DependencyStructureMatrixBuilderTest extends \PHPUnit_Framework_TestCase
+class DependencyStructureMatrixBuilderTest extends \PHPUnit\Framework\TestCase
 {
     /** @var DependencyStructureMatrixBuilder */
     private $builder;

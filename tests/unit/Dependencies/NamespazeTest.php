@@ -9,7 +9,7 @@ use Mihaeu\PhpDependencies\Exceptions\IndexOutOfBoundsException;
 /**
  * @covers Mihaeu\PhpDependencies\Dependencies\Namespaze
  */
-class NamespazeTest extends \PHPUnit_Framework_TestCase
+class NamespazeTest extends \PHPUnit\Framework\TestCase
 {
     public function testAcceptsEmptyNamespace()
     {

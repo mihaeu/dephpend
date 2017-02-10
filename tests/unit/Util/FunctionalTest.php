@@ -7,7 +7,7 @@ namespace Mihaeu\PhpDependencies\Util;
 /**
  * @covers Mihaeu\PhpDependencies\Util\Functional
  */
-class FunctionalTest extends \PHPUnit_Framework_TestCase
+class FunctionalTest extends \PHPUnit\Framework\TestCase
 {
     public function testCompose()
     {

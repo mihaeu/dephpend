@@ -7,7 +7,7 @@ use PhpParser\Parser;
 /**
  * @covers Mihaeu\PhpDependencies\Analyser\DefaultParser
  */
-class DefaultParserTest extends \PHPUnit_Framework_TestCase
+class DefaultParserTest extends \PHPUnit\Framework\TestCase
 {
     public function testPassesCodeToBaseParser()
     {

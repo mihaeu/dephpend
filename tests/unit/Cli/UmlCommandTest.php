@@ -19,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @covers Mihaeu\PhpDependencies\Cli\UmlCommand
  * @covers Mihaeu\PhpDependencies\Cli\BaseCommand
  */
-class UmlCommandTest extends \PHPUnit_Framework_TestCase
+class UmlCommandTest extends \PHPUnit\Framework\TestCase
 {
     /** @var UmlCommand */
     private $umlCommand;

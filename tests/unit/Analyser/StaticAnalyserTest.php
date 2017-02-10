@@ -11,7 +11,7 @@ use PhpParser\NodeTraverser;
 /**
  * @covers Mihaeu\PhpDependencies\Analyser\StaticAnalyser
  */
-class StaticAnalyserTest extends \PHPUnit_Framework_TestCase
+class StaticAnalyserTest extends \PHPUnit\Framework\TestCase
 {
     /** @var StaticAnalyser */
     private $analyser;

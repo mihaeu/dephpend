@@ -19,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @covers Mihaeu\PhpDependencies\Cli\TextCommand
  * @covers Mihaeu\PhpDependencies\Cli\BaseCommand
  */
-class TextCommandTest extends \PHPUnit_Framework_TestCase
+class TextCommandTest extends \PHPUnit\Framework\TestCase
 {
     /** @var TextCommand */
     private $textCommand;

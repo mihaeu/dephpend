@@ -13,7 +13,7 @@ use org\bovigo\vfs\vfsStream;
  * @covers Mihaeu\PhpDependencies\Exceptions\FileIsNotReadableException
  * @covers Mihaeu\PhpDependencies\Exceptions\FileDoesNotExistException
  */
-class PhpFileTest extends \PHPUnit_Framework_TestCase
+class PhpFileTest extends \PHPUnit\Framework\TestCase
 {
     public function testEquals()
     {

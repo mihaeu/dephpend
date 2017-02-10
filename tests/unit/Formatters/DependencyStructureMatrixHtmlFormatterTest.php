@@ -9,7 +9,7 @@ use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 /**
  * @covers Mihaeu\PhpDependencies\Formatters\DependencyStructureMatrixHtmlFormatter
  */
-class DependencyStructureMatrixHtmlFormatterTest extends \PHPUnit_Framework_TestCase
+class DependencyStructureMatrixHtmlFormatterTest extends \PHPUnit\Framework\TestCase
 {
     /** @var DependencyStructureMatrixBuilder|\PHPUnit_Framework_MockObject_MockObject */
     private $dependencyStructureMatrixBuilder;

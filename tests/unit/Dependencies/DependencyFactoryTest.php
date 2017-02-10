@@ -7,7 +7,7 @@ namespace Mihaeu\PhpDependencies\Dependencies;
 /**
  * @covers Mihaeu\PhpDependencies\Dependencies\DependencyFactory
  */
-class DependencyFactoryTest extends \PHPUnit_Framework_TestCase
+class DependencyFactoryTest extends \PHPUnit\Framework\TestCase
 {
     /** @var DependencyFactory */
     private $clazzFactory;

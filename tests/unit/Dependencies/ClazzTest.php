@@ -11,7 +11,7 @@ use Mihaeu\PhpDependencies\DependencyHelper;
  * @covers Mihaeu\PhpDependencies\Dependencies\Clazz
  * @covers Mihaeu\PhpDependencies\Dependencies\ClazzLike
  */
-class ClazzTest extends \PHPUnit_Framework_TestCase
+class ClazzTest extends \PHPUnit\Framework\TestCase
 {
     public function testAcceptsUtf8Name()
     {

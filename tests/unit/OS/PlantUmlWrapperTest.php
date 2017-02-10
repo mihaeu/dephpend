@@ -12,7 +12,7 @@ use Mihaeu\PhpDependencies\Formatters\PlantUmlFormatter;
  * @covers Mihaeu\PhpDependencies\OS\PlantUmlWrapper
  * @covers Mihaeu\PhpDependencies\Exceptions\PlantUmlNotInstalledException
  */
-class PlantUmlWrapperTest extends \PHPUnit_Framework_TestCase
+class PlantUmlWrapperTest extends \PHPUnit\Framework\TestCase
 {
     /** @var ShellWrapper|\PHPUnit_Framework_MockObject_MockObject */
     private $shellWrapper;
