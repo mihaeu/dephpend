@@ -42,9 +42,12 @@ class StaticAnalyser
     public function analyse(PhpFileSet $files) : DependencyMap
     {
         $files->each(function (PhpFile $file) {
-            $this->nodeTraverser->traverse(
-                $this->parser->parse($file->code())
-            );
+            try {
+                $this->nodeTraverser->traverse(
+                    $this->parser->parse($file->code())
+                );
+            } catch (\Throwable $e) {
+            }
         });
 
         return $this->dependencyInspectionVisitor->dependencies();
