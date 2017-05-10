@@ -223,6 +223,15 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
         );
     }
 
+    public function testIgnoresInnerClassesWithoutName()
+    {
+        $node = new ClassNode('');
+        $this->dependencyInspectionVisitor->enterNode($node);
+        $this->dependencyInspectionVisitor->leaveNode($node);
+
+        $this->assertEmpty($this->dependencyInspectionVisitor->dependencies());
+    }
+
     public function testDetectsDependenciesFromMethodArguments()
     {
         $methodNode = new ClassMethod('someMethod');
