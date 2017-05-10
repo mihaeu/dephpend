@@ -176,6 +176,10 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
      */
     private function setCurrentClass(ClassLikeNode $node)
     {
+        if (!isset($node->namespacedName)) {
+            return;
+        }
+
         if ($node instanceof InterfaceNode) {
             $this->currentClass = $this->dependencyFactory->createInterfazeFromStringArray($node->namespacedName->parts);
             // @codeCoverageIgnoreStart
