@@ -157,12 +157,11 @@ class ApplicationTest extends \PHPUnit\Framework\TestCase
 
     public function testHelpOptionWithAnsiOptionPrintsHelp()
     {
-        self::markTestSkipped('Will be fixed when Symfony Console is replaced');
         $_SERVER['argv'] = ['', '--help', '--ansi'];
         $input = new ArgvInput();
         $output = new BufferedOutput();
 
         (new Application('', '', $this->createMock(DI::class)))->doRun($input, $output);
-        $this->assertContains('help [options]', $output->fetch());
+        $this->assertContains('list [options]', $output->fetch());
     }
 }
