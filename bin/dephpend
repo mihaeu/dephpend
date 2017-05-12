@@ -23,7 +23,7 @@ if (file_exists(__DIR__.'/../vendor/autoload.php')) {
 ini_set('xdebug.max_nesting_level', '3000');
 
 $name = <<<EOT
-      _      _____  _    _ _____               _ 
+      _      _____  _    _ _____               _
      | |    |  __ \| |  | |  __ \             | |
    __| | ___| |__) | |__| | |__) |__ _ __   __| |
   / _` |/ _ \  ___/|  __  |  ___/ _ \ '_ \ / _` |
@@ -31,5 +31,5 @@ $name = <<<EOT
   \__,_|\___|_|    |_|  |_|_|   \___|_| |_|\__,_|
 EOT;
 
-$application = new Application($name, '0.3.1', new DI($internals));
+$application = new Application($name, '0.4.0', new DI($internals));
 $application->run();
