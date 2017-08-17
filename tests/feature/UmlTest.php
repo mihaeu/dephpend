@@ -25,6 +25,7 @@ namespace Util {
 }
 }
 
+
 Mihaeu.PhpDependencies.OS --|> Mihaeu.PhpDependencies.Dependencies
 Mihaeu.PhpDependencies.OS --|> Mihaeu.PhpDependencies.Exceptions
 Mihaeu.PhpDependencies.OS --|> Mihaeu.PhpDependencies.Formatters

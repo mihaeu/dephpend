@@ -23,6 +23,9 @@ class PlantUmlFormatterTest extends \PHPUnit\Framework\TestCase
     {
         $dependencyCollection = DependencyHelper::map('ClassA --> ClassB, ClassC');
         $this->assertEquals("@startuml\n\n"
+            ."class ClassA\n"
+            ."class ClassB\n"
+            ."class ClassC\n\n"
             ."ClassA --|> ClassB\n"
             ."ClassA --|> ClassC\n"
             .'@enduml', $this->plantUmlFormatter->format($dependencyCollection));
@@ -41,6 +44,11 @@ namespace a {
 namespace b {
 }
 }
+
+class A.b.C1
+class A.b.C2
+class B.a.C1
+class B.b.C2
 
 A.b.C1 --|> A.b.C2
 B.a.C1 --|> B.b.C2
