@@ -17,17 +17,18 @@ class TextTest extends BaseTest
 
     public function testTextCommandOnPhpUnitWithUnderscoreNamespaces()
     {
-        $this->assertEquals(
-            'PHPUnit\Runner --> PHPUnit\Framework'.PHP_EOL
-            .'PHPUnit\Runner --> PHPUnit\Util'.PHP_EOL
+        $this->assertEquals(''
             .'PHPUnit\Runner --> File\Iterator'.PHP_EOL
-            .'PHPUnit\Runner --> SebastianBergmann'.PHP_EOL
-            .'PHPUnit\Runner --> PHP'.PHP_EOL
-            .'PHPUnit\Runner --> PHPUnit\Util\PHP'.PHP_EOL
-            .'PHPUnit\Runner --> PHPUnit'.PHP_EOL
             .'PHPUnit\Runner\Filter --> PHPUnit\Framework'.PHP_EOL
-            .'PHPUnit\Runner\Filter --> PHPUnit\Util'.PHP_EOL,
+            .'PHPUnit\Runner\Filter --> PHPUnit\Util'.PHP_EOL
+            .'PHPUnit\Runner --> PHP'.PHP_EOL
+            .'PHPUnit\Runner --> PHPUnit'.PHP_EOL
+            .'PHPUnit\Runner --> PHPUnit\Framework'.PHP_EOL
+            .'PHPUnit\Runner --> PHPUnit\Util'.PHP_EOL
+            .'PHPUnit\Runner --> PHPUnit\Util\PHP'.PHP_EOL
+            .'PHPUnit\Runner --> SebastianBergmann'.PHP_EOL
+            .'',
             shell_exec(self::DEPHPEND.' text '.__DIR__.'/../../vendor/phpunit/phpunit/src'
-                .' --underscore-namespaces --no-classes -f "PHPUnit\\\\Runner"'));
+                .' --underscore-namespaces --no-classes -f "PHPUnit\\\\Runner" | sort'));
     }
 }
