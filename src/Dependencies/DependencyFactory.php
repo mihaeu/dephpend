@@ -14,6 +14,10 @@ class DependencyFactory
     final public function createClazzFromStringArray(array $parts) : Dependency
     {
         try {
+            $name = $this->extractClazzPart($parts);
+            if (preg_match('/interface/i', $name)) {
+                return $this->createInterfazeFromStringArray($parts);
+            }
             $clazz = new Clazz(
                 $this->extractClazzPart($parts),
                 new Namespaze($this->extractNamespaceParts($parts))
