@@ -23,6 +23,7 @@ class PlantUmlFormatter implements Formatter
     public function format(DependencyMap $map, \Closure $mappers = null) : string
     {
         return '@startuml'.PHP_EOL
+            .'hide empty members'.PHP_EOL
             .$this->plantUmlNamespaceDefinitions($map).PHP_EOL
             .$this->plantUmlClassDefinitions($map).PHP_EOL
             .$this->dependenciesInPlantUmlFormat($map).PHP_EOL
