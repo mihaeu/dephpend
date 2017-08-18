@@ -33,8 +33,8 @@ class PlantUmlFormatter implements Formatter
     private function dependenciesInPlantUmlFormat(DependencyMap $map) : string
     {
         return str_replace(
-            ['-->', '\\'],
-            ['--|>', '.'],
+            ['\\'],
+            ['.'],
             $map->toString()
         );
     }
