@@ -1,4 +1,6 @@
-# ![dePHPend logo](https://mike-on-a-bike.com/dephpend-logo.png) 
+<p align="center">
+  <img src="https://dephpend.com/logo.svg">
+</p>
 
 > Detect flaws in your architecture, before they drag you down into the depths of dependency hell ...
 
