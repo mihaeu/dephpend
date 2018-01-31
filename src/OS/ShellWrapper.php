@@ -8,6 +8,8 @@ class ShellWrapper
 {
     private $STD_ERR_PIPE = ' 2> /dev/null';
 
+    private $STD_ERR_PIPE_WIN = ' 2> NUL';
+
     /**
      * @param string $command
      *
@@ -17,7 +19,14 @@ class ShellWrapper
     {
         $output = [];
         $returnVar = 1;
-        exec($command.$this->STD_ERR_PIPE, $output, $returnVar);
+
+        if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $command .= $this->STD_ERR_PIPE_WIN;
+        } else {
+            $command .= $this->STD_ERR_PIPE;
+        }
+
+        exec($command, $output, $returnVar);
 
         return $returnVar;
     }
