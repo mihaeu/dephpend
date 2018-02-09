@@ -141,7 +141,7 @@ class ClazzTest extends \PHPUnit\Framework\TestCase
     public function testThrowsExceptionIfNameNotValid()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('');
+        $this->expectExceptionMessage('Class name "Mihaeu\Test" is not valid.');
         new Clazz('Mihaeu\\Test');
     }
 
