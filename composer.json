@@ -16,8 +16,7 @@
     },
     "require-dev": {
         "mikey179/vfsStream": "^1.6",
-        "phpunit/phpunit": "^6.0",
-        "friendsofphp/php-cs-fixer": "^1.11"
+        "phpunit/phpunit": "^6.5"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -32,11 +31,6 @@
         "psr-4": {
             "Mihaeu\\PhpDependencies\\": ["src/", "tests/unit/"],
             "Mihaeu\\PhpDependencies\\Tests\\Feature\\": ["tests/feature/"]
-        }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "0.2.x-dev"
         }
     },
     "support": {
