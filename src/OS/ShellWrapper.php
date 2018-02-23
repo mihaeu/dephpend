@@ -6,7 +6,7 @@ namespace Mihaeu\PhpDependencies\OS;
 
 class ShellWrapper
 {
-    private $STD_ERR_PIPE = ' 2> /dev/null';
+    private $STD_ERR_PIPE = ' 2>&1 /dev/null';
 
     private $STD_ERR_PIPE_WIN = ' 2> NUL';
 
