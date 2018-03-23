@@ -10,6 +10,8 @@ class ShellWrapper
 
     private $STD_ERR_PIPE_WIN = ' 2> NUL';
 
+    private $STD_ERR_PIPE_WIN = ' 2> NUL';
+
     /**
      * @param string $command
      *
