@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.5.0] - 2018-03-23
+### Added
+ - PHP 7.2 support
+
+### Fixed
+ - better Windows support
+
 ## [0.4.0] - 2017-05-12
 ### Added
  - PHP 7.1 support
@@ -41,7 +48,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
  - first tagged release
  - uml, text, dsm and metrics command
 
-[Unreleased]: https://github.com/mihaeu/dephpend/compare/0.3.2...HEAD
+[Unreleased]: https://github.com/mihaeu/dephpend/compare/0.5.0...HEAD
+[0.5.0]: https://github.com/mihaeu/dephpend/compare/0.4.0...0.5.0
+[0.4.0]: https://github.com/mihaeu/dephpend/compare/0.3.2...0.4.0
 [0.3.2]: https://github.com/mihaeu/dephpend/compare/0.3.1...0.3.2
 [0.3.1]: https://github.com/mihaeu/dephpend/compare/0.3.0...0.3.1
 [0.3.0]: https://github.com/mihaeu/dephpend/compare/0.2.0...0.3.0
