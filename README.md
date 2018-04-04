@@ -271,7 +271,7 @@ Save this in your `.git/hooks/pre-commit` or `.git/hooks/pre-push` and you'll ne
 
 ### Architecture Timeline
 
-Executing dePHPend's metric command on every branch `g log --pretty=%H` and using `convert -delay 100 -loop 0 *.png dephpend-timeline.gif` you can create a nice animation detailing the evolution of your architecture:
+Executing dePHPend's metric command on any branch `g log --pretty=%H` and using `convert -delay 100 -loop 0 *.png dephpend-timeline.gif` you can create a nice animation detailing the evolution of your architecture:
 
 ![dePHPend Timeline](https://dephpend.com/dephpend-timeline.gif)
 
