@@ -253,7 +253,7 @@ The trace file, by default, will be in your system's temporary folder. This can 
 Using the `text` command it is fairly straightforward to create a script which validates your architecture:
 
 ```php
-#/usr/bin/env php
+#!/usr/bin/env php
 <?php
 
 $output = shell_exec('php -n dephpend.phar text src --no-classes');
