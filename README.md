@@ -280,7 +280,7 @@ Executing dePHPend's metric command on any branch `git log --pretty=%H` and usin
 Basically the process can be broken down into four steps (the actual work is a bit more complicated and for those interested, I'll publish a paper about it, later this year):
 
  - find all relevant PHP files
- - generate an abstract syntax tree using [php-parser]() by the awesome Nikita Popov
+ - generate an abstract syntax tree using [php-parser](https://github.com/nikic/PHP-Parser) by the awesome Nikita Popov
  - traverse the tree, gathering dependencies along the way
  - pass the information to a formatter
 
