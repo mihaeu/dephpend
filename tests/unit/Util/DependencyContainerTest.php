@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Mihaeu\PhpDependencies\DI;
-
-use Mihaeu\PhpDependencies\Util\DependencyContainer;
+namespace Mihaeu\PhpDependencies\Util;
 
 /**
  * @covers Mihaeu\PhpDependencies\Util\DependencyContainer
@@ -23,7 +21,7 @@ class DependencyContainerTest extends \PHPUnit\Framework\TestCase
             if (!$method->hasReturnType()) {
                 continue;
             }
-            $methods[] = [$method->getName(), $method->getReturnType()->getName()];
+            $methods[] = [$method->getName(), (string) $method->getReturnType()];
         }
         return $methods;
     }
