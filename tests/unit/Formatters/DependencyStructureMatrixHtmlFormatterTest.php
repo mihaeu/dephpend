@@ -30,7 +30,8 @@ class DependencyStructureMatrixHtmlFormatterTest extends \PHPUnit\Framework\Test
             'B' => ['A' => 0, 'B' => 0, 'C' => 1],
             'C' => ['A' => 0, 'B' => 0, 'C' => 0]
         ]);
-        assertContains('<table><thead>'
+        assertContains(
+            '<table><thead>'
             .'<tr><th>X</th><th>1</th><th>2</th><th>3</th></tr>'
             .'</thead><tbody>'
             .'<tr><th>1: A</th><td>X</td><td>1</td><td>1</td></tr>'

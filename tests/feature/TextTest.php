@@ -17,7 +17,8 @@ class TextTest extends TestCase
             'Mihaeu\PhpDependencies\Analyser --> Mihaeu\PhpDependencies\Dependencies'.PHP_EOL
             .'Mihaeu\PhpDependencies\Analyser --> Mihaeu\PhpDependencies\OS'.PHP_EOL,
             shell_exec(self::DEPHPEND.' text '.self::SRC
-                .' --no-classes -f Mihaeu\\\\PhpDependencies\\\\Analyser -e "/Parser/"'));
+            .' --no-classes -f Mihaeu\\\\PhpDependencies\\\\Analyser -e "/Parser/"')
+        );
     }
 
     public function testTextCommandOnPhpUnitWithUnderscoreNamespaces()
@@ -34,6 +35,7 @@ class TextTest extends TestCase
             .'PHPUnit\Runner\Filter --> PHPUnit\Framework'.PHP_EOL
             .'PHPUnit\Runner\Filter --> PHPUnit\Util'.PHP_EOL,
             shell_exec(self::DEPHPEND.' text '.__DIR__.'/../../vendor/phpunit/phpunit/src'
-                .' --underscore-namespaces --no-classes -f "PHPUnit\\\\Runner"'));
+            .' --underscore-namespaces --no-classes -f "PHPUnit\\\\Runner"')
+        );
     }
 }

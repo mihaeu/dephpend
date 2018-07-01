@@ -101,11 +101,13 @@ class DependencyMapTest extends \PHPUnit\Framework\TestCase
             'VendorA\\A --> VendorB\\A'.PHP_EOL
             .'VendorA\\A --> VendorA\\C'.PHP_EOL
             .'VendorB\\B --> VendorA\\A'.PHP_EOL
-            .'VendorC\\C --> B', DependencyHelper::map('
+            .'VendorC\\C --> B',
+            DependencyHelper::map('
             VendorA\\A --> VendorB\\A, VendorA\\C
             VendorB\\B --> VendorA\\A
             VendorC\\C --> B
-        ')->toString());
+        ')->toString()
+        );
     }
 
     public function testMapToArray()

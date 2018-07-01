@@ -68,13 +68,13 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         } elseif ($node instanceof NewNode
             && $node->class instanceof NameNode) {
             $this->addName($node->class);
-            // WEIRD BUG CAUSING XDEBUG TO NOT COVER ELSEIF ONLY ELSE IF
+        // WEIRD BUG CAUSING XDEBUG TO NOT COVER ELSEIF ONLY ELSE IF
             // @codeCoverageIgnoreStart
         } elseif ($node instanceof ClassMethodNode) {
             // @codeCoverageIgnoreEnd
             $this->addInjectedDependencies($node);
             $this->addReturnType($node);
-            // WEIRD BUG CAUSING XDEBUG TO NOT COVER ELSEIF ONLY ELSE IF
+        // WEIRD BUG CAUSING XDEBUG TO NOT COVER ELSEIF ONLY ELSE IF
             // @codeCoverageIgnoreStart
         } elseif ($node instanceof UseNode) {
             // @codeCoverageIgnoreEnd
@@ -86,7 +86,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
             && $node->class instanceof NameNode) {
             // @codeCoverageIgnoreEnd
             $this->addStaticDependency($node);
-            // WEIRD BUG CAUSING XDEBUG TO NOT COVER ELSEIF ONLY ELSE IF
+        // WEIRD BUG CAUSING XDEBUG TO NOT COVER ELSEIF ONLY ELSE IF
             // @codeCoverageIgnoreStart
         } elseif ($node instanceof UseTraitNode) {
             // @codeCoverageIgnoreEnd
@@ -97,12 +97,12 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         } elseif ($node instanceof InstanceofNode) {
             // @codeCoverageIgnoreEnd
             $this->addInstanceofDependency($node);
-            // @codeCoverageIgnoreStart
+        // @codeCoverageIgnoreStart
         } elseif ($node instanceof FetchClassConstantNode
             && !$node->class instanceof Node\Expr\Variable) {
             // @codeCoverageIgnoreEnd
             $this->addName($node->class);
-            // @codeCoverageIgnoreStart
+        // @codeCoverageIgnoreStart
         } elseif ($node instanceof CatchNode) {
             // @codeCoverageIgnoreEnd
             foreach ($node->types as $name) {
@@ -182,7 +182,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
 
         if ($node instanceof InterfaceNode) {
             $this->currentClass = $this->dependencyFactory->createInterfazeFromStringArray($node->namespacedName->parts);
-            // @codeCoverageIgnoreStart
+        // @codeCoverageIgnoreStart
         } elseif ($node instanceof TraitNode) {
             // @codeCoverageIgnoreEnd
             $this->currentClass = $this->dependencyFactory->createTraitFromStringArray($node->namespacedName->parts);

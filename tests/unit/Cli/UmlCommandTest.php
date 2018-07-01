@@ -16,6 +16,7 @@ class UmlCommandTest extends \PHPUnit\Framework\TestCase
 {
     /** @var UmlCommand */
     private $umlCommand;
+
     /** @var InputInterface|\PHPUnit_Framework_MockObject_MockObject */
     private $input;
 

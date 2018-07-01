@@ -29,14 +29,17 @@ class DependencyHelper
     public static function map(string $input) : DependencyMap
     {
         $lines = preg_split('/\v+/', $input, -1, PREG_SPLIT_NO_EMPTY);
-        $array_reduce = array_reduce($lines,
+        $array_reduce = array_reduce(
+            $lines,
             function (DependencyMap $map, string $line) {
                 if (empty(trim($line))) {
                     return $map;
                 }
                 $dependencyPair = self::dependencyPair($line);
                 return $map->addSet($dependencyPair[0], $dependencyPair[1]);
-            }, new DependencyMap());
+            },
+            new DependencyMap()
+        );
         return $array_reduce;
     }
 

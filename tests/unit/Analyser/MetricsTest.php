@@ -24,13 +24,13 @@ class MetricsTest extends \PHPUnit\Framework\TestCase
     public function setUp()
     {
         $this->dependencies = (new DependencyMap())
-            ->add(new Clazz('A'),            new Interfaze('B'))
-            ->add(new Clazz('G'),            new Interfaze('B'))
-            ->add(new Clazz('R'),            new Interfaze('B'))
-            ->add(new Clazz('C'),            new Trait_('F'))
-            ->add(new AbstractClazz('D'),    new Interfaze('E'))
-            ->add(new Interfaze('B'),        new Interfaze('E'))
-            ->add(new Trait_('H'),           new Interfaze('E'))
+            ->add(new Clazz('A'), new Interfaze('B'))
+            ->add(new Clazz('G'), new Interfaze('B'))
+            ->add(new Clazz('R'), new Interfaze('B'))
+            ->add(new Clazz('C'), new Trait_('F'))
+            ->add(new AbstractClazz('D'), new Interfaze('E'))
+            ->add(new Interfaze('B'), new Interfaze('E'))
+            ->add(new Trait_('H'), new Interfaze('E'))
         ;
         $this->metrics = new Metrics($this->dependencies);
     }

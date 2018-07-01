@@ -43,8 +43,7 @@ class Application extends \Symfony\Component\Console\Application
         } catch (Error $e) {
             $output->writeln('<error>Sorry, we could not analyse your dependencies, '
                 . 'because the sources contain syntax errors:' . PHP_EOL . PHP_EOL
-                . $e->getMessage() . '<error>'
-            );
+                . $e->getMessage() . '<error>');
             return $e->getCode() ?? 1;
         } catch (\Throwable $e) {
             if ($output !== null) {

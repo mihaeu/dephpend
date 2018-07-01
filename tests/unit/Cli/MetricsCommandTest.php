@@ -52,7 +52,7 @@ class MetricsCommandTest extends \PHPUnit\Framework\TestCase
         $output = new BufferedOutput();
         $this->metricsCommand->run($this->input, $output);
         assertEquals(
-'+--------------------+-------+
+            '+--------------------+-------+
 | Classes:           | 1     |
 | Abstract classes:  | 2     |
 | Interfaces:        | 3     |
@@ -64,6 +64,8 @@ class MetricsCommandTest extends \PHPUnit\Framework\TestCase
 +---+-------------------+-------------------+-------------+
 | A | 1                 | 1                 | 1.00        |
 +---+-------------------+-------------------+-------------+
-', $output->fetch());
+',
+            $output->fetch()
+        );
     }
 }

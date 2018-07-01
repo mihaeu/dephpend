@@ -38,7 +38,8 @@ class XDebugFunctionTraceAnalyserTest extends \PHPUnit\Framework\TestCase
             DependencyHelper::map('
                 B --> A
                 D --> A
-            '), $this->xDebugFunctionTraceAnalyser->analyse($this->tempFile)
+            '),
+            $this->xDebugFunctionTraceAnalyser->analyse($this->tempFile)
         );
     }
 
@@ -57,7 +58,8 @@ class XDebugFunctionTraceAnalyserTest extends \PHPUnit\Framework\TestCase
         assertEquals(
             DependencyHelper::map('
                 B --> A
-            '), $this->xDebugFunctionTraceAnalyser->analyse($this->tempFile)
+            '),
+            $this->xDebugFunctionTraceAnalyser->analyse($this->tempFile)
         );
     }
 

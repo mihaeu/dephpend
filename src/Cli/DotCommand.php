@@ -14,7 +14,8 @@ class DotCommand extends BaseCommand
     /** @var DotWrapper */
     private $dotWrapper;
 
-    public function __construct(DotWrapper $dotWrapper) {
+    public function __construct(DotWrapper $dotWrapper)
+    {
         parent::__construct('dot');
 
         $this->dotWrapper = $dotWrapper;

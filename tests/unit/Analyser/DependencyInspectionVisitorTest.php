@@ -215,12 +215,12 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
         $this->dependencyInspectionVisitor->leaveNode($node);
         assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
-            new Clazz('InterfaceOne', new Namespaze(['A', 'B'])))
-        );
+            new Clazz('InterfaceOne', new Namespaze(['A', 'B']))
+        ));
         assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
-            new Clazz('InterfaceTwo', new Namespaze(['C', 'D'])))
-        );
+            new Clazz('InterfaceTwo', new Namespaze(['C', 'D']))
+        ));
     }
 
     public function testIgnoresInnerClassesWithoutName()
@@ -250,12 +250,12 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
 
         assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
-            new Clazz('DependencyOne', new Namespaze(['A', 'B'])))
-        );
+            new Clazz('DependencyOne', new Namespaze(['A', 'B']))
+        ));
         assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
-            new Clazz('DependencyTwo', new Namespaze(['A', 'B'])))
-        );
+            new Clazz('DependencyTwo', new Namespaze(['A', 'B']))
+        ));
     }
 
     public function testDetectsUseNodes()

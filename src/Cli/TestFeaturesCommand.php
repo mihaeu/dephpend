@@ -100,8 +100,9 @@ class TestFeaturesCommand extends Command
     protected function fetchAllFeatureTests() : \RegexIterator
     {
         return new \RegexIterator(
-            new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(__DIR__ . '/../../tests/samples')
-            ), '/^.+Feature\.php$/i', \RecursiveRegexIterator::GET_MATCH
+            new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(__DIR__ . '/../../tests/samples')),
+            '/^.+Feature\.php$/i',
+            \RecursiveRegexIterator::GET_MATCH
         );
     }
 

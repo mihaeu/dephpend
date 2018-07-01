@@ -31,8 +31,7 @@ class DotWrapper
         $this->ensureDotIsInstalled();
 
         $dotFile = new \SplFileInfo($destination->getPath()
-            .'/'.$destination->getBasename('.'.$destination->getExtension())
-        );
+            .'/'.$destination->getBasename('.'.$destination->getExtension()));
         file_put_contents($dotFile->getPathname(), $this->dotFormatter->format($dependencies));
 
         $this->shellWrapper->run('dot -O -T'.$destination->getExtension().' '.$dotFile->getPathname());
