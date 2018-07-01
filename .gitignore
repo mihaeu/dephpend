@@ -14,3 +14,6 @@
 
 # build artifacts
 /build
+
+# log files
+*.log
