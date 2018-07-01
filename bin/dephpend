@@ -2,7 +2,7 @@
 <?php declare(strict_types=1);
 
 use Mihaeu\PhpDependencies\Cli\Application;
-use Mihaeu\PhpDependencies\DI\DI;
+use Mihaeu\PhpDependencies\Util\DependencyContainer;
 
 // we need to get this before anything else is loaded
 $internals = array_merge(
@@ -31,5 +31,12 @@ $name = <<<EOT
   \__,_|\___|_|    |_|  |_|_|   \___|_| |_|\__,_|
 EOT;
 
-$application = new Application($name, '0.5.0', new DI($internals));
+$dependencyContainer = new DependencyContainer($internals);
+$application = new Application($name, '0.5.0', $dependencyContainer->dispatcher());
+$application->add($dependencyContainer->umlCommand());
+$application->add($dependencyContainer->dotCommand());
+$application->add($dependencyContainer->dsmCommand());
+$application->add($dependencyContainer->textCommand());
+$application->add($dependencyContainer->metricsCommand());
+$application->add($dependencyContainer->testFeaturesCommand());
 $application->run();

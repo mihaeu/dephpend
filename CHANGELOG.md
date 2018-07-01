@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+### Fixed
+ - replaced Symfony Console hacks with injection through Event Dispatcher
+
 ## [0.5.0] - 2018-03-23
 ### Added
  - PHP 7.2 support

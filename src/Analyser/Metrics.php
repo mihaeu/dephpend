@@ -68,11 +68,14 @@ class Metrics
     public function afferentCoupling(DependencyMap $map) : array
     {
         return $map->fromDependencies()->reduce([], function (array $afferent, Dependency $from) use ($map) {
-            $afferent[$from->toString()] = $map->reduce(0, function (int $count, Dependency $fromOther, Dependency $to) use ($from) {
-                return $from->equals($to)
-                    ? $count + 1
-                    : $count;
-            });
+            $afferent[$from->toString()] = $map->reduce(
+                0,
+                function (int $count, Dependency $fromOther, Dependency $to) use ($from): int {
+                    return $from->equals($to)
+                        ? $count + 1
+                        : $count;
+                }
+            );
             return $afferent;
         });
     }

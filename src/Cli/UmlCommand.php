@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\OS\PlantUmlWrapper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -15,17 +14,9 @@ class UmlCommand extends BaseCommand
     /** @var PlantUmlWrapper */
     private $plantUmlWrapper;
 
-    /**
-     * @param DependencyMap $dependencies
-     * @param \Closure $postProcessors
-     * @param PlantUmlWrapper $plantUmlWrapper
-     */
-    public function __construct(
-        DependencyMap $dependencies,
-        \Closure $postProcessors,
-        PlantUmlWrapper $plantUmlWrapper
-    ) {
-        parent::__construct('uml', $dependencies, $postProcessors);
+    public function __construct(PlantUmlWrapper $plantUmlWrapper)
+    {
+        parent::__construct('uml');
 
         $this->plantUmlWrapper = $plantUmlWrapper;
 

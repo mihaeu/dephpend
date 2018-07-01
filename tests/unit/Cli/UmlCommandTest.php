@@ -4,14 +4,7 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\Analyser\StaticAnalyser;
-use Mihaeu\PhpDependencies\Analyser\Parser;
-use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
-use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
-use Mihaeu\PhpDependencies\OS\PhpFileFinder;
-use Mihaeu\PhpDependencies\OS\PhpFileSet;
 use Mihaeu\PhpDependencies\OS\PlantUmlWrapper;
-use Mihaeu\PhpDependencies\Util\Functional;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -35,11 +28,7 @@ class UmlCommandTest extends \PHPUnit\Framework\TestCase
     public function setUp()
     {
         $this->plantUmlWrapper = $this->createMock(PlantUmlWrapper::class);
-        $this->umlCommand = new UmlCommand(
-            new DependencyMap(),
-            Functional::id(),
-            $this->plantUmlWrapper
-        );
+        $this->umlCommand = new UmlCommand($this->plantUmlWrapper);
         $this->input = $this->createMock(InputInterface::class);
         $this->output = $this->createMock(OutputInterface::class);
     }

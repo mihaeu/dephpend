@@ -4,15 +4,9 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\Analyser\StaticAnalyser;
-use Mihaeu\PhpDependencies\Analyser\Parser;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
-use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\DependencyHelper;
 use Mihaeu\PhpDependencies\Formatters\DependencyStructureMatrixHtmlFormatter;
-use Mihaeu\PhpDependencies\OS\PhpFileFinder;
-use Mihaeu\PhpDependencies\OS\PhpFileSet;
-use Mihaeu\PhpDependencies\Util\Functional;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -41,11 +35,7 @@ class DsmCommandTest extends \PHPUnit\Framework\TestCase
     {
         $this->dependencyStructureMatrixFormatter = $this->createMock(DependencyStructureMatrixHtmlFormatter::class);
         $this->dependencyFilter = $this->createMock(DependencyFilter::class);
-        $this->dsmCommand = new DsmCommand(
-            new DependencyMap(),
-            Functional::id(),
-            $this->dependencyStructureMatrixFormatter
-        );
+        $this->dsmCommand = new DsmCommand($this->dependencyStructureMatrixFormatter);
         $this->input = $this->createMock(InputInterface::class);
         $this->output = $this->createMock(OutputInterface::class);
     }
@@ -60,12 +50,9 @@ class DsmCommandTest extends \PHPUnit\Framework\TestCase
             'depth' => 0,
             'no-classes' => true
         ]);
+        $this->dsmCommand = new DsmCommand($this->dependencyStructureMatrixFormatter);
         $dependencies = DependencyHelper::map('A --> B');
-        $this->dsmCommand = new DsmCommand(
-            $dependencies,
-            Functional::id(),
-            $this->dependencyStructureMatrixFormatter
-        );
+        $this->dsmCommand->setDependencies($dependencies);
 
         $this->dependencyStructureMatrixFormatter->expects($this->once())->method('format')->with($dependencies);
         $this->dsmCommand->run($this->input, $this->output);

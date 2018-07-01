@@ -20,14 +20,15 @@ class ShellWrapper
         $output = [];
         $returnVar = 1;
 
-        if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $command .= $this->STD_ERR_PIPE_WIN;
-        } else {
-            $command .= $this->STD_ERR_PIPE;
-        }
+        $command .= $this->isWindows() ? $this->STD_ERR_PIPE_WIN : $this->STD_ERR_PIPE;
 
         exec($command, $output, $returnVar);
 
         return $returnVar;
+    }
+
+    private function isWindows(): bool
+    {
+        return 0 === stripos(PHP_OS, 'WIN');
     }
 }

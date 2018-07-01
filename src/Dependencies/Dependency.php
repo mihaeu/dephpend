@@ -14,6 +14,8 @@ interface Dependency extends \Countable
 
     public function toString() : string;
 
+    public function __toString() : string;
+
     public function namespaze() : Namespaze;
 
     public function isNamespaced() : bool;

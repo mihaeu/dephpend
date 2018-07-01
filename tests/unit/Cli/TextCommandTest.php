@@ -4,13 +4,8 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\Analyser\StaticAnalyser;
-use Mihaeu\PhpDependencies\Analyser\Parser;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
-use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\DependencyHelper;
-use Mihaeu\PhpDependencies\OS\PhpFileFinder;
-use Mihaeu\PhpDependencies\OS\PhpFileSet;
 use Mihaeu\PhpDependencies\Util\Functional;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -47,7 +42,9 @@ class TextCommandTest extends \PHPUnit\Framework\TestCase
             A\\a\\1\\ClassA --> C\\a\\1\\ClassC
             B\\a\\1\\ClassB --> C\\a\\1\\ClassC
         ');
-        $command = new TextCommand($dependencies, Functional::id());
+        $command = new TextCommand();
+        $command->setDependencies($dependencies);
+        $command->setPostProcessors(Functional::id());
 
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
         $this->input->method('getOption')->willReturn(false, 0);
@@ -70,7 +67,8 @@ class TextCommandTest extends \PHPUnit\Framework\TestCase
             NamespaceA --> NamespaceC
             NamespaceB --> NamespaceC
         ');
-        $command = new TextCommand($dependencies, Functional::id());
+        $command = new TextCommand();
+        $command->setDependencies($dependencies);
 
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
         $this->input->method('getOptions')->willReturn(['internals' => false, 'filter-namespace' => null, 'depth' => 1]);

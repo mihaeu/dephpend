@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Formatters\DependencyStructureMatrixHtmlFormatter;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -15,12 +14,9 @@ class DsmCommand extends BaseCommand
     /** @var DependencyStructureMatrixHtmlFormatter */
     private $dependencyStructureMatrixHtmlFormatter;
 
-    public function __construct(
-        DependencyMap $dependencies,
-        \Closure $postProcessors,
-        DependencyStructureMatrixHtmlFormatter $dependencyStructureMatrixFormatter)
+    public function __construct(DependencyStructureMatrixHtmlFormatter $dependencyStructureMatrixFormatter)
     {
-        parent::__construct('dsm', $dependencies, $postProcessors);
+        parent::__construct('dsm');
 
         $this->defaultFormat = 'html';
         $this->allowedFormats = [$this->defaultFormat];

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Analyser;
 
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
+use Mihaeu\PhpDependencies\OS\PhpFile;
 use Mihaeu\PhpDependencies\OS\PhpFileSet;
 use PhpParser\NodeTraverser;
 
@@ -39,7 +40,9 @@ class StaticAnalyserTest extends \PHPUnit\Framework\TestCase
     public function testAnalyse()
     {
         $this->dependencyInspectionVisitor->method('dependencies')->willReturn(new DependencyMap());
-        $dependencies = $this->analyser->analyse(new PhpFileSet());
+        $phpFile = $this->createMock(PhpFile::class);
+        $phpFile->method('code')->willReturn('');
+        $dependencies = $this->analyser->analyse((new PhpFileSet())->add($phpFile));
         $this->assertEquals(new DependencyMap(), $dependencies);
     }
 }

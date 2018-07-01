@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\OS\DotWrapper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -15,17 +14,8 @@ class DotCommand extends BaseCommand
     /** @var DotWrapper */
     private $dotWrapper;
 
-    /**
-     * @param DependencyMap $dependencies
-     * @param \Closure $postProcessors
-     * @param DotWrapper $dotWrapper
-     */
-    public function __construct(
-        DependencyMap $dependencies,
-        \Closure $postProcessors,
-        DotWrapper $dotWrapper
-    ) {
-        parent::__construct('dot', $dependencies, $postProcessors);
+    public function __construct(DotWrapper $dotWrapper) {
+        parent::__construct('dot');
 
         $this->dotWrapper = $dotWrapper;
 

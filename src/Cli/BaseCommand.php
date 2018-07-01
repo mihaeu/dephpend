@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
+use Mihaeu\PhpDependencies\Util\Functional;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -23,19 +24,22 @@ abstract class BaseCommand extends Command
     /** @var string[] */
     protected $allowedFormats;
 
-    /**
-     * @param string $name
-     * @param DependencyMap $dependencies
-     * @param \Closure $postProcessors
-     */
-    public function __construct(
-        string $name,
-        DependencyMap $dependencies,
-        \Closure $postProcessors
-    ) {
+    public function __construct(string $name = null)
+    {
         parent::__construct($name);
 
+        $this->dependencies = new DependencyMap();
+        $this->postProcessors = Functional::id();
+    }
+
+
+    public function setDependencies(DependencyMap $dependencies)
+    {
         $this->dependencies = $dependencies;
+    }
+
+    public function setPostProcessors(\Closure $postProcessors)
+    {
         $this->postProcessors = $postProcessors;
     }
 

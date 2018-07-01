@@ -20,8 +20,7 @@ class DependencyMap extends AbstractMap
         if ($from->equals($to)
             || $from->count() === 0
             || $to->count() === 0
-            || $to->toString() === 'self'
-            || $to->toString() === 'parent') {
+            || \in_array($to->toString(), ['self', 'parent', 'static'])) {
             return $clone;
         }
 
@@ -99,9 +98,7 @@ class DependencyMap extends AbstractMap
     public function toString() : string
     {
         return trim($this->reduce('', function (string $carry, Dependency $key, Dependency $value) {
-            return $value instanceof NullDependency || $key instanceof NullDependency
-                ? $carry
-                : $carry.$key->toString().' --> '.$value->toString().PHP_EOL;
+            return $carry.$key->toString().' --> '.$value->toString().PHP_EOL;
         }));
     }
 }

@@ -148,9 +148,6 @@ class DependencyFilter
             if ($dependency->isNamespaced()) {
                 return $dependency;
             }
-            if ($dependency instanceof Namespaze) {
-                return new Namespaze(explode('_', $dependency->toString()));
-            }
             $parts = explode('_', $dependency->toString());
             return new Clazz($parts[count($parts) - 1], new Namespaze(array_slice($parts, 0, -1)));
         });

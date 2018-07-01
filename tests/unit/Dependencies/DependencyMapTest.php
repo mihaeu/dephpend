@@ -245,9 +245,15 @@ class DependencyMapTest extends \PHPUnit\Framework\TestCase
 
     public function testCannotAddDependencyToYourself()
     {
-        $this->assertEmpty((new DependencyMap())->add(
-            new Clazz('Collection', new Namespaze(['Mihaeu', 'PhpDependencies', 'Util'])),
-            new Interfaze('Collection', new Namespaze(['Mihaeu', 'PhpDependencies', 'Util'])))
-        );
+        $dependencyMap = (new DependencyMap())
+            ->add(
+                new Clazz('Collection', new Namespaze(['Mihaeu', 'PhpDependencies', 'Util'])),
+                new Interfaze('Collection', new Namespaze(['Mihaeu', 'PhpDependencies', 'Util']))
+            )
+            ->add(
+                new Clazz('A'),
+                new Clazz('static')
+            );
+        $this->assertEmpty($dependencyMap);
     }
 }
