@@ -13,7 +13,7 @@ class DsmTest extends TestCase
 
     public function testCreatesSimpleDsmInHtml()
     {
-        $this->assertRegExp(
+        assertRegExp(
             '@\d: PhpParser</th><td>([1-9]\d*).+.+@s',
             shell_exec(self::DEPHPEND.' dsm '.self::SRC.' --no-classes -d 2 --format=html')
         );

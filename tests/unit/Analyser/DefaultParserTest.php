@@ -14,6 +14,6 @@ class DefaultParserTest extends \PHPUnit\Framework\TestCase
         $baseParser = $this->createMock(Parser::class);
         $baseParser->method('parse')->willReturn(['test']);
         $parser = new DefaultParser($baseParser);
-        $this->assertEquals(['test'], $parser->parse(''));
+        assertEquals(['test'], $parser->parse(''));
     }
 }

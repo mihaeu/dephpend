@@ -13,7 +13,7 @@ class TextTest extends TestCase
 
     public function testTextCommandOnDephpendSourceWithoutClassesAndWithRegexAndFromFilter()
     {
-        $this->assertEquals(
+        assertEquals(
             'Mihaeu\PhpDependencies\Analyser --> Mihaeu\PhpDependencies\Dependencies'.PHP_EOL
             .'Mihaeu\PhpDependencies\Analyser --> Mihaeu\PhpDependencies\OS'.PHP_EOL,
             shell_exec(self::DEPHPEND.' text '.self::SRC
@@ -22,7 +22,7 @@ class TextTest extends TestCase
 
     public function testTextCommandOnPhpUnitWithUnderscoreNamespaces()
     {
-        $this->assertEquals(
+        assertEquals(
             'PHPUnit\Runner --> PHPUnit'.PHP_EOL
             .'PHPUnit\Runner --> SebastianBergmann'.PHP_EOL
             .'PHPUnit\Runner --> PHPUnit\Framework'.PHP_EOL

@@ -17,7 +17,7 @@ class DependencySetTest extends \PHPUnit\Framework\TestCase
         $clazzCollection = (new DependencySet())
             ->add(new Clazz('Test'));
         $clazzCollection->each(function (Dependency $clazz) {
-            $this->assertEquals(new Clazz('Test'), $clazz);
+            assertEquals(new Clazz('Test'), $clazz);
         });
     }
 
@@ -26,21 +26,21 @@ class DependencySetTest extends \PHPUnit\Framework\TestCase
         $clazzCollection = (new DependencySet())
             ->add(new Clazz('Test'));
         $newCollectionAfterRefusingDuplicate = $clazzCollection->add(new Clazz('Test'));
-        $this->assertNotSame($clazzCollection, $newCollectionAfterRefusingDuplicate);
+        assertNotSame($clazzCollection, $newCollectionAfterRefusingDuplicate);
     }
 
     public function testDoesNotAcceptDuplicates()
     {
         $clazzCollection = (new DependencySet())
             ->add(new Clazz('Test'));
-        $this->assertEquals($clazzCollection, $clazzCollection->add(new Clazz('Test')));
+        assertEquals($clazzCollection, $clazzCollection->add(new Clazz('Test')));
     }
 
     public function testToArray()
     {
         $clazzCollection = (new DependencySet())
             ->add(new Clazz('Test'));
-        $this->assertEquals([new Clazz('Test')], $clazzCollection->toArray());
+        assertEquals([new Clazz('Test')], $clazzCollection->toArray());
     }
 
     public function testToString()
@@ -48,34 +48,34 @@ class DependencySetTest extends \PHPUnit\Framework\TestCase
         $clazzCollection = (new DependencySet())
             ->add(new Clazz('Test'))
             ->add(new Clazz('Test2'));
-        $this->assertEquals('Test'.PHP_EOL.'Test2', $clazzCollection->__toString());
+        assertEquals('Test'.PHP_EOL.'Test2', $clazzCollection->__toString());
     }
 
     public function testFilter()
     {
         $expected = DependencyHelper::dependencySet('AB, AC');
-        $this->assertEquals($expected, DependencyHelper::dependencySet('AB, AC, BA, CA')->filter(function (Dependency $dependency) {
+        assertEquals($expected, DependencyHelper::dependencySet('AB, AC, BA, CA')->filter(function (Dependency $dependency) {
             return strpos($dependency->toString(), 'A') === 0;
         }));
     }
 
     public function testReduce()
     {
-        $this->assertEquals('ABC', DependencyHelper::dependencySet('A, B, C')->reduce('', function (string $carry, Dependency $dependency) {
+        assertEquals('ABC', DependencyHelper::dependencySet('A, B, C')->reduce('', function (string $carry, Dependency $dependency) {
             return $carry.$dependency->toString();
         }));
     }
 
     public function testNoneIsTrueWhenNoneMatches()
     {
-        $this->assertTrue(DependencyHelper::dependencySet('AB, AC, BA, CA')->none(function (Dependency $dependency) {
+        assertTrue(DependencyHelper::dependencySet('AB, AC, BA, CA')->none(function (Dependency $dependency) {
             return strpos($dependency->toString(), 'D') === 0;
         }));
     }
-    
+
     public function testNoneIsFalseWhenSomeMatch()
     {
-        $this->assertFalse(DependencyHelper::dependencySet('AB, AC, BA, CA')->none(function (Dependency $dependency) {
+        assertFalse(DependencyHelper::dependencySet('AB, AC, BA, CA')->none(function (Dependency $dependency) {
             return strpos($dependency->toString(), 'A') === 0;
         }));
     }

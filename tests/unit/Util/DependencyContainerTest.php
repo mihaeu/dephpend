@@ -35,6 +35,6 @@ class DependencyContainerTest extends \PHPUnit\Framework\TestCase
      */
     public function testCanInstantiateAllDependencies(string $methodName, string $expectedReturnType)
     {
-        $this->assertInstanceOf($expectedReturnType, (new DependencyContainer([]))->{$methodName}());
+        assertInstanceOf($expectedReturnType, (new DependencyContainer([]))->{$methodName}());
     }
 }

@@ -18,7 +18,7 @@ class DotFormatterTest extends \PHPUnit\Framework\TestCase
             .'}'
         ;
 
-        $this->assertEquals($expected, (new DotFormatter())->format(DependencyHelper::map('
+        assertEquals($expected, (new DotFormatter())->format(DependencyHelper::map('
             A --> B
             C --> D
             A\\b --> D\\c

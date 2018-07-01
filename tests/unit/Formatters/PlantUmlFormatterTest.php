@@ -22,7 +22,7 @@ class PlantUmlFormatterTest extends \PHPUnit\Framework\TestCase
     public function testFormat()
     {
         $dependencyCollection = DependencyHelper::map('ClassA --> ClassB, ClassC');
-        $this->assertEquals("@startuml\n\n"
+        assertEquals("@startuml\n\n"
             ."ClassA --|> ClassB\n"
             ."ClassA --|> ClassC\n"
             .'@enduml', $this->plantUmlFormatter->format($dependencyCollection));
@@ -30,7 +30,7 @@ class PlantUmlFormatterTest extends \PHPUnit\Framework\TestCase
 
     public function testFormatsNestedNamespaces()
     {
-        $this->assertEquals('@startuml
+        assertEquals('@startuml
 namespace A {
 namespace b {
 }

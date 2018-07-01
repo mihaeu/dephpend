@@ -23,7 +23,7 @@ class DependencyFilterTest extends \PHPUnit\Framework\TestCase
     {
         $dependencies = DependencyHelper::map('From --> To, SplFileInfo');
         $expected = (new DependencyMap())->add(new Clazz('From'), new Clazz('To'));
-        $this->assertEquals($expected, $this->filter->removeInternals($dependencies));
+        assertEquals($expected, $this->filter->removeInternals($dependencies));
     }
 
     public function testFilterByDepthOne()
@@ -37,12 +37,12 @@ class DependencyFilterTest extends \PHPUnit\Framework\TestCase
             _B --> SplFileInfo
         ');
         $actual = $this->filter->filterByDepth($dependencies, 1);
-        $this->assertEquals($expected, $actual);
+        assertEquals($expected, $actual);
     }
 
     public function testMapUnderscoreNamespaces()
     {
-        $this->assertEquals(
+        assertEquals(
             DependencyHelper::map('
                 A\\b\\c --> D\\e\\f
                 F\\a --> D\\b
@@ -56,7 +56,7 @@ class DependencyFilterTest extends \PHPUnit\Framework\TestCase
 
     public function testMapUnderscoreNamespacesAlreadyNamespace()
     {
-        $this->assertEquals(
+        assertEquals(
             DependencyHelper::map('
                 VendorA\\Tests\\DDC1209_1 --> a\\To
                 A\\__b__\\c --> D\\e\\f
@@ -75,7 +75,7 @@ class DependencyFilterTest extends \PHPUnit\Framework\TestCase
         ');
         $expected = DependencyHelper::map('_VendorA\\ProjectA\\PathA --> _VendorB\\ProjectB\\PathB');
         $actual = $this->filter->filterByDepth($dependencies, 3);
-        $this->assertEquals($expected, $actual);
+        assertEquals($expected, $actual);
     }
 
     public function testFilterByVendor()
@@ -88,7 +88,7 @@ class DependencyFilterTest extends \PHPUnit\Framework\TestCase
         $expected = DependencyHelper::map('
             VendorA\\A --> VendorA\\C
         ');
-        $this->assertEquals($expected, $this->filter->filterByNamespace($dependencies, 'VendorA'));
+        assertEquals($expected, $this->filter->filterByNamespace($dependencies, 'VendorA'));
     }
 
     public function testFilterByDepth0ReturnsEqual()
@@ -99,7 +99,7 @@ class DependencyFilterTest extends \PHPUnit\Framework\TestCase
             VendorB\\B --> VendorA\\A
             VendorC\\C --> VendorA\\A
         ');
-        $this->assertEquals($dependencies, $this->filter->filterByDepth($dependencies, 0));
+        assertEquals($dependencies, $this->filter->filterByDepth($dependencies, 0));
     }
     public function testRemoveClasses()
     {
@@ -112,12 +112,12 @@ class DependencyFilterTest extends \PHPUnit\Framework\TestCase
             VendorB\\B --> VendorA\\A
             VendorC\\C --> B
         '));
-        $this->assertEquals($expected, $actual);
+        assertEquals($expected, $actual);
     }
 
     public function testFilterFromDependencies()
     {
-        $this->assertEquals(DependencyHelper::map('
+        assertEquals(DependencyHelper::map('
             Good\\A --> Bad\\B
             Good\\B --> Good\\C
         '), $this->filter->filterByFromNamespace(DependencyHelper::map('
@@ -164,12 +164,12 @@ class DependencyFilterTest extends \PHPUnit\Framework\TestCase
             A\\a\\z --> A\\b\\z
             A\\b\\c --> A\\b\\z
         ');
-        $this->assertEquals($expected, $actual);
+        assertEquals($expected, $actual);
     }
 
     public function testExcludeByRegex()
     {
-        $this->assertEquals(DependencyHelper::map('
+        assertEquals(DependencyHelper::map('
             X --> Z
         '), $this->filter->excludeByRegex(DependencyHelper::map('
             Test\\A --> B
@@ -184,6 +184,6 @@ class DependencyFilterTest extends \PHPUnit\Framework\TestCase
     public function testPostFilters()
     {
         $filters = $this->filter->postFiltersByOptions(['no-classes' => true, 'depth' => 1]);
-        $this->assertEquals(new Namespaze(['A']), $filters(new Clazz('Test', new Namespaze(['A', 'a']))));
+        assertEquals(new Namespaze(['A']), $filters(new Clazz('Test', new Namespaze(['A', 'a']))));
     }
 }

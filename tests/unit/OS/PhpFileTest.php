@@ -19,14 +19,14 @@ class PhpFileTest extends \PHPUnit\Framework\TestCase
     {
         $file1 = new PhpFile(new \SplFileInfo(sys_get_temp_dir()));
         $file2 = new PhpFile(new \SplFileInfo(sys_get_temp_dir()));
-        $this->assertTrue($file1->equals($file2));
+        assertTrue($file1->equals($file2));
     }
 
     public function testNotEquals()
     {
         $file1 = new PhpFile(new \SplFileInfo(sys_get_temp_dir()));
         $file2 = new PhpFile(new \SplFileInfo(__DIR__));
-        $this->assertFalse($file1->equals($file2));
+        assertFalse($file1->equals($file2));
     }
 
     public function testReturnsCode()
@@ -36,12 +36,12 @@ class PhpFileTest extends \PHPUnit\Framework\TestCase
             'someFile.php' => $code,
         ]);
         $file = new PhpFile(new \SplFileInfo($mockDir->url().'/someFile.php'));
-        $this->assertEquals($code, $file->code());
+        assertEquals($code, $file->code());
     }
 
     public function testToString()
     {
-        $this->assertContains('PhpFileTest.php', (new PhpFile(new \SplFileInfo(__FILE__)))->__toString());
+        assertContains('PhpFileTest.php', (new PhpFile(new \SplFileInfo(__FILE__)))->__toString());
     }
 
     public function testThrowsExceptionsIfFileDoesNotExist()

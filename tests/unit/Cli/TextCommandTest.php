@@ -50,7 +50,7 @@ class TextCommandTest extends \PHPUnit\Framework\TestCase
         $this->input->method('getOption')->willReturn(false, 0);
         $this->input->method('getOptions')->willReturn(['internals' => false, 'filter-namespace' => null, 'depth' => 0]);
 
-        $this->output->expects($this->once())
+        $this->output->expects(once())
             ->method('writeln')
             ->with(
                 'A\\a\\1\\ClassA --> B\\a\\1\\ClassB'.PHP_EOL
@@ -73,7 +73,7 @@ class TextCommandTest extends \PHPUnit\Framework\TestCase
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
         $this->input->method('getOptions')->willReturn(['internals' => false, 'filter-namespace' => null, 'depth' => 1]);
 
-        $this->output->expects($this->once())
+        $this->output->expects(once())
             ->method('writeln')
             ->with(
                 'NamespaceA --> NamespaceB'.PHP_EOL

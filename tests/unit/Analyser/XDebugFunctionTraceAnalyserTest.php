@@ -34,7 +34,7 @@ class XDebugFunctionTraceAnalyserTest extends \PHPUnit\Framework\TestCase
             [0, 1, 2, 3, 4, 'B->c', 6, 7, 8, 9, 10, 'class A'],
             [0, 1, 2, 3, 4, 'D->c', 6, 7, 8, 9, 10, 'class A'],
         ]);
-        $this->assertEquals(
+        assertEquals(
             DependencyHelper::map('
                 B --> A
                 D --> A
@@ -54,7 +54,7 @@ class XDebugFunctionTraceAnalyserTest extends \PHPUnit\Framework\TestCase
             [0, 1, 2, 3, 4, 'D->c', 6, 7, 8, 9, 10, 'int'],
             [0, 1, 2, 3, 4, 'D->c', 6, 7, 8, 9, 10, 'resource'],
         ]);
-        $this->assertEquals(
+        assertEquals(
             DependencyHelper::map('
                 B --> A
             '), $this->xDebugFunctionTraceAnalyser->analyse($this->tempFile)

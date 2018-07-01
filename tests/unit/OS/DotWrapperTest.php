@@ -37,13 +37,13 @@ class DotWrapperTest extends \PHPUnit\Framework\TestCase
         $this->expectException(DotNotInstalledException::class);
         $this->dotWrapper->generate(new DependencyMap(), new \SplFileInfo(__FILE__));
     }
-    
+
     public function testRunsDot()
     {
         $root = vfsStream::setup()->url();
 
         $this->shellWrapper
-            ->expects($this->exactly(2))
+            ->expects(exactly(2))
             ->method('run')
             ->withConsecutive(
                 ['dot -V'],
@@ -57,9 +57,9 @@ class DotWrapperTest extends \PHPUnit\Framework\TestCase
     {
         $root = vfsStream::setup()->url();
         $testFile = new \SplFileInfo($root.'/test');
-        $this->assertFileNotExists($testFile->getPathname());
+        assertFileNotExists($testFile->getPathname());
         $this->dotWrapper->generate(new DependencyMap(), new \SplFileInfo($testFile->getPathname()), true);
-        $this->assertFileExists($testFile->getPathname());
+        assertFileExists($testFile->getPathname());
     }
 
 
@@ -68,6 +68,6 @@ class DotWrapperTest extends \PHPUnit\Framework\TestCase
         $root = vfsStream::setup()->url();
         $testFile = new \SplFileInfo($root.'/test');
         $this->dotWrapper->generate(new DependencyMap(), new \SplFileInfo($root.'/test.png'), false);
-        $this->assertFileNotExists($testFile->getPathname());
+        assertFileNotExists($testFile->getPathname());
     }
 }

@@ -17,7 +17,7 @@ class FunctionalTest extends \PHPUnit\Framework\TestCase
         $multiplyByTwo = function ($x) {
             return $x * 2;
         };
-        $this->assertEquals(8, Functional::compose(
+        assertEquals(8, Functional::compose(
             $incrementByOne,
             $multiplyByTwo,
             $multiplyByTwo
@@ -26,6 +26,6 @@ class FunctionalTest extends \PHPUnit\Framework\TestCase
 
     public function testComposeWithoutArgumentsReturnsId()
     {
-        $this->assertEquals(9, Functional::compose()(9));
+        assertEquals(9, Functional::compose()(9));
     }
 }

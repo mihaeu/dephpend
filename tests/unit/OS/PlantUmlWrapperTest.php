@@ -38,14 +38,14 @@ class PlantUmlWrapperTest extends \PHPUnit\Framework\TestCase
     public function testDetectsIfPlantUmlIsInstalled()
     {
         $this->shellWrapper->method('run')->willReturn(0);
-        $this->assertInstanceOf(PlantUmlWrapper::class, new PlantUmlWrapper($this->plantUmlFormatter, $this->shellWrapper));
+        assertInstanceOf(PlantUmlWrapper::class, new PlantUmlWrapper($this->plantUmlFormatter, $this->shellWrapper));
     }
 
     public function testGenerate()
     {
         $plantUml = new PlantUmlWrapper($this->plantUmlFormatter, $this->shellWrapper);
         $plantUml->generate(new DependencyMap(), new \SplFileInfo(sys_get_temp_dir().'/dependencies.png'), true);
-        $this->assertFileExists(sys_get_temp_dir().'/dependencies.uml');
+        assertFileExists(sys_get_temp_dir().'/dependencies.uml');
         unlink(sys_get_temp_dir().'/dependencies.uml');
     }
 
@@ -53,6 +53,6 @@ class PlantUmlWrapperTest extends \PHPUnit\Framework\TestCase
     {
         $plantUml = new PlantUmlWrapper($this->plantUmlFormatter, $this->shellWrapper);
         $plantUml->generate(new DependencyMap(), new \SplFileInfo(sys_get_temp_dir().'/dependencies.png'));
-        $this->assertFileNotExists(sys_get_temp_dir().'/dependencies.uml');
+        assertFileNotExists(sys_get_temp_dir().'/dependencies.uml');
     }
 }

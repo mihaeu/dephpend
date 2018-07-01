@@ -14,11 +14,11 @@ class ShellWrapperTest extends \PHPUnit\Framework\TestCase
      */
     public function testDetectsEcho()
     {
-        $this->assertEquals(0, (new ShellWrapper())->run('echo'));
+        assertEquals(0, (new ShellWrapper())->run('echo'));
     }
 
     public function testDetectsWhenApplicationNotInstalled()
     {
-        $this->assertNotEquals(0, (new ShellWrapper())->run('xjcsajhckjsdfhksdf'));
+        assertNotEquals(0, (new ShellWrapper())->run('xjcsajhckjsdfhksdf'));
     }
 }

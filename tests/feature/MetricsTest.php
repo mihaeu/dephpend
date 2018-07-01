@@ -13,7 +13,7 @@ class MetricsTest extends TestCase
 
     public function testComputeMetricsForDephpend()
     {
-        $this->assertRegExp(
+        assertRegExp(
             '/Classes:.*\d\d.*Abstract classes:.*\d+.*Abstractness:.*\d\.\d+/s',
             shell_exec(self::DEPHPEND.' metrics '.self::SRC)
         );

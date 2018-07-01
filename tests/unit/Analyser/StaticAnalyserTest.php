@@ -43,6 +43,6 @@ class StaticAnalyserTest extends \PHPUnit\Framework\TestCase
         $phpFile = $this->createMock(PhpFile::class);
         $phpFile->method('code')->willReturn('');
         $dependencies = $this->analyser->analyse((new PhpFileSet())->add($phpFile));
-        $this->assertEquals(new DependencyMap(), $dependencies);
+        assertEquals(new DependencyMap(), $dependencies);
     }
 }

@@ -19,7 +19,7 @@ class DependencyFactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testInvalidClassReturnsNullDependency()
     {
-        $this->assertInstanceOf(
+        assertInstanceOf(
             NullDependency::class,
             $this->clazzFactory->createClazzFromStringArray(['/'])
         );
@@ -27,12 +27,12 @@ class DependencyFactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testCreatesClazzWithEmptyNamespace()
     {
-        $this->assertEquals(new Clazz('Test', new Namespaze([])), $this->clazzFactory->createClazzFromStringArray(['Test']));
+        assertEquals(new Clazz('Test', new Namespaze([])), $this->clazzFactory->createClazzFromStringArray(['Test']));
     }
 
     public function testCreateClazzWithNamespace()
     {
-        $this->assertEquals(
+        assertEquals(
             new Clazz('Test', new Namespaze(['Mihaeu', 'PhpDependencies'])),
             $this->clazzFactory->createClazzFromStringArray(['Mihaeu', 'PhpDependencies', 'Test'])
         );
@@ -40,16 +40,16 @@ class DependencyFactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateInterfaze()
     {
-        $this->assertEquals(new AbstractClazz('Test', new Namespaze([])), $this->clazzFactory->createAbstractClazzFromStringArray(['Test']));
+        assertEquals(new AbstractClazz('Test', new Namespaze([])), $this->clazzFactory->createAbstractClazzFromStringArray(['Test']));
     }
 
     public function testCreateAbstractClazz()
     {
-        $this->assertEquals(new Interfaze('Test', new Namespaze([])), $this->clazzFactory->createInterfazeFromStringArray(['Test']));
+        assertEquals(new Interfaze('Test', new Namespaze([])), $this->clazzFactory->createInterfazeFromStringArray(['Test']));
     }
 
     public function testCreateTrait()
     {
-        $this->assertEquals(new Trait_('Test', new Namespaze([])), $this->clazzFactory->createTraitFromStringArray(['Test']));
+        assertEquals(new Trait_('Test', new Namespaze([])), $this->clazzFactory->createTraitFromStringArray(['Test']));
     }
 }

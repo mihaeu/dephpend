@@ -42,7 +42,7 @@ class DotCommandTest extends \PHPUnit\Framework\TestCase
             'filter-namespace' => null,
             'depth' => 0
         ]);
-        $this->dotWrapper->expects($this->once())->method('generate');
+        $this->dotWrapper->expects(once())->method('generate');
 
         $this->dotCommand->run(
             $this->input,

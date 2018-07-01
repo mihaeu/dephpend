@@ -54,7 +54,7 @@ class DsmCommandTest extends \PHPUnit\Framework\TestCase
         $dependencies = DependencyHelper::map('A --> B');
         $this->dsmCommand->setDependencies($dependencies);
 
-        $this->dependencyStructureMatrixFormatter->expects($this->once())->method('format')->with($dependencies);
+        $this->dependencyStructureMatrixFormatter->expects(once())->method('format')->with($dependencies);
         $this->dsmCommand->run($this->input, $this->output);
     }
 

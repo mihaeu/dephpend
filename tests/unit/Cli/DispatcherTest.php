@@ -53,14 +53,14 @@ class DispatcherTest extends TestCase
     public function testTriggersOnlyOnNamedConsoleEvents()
     {
         $consoleEvent = $this->createMock(ConsoleEvent::class);
-        $consoleEvent->expects($this->never())->method('getInput');
+        $consoleEvent->expects(never())->method('getInput');
         $this->dispatcher->dispatch('other event', $consoleEvent);
     }
 
     public function testTriggersOnlyOnConsoleEvents()
     {
         $consoleEvent = $this->createMock(Event::class);
-        $this->assertEquals(
+        assertEquals(
             $consoleEvent,
             $this->dispatcher->dispatch(ConsoleEvents::COMMAND, clone $consoleEvent)
         );
@@ -80,9 +80,9 @@ class DispatcherTest extends TestCase
         $input->method('getOption')->with('dynamic')->willReturn($traceFile);
         $consoleEvent->method('getInput')->willReturn($input);
 
-        $this->xDebugFunctionTraceAnalyser->expects($this->once())->method('analyse')->with($traceFile);
-        $command->expects($this->once())->method('setDependencies');
-        $command->expects($this->once())->method('setPostProcessors');
+        $this->xDebugFunctionTraceAnalyser->expects(once())->method('analyse')->with($traceFile);
+        $command->expects(once())->method('setDependencies');
+        $command->expects(once())->method('setPostProcessors');
         $this->dispatcher->dispatch(ConsoleEvents::COMMAND, clone $consoleEvent);
     }
 }

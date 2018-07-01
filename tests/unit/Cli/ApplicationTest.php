@@ -38,9 +38,9 @@ class ApplicationTest extends \PHPUnit\Framework\TestCase
 
         // not sure how to mock this, so we test only one case
         if (!extension_loaded('xdebug')) {
-            $output->expects($this->never())->method('writeln')->with(self::XDEBUG_WARNING);
+            $output->expects(never())->method('writeln')->with(self::XDEBUG_WARNING);
         } else {
-            $output->expects($this->exactly(2))->method('writeln');
+            $output->expects(exactly(2))->method('writeln');
         }
         $this->application->doRun($input, $output);
     }
@@ -56,9 +56,9 @@ class ApplicationTest extends \PHPUnit\Framework\TestCase
             . 'Test on unknown line<error>';
 
         if (!extension_loaded('xdebug')) {
-            $output->expects($this->once())->method('writeln')->with($expectedMessage);
+            $output->expects(once())->method('writeln')->with($expectedMessage);
         } else {
-            $output->expects($this->exactly(2))->method('writeln')->withConsecutive(
+            $output->expects(exactly(2))->method('writeln')->withConsecutive(
                 [self::XDEBUG_WARNING],
                 [$expectedMessage]
             );
@@ -72,7 +72,7 @@ class ApplicationTest extends \PHPUnit\Framework\TestCase
         $input = $this->createMock(Input::class);
         $output = $this->createMock(Output::class);
         $returnCode = (new Application('', '', $this->dispatcher))->doRun($input, $output);
-        $this->assertEquals(0, $returnCode);
+        assertEquals(0, $returnCode);
     }
 
     public function testValidatesUmlInput()
@@ -81,7 +81,7 @@ class ApplicationTest extends \PHPUnit\Framework\TestCase
         $input = $this->createMock(Input::class);
         $output = $this->createMock(Output::class);
         $returnCode = (new Application('', '', $this->dispatcher))->doRun($input, $output);
-        $this->assertEquals(0, $returnCode);
+        assertEquals(0, $returnCode);
     }
 
     public function testValidatesMetricInput()
@@ -90,7 +90,7 @@ class ApplicationTest extends \PHPUnit\Framework\TestCase
         $input = $this->createMock(Input::class);
         $output = $this->createMock(Output::class);
         $returnCode = (new Application('', '', $this->dispatcher))->doRun($input, $output);
-        $this->assertEquals(0, $returnCode);
+        assertEquals(0, $returnCode);
     }
 
     public function testValidatesDotInput()
@@ -99,7 +99,7 @@ class ApplicationTest extends \PHPUnit\Framework\TestCase
         $input = $this->createMock(Input::class);
         $output = $this->createMock(Output::class);
         $returnCode = (new Application('', '', $this->dispatcher))->doRun($input, $output);
-        $this->assertEquals(0, $returnCode);
+        assertEquals(0, $returnCode);
     }
 
     public function testCommandWithHelpOptionProvidesHelpForDotCommand()
@@ -109,7 +109,7 @@ class ApplicationTest extends \PHPUnit\Framework\TestCase
         $application = new Application('', '', $this->dispatcher);
         $application->add(new DotCommand($this->createMock(DotWrapper::class)));
         $application->doRun($input, $output);
-        $this->assertContains('dot [options]', $output->fetch());
+        assertContains('dot [options]', $output->fetch());
     }
 
     public function testNoCommandWithVersionOptionWritesVersion()
@@ -117,7 +117,7 @@ class ApplicationTest extends \PHPUnit\Framework\TestCase
         $input = new ArgvInput(['', '--version']);
         $output = new BufferedOutput();
         (new Application('Test', '4.2.0', $this->dispatcher))->doRun($input, $output);
-        $this->assertRegExp('/\d+\.\d+\.\d+/', $output->fetch());
+        assertRegExp('/\d+\.\d+\.\d+/', $output->fetch());
     }
 
     public function testNoCommandWithHelpOptionWritesHelp()
@@ -126,7 +126,7 @@ class ApplicationTest extends \PHPUnit\Framework\TestCase
         $output = new BufferedOutput();
         $application = new Application('', '', $this->dispatcher);
         $application->doRun($input, $output);
-        $this->assertContains('list [options]', $output->fetch());
+        assertContains('list [options]', $output->fetch());
     }
 
     public function testHelpOptionWithAnsiOptionPrintsHelp()
@@ -135,6 +135,6 @@ class ApplicationTest extends \PHPUnit\Framework\TestCase
         $output = new BufferedOutput();
 
         (new Application('', '', $this->dispatcher))->doRun($input, $output);
-        $this->assertContains('list [options]', $output->fetch());
+        assertContains('list [options]', $output->fetch());
     }
 }

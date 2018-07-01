@@ -30,9 +30,16 @@
     ],
     "autoload": {
         "psr-4": {
-            "Mihaeu\\PhpDependencies\\": ["src/", "tests/unit/"],
-            "Mihaeu\\PhpDependencies\\Tests\\Feature\\": ["tests/feature/"]
+            "Mihaeu\\PhpDependencies\\": ["src/", "tests/unit/"]
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Mihaeu\\PhpDependencies\\Tests\\Feature\\": ["tests/feature/"]
+        },
+        "files": [
+            "vendor/phpunit/phpunit/src/Framework/Assert/Functions.php"
+        ]
     },
     "support": {
         "issues": "https://github.com/mihaeu/dephpend/issues"

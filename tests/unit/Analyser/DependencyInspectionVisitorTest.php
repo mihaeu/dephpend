@@ -122,7 +122,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
         $this->dependencyInspectionVisitor->enterNode($newNode);
 
         $this->dependencyInspectionVisitor->leaveNode($node);
-        $this->assertTrue($this->dependenciesContain($this->dependencyInspectionVisitor->dependencies(), new Clazz('TestDep')));
+        assertTrue($this->dependenciesContain($this->dependencyInspectionVisitor->dependencies(), new Clazz('TestDep')));
     }
 
     public function testDetectsExtendedClasses()
@@ -136,7 +136,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
         $this->dependencyInspectionVisitor->enterNode($node);
 
         $this->dependencyInspectionVisitor->leaveNode($node);
-        $this->assertTrue($this->dependenciesContain(
+        assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
             new Clazz('ClassA', new Namespaze(['A', 'a', '1']))
         ));
@@ -157,11 +157,11 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
         $this->dependencyInspectionVisitor->enterNode($node);
 
         $this->dependencyInspectionVisitor->leaveNode($node);
-        $this->assertTrue($this->dependenciesContain(
+        assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
             new Clazz('ClassA', new Namespaze(['A', 'a', '1']))
         ));
-        $this->assertTrue($this->dependenciesContain(
+        assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
             new Clazz('ClassB', new Namespaze(['B', 'b', '2']))
         ));
@@ -177,7 +177,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
         $this->addRandomDependency();
 
         $this->dependencyInspectionVisitor->leaveNode($node);
-        $this->assertTrue($this->dependenciesContain(
+        assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
             new AbstractClazz('Test', new Namespaze(['A']))
         ));
@@ -193,7 +193,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
         $this->addRandomDependency();
 
         $this->dependencyInspectionVisitor->leaveNode($node);
-        $this->assertTrue($this->dependenciesContain(
+        assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
             new Interfaze('Test', new Namespaze(['A']))
         ));
@@ -213,11 +213,11 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
         $this->dependencyInspectionVisitor->enterNode($node);
 
         $this->dependencyInspectionVisitor->leaveNode($node);
-        $this->assertTrue($this->dependenciesContain(
+        assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
             new Clazz('InterfaceOne', new Namespaze(['A', 'B'])))
         );
-        $this->assertTrue($this->dependenciesContain(
+        assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
             new Clazz('InterfaceTwo', new Namespaze(['C', 'D'])))
         );
@@ -229,7 +229,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
         $this->dependencyInspectionVisitor->enterNode($node);
         $this->dependencyInspectionVisitor->leaveNode($node);
 
-        $this->assertEmpty($this->dependencyInspectionVisitor->dependencies());
+        assertEmpty($this->dependencyInspectionVisitor->dependencies());
     }
 
     public function testDetectsDependenciesFromMethodArguments()
@@ -248,11 +248,11 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
 
         $this->addNodeToAst($methodNode);
 
-        $this->assertTrue($this->dependenciesContain(
+        assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
             new Clazz('DependencyOne', new Namespaze(['A', 'B'])))
         );
-        $this->assertTrue($this->dependenciesContain(
+        assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
             new Clazz('DependencyTwo', new Namespaze(['A', 'B'])))
         );
@@ -266,7 +266,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
             )
         );
 
-        $this->assertTrue($this->dependenciesContain(
+        assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
             new Clazz('Test', new Namespaze(['A', 'a', '1']))
         ));
@@ -278,7 +278,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
             new ClassMethod('', ['returnType' => new Name(['Namespace', 'Test'])])
         );
 
-        $this->assertTrue($this->dependenciesContain(
+        assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
             new Clazz('Test', new Namespaze(['Namespace']))
         ));
@@ -293,7 +293,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
         $this->dependencyInspectionVisitor->enterNode($staticCall);
 
         $this->dependencyInspectionVisitor->leaveNode($node);
-        $this->assertTrue($this->dependenciesContain(
+        assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
             new Clazz('Singleton', new Namespaze(['A', 'a', '1']))
         ));
@@ -307,7 +307,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
         // we leave the ClassNode, but we haven't entered it, so class context is unknown
         $this->dependencyInspectionVisitor->leaveNode(new ClassNode('test'));
         $dependencies = $this->dependencyInspectionVisitor->dependencies();
-        $this->assertEmpty($dependencies);
+        assertEmpty($dependencies);
     }
 
     public function testTrait()
@@ -320,7 +320,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
         $this->addRandomDependency();
 
         $this->dependencyInspectionVisitor->leaveNode($node);
-        $this->assertTrue($this->dependenciesContain(
+        assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
             new Trait_('Test', new Namespaze(['A']))
         ));
@@ -332,7 +332,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
             new TraitUse([new Name(['A', 'Test'])])
         );
 
-        $this->assertTrue($this->dependenciesContain(
+        assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
             new Trait_('Test', new Namespaze(['A']))
         ));
@@ -348,15 +348,15 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
             ])
         );
 
-        $this->assertTrue($this->dependenciesContain(
+        assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
             new Trait_('Test', new Namespaze(['A']))
         ));
-        $this->assertTrue($this->dependenciesContain(
+        assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
             new Trait_('Test2', new Namespaze(['B']))
         ));
-        $this->assertTrue($this->dependenciesContain(
+        assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
             new Trait_('Test3', new Namespaze(['C']))
         ));
@@ -368,7 +368,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
             new Instanceof_(new Array_(), new FullyQualifiedNameNode('Test'))
         );
 
-        $this->assertTrue($this->dependenciesContain(
+        assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
             new Clazz('Test')
         ));
@@ -380,7 +380,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
             new Catch_([new Name(['AnException'])], new Variable('e'))
         );
 
-        $this->assertTrue($this->dependenciesContain(
+        assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
             new Clazz('AnException')
         ));
@@ -395,11 +395,11 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
             ], new Variable('e'))
         );
 
-        $this->assertTrue($this->dependenciesContain(
+        assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
             new Clazz('AnException')
         ));
-        $this->assertTrue($this->dependenciesContain(
+        assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
             new Clazz('AnotherException')
         ));
@@ -411,7 +411,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
             new ClassConstFetch(new Name('StaticTest'), 'test')
         );
 
-        $this->assertTrue($this->dependenciesContain(
+        assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
             new Clazz('StaticTest')
         ));
