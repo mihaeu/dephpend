@@ -17,3 +17,5 @@
 
 # log files
 *.log
+
+composer.lock
