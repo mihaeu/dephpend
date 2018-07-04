@@ -5,8 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [0.5.1] - 2018-07-04
 ### Fixed
  - replaced Symfony Console hacks with injection through Event Dispatcher
+ - PHP 7.2 support for projects which require PHP 7.2 and Symfony 4 components
 
 ## [0.5.0] - 2018-03-23
 ### Added
@@ -52,7 +55,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
  - first tagged release
  - uml, text, dsm and metrics command
 
-[Unreleased]: https://github.com/mihaeu/dephpend/compare/0.5.0...HEAD
+[Unreleased]: https://github.com/mihaeu/dephpend/compare/0.5.1...HEAD
+[0.5.1]: https://github.com/mihaeu/dephpend/compare/0.5.0...0.5.1
 [0.5.0]: https://github.com/mihaeu/dephpend/compare/0.4.0...0.5.0
 [0.4.0]: https://github.com/mihaeu/dephpend/compare/0.3.2...0.4.0
 [0.3.2]: https://github.com/mihaeu/dephpend/compare/0.3.1...0.3.2
