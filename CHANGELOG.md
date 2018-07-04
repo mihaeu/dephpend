@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
  - replaced Symfony Console hacks with injection through Event Dispatcher
 
+## [0.5.1] - 2018-07-04
+### Fixed
+ - PHP 7.2 support for projects which require PHP 7.2 and Symfony 4 components
+
 ## [0.5.0] - 2018-03-23
 ### Added
  - PHP 7.2 support
