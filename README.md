@@ -7,6 +7,7 @@
 [![Build Status](https://travis-ci.org/mihaeu/dephpend.svg?branch=develop)](https://travis-ci.org/mihaeu/dephpend) [![Coverage Status](https://coveralls.io/repos/github/mihaeu/dephpend/badge.svg)](https://coveralls.io/github/mihaeu/dephpend) ![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat) [![Join the chat at https://gitter.im/dephpend/Lobby](https://badges.gitter.im/dephpend/Lobby.svg)](https://gitter.im/dephpend/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
   - [What it does](#what-it-does)
+  - [System Requirements](#system-requirements)
   - [Installation](#installation)
     + [Phive](#phive)
     + [Composer](#composer)
@@ -46,6 +47,12 @@ With this information you can:
  - track architecture violations 
     (maybe your view shouldn't be telling the model what to do?)
  - find out why your changes are breaking tests
+
+
+## System Requirement
+- PHP >= 7.0
+- plantuml (UML Class diagram)
+
 
 ## Installation
 
