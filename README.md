@@ -49,7 +49,7 @@ With this information you can:
  - find out why your changes are breaking tests
 
 
-## System Requirement
+## System Requirements
 - PHP >= 7.0
 - plantuml (UML Class diagram)
 
