@@ -78,6 +78,16 @@ wget https://phar.dephpend.com/dephpend.phar
 ```
 (for old releases use https://phar.dephpend.com/)
 
+or if you prefer to use Curl:
+```bash
+curl -O  https://phar.dephpend.com/dephpend.phar
+```
+
+If you want to use the command system-wide you can copy it to /usr/local/bin.
+```bash
+sudo cp ./dephpend.phar /usr/local/bin/
+```
+
 ### Git
 
 ```bash
