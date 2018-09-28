@@ -307,7 +307,7 @@ Check out `tests/features` for examples of supported features or run `bin/dephpe
 
 ### Can't install PlantUML 
 
-If you can't install PlantUML or you don't want to install it, you can use the plantuml.jar with this shell script. Make sure it's executable by the user which is running dephpend and name it `plantuml.
+If you can't install PlantUML or you don't want to install it, you can use the plantuml.jar with this shell script. Make sure it's executable by the user which is running dephpend and name it `plantuml`.
 
 ```shell
 #!/bin/sh
