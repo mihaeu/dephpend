@@ -305,6 +305,15 @@ Check out `tests/features` for examples of supported features or run `bin/dephpe
 
 ## Troubleshooting
 
+### Can't install PlantUML 
+
+If you can't install PlantUML or you don't want to install it, you can use the plantuml.jar with this shell script. Make sure it's executable by the user which is running dephpend and name it `plantuml.
+
+```shell
+#!/bin/sh
+java -Djava.awt.headless=true -jar /path/to/the/plantuml.jar "$@"
+```
+
 ### Not enough RAM
 
 The PHP-Parser can take up lots of RAM for big applications. You can adjust the RAM limit in your `php.ini`, but a safer solution would be to call dePHPend by adding `php -n -d memory_limit=1024M dephpend.phar ...`.
