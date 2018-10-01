@@ -7,6 +7,7 @@
 [![Build Status](https://travis-ci.org/mihaeu/dephpend.svg?branch=develop)](https://travis-ci.org/mihaeu/dephpend) [![Coverage Status](https://coveralls.io/repos/github/mihaeu/dephpend/badge.svg)](https://coveralls.io/github/mihaeu/dephpend) ![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat) [![Join the chat at https://gitter.im/dephpend/Lobby](https://badges.gitter.im/dephpend/Lobby.svg)](https://gitter.im/dephpend/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
   - [What it does](#what-it-does)
+  - [System Requirements](#system-requirements)
   - [Installation](#installation)
     + [Phive](#phive)
     + [Composer](#composer)
@@ -47,6 +48,12 @@ With this information you can:
     (maybe your view shouldn't be telling the model what to do?)
  - find out why your changes are breaking tests
 
+
+## System Requirements
+- PHP >= 7.0
+- plantuml (UML Class diagram)
+
+
 ## Installation
 
 ### Phive
@@ -77,6 +84,16 @@ Download the phar file by clicking [here](https://phar.dephpend.com/dephpend.pha
 wget https://phar.dephpend.com/dephpend.phar
 ```
 (for old releases use https://phar.dephpend.com/)
+
+or if you prefer to use Curl:
+```bash
+curl -O  https://phar.dephpend.com/dephpend.phar
+```
+
+If you want to use the command system-wide you can copy it to /usr/local/bin.
+```bash
+sudo cp ./dephpend.phar /usr/local/bin/
+```
 
 ### Git
 
