@@ -18,7 +18,7 @@ class TextCommand extends BaseCommand
     {
         parent::configure();
 
-        $this->setDescription('Generate a Dependency Structure Matrix of your dependencies');
+        $this->setDescription('Prints a list of all dependencies');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
