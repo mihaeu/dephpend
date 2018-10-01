@@ -121,7 +121,7 @@ Available commands:
   list           Lists commands
   metrics        Generate dependency metrics
   test-features  Test support for dependency detection
-  text           Generate a Dependency Structure Matrix of your dependencies
+  text           Prints a list of all dependencies
   uml            Generate a UML Class diagram of your dependencies
 ```
 
