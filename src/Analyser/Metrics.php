@@ -23,10 +23,10 @@ class Metrics
         $abstractions = $this->abstractClassCount($map)
             + $this->interfaceCount($map)
             + $this->traitCount($map);
-        $allClasses = $this->classCount($map)
-            + $this->abstractClassCount($map)
-            + $this->interfaceCount($map)
-            + $this->traitCount($map);
+        if ($abstractions === 0) {
+            return 0;
+        }
+        $allClasses = $abstractions + $this->classCount($map);
         return $abstractions / $allClasses;
     }
 

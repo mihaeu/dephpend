@@ -32,7 +32,12 @@ class MetricsTest extends \PHPUnit\Framework\TestCase
             ->add(new Interfaze('B'), new Interfaze('E'))
             ->add(new Trait_('H'), new Interfaze('E'))
         ;
-        $this->metrics = new Metrics($this->dependencies);
+        $this->metrics = new Metrics();
+    }
+
+    public function testAbstractnessWithNoDependency()
+    {
+        assertEquals(0, (new Metrics)->abstractness(new DependencyMap));
     }
 
     public function testCountClasses()
