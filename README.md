@@ -56,6 +56,15 @@ With this information you can:
 
 ## Installation
 
+### Docker
+
+If you don't want to worry about PHP versions, composer dependencies etc. you can run dePHPend from a docker container:
+
+```bash
+# replace $PATH_TO_INSPECT with whatever path you would live to inspect
+docker run --rm -v $PATH_TO_INSPECT:/inspect mihaeu/dephpend:latest text /inspect
+```
+
 ### Phive
 
 [Phive](https://phar.io) is the preferred method of installing QA tools which are not linked directly to your code. If you've never heard about it, I'd recommend you check it out. Once installed simply use:
