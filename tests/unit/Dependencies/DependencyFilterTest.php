@@ -4,29 +4,31 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Dependencies;
 
+use InvalidArgumentException;
 use Mihaeu\PhpDependencies\DependencyHelper;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Mihaeu\PhpDependencies\Dependencies\DependencyFilter
  */
-class DependencyFilterTest extends \PHPUnit\Framework\TestCase
+class DependencyFilterTest extends TestCase
 {
     /** @var DependencyFilter */
     private $filter;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->filter = new DependencyFilter(['SplFileInfo']);
     }
 
-    public function testRemovesInternals()
+    public function testRemovesInternals(): void
     {
         $dependencies = DependencyHelper::map('From --> To, SplFileInfo');
         $expected = (new DependencyMap())->add(new Clazz('From'), new Clazz('To'));
         assertEquals($expected, $this->filter->removeInternals($dependencies));
     }
 
-    public function testFilterByDepthOne()
+    public function testFilterByDepthOne(): void
     {
         $dependencies = DependencyHelper::map('
             From --> A\\a\\To
@@ -40,7 +42,7 @@ class DependencyFilterTest extends \PHPUnit\Framework\TestCase
         assertEquals($expected, $actual);
     }
 
-    public function testMapUnderscoreNamespaces()
+    public function testMapUnderscoreNamespaces(): void
     {
         assertEquals(
             DependencyHelper::map('
@@ -54,7 +56,7 @@ class DependencyFilterTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testMapUnderscoreNamespacesAlreadyNamespace()
+    public function testMapUnderscoreNamespacesAlreadyNamespace(): void
     {
         assertEquals(
             DependencyHelper::map('
@@ -68,7 +70,7 @@ class DependencyFilterTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testFilterByDepthThree()
+    public function testFilterByDepthThree(): void
     {
         $dependencies = DependencyHelper::map('
             VendorA\\ProjectA\\PathA\\From --> VendorB\\ProjectB\\PathB\\To
@@ -78,7 +80,7 @@ class DependencyFilterTest extends \PHPUnit\Framework\TestCase
         assertEquals($expected, $actual);
     }
 
-    public function testFilterByVendor()
+    public function testFilterByVendor(): void
     {
         $dependencies = DependencyHelper::map('
             VendorA\\A --> VendorB\\A, VendorA\\C
@@ -91,7 +93,7 @@ class DependencyFilterTest extends \PHPUnit\Framework\TestCase
         assertEquals($expected, $this->filter->filterByNamespace($dependencies, 'VendorA'));
     }
 
-    public function testFilterByDepth0ReturnsEqual()
+    public function testFilterByDepth0ReturnsEqual(): void
     {
         $dependencies = DependencyHelper::map('
             VendorA\\A --> VendorB\\A
@@ -101,7 +103,7 @@ class DependencyFilterTest extends \PHPUnit\Framework\TestCase
         ');
         assertEquals($dependencies, $this->filter->filterByDepth($dependencies, 0));
     }
-    public function testRemoveClasses()
+    public function testRemoveClasses(): void
     {
         $expected = DependencyHelper::map('
             _VendorA --> _VendorB
@@ -115,7 +117,7 @@ class DependencyFilterTest extends \PHPUnit\Framework\TestCase
         assertEquals($expected, $actual);
     }
 
-    public function testFilterFromDependencies()
+    public function testFilterFromDependencies(): void
     {
         assertEquals(DependencyHelper::map('
             Good\\A --> Bad\\B
@@ -127,7 +129,7 @@ class DependencyFilterTest extends \PHPUnit\Framework\TestCase
         '), 'Good'));
     }
 
-    public function testThrowsExceptionForBadRegex()
+    public function testThrowsExceptionForBadRegex(): void
     {
         $options = [
             'internals'             => false,
@@ -138,11 +140,11 @@ class DependencyFilterTest extends \PHPUnit\Framework\TestCase
             'exclude-regex'         => 'Missing brackets',
             'underscore-namespaces' => true,
         ];
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->filter->filterByOptions(new DependencyMap(), $options);
     }
 
-    public function testRunAllFilters()
+    public function testRunAllFilters(): void
     {
         $options = [
             'internals'             => false,
@@ -167,7 +169,7 @@ class DependencyFilterTest extends \PHPUnit\Framework\TestCase
         assertEquals($expected, $actual);
     }
 
-    public function testExcludeByRegex()
+    public function testExcludeByRegex(): void
     {
         assertEquals(DependencyHelper::map('
             X --> Z
@@ -181,7 +183,7 @@ class DependencyFilterTest extends \PHPUnit\Framework\TestCase
         '), '/(Test)|(Example)/'));
     }
 
-    public function testPostFilters()
+    public function testPostFilters(): void
     {
         $filters = $this->filter->postFiltersByOptions(['no-classes' => true, 'depth' => 1]);
         assertEquals(new Namespaze(['A']), $filters(new Clazz('Test', new Namespaze(['A', 'a']))));

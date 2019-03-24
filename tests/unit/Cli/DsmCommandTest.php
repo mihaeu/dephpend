@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
+use Exception;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\DependencyHelper;
 use Mihaeu\PhpDependencies\Formatters\DependencyStructureMatrixHtmlFormatter;
+use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -14,24 +17,24 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @covers Mihaeu\PhpDependencies\Cli\DsmCommand
  * @covers Mihaeu\PhpDependencies\Cli\BaseCommand
  */
-class DsmCommandTest extends \PHPUnit\Framework\TestCase
+class DsmCommandTest extends TestCase
 {
     /** @var DsmCommand */
     private $dsmCommand;
 
-    /** @var InputInterface|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var InputInterface|PHPUnit_Framework_MockObject_MockObject */
     private $input;
 
-    /** @var OutputInterface|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var OutputInterface|PHPUnit_Framework_MockObject_MockObject */
     private $output;
 
-    /** @var DependencyFilter|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var DependencyFilter|PHPUnit_Framework_MockObject_MockObject */
     private $dependencyFilter;
 
-    /** @var DependencyStructureMatrixHtmlFormatter|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var DependencyStructureMatrixHtmlFormatter|PHPUnit_Framework_MockObject_MockObject */
     private $dependencyStructureMatrixFormatter;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->dependencyStructureMatrixFormatter = $this->createMock(DependencyStructureMatrixHtmlFormatter::class);
         $this->dependencyFilter = $this->createMock(DependencyFilter::class);
@@ -40,7 +43,7 @@ class DsmCommandTest extends \PHPUnit\Framework\TestCase
         $this->output = $this->createMock(OutputInterface::class);
     }
 
-    public function testPassesDependenciesToFormatter()
+    public function testPassesDependenciesToFormatter(): void
     {
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
         $this->input->method('getOptions')->willReturn([
@@ -58,11 +61,11 @@ class DsmCommandTest extends \PHPUnit\Framework\TestCase
         $this->dsmCommand->run($this->input, $this->output);
     }
 
-    public function testDoesNotAllowOtherFormats()
+    public function testDoesNotAllowOtherFormats(): void
     {
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
         $this->input->method('getOptions')->willReturn(['format' => 'tiff']);
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Output format is not allowed (html)');
         $this->dsmCommand->run($this->input, $this->output);
     }

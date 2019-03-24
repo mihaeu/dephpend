@@ -10,14 +10,14 @@
     "homepage": "https://dephpend.com",
     "bin": ["bin/dephpend", "bin/php-trace"],
     "require": {
-        "php": "^7.0",
+        "php": "^7.2",
         "nikic/php-parser": "^4.0",
         "symfony/console": "^2.0 || ^3.0 || ^4.0",
         "symfony/event-dispatcher": "^2.0 || ^3.0 || ^4.0"
     },
     "require-dev": {
         "mikey179/vfsstream": "^1.6",
-        "phpunit/phpunit": "^6.5 || ^7.0",
+        "phpunit/phpunit": "^8.0",
         "squizlabs/php_codesniffer": "^3.3",
         "friendsofphp/php-cs-fixer": "^2.12"
     },

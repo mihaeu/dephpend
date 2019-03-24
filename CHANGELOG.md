@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
  - support for Docker
 
+### Changed
+ - upgrade PHP language dependency to ^7.2
+ - upgrade PHPUnit to ^8.0
+
 ## [0.5.1] - 2018-07-04
 ### Fixed
  - replaced Symfony Console hacks with injection through Event Dispatcher

@@ -4,7 +4,7 @@
 
 class A
 {
-    public function test(B $b, C $c, $d)
+    public function test(B $b, C $c, $d): void
     {
         // ...
     }

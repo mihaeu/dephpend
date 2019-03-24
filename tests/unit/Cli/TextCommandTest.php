@@ -7,6 +7,8 @@ namespace Mihaeu\PhpDependencies\Cli;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\DependencyHelper;
 use Mihaeu\PhpDependencies\Util\Functional;
+use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -14,28 +16,28 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @covers Mihaeu\PhpDependencies\Cli\TextCommand
  * @covers Mihaeu\PhpDependencies\Cli\BaseCommand
  */
-class TextCommandTest extends \PHPUnit\Framework\TestCase
+class TextCommandTest extends TestCase
 {
     /** @var TextCommand */
     private $textCommand;
 
-    /** @var InputInterface|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var InputInterface|PHPUnit_Framework_MockObject_MockObject */
     private $input;
 
-    /** @var OutputInterface|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var OutputInterface|PHPUnit_Framework_MockObject_MockObject */
     private $output;
 
-    /** @var DependencyFilter|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var DependencyFilter|PHPUnit_Framework_MockObject_MockObject */
     private $dependencyFilter;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->dependencyFilter = $this->createMock(DependencyFilter::class);
         $this->input = $this->createMock(InputInterface::class);
         $this->output = $this->createMock(OutputInterface::class);
     }
 
-    public function testPrintsDependencies()
+    public function testPrintsDependencies(): void
     {
         $dependencies = DependencyHelper::map('
             A\\a\\1\\ClassA --> B\\a\\1\\ClassB
@@ -60,7 +62,7 @@ class TextCommandTest extends \PHPUnit\Framework\TestCase
         $command->run($this->input, $this->output);
     }
 
-    public function testPrintsOnlyNamespacedDependencies()
+    public function testPrintsOnlyNamespacedDependencies(): void
     {
         $dependencies = DependencyHelper::map('
             NamespaceA --> NamespaceB

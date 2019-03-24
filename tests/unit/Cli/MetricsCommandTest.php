@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser\Metrics;
+use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -12,21 +14,21 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * @covers Mihaeu\PhpDependencies\Cli\MetricsCommand
  */
-class MetricsCommandTest extends \PHPUnit\Framework\TestCase
+class MetricsCommandTest extends TestCase
 {
     /** @var MetricsCommand */
     private $metricsCommand;
 
-    /** @var Metrics|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var Metrics|PHPUnit_Framework_MockObject_MockObject */
     private $metrics;
 
-    /** @var InputInterface|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var InputInterface|PHPUnit_Framework_MockObject_MockObject */
     private $input;
 
-    /** @var OutputInterface|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var OutputInterface|PHPUnit_Framework_MockObject_MockObject */
     private $output;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->metrics = $this->createMock(Metrics::class);
         $this->metricsCommand = new MetricsCommand($this->metrics);
@@ -34,7 +36,7 @@ class MetricsCommandTest extends \PHPUnit\Framework\TestCase
         $this->output = $this->createMock(OutputInterface::class);
     }
 
-    public function testPrintsMetrics()
+    public function testPrintsMetrics(): void
     {
         $this->input->method('getArgument')->willReturn([]);
         $this->input->method('getOption')->willReturn(true, 0);

@@ -8,10 +8,10 @@ use PHPUnit\Framework\TestCase;
 
 class TextTest extends TestCase
 {
-    const DEPHPEND = PHP_BINARY.' -n '.__DIR__.'/../../bin/dephpend';
-    const SRC = __DIR__.'/../../src';
+    private const DEPHPEND = PHP_BINARY.' -n '.__DIR__.'/../../bin/dephpend';
+    private const SRC = __DIR__.'/../../src';
 
-    public function testTextCommandOnDephpendSourceWithoutClassesAndWithRegexAndFromFilter()
+    public function testTextCommandOnDephpendSourceWithoutClassesAndWithRegexAndFromFilter(): void
     {
         assertEquals(
             'Mihaeu\PhpDependencies\Analyser --> Mihaeu\PhpDependencies\Dependencies'.PHP_EOL
@@ -21,19 +21,23 @@ class TextTest extends TestCase
         );
     }
 
-    public function testTextCommandOnPhpUnitWithUnderscoreNamespaces()
+    public function testTextCommandOnPhpUnitWithUnderscoreNamespaces(): void
     {
+        $expected = <<<EOT
+PHPUnit\Runner --> PHPUnit\Framework
+PHPUnit\Runner --> PHPUnit\Util\PHP
+PHPUnit\Runner --> SebastianBergmann\Timer
+PHPUnit\Runner --> Text
+PHPUnit\Runner --> SebastianBergmann\FileIterator
+PHPUnit\Runner --> PHPUnit\Util
+PHPUnit\Runner --> SebastianBergmann
+PHPUnit\Runner --> PHPUnit
+PHPUnit\Runner\Filter --> PHPUnit\Framework
+PHPUnit\Runner\Filter --> PHPUnit\Util
+
+EOT;
         assertEquals(
-            'PHPUnit\Runner --> PHPUnit'.PHP_EOL
-            .'PHPUnit\Runner --> SebastianBergmann'.PHP_EOL
-            .'PHPUnit\Runner --> PHPUnit\Framework'.PHP_EOL
-            .'PHPUnit\Runner --> PHPUnit\Util'.PHP_EOL
-            .'PHPUnit\Runner --> File\Iterator'.PHP_EOL
-            .'PHPUnit\Runner --> PHP'.PHP_EOL
-            .'PHPUnit\Runner --> PHPUnit\Util\PHP'.PHP_EOL
-            .'PHPUnit\Runner --> Text'.PHP_EOL
-            .'PHPUnit\Runner\Filter --> PHPUnit\Framework'.PHP_EOL
-            .'PHPUnit\Runner\Filter --> PHPUnit\Util'.PHP_EOL,
+            $expected,
             shell_exec(self::DEPHPEND.' text '.__DIR__.'/../../vendor/phpunit/phpunit/src'
             .' --underscore-namespaces --no-classes -f "PHPUnit\\\\Runner"')
         );

@@ -3,7 +3,7 @@
 
 class A
 {
-    public function test()
+    public function test(): void
     {
         Singleton::create();
     }
@@ -18,7 +18,7 @@ class Singleton
         // ...
     }
 
-    public static function create()
+    public static function create(): \Singleton
     {
         if (self::$instance === null) {
             self::$instance = new Singleton();

@@ -35,7 +35,7 @@ class DispatcherTest extends TestCase
     /** @var DependencyFilter | MockObject */
     private $dependencyFilter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->staticAnalyser = $this->createMock(StaticAnalyser::class);
         $this->xDebugFunctionTraceAnalyser = $this->createMock(XDebugFunctionTraceAnalyser::class);
@@ -50,14 +50,14 @@ class DispatcherTest extends TestCase
         );
     }
 
-    public function testTriggersOnlyOnNamedConsoleEvents()
+    public function testTriggersOnlyOnNamedConsoleEvents(): void
     {
         $consoleEvent = $this->createMock(ConsoleEvent::class);
         $consoleEvent->expects(never())->method('getInput');
         $this->dispatcher->dispatch('other event', $consoleEvent);
     }
 
-    public function testTriggersOnlyOnConsoleEvents()
+    public function testTriggersOnlyOnConsoleEvents(): void
     {
         $consoleEvent = $this->createMock(Event::class);
         assertEquals(
@@ -66,7 +66,7 @@ class DispatcherTest extends TestCase
         );
     }
 
-    public function testInjectsDependenciesIntoConsoleEvents()
+    public function testInjectsDependenciesIntoConsoleEvents(): void
     {
         $command = $this->createMock(BaseCommand::class);
 

@@ -2,14 +2,16 @@
 
 namespace Mihaeu\PhpDependencies\Analyser;
 
+use InvalidArgumentException;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
 use Mihaeu\PhpDependencies\DependencyHelper;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * @covers Mihaeu\PhpDependencies\Analyser\XDebugFunctionTraceAnalyser
  */
-class XDebugFunctionTraceAnalyserTest extends \PHPUnit\Framework\TestCase
+class XDebugFunctionTraceAnalyserTest extends TestCase
 {
     /** @var XDebugFunctionTraceAnalyser */
     private $xDebugFunctionTraceAnalyser;
@@ -17,18 +19,19 @@ class XDebugFunctionTraceAnalyserTest extends \PHPUnit\Framework\TestCase
     /** @var SplFileInfo */
     private $tempFile;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->xDebugFunctionTraceAnalyser = new XDebugFunctionTraceAnalyser($this->createMock(DependencyFactory::class));
         $this->tempFile = new \SplFileInfo(sys_get_temp_dir().'/'.'dephpend-trace.sample');
+        touch($this->tempFile->getPathname());
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         unlink($this->tempFile->getPathname());
     }
 
-    public function testAnalyse()
+    public function testAnalyse(): void
     {
         $this->writeContent([
             [0, 1, 2, 3, 4, 'B->c', 6, 7, 8, 9, 10, 'class A'],
@@ -43,7 +46,7 @@ class XDebugFunctionTraceAnalyserTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testAnalyseIgnoresScalarValues()
+    public function testAnalyseIgnoresScalarValues(): void
     {
         $this->writeContent([
             [0, 1, 2, 3, 4, 'B->c', 6, 7, 8, 9, 10, '???', 'class A'],
@@ -63,12 +66,12 @@ class XDebugFunctionTraceAnalyserTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testThrowsExceptionIfFileCannotBeOpened()
+    public function testThrowsExceptionIfFileCannotBeOpened(): void
     {
-        touch($this->tempFile->getPathname());
-        chmod($this->tempFile->getPathname(), 0000);
-        $this->expectException(\InvalidArgumentException::class);
-        $this->xDebugFunctionTraceAnalyser->analyse($this->tempFile);
+        $tmpFile = $this->createMock(SplFileInfo::class);
+        $tmpFile->expects($this->once())->method('getPathname')->willReturn('');
+        $this->expectException(InvalidArgumentException::class);
+        $this->xDebugFunctionTraceAnalyser->analyse($tmpFile);
     }
 
     private function createContent(array $data) : string
@@ -78,7 +81,7 @@ class XDebugFunctionTraceAnalyserTest extends \PHPUnit\Framework\TestCase
         }, '');
     }
 
-    private function writeContent(array $data)
+    private function writeContent(array $data): void
     {
         file_put_contents($this->tempFile->getPathname(), $this->createContent($data));
     }

@@ -9,11 +9,13 @@ use Mihaeu\PhpDependencies\Dependencies\Clazz;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Dependencies\Interfaze;
 use Mihaeu\PhpDependencies\Dependencies\Trait_;
+use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Mihaeu\PhpDependencies\Analyser\Metrics
  */
-class MetricsTest extends \PHPUnit\Framework\TestCase
+class MetricsTest extends TestCase
 {
     /** @var Metrics */
     private $metrics;
@@ -21,7 +23,7 @@ class MetricsTest extends \PHPUnit\Framework\TestCase
     /** @var DependencyMap */
     private $dependencies;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->dependencies = (new DependencyMap())
             ->add(new Clazz('A'), new Interfaze('B'))
@@ -35,37 +37,37 @@ class MetricsTest extends \PHPUnit\Framework\TestCase
         $this->metrics = new Metrics();
     }
 
-    public function testAbstractnessWithNoDependency()
+    public function testAbstractnessWithNoDependency(): void
     {
         assertEquals(0, (new Metrics)->abstractness(new DependencyMap));
     }
 
-    public function testCountClasses()
+    public function testCountClasses(): void
     {
         assertEquals(4, $this->metrics->classCount($this->dependencies));
     }
 
-    public function testCountInterfaces()
+    public function testCountInterfaces(): void
     {
         assertEquals(1, $this->metrics->interfaceCount($this->dependencies));
     }
 
-    public function testCountAbstractClasses()
+    public function testCountAbstractClasses(): void
     {
         assertEquals(1, $this->metrics->abstractClassCount($this->dependencies));
     }
 
-    public function testCountTraits()
+    public function testCountTraits(): void
     {
         assertEquals(1, $this->metrics->traitCount($this->dependencies));
     }
 
-    public function testComputeAbstractness()
+    public function testComputeAbstractness(): void
     {
-        assertEquals(0.428, $this->metrics->abstractness($this->dependencies), '', 0.001);
+        Assert::assertEqualsWithDelta(0.428, $this->metrics->abstractness($this->dependencies), 0.001);
     }
 
-    public function testComputeAfferentCoupling()
+    public function testComputeAfferentCoupling(): void
     {
         assertEquals([
             'A' => 0,
@@ -78,7 +80,7 @@ class MetricsTest extends \PHPUnit\Framework\TestCase
         ], $this->metrics->afferentCoupling($this->dependencies));
     }
 
-    public function testComputeEfferentCoupling()
+    public function testComputeEfferentCoupling(): void
     {
         // all my classes depend only on one dependency
         assertEquals([
@@ -92,7 +94,7 @@ class MetricsTest extends \PHPUnit\Framework\TestCase
         ], $this->metrics->efferentCoupling($this->dependencies));
     }
 
-    public function testComputeInstability()
+    public function testComputeInstability(): void
     {
         assertEquals([
             'A' => 1,

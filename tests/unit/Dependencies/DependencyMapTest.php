@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Dependencies;
 
 use Mihaeu\PhpDependencies\DependencyHelper;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Mihaeu\PhpDependencies\Dependencies\DependencyMap
  * @covers Mihaeu\PhpDependencies\Util\AbstractMap
  */
-class DependencyMapTest extends \PHPUnit\Framework\TestCase
+class DependencyMapTest extends TestCase
 {
-    public function testNoDuplicates()
+    public function testNoDuplicates(): void
     {
         $map = DependencyHelper::map('
             A --> B
@@ -21,7 +22,7 @@ class DependencyMapTest extends \PHPUnit\Framework\TestCase
         assertEquals($map, $map->add(new Clazz('A'), new Clazz('B')));
     }
 
-    public function testAddMapToMap()
+    public function testAddMapToMap(): void
     {
         assertEquals(DependencyHelper::map('
             A --> B, C
@@ -34,7 +35,7 @@ class DependencyMapTest extends \PHPUnit\Framework\TestCase
         ')));
     }
 
-    public function testAddMoreDependenciesToExistingPair()
+    public function testAddMoreDependenciesToExistingPair(): void
     {
         $map = DependencyHelper::map('A --> B');
         assertEquals(
@@ -43,12 +44,12 @@ class DependencyMapTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testDoesNotAcceptDependenciesMappingToThemselves()
+    public function testDoesNotAcceptDependenciesMappingToThemselves(): void
     {
         assertCount(0, DependencyHelper::map('')->add(new Clazz('A'), new Clazz('A')));
     }
 
-    public function testReturnsTrueIfAnyMatches()
+    public function testReturnsTrueIfAnyMatches(): void
     {
         $toSet = DependencyHelper::dependencySet('To, ToAnother');
         $dependencies = (new DependencyMap())->addSet(new Clazz('Test'), $toSet);
@@ -57,7 +58,7 @@ class DependencyMapTest extends \PHPUnit\Framework\TestCase
         }));
     }
 
-    public function testReturnsTrueIfNoneMatches()
+    public function testReturnsTrueIfNoneMatches(): void
     {
         $dependencies = (new DependencyMap())->addSet(new Clazz('Test'), DependencyHelper::dependencySet('To, ToAnother'));
         assertTrue($dependencies->none(function (Dependency $from, Dependency $to) {
@@ -65,14 +66,14 @@ class DependencyMapTest extends \PHPUnit\Framework\TestCase
         }));
     }
 
-    public function testEach()
+    public function testEach(): void
     {
         DependencyHelper::map('From --> To, ToAnother')->each(function (Dependency $from, Dependency $to) {
             assertTrue($from->equals(new Clazz('From')));
         });
     }
 
-    public function testReduce()
+    public function testReduce(): void
     {
         $dependencies = DependencyHelper::map('From --> To, ToAnother');
         assertEquals('ToToAnother', $dependencies->reduce('', function (string $output, Dependency $from, Dependency $to) {
@@ -80,22 +81,21 @@ class DependencyMapTest extends \PHPUnit\Framework\TestCase
         }));
     }
 
-    public function testFromClasses()
+    public function testFromClasses(): void
     {
         $dependencies = DependencyHelper::map('From --> To, ToAnother');
         $expected = (new DependencySet())->add(new Clazz('From'));
         assertEquals($expected, $dependencies->fromDependencies());
     }
 
-    public function testAllClasses()
+    public function testAllClasses(): void
     {
         $dependencies = DependencyHelper::map('From --> To, ToAnother');
         $expected = DependencyHelper::dependencySet('From, To, ToAnother');
-        ;
         assertEquals($expected, $dependencies->allDependencies());
     }
 
-    public function testToString()
+    public function testToString(): void
     {
         assertEquals(
             'VendorA\\A --> VendorB\\A'.PHP_EOL
@@ -110,7 +110,7 @@ class DependencyMapTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testMapToArray()
+    public function testMapToArray(): void
     {
         assertEquals([new Clazz('A'), new Clazz('C')], DependencyHelper::map('
             A --> B
@@ -120,7 +120,7 @@ class DependencyMapTest extends \PHPUnit\Framework\TestCase
         }));
     }
 
-    public function testToArray()
+    public function testToArray(): void
     {
         assertEquals([
             'A' => [
@@ -137,7 +137,7 @@ class DependencyMapTest extends \PHPUnit\Framework\TestCase
         ')->toArray());
     }
 
-    public function testFilter()
+    public function testFilter(): void
     {
         assertEquals(
             DependencyHelper::map('A --> B'),
@@ -150,7 +150,7 @@ class DependencyMapTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testCount()
+    public function testCount(): void
     {
         assertCount(2, DependencyHelper::map('
             A --> B, C, D
@@ -158,7 +158,7 @@ class DependencyMapTest extends \PHPUnit\Framework\TestCase
         '));
     }
 
-    public function testEquals()
+    public function testEquals(): void
     {
         $one = DependencyHelper::map('
             A --> B, C, D
@@ -171,7 +171,7 @@ class DependencyMapTest extends \PHPUnit\Framework\TestCase
         assertTrue($one->equals($two));
     }
 
-    public function testContainsIsTrueIfItMatchesTheKey()
+    public function testContainsIsTrueIfItMatchesTheKey(): void
     {
         assertTrue(DependencyHelper::map('
             A --> B, C, D
@@ -179,7 +179,7 @@ class DependencyMapTest extends \PHPUnit\Framework\TestCase
         ')->contains(new Clazz('A')));
     }
 
-    public function testContainsIsFalseIfItOnlyMatchesTheValue()
+    public function testContainsIsFalseIfItOnlyMatchesTheValue(): void
     {
         assertFalse(DependencyHelper::map('
             A --> B, C, D
@@ -187,7 +187,7 @@ class DependencyMapTest extends \PHPUnit\Framework\TestCase
         ')->contains(new Clazz('E')));
     }
 
-    public function testMapAllDependencies()
+    public function testMapAllDependencies(): void
     {
         $map = DependencyHelper::map('
             A\b --> C
@@ -198,7 +198,7 @@ class DependencyMapTest extends \PHPUnit\Framework\TestCase
         }));
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         assertEquals(
             DependencyHelper::dependencySet('A, B, C'),
@@ -206,7 +206,7 @@ class DependencyMapTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testReduceEachDependency()
+    public function testReduceEachDependency(): void
     {
         assertEquals(DependencyHelper::map('
             _A --> _B, _C
@@ -218,34 +218,34 @@ class DependencyMapTest extends \PHPUnit\Framework\TestCase
         }));
     }
 
-    public function testDoesNotPrintNullDependenciesInKey()
+    public function testDoesNotPrintNullDependenciesInKey(): void
     {
         $map = (new DependencyMap())->add(new NullDependency(), new Clazz('A'));
         assertEmpty($map->toString());
     }
 
-    public function testDoesNotPrintNullDependenciesInValue()
+    public function testDoesNotPrintNullDependenciesInValue(): void
     {
         $map = (new DependencyMap())->add(new Clazz('A'), new NullDependency());
         assertEmpty($map->toString());
     }
 
-    public function testCannotAddEmptyNamespaceAsFrom()
+    public function testCannotAddEmptyNamespaceAsFrom(): void
     {
         assertEmpty((new DependencyMap())->add(new Clazz('A'), new Namespaze([])));
     }
 
-    public function testCannotAddEmptyNamespaceAsTo()
+    public function testCannotAddEmptyNamespaceAsTo(): void
     {
         assertEmpty((new DependencyMap())->add(new Namespaze([]), new Clazz('A')));
     }
 
-    public function testCannotAddSelf()
+    public function testCannotAddSelf(): void
     {
         assertEmpty((new DependencyMap())->add(new Clazz('A'), new Clazz('self')));
     }
 
-    public function testCannotAddDependencyToYourself()
+    public function testCannotAddDependencyToYourself(): void
     {
         $dependencyMap = (new DependencyMap())
             ->add(

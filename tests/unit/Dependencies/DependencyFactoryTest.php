@@ -4,20 +4,22 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Dependencies;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * @covers Mihaeu\PhpDependencies\Dependencies\DependencyFactory
  */
-class DependencyFactoryTest extends \PHPUnit\Framework\TestCase
+class DependencyFactoryTest extends TestCase
 {
     /** @var DependencyFactory */
     private $clazzFactory;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->clazzFactory = new DependencyFactory();
     }
 
-    public function testInvalidClassReturnsNullDependency()
+    public function testInvalidClassReturnsNullDependency(): void
     {
         assertInstanceOf(
             NullDependency::class,
@@ -25,12 +27,12 @@ class DependencyFactoryTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testCreatesClazzWithEmptyNamespace()
+    public function testCreatesClazzWithEmptyNamespace(): void
     {
         assertEquals(new Clazz('Test', new Namespaze([])), $this->clazzFactory->createClazzFromStringArray(['Test']));
     }
 
-    public function testCreateClazzWithNamespace()
+    public function testCreateClazzWithNamespace(): void
     {
         assertEquals(
             new Clazz('Test', new Namespaze(['Mihaeu', 'PhpDependencies'])),
@@ -38,17 +40,17 @@ class DependencyFactoryTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testCreateInterfaze()
+    public function testCreateInterfaze(): void
     {
         assertEquals(new AbstractClazz('Test', new Namespaze([])), $this->clazzFactory->createAbstractClazzFromStringArray(['Test']));
     }
 
-    public function testCreateAbstractClazz()
+    public function testCreateAbstractClazz(): void
     {
         assertEquals(new Interfaze('Test', new Namespaze([])), $this->clazzFactory->createInterfazeFromStringArray(['Test']));
     }
 
-    public function testCreateTrait()
+    public function testCreateTrait(): void
     {
         assertEquals(new Trait_('Test', new Namespaze([])), $this->clazzFactory->createTraitFromStringArray(['Test']));
     }

@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Util;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * @covers Mihaeu\PhpDependencies\Util\Functional
  */
-class FunctionalTest extends \PHPUnit\Framework\TestCase
+class FunctionalTest extends TestCase
 {
-    public function testCompose()
+    public function testCompose(): void
     {
         $incrementByOne = function ($x) {
             return $x + 1;
@@ -24,7 +26,7 @@ class FunctionalTest extends \PHPUnit\Framework\TestCase
         )(1));
     }
 
-    public function testComposeWithoutArgumentsReturnsId()
+    public function testComposeWithoutArgumentsReturnsId(): void
     {
         assertEquals(9, Functional::compose()(9));
     }

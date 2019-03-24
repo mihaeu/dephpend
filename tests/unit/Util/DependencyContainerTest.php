@@ -4,18 +4,22 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Util;
 
+use PHPUnit\Framework\TestCase;
+use ReflectionClass;
+use ReflectionException;
+
 /**
  * @covers Mihaeu\PhpDependencies\Util\DependencyContainer
  */
-class DependencyContainerTest extends \PHPUnit\Framework\TestCase
+class DependencyContainerTest extends TestCase
 {
     /**
-     * @return \Generator
-     * @throws \ReflectionException
+     * @return array
+     * @throws ReflectionException
      */
     public function provideMethods(): array
     {
-        $reflectionClass = new \ReflectionClass(DependencyContainer::class);
+        $reflectionClass = new ReflectionClass(DependencyContainer::class);
         $methods = [];
         foreach ($reflectionClass->getMethods() as $method) {
             if (!$method->hasReturnType()) {
@@ -31,7 +35,7 @@ class DependencyContainerTest extends \PHPUnit\Framework\TestCase
      * @param string $methodName
      * @param string $expectedReturnType
      */
-    public function testCanInstantiateAllDependencies(string $methodName, string $expectedReturnType)
+    public function testCanInstantiateAllDependencies(string $methodName, string $expectedReturnType): void
     {
         assertInstanceOf($expectedReturnType, (new DependencyContainer([]))->{$methodName}());
     }

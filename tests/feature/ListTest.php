@@ -8,9 +8,9 @@ use PHPUnit\Framework\TestCase;
 
 class ListTest extends TestCase
 {
-    const DEPHPEND = PHP_BINARY.' -n '.__DIR__.'/../../bin/dephpend';
+    private const DEPHPEND = PHP_BINARY.' -n '.__DIR__.'/../../bin/dephpend';
 
-    public function testNoArgumentsShowsHelp()
+    public function testNoArgumentsShowsHelp(): void
     {
         assertRegExp('/dsm.*metrics.*text.*uml.*/s', shell_exec(self::DEPHPEND.' list'));
     }

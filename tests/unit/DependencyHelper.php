@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies;
 
+use InvalidArgumentException;
 use Mihaeu\PhpDependencies\Dependencies\Clazz;
 use Mihaeu\PhpDependencies\Dependencies\Dependency;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
@@ -24,7 +25,7 @@ class DependencyHelper
      *
      * @return DependencyMap
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public static function map(string $input) : DependencyMap
     {
@@ -48,9 +49,9 @@ class DependencyHelper
      *
      * @return Clazz
      */
-    public static function clazz(string $input) : Clazz
+    public static function clazz(string $input): Dependency
     {
-        return (new DependencyFactory())->createClazzFromStringArray((explode('\\', $input)));
+        return (new DependencyFactory())->createClazzFromStringArray(explode('\\', $input));
     }
 
     /**

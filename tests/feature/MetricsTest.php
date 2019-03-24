@@ -8,10 +8,10 @@ use PHPUnit\Framework\TestCase;
 
 class MetricsTest extends TestCase
 {
-    const DEPHPEND = PHP_BINARY.' -n '.__DIR__.'/../../bin/dephpend';
-    const SRC = __DIR__.'/../../src';
+    private const DEPHPEND = PHP_BINARY.' -n '.__DIR__.'/../../bin/dephpend';
+    private const SRC = __DIR__.'/../../src';
 
-    public function testComputeMetricsForDephpend()
+    public function testComputeMetricsForDephpend(): void
     {
         assertRegExp(
             '/Classes:.*\d\d.*Abstract classes:.*\d+.*Abstractness:.*\d\.\d+/s',

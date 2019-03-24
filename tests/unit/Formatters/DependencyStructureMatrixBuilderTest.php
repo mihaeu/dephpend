@@ -4,21 +4,22 @@ namespace Mihaeu\PhpDependencies\Formatters;
 
 use Mihaeu\PhpDependencies\DependencyHelper;
 use Mihaeu\PhpDependencies\Util\Functional;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Mihaeu\PhpDependencies\Formatters\DependencyStructureMatrixBuilder
  */
-class DependencyStructureMatrixBuilderTest extends \PHPUnit\Framework\TestCase
+class DependencyStructureMatrixBuilderTest extends TestCase
 {
     /** @var DependencyStructureMatrixBuilder */
     private $builder;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->builder = new DependencyStructureMatrixBuilder();
     }
 
-    public function testBuildMatrixFromClassesWithoutNamespaces()
+    public function testBuildMatrixFromClassesWithoutNamespaces(): void
     {
         $dependencies = DependencyHelper::map('
             A --> D, B
@@ -34,7 +35,7 @@ class DependencyStructureMatrixBuilderTest extends \PHPUnit\Framework\TestCase
         ], $this->builder->buildMatrix($dependencies, Functional::id()));
     }
 
-    public function testBuildMatrixFromClassesWithNamespaces()
+    public function testBuildMatrixFromClassesWithNamespaces(): void
     {
         $dependencies = DependencyHelper::map('
             AA\\A --> DD\\D, BB\\B

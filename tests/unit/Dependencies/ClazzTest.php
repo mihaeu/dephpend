@@ -4,67 +4,70 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Dependencies;
 
-use Mihaeu\PhpDependencies\DependencyHelper as H;
+use InvalidArgumentException;
 use Mihaeu\PhpDependencies\DependencyHelper;
+use Mihaeu\PhpDependencies\DependencyHelper as H;
+use Mihaeu\PhpDependencies\Util\Collection;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Mihaeu\PhpDependencies\Dependencies\Clazz
  * @covers Mihaeu\PhpDependencies\Dependencies\ClazzLike
  */
-class ClazzTest extends \PHPUnit\Framework\TestCase
+class ClazzTest extends TestCase
 {
-    public function testAcceptsUtf8Name()
+    public function testAcceptsUtf8Name(): void
     {
         assertEquals('á', (new Clazz('á'))->toString());
     }
 
-    public function testHasValue()
+    public function testHasValue(): void
     {
         assertEquals('Name', new Clazz('Name'));
         assertEquals('Name', (new Clazz('Name'))->toString());
     }
 
-    public function testNamespace()
+    public function testNamespace(): void
     {
         assertEquals(new Namespaze(['A', 'a']), (new Clazz('Name', new Namespaze(['A', 'a'])))->namespaze());
     }
 
-    public function testToStringWithNamespace()
+    public function testToStringWithNamespace(): void
     {
-        assertEquals('A\\a\\ClassA', (new Clazz('ClassA', new Namespaze(['A', 'a']))));
+        assertEquals('A\\a\\ClassA', new Clazz('ClassA', new Namespaze(['A', 'a'])));
     }
 
-    public function testEquals()
+    public function testEquals(): void
     {
         assertTrue((new Clazz('A'))->equals(new Clazz('A')));
     }
 
-    public function testEqualsIgnoresType()
+    public function testEqualsIgnoresType(): void
     {
         assertTrue((new Clazz('A'))->equals(new Interfaze('A')));
     }
 
-    public function testDetectsIfClassHasNamespace()
+    public function testDetectsIfClassHasNamespace(): void
     {
         assertTrue((new Clazz('Class', new Namespaze(['A'])))->hasNamespace());
     }
 
-    public function testDetectsIfClassHasNoNamespace()
+    public function testDetectsIfClassHasNoNamespace(): void
     {
         assertFalse((new Clazz('Class'))->hasNamespace());
     }
 
-    public function testDepthWithoutNamespaceIsOne()
+    public function testDepthWithoutNamespaceIsOne(): void
     {
         assertCount(1, new Clazz('A'));
     }
 
-    public function testDepthWithNamespace()
+    public function testDepthWithNamespace(): void
     {
         assertCount(3, new Clazz('A', new Namespaze(['B', 'C'])));
     }
 
-    public function testReduceWithDepthZero()
+    public function testReduceWithDepthZero(): void
     {
         assertEquals(
             H::clazz('A\\B\\C\\D'),
@@ -72,12 +75,12 @@ class ClazzTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testReduceToDepthTwoWithoutNamespacesProducesClass()
+    public function testReduceToDepthTwoWithoutNamespacesProducesClass(): void
     {
         assertEquals(new Clazz('A'), (new Clazz('A'))->reduceToDepth(2));
     }
 
-    public function testReduceDepthToTwoProducesTopTwoNamespaces()
+    public function testReduceDepthToTwoProducesTopTwoNamespaces(): void
     {
         $clazz = H::clazz('A\\B\\C\\D');
         assertEquals(
@@ -86,7 +89,7 @@ class ClazzTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testReduceToDepthOfOneProducesOneNamespace()
+    public function testReduceToDepthOfOneProducesOneNamespace(): void
     {
         assertEquals(
             new Namespaze(['A']),
@@ -94,7 +97,7 @@ class ClazzTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testLeftReduceClassWithNamespace()
+    public function testLeftReduceClassWithNamespace(): void
     {
         assertEquals(
             H::clazz('D'),
@@ -102,7 +105,7 @@ class ClazzTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testCannotLeftReduceClassWithNamespaceByItsLength()
+    public function testCannotLeftReduceClassWithNamespaceByItsLength(): void
     {
         assertEquals(
             H::clazz('A\\B\\C\\D'),
@@ -113,12 +116,12 @@ class ClazzTest extends \PHPUnit\Framework\TestCase
     /**
      * @see https://github.com/mihaeu/dephpend/issues/22
      */
-    public function testAcceptsNumbersAsFirstCharacterInName()
+    public function testAcceptsNumbersAsFirstCharacterInName(): void
     {
         assertEquals('Vendor\\1Sub\\2Factor', new Clazz('2Factor', new Namespaze(['Vendor', '1Sub'])));
     }
 
-    public function testCannotLeftReduceClassWithNamespaceByMoreThanItsLength()
+    public function testCannotLeftReduceClassWithNamespaceByMoreThanItsLength(): void
     {
         assertEquals(
             H::clazz('A\\B\\C\\D'),
@@ -126,31 +129,31 @@ class ClazzTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testDetectsIfInOtherNamespace()
+    public function testDetectsIfInOtherNamespace(): void
     {
         assertTrue(DependencyHelper::clazz('A\\b\\T\\Test')->inNamespaze(DependencyHelper::namespaze('A\\b')));
         assertTrue(DependencyHelper::clazz('A\\Test')->inNamespaze(DependencyHelper::namespaze('A')));
-        assertTrue(DependencyHelper::clazz('Mihaeu\\PhpDependencies\\Util\\Collection')->inNamespaze(new Namespaze(['Mihaeu', 'PhpDependencies'])));
+        assertTrue(DependencyHelper::clazz(Collection::class)->inNamespaze(new Namespaze(['Mihaeu', 'PhpDependencies'])));
     }
 
-    public function testDetectsIfNotInOtherNamespace()
+    public function testDetectsIfNotInOtherNamespace(): void
     {
         assertFalse(DependencyHelper::clazz('Global')->inNamespaze(DependencyHelper::namespaze('A\\b\\T')));
     }
 
-    public function testThrowsExceptionIfNameNotValid()
+    public function testThrowsExceptionIfNameNotValid(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Class name "Mihaeu\Test" is not valid.');
         new Clazz('Mihaeu\\Test');
     }
 
-    public function testDetectsIfClassIsNotNamespaced()
+    public function testDetectsIfClassIsNotNamespaced(): void
     {
         assertFalse((new Clazz('NoNamespace'))->isNamespaced());
     }
 
-    public function testDetectsIfClassIsNamespaced()
+    public function testDetectsIfClassIsNamespaced(): void
     {
         assertTrue((new Clazz('HasNamespace', new Namespaze(['Vendor'])))->isNamespaced());
     }

@@ -8,22 +8,24 @@ use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\OS\PhpFile;
 use Mihaeu\PhpDependencies\OS\PhpFileSet;
 use PhpParser\NodeTraverser;
+use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject;
 
 /**
  * @covers Mihaeu\PhpDependencies\Analyser\StaticAnalyser
  */
-class StaticAnalyserTest extends \PHPUnit\Framework\TestCase
+class StaticAnalyserTest extends TestCase
 {
     /** @var StaticAnalyser */
     private $analyser;
 
-    /** @var DependencyInspectionVisitor|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var DependencyInspectionVisitor|PHPUnit_Framework_MockObject_MockObject */
     private $dependencyInspectionVisitor;
 
     /** @var Parser */
     private $parser;
 
-    public function setUp()
+    protected function setUp(): void
     {
         /** @var NodeTraverser $nodeTraverser */
         $nodeTraverser = $this->createMock(NodeTraverser::class);
@@ -37,7 +39,7 @@ class StaticAnalyserTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testAnalyse()
+    public function testAnalyse(): void
     {
         $this->dependencyInspectionVisitor->method('dependencies')->willReturn(new DependencyMap());
         $phpFile = $this->createMock(PhpFile::class);

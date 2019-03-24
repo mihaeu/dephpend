@@ -8,10 +8,10 @@ use PHPUnit\Framework\TestCase;
 
 class UmlTest extends TestCase
 {
-    const DEPHPEND = PHP_BINARY.' -n '.__DIR__.'/../../bin/dephpend';
-    const SRC = __DIR__.'/../../src';
+    private const DEPHPEND = PHP_BINARY.' -n '.__DIR__.'/../../bin/dephpend';
+    private const SRC = __DIR__.'/../../src';
 
-    public function testCreatesUml()
+    public function testCreatesUml(): void
     {
         system('plantuml -version > /dev/null 2>&1', $returnStatus);
         if ($returnStatus !== 0) {

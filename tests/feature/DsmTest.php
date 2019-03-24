@@ -8,10 +8,10 @@ use PHPUnit\Framework\TestCase;
 
 class DsmTest extends TestCase
 {
-    const DEPHPEND = PHP_BINARY.' -n '.__DIR__.'/../../bin/dephpend';
-    const SRC = __DIR__.'/../../src';
+    private const DEPHPEND = PHP_BINARY.' -n '.__DIR__.'/../../bin/dephpend';
+    private const SRC = __DIR__.'/../../src';
 
-    public function testCreatesSimpleDsmInHtml()
+    public function testCreatesSimpleDsmInHtml(): void
     {
         assertRegExp(
             '@\d: PhpParser</th><td>([1-9]\d*).+.+@s',

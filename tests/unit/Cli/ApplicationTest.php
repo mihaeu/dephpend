@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\OS\DotWrapper;
+use PhpParser\Error;
+use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\Input;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -14,7 +17,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 /**
  * @covers Mihaeu\PhpDependencies\Cli\Application
  */
-class ApplicationTest extends \PHPUnit\Framework\TestCase
+class ApplicationTest extends TestCase
 {
     /** @var Application */
     private $application;
@@ -22,16 +25,16 @@ class ApplicationTest extends \PHPUnit\Framework\TestCase
     /** @var EventDispatcherInterface */
     private $dispatcher;
 
-    const XDEBUG_WARNING = '<fg=black;bg=yellow>You are running dePHPend with xdebug enabled. This has a major impact on runtime performance. See https://getcomposer.org/xdebug</>';
+    private const XDEBUG_WARNING = '<fg=black;bg=yellow>You are running dePHPend with xdebug enabled. This has a major impact on runtime performance. See https://getcomposer.org/xdebug</>';
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->dispatcher = $this->createMock(EventDispatcherInterface::class);
         $_SERVER['argv'] = ['', 'text', sys_get_temp_dir()];
         $this->application = new Application('', '', $this->dispatcher);
     }
 
-    public function testWarningIfXDebugEnabled()
+    public function testWarningIfXDebugEnabled(): void
     {
         $input = $this->createMock(Input::class);
         $output = $this->createMock(Output::class);
@@ -45,10 +48,10 @@ class ApplicationTest extends \PHPUnit\Framework\TestCase
         $this->application->doRun($input, $output);
     }
 
-    public function testPrintsErrorMessageIfParserThrowsException()
+    public function testPrintsErrorMessageIfParserThrowsException(): void
     {
         $input = $this->createMock(Input::class);
-        $input->method('hasParameterOption')->willThrowException(new \PhpParser\Error('Test'));
+        $input->method('hasParameterOption')->willThrowException(new Error('Test'));
         $output = $this->createMock(Output::class);
 
         $expectedMessage = '<error>Sorry, we could not analyse your dependencies, '
@@ -66,7 +69,7 @@ class ApplicationTest extends \PHPUnit\Framework\TestCase
         $this->application->doRun($input, $output);
     }
 
-    public function testValidatesDsmInput()
+    public function testValidatesDsmInput(): void
     {
         $_SERVER['argv'] = ['', 'dsm', sys_get_temp_dir(), '--format=html'];
         $input = $this->createMock(Input::class);
@@ -75,7 +78,7 @@ class ApplicationTest extends \PHPUnit\Framework\TestCase
         assertEquals(0, $returnCode);
     }
 
-    public function testValidatesUmlInput()
+    public function testValidatesUmlInput(): void
     {
         $_SERVER['argv'] = ['', 'uml', sys_get_temp_dir(), '--output=test.png'];
         $input = $this->createMock(Input::class);
@@ -84,7 +87,7 @@ class ApplicationTest extends \PHPUnit\Framework\TestCase
         assertEquals(0, $returnCode);
     }
 
-    public function testValidatesMetricInput()
+    public function testValidatesMetricInput(): void
     {
         $_SERVER['argv'] = ['', 'metrics', sys_get_temp_dir()];
         $input = $this->createMock(Input::class);
@@ -93,7 +96,7 @@ class ApplicationTest extends \PHPUnit\Framework\TestCase
         assertEquals(0, $returnCode);
     }
 
-    public function testValidatesDotInput()
+    public function testValidatesDotInput(): void
     {
         $_SERVER['argv'] = ['', 'dot', sys_get_temp_dir()];
         $input = $this->createMock(Input::class);
@@ -102,17 +105,17 @@ class ApplicationTest extends \PHPUnit\Framework\TestCase
         assertEquals(0, $returnCode);
     }
 
-    public function testCommandWithHelpOptionProvidesHelpForDotCommand()
+    public function testCommandWithHelpOptionProvidesHelpForDotCommand(): void
     {
         $input = new ArgvInput(['', 'dot', '--help']);
         $output = new BufferedOutput();
         $application = new Application('', '', $this->dispatcher);
         $application->add(new DotCommand($this->createMock(DotWrapper::class)));
         $application->doRun($input, $output);
-        assertContains('dot [options]', $output->fetch());
+        Assert::assertStringContainsString('dot [options]', $output->fetch());
     }
 
-    public function testNoCommandWithVersionOptionWritesVersion()
+    public function testNoCommandWithVersionOptionWritesVersion(): void
     {
         $input = new ArgvInput(['', '--version']);
         $output = new BufferedOutput();
@@ -120,21 +123,21 @@ class ApplicationTest extends \PHPUnit\Framework\TestCase
         assertRegExp('/\d+\.\d+\.\d+/', $output->fetch());
     }
 
-    public function testNoCommandWithHelpOptionWritesHelp()
+    public function testNoCommandWithHelpOptionWritesHelp(): void
     {
         $input = new ArgvInput(['', '--help']);
         $output = new BufferedOutput();
         $application = new Application('', '', $this->dispatcher);
         $application->doRun($input, $output);
-        assertContains('list [options]', $output->fetch());
+        Assert::assertStringContainsString('list [options]', $output->fetch());
     }
 
-    public function testHelpOptionWithAnsiOptionPrintsHelp()
+    public function testHelpOptionWithAnsiOptionPrintsHelp(): void
     {
         $input = new ArgvInput(['', '--help', '--ansi']);
         $output = new BufferedOutput();
 
         (new Application('', '', $this->dispatcher))->doRun($input, $output);
-        assertContains('list [options]', $output->fetch());
+        Assert::assertStringContainsString('list [options]', $output->fetch());
     }
 }

@@ -8,9 +8,8 @@ use Mihaeu\PhpDependencies\Dependencies\AbstractClazz;
 use Mihaeu\PhpDependencies\Dependencies\Clazz;
 use Mihaeu\PhpDependencies\Dependencies\Dependency;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
-use Mihaeu\PhpDependencies\Dependencies\DependencyPair;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
-use Mihaeu\PhpDependencies\Dependencies\DependencySet;
+use Mihaeu\PhpDependencies\Dependencies\DependencyPair;
 use Mihaeu\PhpDependencies\Dependencies\Interfaze;
 use Mihaeu\PhpDependencies\Dependencies\Namespaze;
 use Mihaeu\PhpDependencies\Dependencies\Trait_;
@@ -18,7 +17,6 @@ use PhpParser\Node;
 use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\ClassConstFetch;
 use PhpParser\Node\Expr\Instanceof_;
-use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\New_ as NewNode;
 use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Expr\Variable;
@@ -28,11 +26,13 @@ use PhpParser\Node\Param;
 use PhpParser\Node\Stmt\Catch_;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\ClassMethod;
-use PhpParser\Node\Stmt\Interface_ as InterfaceNode;
 use PhpParser\Node\Stmt\Interface_;
+use PhpParser\Node\Stmt\Interface_ as InterfaceNode;
+use PhpParser\Node\Stmt\Trait_ as TraitNode;
 use PhpParser\Node\Stmt\TraitUse;
 use PhpParser\Node\Stmt\Use_ as UseNode;
-use PhpParser\Node\Stmt\Trait_ as TraitNode;
+use PHPUnit\Framework\TestCase;
+use stdClass;
 
 /**
  * The Dependency Inspection is where all the magic happens,
@@ -56,12 +56,12 @@ use PhpParser\Node\Stmt\Trait_ as TraitNode;
  *
  * @covers Mihaeu\PhpDependencies\Analyser\DependencyInspectionVisitor
  */
-class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
+class DependencyInspectionVisitorTest extends TestCase
 {
     /** @var DependencyInspectionVisitor */
     private $dependencyInspectionVisitor;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->dependencyInspectionVisitor = new DependencyInspectionVisitor(new DependencyFactory());
         $this->dependencyInspectionVisitor->beforeTraverse([]);
@@ -93,10 +93,10 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
      *
      * @return ClassNode
      */
-    private function createAndEnterCurrentClassNode()
+    private function createAndEnterCurrentClassNode(): ClassNode
     {
         $node = new ClassNode('SomeClass');
-        $node->namespacedName = new \stdClass();
+        $node->namespacedName = new stdClass();
         $node->namespacedName->parts = ['SomeNamespace', 'SomeClass'];
         $this->dependencyInspectionVisitor->enterNode($node);
 
@@ -107,14 +107,14 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
      * Helper method which adds a random dependency when testing if the from-
      * dependency is picked up and the to-dependency is not important.
      */
-    private function addRandomDependency()
+    private function addRandomDependency(): void
     {
         $newNode = new NewNode(new FullyQualifiedNameNode('TestDep'));
         $this->dependencyInspectionVisitor->enterNode($newNode);
         $this->dependencyInspectionVisitor->leaveNode($newNode);
     }
 
-    public function testDetectsExplicitNewCreation()
+    public function testDetectsExplicitNewCreation(): void
     {
         $node = $this->createAndEnterCurrentClassNode();
 
@@ -125,13 +125,13 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
         assertTrue($this->dependenciesContain($this->dependencyInspectionVisitor->dependencies(), new Clazz('TestDep')));
     }
 
-    public function testDetectsExtendedClasses()
+    public function testDetectsExtendedClasses(): void
     {
         $node = new ClassNode('SomeClass');
-        $node->namespacedName = new \stdClass();
+        $node->namespacedName = new stdClass();
         $node->namespacedName->parts = ['SomeNamespace', 'SomeClass'];
 
-        $node->extends = new \stdClass();
+        $node->extends = new stdClass();
         $node->extends->parts = ['A', 'a', '1', 'ClassA'];
         $this->dependencyInspectionVisitor->enterNode($node);
 
@@ -142,15 +142,15 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
         ));
     }
 
-    public function testDetectsWhenInterfacesImplementMultipleInterfaces()
+    public function testDetectsWhenInterfacesImplementMultipleInterfaces(): void
     {
         $node = new InterfaceNode('SomeInterface');
-        $node->namespacedName = new \stdClass();
+        $node->namespacedName = new stdClass();
         $node->namespacedName->parts = ['SomeNamespace', 'SomeInterface'];
 
         $node->extends = [
-            new \stdClass(),
-            new \stdClass()
+            new stdClass(),
+            new stdClass()
         ];
         $node->extends[0]->parts = ['A', 'a', '1', 'ClassA'];
         $node->extends[1]->parts = ['B', 'b', '2', 'ClassB'];
@@ -167,10 +167,10 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
         ));
     }
 
-    public function testDetectsAbstractClasses()
+    public function testDetectsAbstractClasses(): void
     {
         $node = new ClassNode('Test', ['type' => 16]);
-        $node->namespacedName = new \stdClass();
+        $node->namespacedName = new stdClass();
         $node->namespacedName->parts = ['A', 'Test'];
         $this->dependencyInspectionVisitor->enterNode($node);
 
@@ -183,10 +183,10 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
         ));
     }
 
-    public function testDetectsInterfaces()
+    public function testDetectsInterfaces(): void
     {
         $node = new Interface_('Test');
-        $node->namespacedName = new \stdClass();
+        $node->namespacedName = new stdClass();
         $node->namespacedName->parts = ['A', 'Test'];
         $this->dependencyInspectionVisitor->enterNode($node);
 
@@ -199,10 +199,10 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
         ));
     }
 
-    public function testDetectsImplementedInterfaces()
+    public function testDetectsImplementedInterfaces(): void
     {
         $node = new ClassNode('SomeClass');
-        $node->namespacedName = new \stdClass();
+        $node->namespacedName = new stdClass();
         $node->namespacedName->parts = ['SomeNamespace', 'SomeClass'];
 
         $interfaceOneNode = new InterfaceNode('InterfaceOne');
@@ -223,7 +223,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
         ));
     }
 
-    public function testIgnoresInnerClassesWithoutName()
+    public function testIgnoresInnerClassesWithoutName(): void
     {
         $node = new ClassNode('');
         $this->dependencyInspectionVisitor->enterNode($node);
@@ -232,14 +232,14 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
         assertEmpty($this->dependencyInspectionVisitor->dependencies());
     }
 
-    public function testDetectsDependenciesFromMethodArguments()
+    public function testDetectsDependenciesFromMethodArguments(): void
     {
         $methodNode = new ClassMethod('someMethod');
         $paramOne = new Param('one', null, 'DependencyOne');
-        $paramOne->type = new \stdClass();
+        $paramOne->type = new stdClass();
         $paramOne->type->parts = ['A', 'B', 'DependencyOne'];
         $paramTwo = new Param('two', null, 'DependencyTwo');
-        $paramTwo->type = new \stdClass();
+        $paramTwo->type = new stdClass();
         $paramTwo->type->parts = ['A', 'B', 'DependencyTwo'];
         $methodNode->params = [
             $paramOne,
@@ -258,7 +258,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
         ));
     }
 
-    public function testDetectsUseNodes()
+    public function testDetectsUseNodes(): void
     {
         $this->addNodeToAst(
             new UseNode(
@@ -272,7 +272,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
         ));
     }
 
-    public function testReturnType()
+    public function testReturnType(): void
     {
         $this->addNodeToAst(
             new ClassMethod('', ['returnType' => new Name(['Namespace', 'Test'])])
@@ -284,7 +284,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
         ));
     }
 
-    public function testDetectsCallsOnStaticClasses()
+    public function testDetectsCallsOnStaticClasses(): void
     {
         $node = $this->createAndEnterCurrentClassNode();
 
@@ -299,7 +299,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
         ));
     }
 
-    public function testAddsDependenciesOnlyWhenInClassContext()
+    public function testAddsDependenciesOnlyWhenInClassContext(): void
     {
         $node = new NewNode(new FullyQualifiedNameNode('TestDep'));
         $this->dependencyInspectionVisitor->enterNode($node);
@@ -310,10 +310,10 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
         assertEmpty($dependencies);
     }
 
-    public function testTrait()
+    public function testTrait(): void
     {
         $node = new TraitNode('Test');
-        $node->namespacedName = new \stdClass();
+        $node->namespacedName = new stdClass();
         $node->namespacedName->parts = ['A', 'Test'];
         $this->dependencyInspectionVisitor->enterNode($node);
 
@@ -326,7 +326,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
         ));
     }
 
-    public function testUseSingleTrait()
+    public function testUseSingleTrait(): void
     {
         $this->addNodeToAst(
             new TraitUse([new Name(['A', 'Test'])])
@@ -338,7 +338,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
         ));
     }
 
-    public function testUseMultipleTraits()
+    public function testUseMultipleTraits(): void
     {
         $this->addNodeToAst(
             new TraitUse([
@@ -362,7 +362,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
         ));
     }
 
-    public function testUseInstanceofComparison()
+    public function testUseInstanceofComparison(): void
     {
         $this->addNodeToAst(
             new Instanceof_(new Array_(), new FullyQualifiedNameNode('Test'))
@@ -374,7 +374,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
         ));
     }
 
-    public function testDetectsCatchNode()
+    public function testDetectsCatchNode(): void
     {
         $this->addNodeToAst(
             new Catch_([new Name(['AnException'])], new Variable('e'))
@@ -386,7 +386,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
         ));
     }
 
-    public function testDetectsPhp71MultipleCatchNodes()
+    public function testDetectsPhp71MultipleCatchNodes(): void
     {
         $this->addNodeToAst(
             new Catch_([
@@ -405,7 +405,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
         ));
     }
 
-    public function testDetectsFetchClassNode()
+    public function testDetectsFetchClassNode(): void
     {
         $this->addNodeToAst(
             new ClassConstFetch(new Name('StaticTest'), 'test')
@@ -417,7 +417,7 @@ class DependencyInspectionVisitorTest extends \PHPUnit\Framework\TestCase
         ));
     }
 
-    private function addNodeToAst(Node $node)
+    private function addNodeToAst(Node $node): void
     {
         $classNode = $this->createAndEnterCurrentClassNode();
 

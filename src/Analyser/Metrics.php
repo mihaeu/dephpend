@@ -109,9 +109,7 @@ class Metrics
         $instability = [];
         foreach ($ce as $class => $count) {
             $totalCoupling = $ce[$class] + $ca[$class];
-            $instability[$class] = $totalCoupling !== 0
-                ? $ce[$class] / $totalCoupling
-                : 0;
+            $instability[$class] = $ce[$class] / $totalCoupling;
         }
         return $instability;
     }

@@ -3,13 +3,14 @@
 namespace Mihaeu\PhpDependencies\Formatters;
 
 use Mihaeu\PhpDependencies\DependencyHelper;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Mihaeu\PhpDependencies\Formatters\DotFormatter
  */
-class DotFormatterTest extends \PHPUnit\Framework\TestCase
+class DotFormatterTest extends TestCase
 {
-    public function testFormatsSimpleDependencies()
+    public function testFormatsSimpleDependencies(): void
     {
         $expected = 'digraph generated_by_dePHPend {'.PHP_EOL
             ."\t\"A\" -> \"B\"".PHP_EOL

@@ -5,40 +5,41 @@ namespace Mihaeu\PhpDependencies\OS;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Exceptions\DotNotInstalledException;
 use Mihaeu\PhpDependencies\Formatters\DotFormatter;
-use Mihaeu\PhpDependencies\OS\DotWrapper;
-use Mihaeu\PhpDependencies\OS\ShellWrapper;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject;
+use SplFileInfo;
 
 /**
  * @covers Mihaeu\PhpDependencies\OS\DotWrapper
  */
-class DotWrapperTest extends \PHPUnit\Framework\TestCase
+class DotWrapperTest extends TestCase
 {
-    /** @var ShellWrapper|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var ShellWrapper|PHPUnit_Framework_MockObject_MockObject */
     private $shellWrapper;
 
-    /** @var DotFormatter|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var DotFormatter|PHPUnit_Framework_MockObject_MockObject */
     private $dotFormatter;
 
     /** @var DotWrapper */
     private $dotWrapper;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->shellWrapper = $this->createMock(ShellWrapper::class);
         $this->dotFormatter = $this->createMock(DotFormatter::class);
         $this->dotWrapper = new DotWrapper($this->dotFormatter, $this->shellWrapper);
     }
 
-    public function testThrowsExceptionIfDotIsNotInstalled()
+    public function testThrowsExceptionIfDotIsNotInstalled(): void
     {
         $this->shellWrapper->method('run')->willReturn(1);
 
         $this->expectException(DotNotInstalledException::class);
-        $this->dotWrapper->generate(new DependencyMap(), new \SplFileInfo(__FILE__));
+        $this->dotWrapper->generate(new DependencyMap(), new SplFileInfo(__FILE__));
     }
 
-    public function testRunsDot()
+    public function testRunsDot(): void
     {
         $root = vfsStream::setup()->url();
 
@@ -50,24 +51,24 @@ class DotWrapperTest extends \PHPUnit\Framework\TestCase
                 ['dot -O -Tpng '.$root.'/test']
             )
         ;
-        $this->dotWrapper->generate(new DependencyMap(), new \SplFileInfo($root.'/test.png'), true);
+        $this->dotWrapper->generate(new DependencyMap(), new SplFileInfo($root.'/test.png'), true);
     }
 
-    public function testKeepsDotFiles()
+    public function testKeepsDotFiles(): void
     {
         $root = vfsStream::setup()->url();
-        $testFile = new \SplFileInfo($root.'/test');
+        $testFile = new SplFileInfo($root.'/test');
         assertFileNotExists($testFile->getPathname());
-        $this->dotWrapper->generate(new DependencyMap(), new \SplFileInfo($testFile->getPathname()), true);
+        $this->dotWrapper->generate(new DependencyMap(), new SplFileInfo($testFile->getPathname()), true);
         assertFileExists($testFile->getPathname());
     }
 
 
-    public function testRemovesDotFiles()
+    public function testRemovesDotFiles(): void
     {
         $root = vfsStream::setup()->url();
-        $testFile = new \SplFileInfo($root.'/test');
-        $this->dotWrapper->generate(new DependencyMap(), new \SplFileInfo($root.'/test.png'), false);
+        $testFile = new SplFileInfo($root.'/test');
+        $this->dotWrapper->generate(new DependencyMap(), new SplFileInfo($root.'/test.png'), false);
         assertFileNotExists($testFile->getPathname());
     }
 }
