@@ -68,43 +68,26 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         } elseif ($node instanceof NewNode
             && $node->class instanceof NameNode) {
             $this->addName($node->class);
-        // WEIRD BUG CAUSING XDEBUG TO NOT COVER ELSEIF ONLY ELSE IF
-            // @codeCoverageIgnoreStart
         } elseif ($node instanceof ClassMethodNode) {
-            // @codeCoverageIgnoreEnd
             $this->addInjectedDependencies($node);
             $this->addReturnType($node);
-        // WEIRD BUG CAUSING XDEBUG TO NOT COVER ELSEIF ONLY ELSE IF
-            // @codeCoverageIgnoreStart
         } elseif ($node instanceof UseNode) {
-            // @codeCoverageIgnoreEnd
             foreach ($node->uses as $use) {
                 $this->addName($use->name);
             }
-            // @codeCoverageIgnoreStart
         } elseif ($node instanceof StaticCallNode
             && $node->class instanceof NameNode) {
-            // @codeCoverageIgnoreEnd
             $this->addStaticDependency($node);
-        // WEIRD BUG CAUSING XDEBUG TO NOT COVER ELSEIF ONLY ELSE IF
-            // @codeCoverageIgnoreStart
         } elseif ($node instanceof UseTraitNode) {
-            // @codeCoverageIgnoreEnd
             foreach ($node->traits as $trait) {
                 $this->addName($trait);
             }
-            // @codeCoverageIgnoreStart
         } elseif ($node instanceof InstanceofNode) {
-            // @codeCoverageIgnoreEnd
             $this->addInstanceofDependency($node);
-        // @codeCoverageIgnoreStart
         } elseif ($node instanceof FetchClassConstantNode
             && !$node->class instanceof Node\Expr\Variable) {
-            // @codeCoverageIgnoreEnd
             $this->addName($node->class);
-        // @codeCoverageIgnoreStart
         } elseif ($node instanceof CatchNode) {
-            // @codeCoverageIgnoreEnd
             foreach ($node->types as $name) {
                 $this->addName($name);
             }
