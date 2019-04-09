@@ -5,8 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [0.6.0] - 2019-04-09
 ### Added
  - support for Docker
+ - Messages for missing PlantUML and Docker installation
 
 ### Changed
  - upgrade PHP language dependency to ^7.2
@@ -60,12 +63,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
  - metrics are being displayed as a table
 
-## 0.1.0 - 2016-10-01
+## [0.1.0] - 2016-10-01
 ### Added
  - first tagged release
  - uml, text, dsm and metrics command
 
-[Unreleased]: https://github.com/mihaeu/dephpend/compare/0.5.1...HEAD
+[Unreleased]: https://github.com/mihaeu/dephpend/compare/0.6.0...HEAD
+[0.6.0]: https://github.com/mihaeu/dephpend/compare/0.5.1...0.6.0
 [0.5.1]: https://github.com/mihaeu/dephpend/compare/0.5.0...0.5.1
 [0.5.0]: https://github.com/mihaeu/dephpend/compare/0.4.0...0.5.0
 [0.4.0]: https://github.com/mihaeu/dephpend/compare/0.3.2...0.4.0
@@ -73,3 +77,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 [0.3.1]: https://github.com/mihaeu/dephpend/compare/0.3.0...0.3.1
 [0.3.0]: https://github.com/mihaeu/dephpend/compare/0.2.0...0.3.0
 [0.2.0]: https://github.com/mihaeu/dephpend/compare/0.1.0...0.2.0
+[0.1.0]: https://github.com/mihaeu/dephpend/compare/0549dbd...0.1.0
