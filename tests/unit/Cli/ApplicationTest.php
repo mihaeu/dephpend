@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
+use Mihaeu\PhpDependencies\Exceptions\ParserException;
 use Mihaeu\PhpDependencies\OS\DotWrapper;
-use PhpParser\Error;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -16,6 +16,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @covers Mihaeu\PhpDependencies\Cli\Application
+ * @covers \Mihaeu\PhpDependencies\Exceptions\ParserException
  */
 class ApplicationTest extends TestCase
 {
@@ -51,12 +52,14 @@ class ApplicationTest extends TestCase
     public function testPrintsErrorMessageIfParserThrowsException(): void
     {
         $input = $this->createMock(Input::class);
-        $input->method('hasParameterOption')->willThrowException(new Error('Test'));
+        $input->method('hasParameterOption')->willThrowException(
+            new ParserException('Test', 'someFile.php')
+        );
         $output = $this->createMock(Output::class);
 
         $expectedMessage = '<error>Sorry, we could not analyse your dependencies, '
             . 'because the sources contain syntax errors:' . PHP_EOL . PHP_EOL
-            . 'Test on unknown line<error>';
+            . 'Test in file someFile.php<error>';
 
         if (!extension_loaded('xdebug')) {
             $output->expects(once())->method('writeln')->with($expectedMessage);

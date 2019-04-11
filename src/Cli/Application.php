@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use PhpParser\Error;
+use Mihaeu\PhpDependencies\Exceptions\ParserException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -40,10 +40,10 @@ class Application extends \Symfony\Component\Console\Application
 
         try {
             parent::doRun($input, $output);
-        } catch (Error $e) {
+        } catch (ParserException $e) {
             $output->writeln('<error>Sorry, we could not analyse your dependencies, '
                 . 'because the sources contain syntax errors:' . PHP_EOL . PHP_EOL
-                . $e->getMessage() . '<error>');
+                . $e->getMessage() . ' in file ' . $e->getFile() . '<error>');
             return $e->getCode() ?? 1;
         } catch (\Throwable $e) {
             if ($output !== null) {
