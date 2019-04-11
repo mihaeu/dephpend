@@ -74,7 +74,7 @@ phive install dephpend
 
 # or
 
-phive install -copy dephpend
+phive install --copy dephpend
 ```
 
 ### Composer
