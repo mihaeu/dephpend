@@ -9,4 +9,4 @@ RUN mkdir -p /usr/share/man/man1 \
         plantuml
 COPY . /dephpend
 WORKDIR /dephpend
-ENTRYPOINT [ "php", "./bin/dephpend" ]
+ENTRYPOINT [ "php", "-n", "-d memory_limit=-1", "./bin/dephpend" ]
