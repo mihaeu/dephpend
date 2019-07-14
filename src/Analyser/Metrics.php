@@ -24,7 +24,7 @@ class Metrics
             + $this->interfaceCount($map)
             + $this->traitCount($map);
         if ($abstractions === 0) {
-            return 0;
+            return 0.0;
         }
         $allClasses = $abstractions + $this->classCount($map);
         return $abstractions / $allClasses;

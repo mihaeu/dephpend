@@ -46,7 +46,7 @@ class MetricsCommandTest extends TestCase
         $this->metrics->method('abstractClassCount')->willReturn(2);
         $this->metrics->method('interfaceCount')->willReturn(3);
         $this->metrics->method('traitCount')->willReturn(4);
-        $this->metrics->method('abstractness')->willReturn(5);
+        $this->metrics->method('abstractness')->willReturn(5.0);
         $this->metrics->method('afferentCoupling')->willReturn(['A' => 1]);
         $this->metrics->method('efferentCoupling')->willReturn(['A' => 1]);
         $this->metrics->method('instability')->willReturn(['A' => 1]);

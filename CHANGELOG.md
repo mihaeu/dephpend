@@ -5,8 +5,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [0.6.1] - 2019-07-14
 ### Added
  - Added filename to parser exception message
+
+### Fixed
+ - Fixed return type of edge case for abstractness metric
+ - Fixed BC break in symfony/console 4.3
 
 ## [0.6.0] - 2019-04-09
 ### Added
@@ -70,7 +76,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
  - first tagged release
  - uml, text, dsm and metrics command
 
-[Unreleased]: https://github.com/mihaeu/dephpend/compare/0.6.0...HEAD
+[Unreleased]: https://github.com/mihaeu/dephpend/compare/0.6.1...HEAD
+[0.6.1]: https://github.com/mihaeu/dephpend/compare/0.6.0...0.6.1
 [0.6.0]: https://github.com/mihaeu/dephpend/compare/0.5.1...0.6.0
 [0.5.1]: https://github.com/mihaeu/dephpend/compare/0.5.0...0.5.1
 [0.5.0]: https://github.com/mihaeu/dephpend/compare/0.4.0...0.5.0
