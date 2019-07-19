@@ -10,7 +10,7 @@ PHPUNIT=vendor/bin/phpunit
 all: autoload tests testdox cov
 
 autoload:
-	composer dumpautoload
+	php composer.phar dumpautoload
 
 test: unit feature
 
@@ -43,10 +43,10 @@ style:
 	@$(PHP_NO_INI) vendor/bin/php-cs-fixer fix --level=psr2 --verbose tests
 
 phar:
-	@composer update --no-dev
+	@php composer.phar update --no-dev
 	@$(PHP) box.phar build
 	@chmod +x build/dephpend.phar
-	@composer update
+	@php composer.phar update
 
 c: cov
 
