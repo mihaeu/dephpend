@@ -40,11 +40,14 @@ class ApplicationTest extends TestCase
         $input = $this->createMock(Input::class);
         $output = $this->createMock(Output::class);
 
+        $errorOutput = $this->createMock(ErrorOutput::class);
+        $this->application->setErrorOutput($errorOutput);
+
         // not sure how to mock this, so we test only one case
         if (!extension_loaded('xdebug')) {
-            $output->expects(never())->method('writeln')->with(self::XDEBUG_WARNING);
+            $errorOutput->expects(never())->method('writeln')->with(self::XDEBUG_WARNING);
         } else {
-            $output->expects(exactly(2))->method('writeln');
+            $errorOutput->expects(exactly(2))->method('writeln');
         }
         $this->application->doRun($input, $output);
     }
@@ -61,10 +64,12 @@ class ApplicationTest extends TestCase
             . 'because the sources contain syntax errors:' . PHP_EOL . PHP_EOL
             . 'Test in file someFile.php<error>';
 
+        $errorOutput = $this->createMock(ErrorOutput::class);
+        $this->application->setErrorOutput($errorOutput);
         if (!extension_loaded('xdebug')) {
-            $output->expects(once())->method('writeln')->with($expectedMessage);
+            $errorOutput->expects(once())->method('writeln')->with($expectedMessage);
         } else {
-            $output->expects(exactly(2))->method('writeln')->withConsecutive(
+            $errorOutput->expects(exactly(2))->method('writeln')->withConsecutive(
                 [self::XDEBUG_WARNING],
                 [$expectedMessage]
             );
@@ -77,7 +82,12 @@ class ApplicationTest extends TestCase
         $_SERVER['argv'] = ['', 'dsm', sys_get_temp_dir(), '--format=html'];
         $input = $this->createMock(Input::class);
         $output = $this->createMock(Output::class);
-        $returnCode = (new Application('', '', $this->dispatcher))->doRun($input, $output);
+
+        $errorOutput = $this->createMock(ErrorOutput::class);
+        $application = new Application('', '', $this->dispatcher);
+        $application->setErrorOutput($errorOutput);
+
+        $returnCode = $application->doRun($input, $output);
         assertEquals(0, $returnCode);
     }
 
@@ -86,7 +96,12 @@ class ApplicationTest extends TestCase
         $_SERVER['argv'] = ['', 'uml', sys_get_temp_dir(), '--output=test.png'];
         $input = $this->createMock(Input::class);
         $output = $this->createMock(Output::class);
-        $returnCode = (new Application('', '', $this->dispatcher))->doRun($input, $output);
+
+        $errorOutput = $this->createMock(ErrorOutput::class);
+        $application = new Application('', '', $this->dispatcher);
+        $application->setErrorOutput($errorOutput);
+
+        $returnCode = $application->doRun($input, $output);
         assertEquals(0, $returnCode);
     }
 
@@ -95,7 +110,12 @@ class ApplicationTest extends TestCase
         $_SERVER['argv'] = ['', 'metrics', sys_get_temp_dir()];
         $input = $this->createMock(Input::class);
         $output = $this->createMock(Output::class);
-        $returnCode = (new Application('', '', $this->dispatcher))->doRun($input, $output);
+
+        $errorOutput = $this->createMock(ErrorOutput::class);
+        $application = new Application('', '', $this->dispatcher);
+        $application->setErrorOutput($errorOutput);
+
+        $returnCode = $application->doRun($input, $output);
         assertEquals(0, $returnCode);
     }
 
@@ -104,7 +124,12 @@ class ApplicationTest extends TestCase
         $_SERVER['argv'] = ['', 'dot', sys_get_temp_dir()];
         $input = $this->createMock(Input::class);
         $output = $this->createMock(Output::class);
-        $returnCode = (new Application('', '', $this->dispatcher))->doRun($input, $output);
+
+        $errorOutput = $this->createMock(ErrorOutput::class);
+        $application = new Application('', '', $this->dispatcher);
+        $application->setErrorOutput($errorOutput);
+
+        $returnCode = $application->doRun($input, $output);
         assertEquals(0, $returnCode);
     }
 

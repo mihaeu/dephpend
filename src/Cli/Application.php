@@ -13,6 +13,9 @@ class Application extends \Symfony\Component\Console\Application
 {
     const XDEBUG_WARNING = 'You are running dePHPend with xdebug enabled. This has a major impact on runtime performance. See https://getcomposer.org/xdebug';
 
+    /** @var ErrorOutput */
+    private $errorOutput;
+
     public function __construct(string $name, string $version, EventDispatcherInterface $dispatcher)
     {
         parent::__construct($name, $version);
@@ -20,6 +23,13 @@ class Application extends \Symfony\Component\Console\Application
         $this->setHelperSet($this->getDefaultHelperSet());
         $this->setDefaultCommand('list');
         $this->setDispatcher($dispatcher);
+    }
+
+    public function setErrorOutput(ErrorOutput $errorOutput): void
+    {
+        if (!$this->errorOutput) {
+            $this->errorOutput = $errorOutput;
+        }
     }
 
     /**
@@ -36,18 +46,20 @@ class Application extends \Symfony\Component\Console\Application
      */
     public function doRun(InputInterface $input, OutputInterface $output)
     {
-        $this->printWarningIfXdebugIsEnabled($output);
+        $this->printWarningIfXdebugIsEnabled($input, $output);
 
         try {
             parent::doRun($input, $output);
         } catch (ParserException $e) {
-            $output->writeln('<error>Sorry, we could not analyse your dependencies, '
+            $this->writeToStdErr($input, $output, '<error>Sorry, we could not analyse your dependencies, '
                 . 'because the sources contain syntax errors:' . PHP_EOL . PHP_EOL
                 . $e->getMessage() . ' in file ' . $e->getFile() . '<error>');
             return $e->getCode() ?? 1;
         } catch (\Throwable $e) {
             if ($output !== null) {
-                $output->writeln(
+                $this->writeToStdErr(
+                    $input,
+                    $output,
                     "<error>Something went wrong, this shouldn't happen."
                     . ' Please take a minute and report this issue:'
                     . ' https://github.com/mihaeu/dephpend/issues</error>'
@@ -63,10 +75,16 @@ class Application extends \Symfony\Component\Console\Application
         return 0;
     }
 
-    private function printWarningIfXdebugIsEnabled(OutputInterface $output)
+    private function printWarningIfXdebugIsEnabled(InputInterface $input, OutputInterface $output): void
     {
         if (\extension_loaded('xdebug')) {
-            $output->writeln('<fg=black;bg=yellow>' . self::XDEBUG_WARNING . '</>');
+            $this->writeToStdErr($input, $output, '<fg=black;bg=yellow>' . self::XDEBUG_WARNING . '</>');
         }
+    }
+
+    private function writeToStdErr(InputInterface $input, OutputInterface $output, string $message): void
+    {
+        $this->setErrorOutput(new ErrorOutput($input, $output));
+        $this->errorOutput->writeln($message);
     }
 }

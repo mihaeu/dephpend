@@ -9,13 +9,14 @@ use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Dependencies\DependencySet;
 use PhpParser\Node;
+use PhpParser\Node\Expr\ClassConstFetch as FetchClassConstantNode;
 use PhpParser\Node\Expr\Instanceof_ as InstanceofNode;
 use PhpParser\Node\Expr\New_ as NewNode;
-use PhpParser\Node\Expr\ClassConstFetch as FetchClassConstantNode;
 use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Expr\StaticCall as StaticCallNode;
-use PhpParser\Node\Name as NameNode;
 use PhpParser\Node\Name;
+use PhpParser\Node\Name as NameNode;
+use PhpParser\Node\Param;
 use PhpParser\Node\Stmt\Catch_ as CatchNode;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\ClassLike as ClassLikeNode;
@@ -212,7 +213,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     private function addInjectedDependencies(ClassMethodNode $node)
     {
         foreach ($node->params as $param) {
-            /* @var \PhpParser\Node\Param */
+            /* @var Param */
             if (isset($param->type, $param->type->parts)) {
                 $this->tempDependencies = $this->tempDependencies->add(
                     $this->dependencyFactory->createClazzFromStringArray($param->type->parts)
