@@ -21,7 +21,7 @@ class DotCommand extends BaseCommand
         $this->dotWrapper = $dotWrapper;
 
         $this->defaultFormat = 'png';
-        $this->allowedFormats = [$this->defaultFormat, 'svg'];
+        $this->allowedFormats = [$this->defaultFormat, 'dot', 'svg'];
     }
 
     protected function configure()
