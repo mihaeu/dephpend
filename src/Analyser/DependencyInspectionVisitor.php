@@ -9,13 +9,13 @@ use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Dependencies\DependencySet;
 use PhpParser\Node;
+use PhpParser\Node\Expr\ClassConstFetch as FetchClassConstantNode;
 use PhpParser\Node\Expr\Instanceof_ as InstanceofNode;
 use PhpParser\Node\Expr\New_ as NewNode;
-use PhpParser\Node\Expr\ClassConstFetch as FetchClassConstantNode;
 use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Expr\StaticCall as StaticCallNode;
-use PhpParser\Node\Name as NameNode;
 use PhpParser\Node\Name;
+use PhpParser\Node\Name as NameNode;
 use PhpParser\Node\Stmt\Catch_ as CatchNode;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\ClassLike as ClassLikeNode;
@@ -85,7 +85,8 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         } elseif ($node instanceof InstanceofNode) {
             $this->addInstanceofDependency($node);
         } elseif ($node instanceof FetchClassConstantNode
-            && !$node->class instanceof Node\Expr\Variable) {
+            && !$node->class instanceof Node\Expr\Variable
+            && !$node->class instanceof Node\Expr\PropertyFetch) {
             $this->addName($node->class);
         } elseif ($node instanceof CatchNode) {
             foreach ($node->types as $name) {
