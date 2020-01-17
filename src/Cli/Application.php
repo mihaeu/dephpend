@@ -7,6 +7,7 @@ namespace Mihaeu\PhpDependencies\Cli;
 use Mihaeu\PhpDependencies\Exceptions\ParserException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class Application extends \Symfony\Component\Console\Application
@@ -84,7 +85,7 @@ class Application extends \Symfony\Component\Console\Application
 
     private function writeToStdErr(InputInterface $input, OutputInterface $output, string $message): void
     {
-        $this->setErrorOutput(new ErrorOutput($input, $output));
+        $this->setErrorOutput(new ErrorOutput(new SymfonyStyle($input, $output)));
         $this->errorOutput->writeln($message);
     }
 }

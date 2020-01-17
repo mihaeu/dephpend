@@ -87,6 +87,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
             $this->addInstanceofDependency($node);
         } elseif ($node instanceof FetchClassConstantNode
             && !$node->class instanceof Node\Expr\Variable
+            && !$node->class instanceof Node\Expr\ArrayDimFetch
             && !$node->class instanceof Node\Expr\PropertyFetch) {
             $this->addName($node->class);
         } elseif ($node instanceof CatchNode) {

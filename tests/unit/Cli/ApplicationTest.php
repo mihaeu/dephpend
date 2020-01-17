@@ -8,10 +8,13 @@ use Mihaeu\PhpDependencies\Exceptions\ParserException;
 use Mihaeu\PhpDependencies\OS\DotWrapper;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\Input;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\Output;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -23,6 +26,12 @@ class ApplicationTest extends TestCase
     /** @var Application */
     private $application;
 
+    /** @var InputInterface */
+    private $input;
+
+    /** @var OutputInterface */
+    private $output;
+
     /** @var EventDispatcherInterface */
     private $dispatcher;
 
@@ -33,13 +42,14 @@ class ApplicationTest extends TestCase
         $this->dispatcher = $this->createMock(EventDispatcherInterface::class);
         $_SERVER['argv'] = ['', 'text', sys_get_temp_dir()];
         $this->application = new Application('', '', $this->dispatcher);
+
+        $this->input = $this->createMock(Input::class);
+        $this->output = $this->createMock(Output::class);
+        $this->output->method('getFormatter')->willReturn($this->createMock(OutputFormatter::class));
     }
 
     public function testWarningIfXDebugEnabled(): void
     {
-        $input = $this->createMock(Input::class);
-        $output = $this->createMock(Output::class);
-
         $errorOutput = $this->createMock(ErrorOutput::class);
         $this->application->setErrorOutput($errorOutput);
 
@@ -49,16 +59,14 @@ class ApplicationTest extends TestCase
         } else {
             $errorOutput->expects(exactly(2))->method('writeln');
         }
-        $this->application->doRun($input, $output);
+        $this->application->doRun($this->input, $this->output);
     }
 
     public function testPrintsErrorMessageIfParserThrowsException(): void
     {
-        $input = $this->createMock(Input::class);
-        $input->method('hasParameterOption')->willThrowException(
+        $this->input->method('hasParameterOption')->willThrowException(
             new ParserException('Test', 'someFile.php')
         );
-        $output = $this->createMock(Output::class);
 
         $expectedMessage = '<error>Sorry, we could not analyse your dependencies, '
             . 'because the sources contain syntax errors:' . PHP_EOL . PHP_EOL
@@ -74,7 +82,7 @@ class ApplicationTest extends TestCase
                 [$expectedMessage]
             );
         }
-        $this->application->doRun($input, $output);
+        $this->application->doRun($this->input, $this->output);
     }
 
     public function testValidatesDsmInput(): void
@@ -87,7 +95,7 @@ class ApplicationTest extends TestCase
         $application = new Application('', '', $this->dispatcher);
         $application->setErrorOutput($errorOutput);
 
-        $returnCode = $application->doRun($input, $output);
+        $returnCode = $application->doRun($this->input, $this->output);
         assertEquals(0, $returnCode);
     }
 
@@ -101,7 +109,7 @@ class ApplicationTest extends TestCase
         $application = new Application('', '', $this->dispatcher);
         $application->setErrorOutput($errorOutput);
 
-        $returnCode = $application->doRun($input, $output);
+        $returnCode = $application->doRun($this->input, $this->output);
         assertEquals(0, $returnCode);
     }
 
@@ -115,7 +123,7 @@ class ApplicationTest extends TestCase
         $application = new Application('', '', $this->dispatcher);
         $application->setErrorOutput($errorOutput);
 
-        $returnCode = $application->doRun($input, $output);
+        $returnCode = $application->doRun($this->input, $this->output);
         assertEquals(0, $returnCode);
     }
 
@@ -129,7 +137,7 @@ class ApplicationTest extends TestCase
         $application = new Application('', '', $this->dispatcher);
         $application->setErrorOutput($errorOutput);
 
-        $returnCode = $application->doRun($input, $output);
+        $returnCode = $application->doRun($this->input, $this->output);
         assertEquals(0, $returnCode);
     }
 
