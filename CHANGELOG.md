@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.6.3] - 2020-01-17
+### Fixed
+ - [Issue 58](https://github.com/mihaeu/dephpend/issues/58)
+
 ## [0.6.2] - 2019-10-20
 ### Fixed
  - Do not analyse method calls via dynamic property fetch [#50](https://github.com/mihaeu/dephpend/issues/56)
@@ -80,7 +84,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
  - first tagged release
  - uml, text, dsm and metrics command
 
-[Unreleased]: https://github.com/mihaeu/dephpend/compare/0.6.2...HEAD
+[Unreleased]: https://github.com/mihaeu/dephpend/compare/0.6.3...HEAD
+[0.6.3]: https://github.com/mihaeu/dephpend/compare/0.6.2...0.6.3
 [0.6.2]: https://github.com/mihaeu/dephpend/compare/0.6.1...0.6.2
 [0.6.1]: https://github.com/mihaeu/dephpend/compare/0.6.0...0.6.1
 [0.6.0]: https://github.com/mihaeu/dephpend/compare/0.5.1...0.6.0
