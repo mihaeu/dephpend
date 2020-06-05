@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://dephpend.com/logo.svg">
+  <img src="doc/logo.svg">
 </p>
 
 > Detect flaws in your architecture, before they drag you down into the depths of dependency hell ...
@@ -87,22 +87,7 @@ composer global require dephpend/dephpend:dev-master
 
 ### Manual .phar download
 
-Download the phar file by clicking [here](https://phar.dephpend.com/dephpend.phar) or use
-
-```bash
-wget https://phar.dephpend.com/dephpend.phar
-```
-(for old releases use https://phar.dephpend.com/)
-
-or if you prefer to use Curl:
-```bash
-curl -O  https://phar.dephpend.com/dephpend.phar
-```
-
-If you want to use the command system-wide you can copy it to /usr/local/bin.
-```bash
-sudo cp ./dephpend.phar /usr/local/bin/
-```
+Download the phar file by selecting the latest file from [here](https://github.com/mihaeu/dephpend/releases/latest).
 
 ### Git
 
