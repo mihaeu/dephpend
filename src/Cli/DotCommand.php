@@ -56,5 +56,7 @@ class DotCommand extends BaseCommand
             new \SplFileInfo($options['output']),
             $options['keep']
         );
+
+        return 0;
     }
 }

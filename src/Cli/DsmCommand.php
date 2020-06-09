@@ -50,5 +50,7 @@ class DsmCommand extends BaseCommand
             $this->dependencies,
             $this->postProcessors
         ));
+
+        return 0;
     }
 }

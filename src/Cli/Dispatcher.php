@@ -42,9 +42,9 @@ class Dispatcher extends EventDispatcher
         $this->dependencyFilter = $dependencyFilter;
     }
 
-    public function dispatch($eventName, Event $event = null)
+    public function dispatch(object $event, string $eventName = null): object
     {
-        $event = parent::dispatch($eventName, $event);
+        $event = parent::dispatch($event, $eventName);
 
         if ($eventName !== ConsoleEvents::COMMAND
             || !($event instanceof ConsoleEvent)
