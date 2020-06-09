@@ -1,5 +1,5 @@
 {
-    "name": "Sauerbrei/dephpend",
+    "name": "dephpend/dephpend",
     "description": "Dependency analysis for PHP",
     "type": "library",
     "keywords": [
