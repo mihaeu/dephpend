@@ -36,13 +36,15 @@ class Dispatcher extends EventDispatcher
         PhpFileFinder $phpFileFinder,
         DependencyFilter $dependencyFilter
     ) {
+        parent::__construct();
+
         $this->staticAnalyser = $staticAnalyser;
         $this->xDebugFunctionTraceAnalyser = $xDebugFunctionTraceAnalyser;
         $this->phpFileFinder = $phpFileFinder;
         $this->dependencyFilter = $dependencyFilter;
     }
 
-    public function dispatch(object $event, string $eventName = null): object
+    public function dispatch($event, string $eventName = null): object
     {
         $event = parent::dispatch($event, $eventName);
 

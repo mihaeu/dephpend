@@ -24,14 +24,14 @@ class TextTest extends TestCase
     public function testTextCommandOnPhpUnitWithUnderscoreNamespaces(): void
     {
         $expected = <<<EOT
+PHPUnit\Runner --> PHPUnit
+PHPUnit\Runner --> PHPUnit\Util
+PHPUnit\Runner --> SebastianBergmann
 PHPUnit\Runner --> PHPUnit\Framework
+PHPUnit\Runner --> SebastianBergmann\FileIterator
 PHPUnit\Runner --> PHPUnit\Util\PHP
 PHPUnit\Runner --> SebastianBergmann\Timer
 PHPUnit\Runner --> Text
-PHPUnit\Runner --> SebastianBergmann\FileIterator
-PHPUnit\Runner --> PHPUnit\Util
-PHPUnit\Runner --> SebastianBergmann
-PHPUnit\Runner --> PHPUnit
 PHPUnit\Runner\Filter --> PHPUnit\Framework
 PHPUnit\Runner\Filter --> PHPUnit\Util
 
