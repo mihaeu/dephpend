@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.7.0] - 2020-06-19
+### Removed
+- Removed support for Symfony 2 and 3
+
 ## [0.6.3] - 2020-01-17
 ### Fixed
  - [Issue 58](https://github.com/mihaeu/dephpend/issues/58)
@@ -84,7 +88,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
  - first tagged release
  - uml, text, dsm and metrics command
 
-[Unreleased]: https://github.com/mihaeu/dephpend/compare/0.6.3...HEAD
+[Unreleased]: https://github.com/mihaeu/dephpend/compare/0.7.0...HEAD
+[0.6.3]: https://github.com/mihaeu/dephpend/compare/0.6.3...0.7.0
 [0.6.3]: https://github.com/mihaeu/dephpend/compare/0.6.2...0.6.3
 [0.6.2]: https://github.com/mihaeu/dephpend/compare/0.6.1...0.6.2
 [0.6.1]: https://github.com/mihaeu/dephpend/compare/0.6.0...0.6.1
