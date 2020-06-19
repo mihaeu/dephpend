@@ -26,5 +26,7 @@ class TextCommand extends BaseCommand
         $this->ensureSourcesAreReadable($input->getArgument('source'));
 
         $output->writeln($this->dependencies->reduceEachDependency($this->postProcessors)->toString());
+
+        return 0;
     }
 }

@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\Console\Event\ConsoleEvent;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\EventDispatcher\GenericEvent;
 
 /**
  * @covers Mihaeu\PhpDependencies\Cli\Dispatcher
@@ -54,15 +54,15 @@ class DispatcherTest extends TestCase
     {
         $consoleEvent = $this->createMock(ConsoleEvent::class);
         $consoleEvent->expects(never())->method('getInput');
-        $this->dispatcher->dispatch('other event', $consoleEvent);
+        $this->dispatcher->dispatch($consoleEvent, 'other event');
     }
 
     public function testTriggersOnlyOnConsoleEvents(): void
     {
-        $consoleEvent = $this->createMock(Event::class);
+        $consoleEvent = $this->createMock(GenericEvent::class);
         assertEquals(
             $consoleEvent,
-            $this->dispatcher->dispatch(ConsoleEvents::COMMAND, clone $consoleEvent)
+            $this->dispatcher->dispatch(clone $consoleEvent, ConsoleEvents::COMMAND)
         );
     }
 
@@ -83,6 +83,6 @@ class DispatcherTest extends TestCase
         $this->xDebugFunctionTraceAnalyser->expects(once())->method('analyse')->with($traceFile);
         $command->expects(once())->method('setDependencies');
         $command->expects(once())->method('setPostProcessors');
-        $this->dispatcher->dispatch(ConsoleEvents::COMMAND, clone $consoleEvent);
+        $this->dispatcher->dispatch(clone $consoleEvent, ConsoleEvents::COMMAND);
     }
 }

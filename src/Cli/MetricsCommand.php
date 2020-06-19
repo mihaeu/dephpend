@@ -54,6 +54,8 @@ class MetricsCommand extends BaseCommand
             $this->metrics->instability($this->dependencies)
         ));
         $table->render();
+
+        return 0;
     }
 
     private function combineMetrics(array $afferentCoupling, array $efferentCoupling, array $instability) : array

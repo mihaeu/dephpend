@@ -59,6 +59,8 @@ class UmlCommand extends BaseCommand
             $destination,
             $options['keep-uml']
         );
+
+        return 0;
     }
 
     /**
