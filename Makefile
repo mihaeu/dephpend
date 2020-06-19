@@ -12,17 +12,20 @@ all: autoload tests testdox cov
 autoload:
 	php composer.phar dumpautoload
 
+t: test
 test: unit feature
 
 unit:
 	$(PHP) $(PHPUNIT) -c phpunit.xml.dist
 
+f: feature
 feature:
 	@$(PHP) $(PHPUNIT) tests/feature --testdox\
      | sed 's/\[x\]/$(OK_COLOR)$\[x]$(NO_COLOR)/' \
      | sed -r 's/(\[ \].+)/$(ERROR_COLOR)\1$(NO_COLOR)/' \
      | sed -r 's/(^[^ ].+)/$(WARN_COLOR)\1$(NO_COLOR)/'
 
+d: testdox
 testdox:
 	@$(PHP_NO_INI) $(PHPUNIT) -c phpunit.xml.dist --testdox tests \
 	 | sed 's/\[x\]/$(OK_COLOR)$\[x]$(NO_COLOR)/' \
@@ -35,9 +38,11 @@ testdox-osx:
 	 | sed -E 's/(\[ \].+)/$(ERROR_COLOR)\1$(NO_COLOR)/' \
 	 | sed -E 's/(^[^ ].+)/$(WARN_COLOR)\1$(NO_COLOR)/'
 
+c: cov
 cov:
 	@$(PHP) $(PHPUNIT) -c phpunit.xml.dist --coverage-text
 
+s: style
 style:
 	@$(PHP_NO_INI) vendor/bin/php-cs-fixer fix --level=psr2 --verbose src
 	@$(PHP_NO_INI) vendor/bin/php-cs-fixer fix --level=psr2 --verbose tests
@@ -47,13 +52,3 @@ phar:
 	@$(PHP) box.phar build
 	@chmod +x build/dephpend.phar
 	@php composer.phar update
-
-c: cov
-
-d: testdox
-
-s: style
-
-t: test
-
-f: feature
