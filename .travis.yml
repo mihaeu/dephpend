@@ -12,7 +12,7 @@ php:
 
 branches:
     only:
-        - "master"
+        - "main"
 
 install:
     - "mkdir -p build/logs"
