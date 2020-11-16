@@ -1,35 +1,38 @@
-<p align="center">
-  <img src="doc/logo.svg">
-</p>
+<h1 align="center"><a href="https://dephpend.com/"><img src="doc/logo.svg" alt="dePHPend lgo"></a></h1>
 
-> Detect flaws in your architecture, before they drag you down into the depths of dependency hell ...
+[![Build Status](https://travis-ci.org/mihaeu/dephpend.svg?branch=master)](https://travis-ci.org/github/mihaeu/dephpend)
+[![Coverage Status](https://coveralls.io/repos/github/mihaeu/dephpend/badge.svg)](https://coveralls.io/github/mihaeu/dephpend)
+[![Packagist Version](https://img.shields.io/packagist/v/dephpend/dephpend)](https://packagist.org/packages/dephpend/dephpend)
+[![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](https://github.com/mihaeu/dephpend/blob/main/LICENSE)
+[![PHP 7.2](https://img.shields.io/badge/PHP-7.2-blue.svg?style=flat)](https://www.php.net/supported-versions.php)
+[![Join the chat at Gitter](https://badges.gitter.im/dephpend/Lobby.svg)](https://gitter.im/dephpend/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-[![Build Status](https://travis-ci.org/mihaeu/dephpend.svg?branch=master)](https://travis-ci.org/mihaeu/dephpend) [![Coverage Status](https://coveralls.io/repos/github/mihaeu/dephpend/badge.svg)](https://coveralls.io/github/mihaeu/dephpend) ![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat) ![PHP 7.2](https://img.shields.io/badge/PHP-7.2-blue.svg?style=flat) [![Join the chat at https://gitter.im/dephpend/Lobby](https://badges.gitter.im/dephpend/Lobby.svg)](https://gitter.im/dephpend/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+Detect flaws in your architecture before they drag you down into the depths of dependency hell ...
 
-  - [What it does](#what-it-does)
-  - [System Requirements](#system-requirements)
-  - [Installation](#installation)
-    + [Phive](#phive)
-    + [Composer](#composer)
-    + [Manual .phar download](#manual-phar-download)
-    + [Git](#git)
-  - [Usage](#usage)
-    + [Filters](#filters)
-    + [Text](#text)
-    + [UML](#uml)
-    + [Dependency Structure Matrix](#dependency-structure-matrix)
-    + [Metrics](#metrics)
-    + [Dynamic Analysis](#dynamic-analysis)
-      * [Setup](#setup)
-      * [Usage](#usage-1)
-  - [Examples](#examples)
-    + [Architecture Constraints](#architecture-constraints)
-    + [Architecture Timeline](#architecture-timeline)
-  - [How it all works](#how-it-all-works)
-  - [Supported Features](#supported-features)
-  - [Troubleshooting](#troubleshooting)
-    + [Not enough RAM](#not-enough-ram)
-  - [License](#license)
+- [What it does](#what-it-does)
+- [System Requirements](#system-requirements)
+- [Installation](#installation)
+  + [Phive](#phive)
+  + [Composer](#composer)
+  + [Manual .phar download](#manual-phar-download)
+  + [Git](#git)
+- [Usage](#usage)
+  + [Filters](#filters)
+  + [Text](#text)
+  + [UML](#uml)
+  + [Dependency Structure Matrix](#dependency-structure-matrix)
+  + [Metrics](#metrics)
+  + [Dynamic Analysis](#dynamic-analysis)
+    * [Setup](#setup)
+    * [Usage](#usage-1)
+- [Examples](#examples)
+  + [Architecture Constraints](#architecture-constraints)
+  + [Architecture Timeline](#architecture-timeline)
+- [How it all works](#how-it-all-works)
+- [Supported Features](#supported-features)
+- [Troubleshooting](#troubleshooting)
+  + [Not enough RAM](#not-enough-ram)
+- [License](#license)
 
 ## What it does
 
@@ -50,7 +53,7 @@ With this information you can:
 
 
 ## System Requirements
-- PHP >= 7.0
+- PHP >= 7.2
 - plantuml (UML Class diagram)
 
 
@@ -87,13 +90,13 @@ composer global require dephpend/dephpend:dev-master
 
 ### Manual .phar download
 
-Download the phar file by selecting the latest file from [here](https://github.com/mihaeu/dephpend/releases/latest).
+Download the PHAR file by selecting the latest file from [GitHub Releases](https://github.com/mihaeu/dephpend/releases/latest).
 
 ### Git
 
 ```bash
 git clone git@github.com:mihaeu/dephpend.git
-#or
+# or
 git clone https://github.com/mihaeu/dephpend.git
 
 cd dephpend
