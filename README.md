@@ -85,7 +85,7 @@ phive install --copy dephpend
 You can install dePHPend globally, but this might lead to problems if other globally installed QA tools use different versions of PhpParser for instance.
 
 ```bash
-composer global require dephpend/dephpend:dev-master
+composer global require dephpend/dephpend:dev-main
 ```
 
 ### Manual .phar download
