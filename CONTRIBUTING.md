@@ -64,4 +64,13 @@ COMMIT_EMAIL="valid@email.com"
 
 Then upload to GitHub releases and verify via `phive install dephpend` or `phive update dephpend`.
 
-Switch to branch `gh-pages`, merge `main` and run `make pages` and commit and push the changes to `index.html`.
+The update the documentation
+
+```bash
+git checkout gh-pages && \
+  git merge --no-edit origin/main && \
+  make pages && \
+  git commit index.html -m "Update documentation" && \
+  git push && \
+  git checkout main
+```
