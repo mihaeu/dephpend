@@ -52,6 +52,7 @@ class UmlCommandTest extends TestCase
     public function testOutputHasToBeDefined(): void
     {
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
+        $this->input->method('getOptions')->willReturn(['output' => null]);
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Output not defined (use "help" for more information).');
         $this->umlCommand->run(
@@ -62,11 +63,11 @@ class UmlCommandTest extends TestCase
 
     public function testChecksIfDestinationIsWritable(): void
     {
-        $mockFile = vfsStream::setup();
-        vfsStream::newFile('example', 0000)->at($mockFile);
+        $tempDirectory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . rand() . time();
+        mkdir($tempDirectory, 0444);
 
-        $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
-        $this->input->method('getOptions')->willReturn(['output' => $mockFile->url()]);
+        $this->input->method('getArgument')->willReturn([$tempDirectory]);
+        $this->input->method('getOptions')->willReturn(['output' => $tempDirectory . '/does_not_exist.png']);
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Destination is not writable.');
         $this->umlCommand->run(

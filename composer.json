@@ -15,6 +15,11 @@
         "symfony/console": "^4 || ^5",
         "symfony/event-dispatcher": "^4 || ^5"
     },
+    "suggest": {
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "ext-tokenizer": "*"
+    },
     "require-dev": {
         "mikey179/vfsstream": "^1.6",
         "phpunit/phpunit": "^8.0",
@@ -40,7 +45,8 @@
             "Mihaeu\\PhpDependencies\\Tests\\Feature\\": ["tests/feature/"]
         },
         "files": [
-            "vendor/phpunit/phpunit/src/Framework/Assert/Functions.php"
+            "vendor/phpunit/phpunit/src/Framework/Assert/Functions.php",
+            "tests/feature/constants.php"
         ]
     },
     "support": {

@@ -57,7 +57,7 @@ class UmlCommand extends BaseCommand
         $this->plantUmlWrapper->generate(
             $this->dependencies->reduceEachDependency($this->postProcessors),
             $destination,
-            $options['keep-uml']
+            $options['keep-uml'] ?? false
         );
 
         return 0;
