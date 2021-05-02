@@ -105,17 +105,17 @@ composer install
 
 ## Usage
 
-You should almost always run QA tools without XDebug (unless you need code coverage of course). You could use a separate `php.ini` where XDebug is not loaded and pass that to php or you just use the `-n` option (this will however not load any extensions). 
+You should almost always run QA tools without XDebug (unless you need code coverage of course). You could use a separate `php.ini` where XDebug is not loaded and pass that to php or you just use the `-n` option (this will however not load any extensions, so you have to specify those separately). 
 
 ```
 # or bin/dephpend depending on how you installed this
-$ php -n dephpend.phar                                                                                                 
+$ php -n -d extension=tokenizer.so -d extension=json.so -d extension=mbstring.so dephpend.phar                                                                                                 
       _      _____  _    _ _____               _ 
      | |    |  __ \| |  | |  __ \             | |
    __| | ___| |__) | |__| | |__) |__ _ __   __| |
   / _` |/ _ \  ___/|  __  |  ___/ _ \ '_ \ / _` |
  | (_| |  __/ |    | |  | | |  |  __/ | | | (_| |
-  \__,_|\___|_|    |_|  |_|_|   \___|_| |_|\__,_| version 0.7.0
+  \__,_|\___|_|    |_|  |_|_|   \___|_| |_|\__,_| version 0.8.0
 
 Usage:
   command [options] [arguments]
@@ -162,10 +162,10 @@ For more info just run `php dephpend.phar help text`.
 For quick debugging use the `text` command. Say you want to find out which classes depend on XYZ and what XYZ depends on, you'd run: 
 
 ```bash
-php -n dephpend.phar text src | grep XYZ
+php dephpend.phar text src | grep XYZ
 
 # or for more complex applications use filters
-php -n dephpend.phar text symfony --no-classes --depth 3 --exclude-regex='/Test/'
+php dephpend.phar text symfony --no-classes --depth 3 --exclude-regex='/Test/'
 ```
 
 ### UML
@@ -175,10 +175,10 @@ Generates UML class or package diagrams of your source code. Requires [PlantUML]
 You can either run 
 
 ```bash
-php -n dephpend.phar uml --output=uml.png src
+php dephpend.phar uml --output=uml.png src
 
 # or for post-processing
-php -n dephpend.phar uml --output=uml.png --keep-uml src
+php dephpend.phar uml --output=uml.png --keep-uml src
 ``` 
 
 but most likely what you want to do is to use the `--no-classes` and `--depth[=DEPTH]` option. If your app has more than 20 classes, the UML will become messy if you don't use namespace instead of class level. Experiment with different depth values, but usually a depth of 2 or 3 is what you want.
@@ -190,9 +190,9 @@ If you've tried decrypting massive UML diagrams before, you know that they becom
 This feature is still under construction and right now it's not really fun to use. If you still want to try run 
 
 ```bash
-php -n dephpend.phar dsm src > dependencies.html
+php dephpend.phar dsm src > dependencies.html
 
-php -n dephpend.phar dsm src --no-classes | bcat
+php dephpend.phar dsm src --no-classes | bcat
 ``` 
 or pipe it to something like [bcat](https://rtomayko.github.io/bcat/).
 
@@ -201,7 +201,7 @@ or pipe it to something like [bcat](https://rtomayko.github.io/bcat/).
 The most common package metrics have already been implemented, but there are more to come. Check them out by running the following command:
 
 ```bash
-php -n dephpend.phar metrics src
+php dephpend.phar metrics src
 ```
 
 This feature is not production ready and it's better to rely on [PHP Depend](https://pdepend.org) for this.
@@ -249,7 +249,7 @@ php -c php-with-traces.ini -S localhost:8080
 The better the sample run and the more of your application it covers, the better the results are going to be. After that process the trace file using the `--dynamic` option.
 
 ```bash
-php -n dephpend.phar text src               \
+php dephpend.phar text src                  \
     --no-classes                            \
     --filter-from=Mihaeu\\PhpDependencies   \
     --exclude-regex='/(Test)|(Mock)/'       \
@@ -270,7 +270,7 @@ Using the `text` command it is fairly straightforward to create a script which v
 #!/usr/bin/env php
 <?php
 
-$output = shell_exec('php -n dephpend.phar text src --no-classes');
+$output = shell_exec('php dephpend.phar text src --no-classes');
 $constraints = [
     'OS --> .*Analyser',
     'Analyser --> .*OS',

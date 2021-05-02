@@ -8,20 +8,18 @@ use PHPUnit\Framework\TestCase;
 
 class HelpTest extends TestCase
 {
-    private const DEPHPEND = PHP_BINARY.' -n '.__DIR__.'/../../bin/dephpend';
-
     public function testNoArgumentsShowsHelp(): void
     {
-        self::assertRegExp('/command \[options\] \[arguments\].*/s', shell_exec(self::DEPHPEND));
+        self::assertRegExp('/command \[options\] \[arguments\].*/s', shell_exec(DEPHPEND_BIN));
     }
 
     public function testHelpShowsHelp(): void
     {
-        self::assertRegExp('/Usage:.*Options:.*Help:.*/s', shell_exec(self::DEPHPEND.' help'));
+        self::assertRegExp('/Usage:.*Options:.*Help:.*/s', shell_exec(DEPHPEND_BIN.' help'));
     }
 
     public function testShowsHelpForCommand(): void
     {
-        self::assertRegExp('/Arguments:.*source.*Options:.*--internals.*/s', shell_exec(self::DEPHPEND.' help text'));
+        self::assertRegExp('/Arguments:.*source.*Options:.*--internals.*/s', shell_exec(DEPHPEND_BIN.' help text'));
     }
 }

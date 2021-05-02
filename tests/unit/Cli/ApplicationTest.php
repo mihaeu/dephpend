@@ -53,9 +53,10 @@ class ApplicationTest extends TestCase
         $errorOutput = $this->createMock(ErrorOutput::class);
         $this->application->setErrorOutput($errorOutput);
 
-        // not sure how to mock this, so we test only one case
+        // not sure how to mock this, so we test only one case, there's always one error message regarding
+        // Symfony console setup, so if there's no xdebug loaded we still see one message
         if (!extension_loaded('xdebug')) {
-            $errorOutput->expects(never())->method('writeln')->with(self::XDEBUG_WARNING);
+            $errorOutput->expects(once())->method('writeln');
         } else {
             $errorOutput->expects(exactly(2))->method('writeln');
         }
@@ -88,8 +89,6 @@ class ApplicationTest extends TestCase
     public function testValidatesDsmInput(): void
     {
         $_SERVER['argv'] = ['', 'dsm', sys_get_temp_dir(), '--format=html'];
-        $input = $this->createMock(Input::class);
-        $output = $this->createMock(Output::class);
 
         $errorOutput = $this->createMock(ErrorOutput::class);
         $application = new Application('', '', $this->dispatcher);
@@ -102,8 +101,6 @@ class ApplicationTest extends TestCase
     public function testValidatesUmlInput(): void
     {
         $_SERVER['argv'] = ['', 'uml', sys_get_temp_dir(), '--output=test.png'];
-        $input = $this->createMock(Input::class);
-        $output = $this->createMock(Output::class);
 
         $errorOutput = $this->createMock(ErrorOutput::class);
         $application = new Application('', '', $this->dispatcher);
@@ -116,8 +113,6 @@ class ApplicationTest extends TestCase
     public function testValidatesMetricInput(): void
     {
         $_SERVER['argv'] = ['', 'metrics', sys_get_temp_dir()];
-        $input = $this->createMock(Input::class);
-        $output = $this->createMock(Output::class);
 
         $errorOutput = $this->createMock(ErrorOutput::class);
         $application = new Application('', '', $this->dispatcher);
@@ -130,8 +125,6 @@ class ApplicationTest extends TestCase
     public function testValidatesDotInput(): void
     {
         $_SERVER['argv'] = ['', 'dot', sys_get_temp_dir()];
-        $input = $this->createMock(Input::class);
-        $output = $this->createMock(Output::class);
 
         $errorOutput = $this->createMock(ErrorOutput::class);
         $application = new Application('', '', $this->dispatcher);

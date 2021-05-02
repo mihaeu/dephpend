@@ -8,9 +8,6 @@ use PHPUnit\Framework\TestCase;
 
 class UmlTest extends TestCase
 {
-    private const DEPHPEND = PHP_BINARY.' -n '.__DIR__.'/../../bin/dephpend';
-    private const SRC = __DIR__.'/../../src';
-
     public function testCreatesUml(): void
     {
         system('plantuml -version > /dev/null 2>&1', $returnStatus);
@@ -45,7 +42,7 @@ EOT;
 
         $tempFilePng = sys_get_temp_dir().'/dephpend-uml-test.png';
         $tempFileUml = sys_get_temp_dir().'/dephpend-uml-test.uml';
-        shell_exec(self::DEPHPEND.' uml '.self::SRC.' --no-classes --keep-uml '
+        shell_exec(DEPHPEND_BIN.' uml '.SRC_PATH.' --no-classes --keep-uml '
             .'--output="'.$tempFilePng.'" -f Mihaeu\\\\PhpDependencies\\\\OS');
         assertEquals(
             $expected,
