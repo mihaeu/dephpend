@@ -46,14 +46,22 @@ Bump versions in
  - test files
 
 Then run:
-```
+```bash
+# change these
 VERSION="MAJOR.MINOR.PATCH"
-make phar
-mv build/dephpend.phar build/dephpend-$VERSION.phar
-gpg -u valid@email.com --detach-sign --output build/dephpend-$VERSION.phar.asc build/dephpend-$VERSION.phar
-gpg --verify build/dephpend-$VERSION.phar.asc build/dephpend-$VERSION.phar
-git tag -a $VERSION -m $VERSION -s
-git push origin $VERSION
+COMMIT_EMAIL="valid@email.com"
+
+# copy & paste
+[[ -z $(git status --porcelain) ]] && \  
+  make phar && \
+  mv "build/dephpend.phar" "build/dephpend-$VERSION.phar" && \
+  gpg --local-user "${COMMIT_EMAIL}" --detach-sign --output "build/dephpend-${VERSION}.phar.asc" "build/dephpend-${VERSION}.phar" && \
+  gpg --verify "build/dephpend-${VERSION}.phar.asc" "build/dephpend-${VERSION}.phar" && \
+  bin/prepare-tag "${VERSION}" && \
+  git push && \
+  git push origin "${VERSION}" 
 ```
 
 Then upload to GitHub releases and verify via `phive install dephpend` or `phive update dephpend`.
+
+Switch to branch `gh-pages`, merge `main` and run `make pages` and commit and push the changes to `index.html`.
