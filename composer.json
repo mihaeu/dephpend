@@ -10,7 +10,7 @@
     "homepage": "https://dephpend.com",
     "bin": ["bin/dephpend", "bin/php-trace"],
     "require": {
-        "php": "^7.2",
+        "php": "^7.2 || ^8.0",
         "nikic/php-parser": "^4.0",
         "symfony/console": "^4 || ^5",
         "symfony/event-dispatcher": "^4 || ^5"
