@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\Util\DI;
+use Mihaeu\PhpDependencies\Util\DependencyContainer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
@@ -43,12 +43,13 @@ class TestFeaturesCommand extends Command
         foreach ($results as $result) {
             $output->writeln($result[1]);
         }
+        return 0;
     }
 
     public function runTest(string $filename) : array
     {
         $_SERVER['argv'] = [0, 'text', $filename];
-        $application = new Application('', '', new DI([]));
+        $application = new Application('', '', (new DependencyContainer([]))->dispatcher());
         $application->setAutoExit(false);
         $applicationOutput = new BufferedOutput();
         $application->doRun(new ArgvInput($_SERVER['argv']), $applicationOutput);
