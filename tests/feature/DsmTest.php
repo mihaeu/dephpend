@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\tests\feature;
 
-class DsmTest extends \PHPUnit_Framework_TestCase
-{
-    const DEPHPEND = PHP_BINARY.' -n '.__DIR__.'/../../bin/dephpend';
-    const SRC = __DIR__.'/../../src';
+use PHPUnit\Framework\TestCase;
 
-    public function testCreatesSimpleDsmInHtml()
+class DsmTest extends TestCase
+{
+    public function testCreatesSimpleDsmInHtml(): void
     {
-        $this->assertRegExp(
-            '/PhpDependencies.+X.+8.+1.+11.+29/s',
-            shell_exec(self::DEPHPEND.' dsm '.self::SRC.' --no-classes -d 2 --format=html')
+        assertRegExp(
+            '@\d: PhpParser</th><td>([1-9]\d*).+.+@s',
+            shell_exec(DEPHPEND_BIN.' dsm '.SRC_PATH.' --no-classes --depth=2 --format=html')
         );
     }
 }

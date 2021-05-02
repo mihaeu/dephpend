@@ -6,7 +6,9 @@ namespace Mihaeu\PhpDependencies\OS;
 
 class ShellWrapper
 {
-    private $STD_ERR_PIPE = ' 2> /dev/null';
+    private $STD_ERR_PIPE = ' 2>&1 /dev/null';
+
+    private $STD_ERR_PIPE_WIN = ' 2> NUL';
 
     /**
      * @param string $command
@@ -17,8 +19,16 @@ class ShellWrapper
     {
         $output = [];
         $returnVar = 1;
-        exec($command.$this->STD_ERR_PIPE, $output, $returnVar);
+
+        $command .= $this->isWindows() ? $this->STD_ERR_PIPE_WIN : $this->STD_ERR_PIPE;
+
+        exec($command, $output, $returnVar);
 
         return $returnVar;
+    }
+
+    private function isWindows(): bool
+    {
+        return 0 === stripos(PHP_OS, 'WIN');
     }
 }

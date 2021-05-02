@@ -4,7 +4,7 @@
 
 class A
 {
-    public function test()
+    public function test(): void
     {
         new B();
         new C;

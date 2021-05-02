@@ -5,7 +5,7 @@
 
 class A
 {
-    public function test()
+    public function test(): void
     {
         $x = (new B())->x();
     }

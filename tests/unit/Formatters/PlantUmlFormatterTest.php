@@ -5,32 +5,33 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Formatters;
 
 use Mihaeu\PhpDependencies\DependencyHelper;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Mihaeu\PhpDependencies\Formatters\PlantUmlFormatter
  */
-class PlantUmlFormatterTest extends \PHPUnit_Framework_TestCase
+class PlantUmlFormatterTest extends TestCase
 {
     /** @var PlantUmlFormatter */
     private $plantUmlFormatter;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->plantUmlFormatter = new PlantUmlFormatter();
     }
 
-    public function testFormat()
+    public function testFormat(): void
     {
         $dependencyCollection = DependencyHelper::map('ClassA --> ClassB, ClassC');
-        $this->assertEquals("@startuml\n\n"
+        assertEquals("@startuml\n\n"
             ."ClassA --|> ClassB\n"
             ."ClassA --|> ClassC\n"
             .'@enduml', $this->plantUmlFormatter->format($dependencyCollection));
     }
 
-    public function testFormatsNestedNamespaces()
+    public function testFormatsNestedNamespaces(): void
     {
-        $this->assertEquals('@startuml
+        assertEquals('@startuml
 namespace A {
 namespace b {
 }

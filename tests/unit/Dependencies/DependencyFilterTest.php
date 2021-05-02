@@ -4,29 +4,31 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Dependencies;
 
+use InvalidArgumentException;
 use Mihaeu\PhpDependencies\DependencyHelper;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Mihaeu\PhpDependencies\Dependencies\DependencyFilter
  */
-class DependencyFilterTest extends \PHPUnit_Framework_TestCase
+class DependencyFilterTest extends TestCase
 {
     /** @var DependencyFilter */
     private $filter;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->filter = new DependencyFilter(['SplFileInfo']);
     }
 
-    public function testRemovesInternals()
+    public function testRemovesInternals(): void
     {
         $dependencies = DependencyHelper::map('From --> To, SplFileInfo');
         $expected = (new DependencyMap())->add(new Clazz('From'), new Clazz('To'));
-        $this->assertEquals($expected, $this->filter->removeInternals($dependencies));
+        assertEquals($expected, $this->filter->removeInternals($dependencies));
     }
 
-    public function testFilterByDepthOne()
+    public function testFilterByDepthOne(): void
     {
         $dependencies = DependencyHelper::map('
             From --> A\\a\\To
@@ -37,36 +39,48 @@ class DependencyFilterTest extends \PHPUnit_Framework_TestCase
             _B --> SplFileInfo
         ');
         $actual = $this->filter->filterByDepth($dependencies, 1);
-        $this->assertEquals($expected, $actual);
+        assertEquals($expected, $actual);
     }
 
-    public function testMapUnderscoreNamespaces()
+    public function testMapUnderscoreNamespaces(): void
     {
-        $this->assertEquals(
+        assertEquals(
             DependencyHelper::map('
                 A\\b\\c --> D\\e\\f
                 F\\a --> D\\b
-                _A\\b --> _B\\c
             '),
             $this->filter->mapNamespaces(DependencyHelper::map('
                 A_b_c --> D_e_f
                 F_a --> D_b
-                _A_b --> _B_c
             '))
         );
     }
 
-    public function testFilterByDepthThree()
+    public function testMapUnderscoreNamespacesAlreadyNamespace(): void
+    {
+        assertEquals(
+            DependencyHelper::map('
+                VendorA\\Tests\\DDC1209_1 --> a\\To
+                A\\__b__\\c --> D\\e\\f
+            '),
+            $this->filter->mapNamespaces(DependencyHelper::map('
+                VendorA\\Tests\\DDC1209_1 --> a\\To
+                A\\__b__\\c --> D\\e\\f
+            '))
+        );
+    }
+
+    public function testFilterByDepthThree(): void
     {
         $dependencies = DependencyHelper::map('
             VendorA\\ProjectA\\PathA\\From --> VendorB\\ProjectB\\PathB\\To
         ');
         $expected = DependencyHelper::map('_VendorA\\ProjectA\\PathA --> _VendorB\\ProjectB\\PathB');
         $actual = $this->filter->filterByDepth($dependencies, 3);
-        $this->assertEquals($expected, $actual);
+        assertEquals($expected, $actual);
     }
 
-    public function testFilterByVendor()
+    public function testFilterByVendor(): void
     {
         $dependencies = DependencyHelper::map('
             VendorA\\A --> VendorB\\A, VendorA\\C
@@ -76,10 +90,10 @@ class DependencyFilterTest extends \PHPUnit_Framework_TestCase
         $expected = DependencyHelper::map('
             VendorA\\A --> VendorA\\C
         ');
-        $this->assertEquals($expected, $this->filter->filterByNamespace($dependencies, 'VendorA'));
+        assertEquals($expected, $this->filter->filterByNamespace($dependencies, 'VendorA'));
     }
 
-    public function testFilterByDepth0ReturnsEqual()
+    public function testFilterByDepth0ReturnsEqual(): void
     {
         $dependencies = DependencyHelper::map('
             VendorA\\A --> VendorB\\A
@@ -87,9 +101,9 @@ class DependencyFilterTest extends \PHPUnit_Framework_TestCase
             VendorB\\B --> VendorA\\A
             VendorC\\C --> VendorA\\A
         ');
-        $this->assertEquals($dependencies, $this->filter->filterByDepth($dependencies, 0));
+        assertEquals($dependencies, $this->filter->filterByDepth($dependencies, 0));
     }
-    public function testRemoveClasses()
+    public function testRemoveClasses(): void
     {
         $expected = DependencyHelper::map('
             _VendorA --> _VendorB
@@ -100,12 +114,12 @@ class DependencyFilterTest extends \PHPUnit_Framework_TestCase
             VendorB\\B --> VendorA\\A
             VendorC\\C --> B
         '));
-        $this->assertEquals($expected, $actual);
+        assertEquals($expected, $actual);
     }
 
-    public function testFilterFromDependencies()
+    public function testFilterFromDependencies(): void
     {
-        $this->assertEquals(DependencyHelper::map('
+        assertEquals(DependencyHelper::map('
             Good\\A --> Bad\\B
             Good\\B --> Good\\C
         '), $this->filter->filterByFromNamespace(DependencyHelper::map('
@@ -115,7 +129,7 @@ class DependencyFilterTest extends \PHPUnit_Framework_TestCase
         '), 'Good'));
     }
 
-    public function testThrowsExceptionForBadRegex()
+    public function testThrowsExceptionForBadRegex(): void
     {
         $options = [
             'internals'             => false,
@@ -126,11 +140,11 @@ class DependencyFilterTest extends \PHPUnit_Framework_TestCase
             'exclude-regex'         => 'Missing brackets',
             'underscore-namespaces' => true,
         ];
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->filter->filterByOptions(new DependencyMap(), $options);
     }
 
-    public function testRunAllFilters()
+    public function testRunAllFilters(): void
     {
         $options = [
             'internals'             => false,
@@ -152,12 +166,12 @@ class DependencyFilterTest extends \PHPUnit_Framework_TestCase
             A\\a\\z --> A\\b\\z
             A\\b\\c --> A\\b\\z
         ');
-        $this->assertEquals($expected, $actual);
+        assertEquals($expected, $actual);
     }
 
-    public function testExcludeByRegex()
+    public function testExcludeByRegex(): void
     {
-        $this->assertEquals(DependencyHelper::map('
+        assertEquals(DependencyHelper::map('
             X --> Z
         '), $this->filter->excludeByRegex(DependencyHelper::map('
             Test\\A --> B
@@ -169,9 +183,9 @@ class DependencyFilterTest extends \PHPUnit_Framework_TestCase
         '), '/(Test)|(Example)/'));
     }
 
-    public function testPostFilters()
+    public function testPostFilters(): void
     {
         $filters = $this->filter->postFiltersByOptions(['no-classes' => true, 'depth' => 1]);
-        $this->assertEquals(new Namespaze(['A']), $filters(new Clazz('Test', new Namespaze(['A', 'a']))));
+        assertEquals(new Namespaze(['A']), $filters(new Clazz('Test', new Namespaze(['A', 'a']))));
     }
 }

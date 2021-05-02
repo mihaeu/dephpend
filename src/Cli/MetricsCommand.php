@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser\Metrics;
-use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
-use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
-use Mihaeu\PhpDependencies\Util\Functional;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -17,16 +14,10 @@ class MetricsCommand extends BaseCommand
     /** @var Metrics */
     private $metrics;
 
-    /**
-     * @param DependencyMap $dependencies
-     * @param Metrics $metrics
-     */
-    public function __construct(
-        DependencyMap $dependencies,
-        Metrics $metrics
-    ) {
+    public function __construct(Metrics $metrics)
+    {
         $this->metrics = $metrics;
-        parent::__construct('metrics', $dependencies, Functional::id());
+        parent::__construct('metrics');
     }
 
     protected function configure()
@@ -63,16 +54,18 @@ class MetricsCommand extends BaseCommand
             $this->metrics->instability($this->dependencies)
         ));
         $table->render();
+
+        return 0;
     }
 
-    private function combineMetrics(array $ca, array $ce, array $instability) : array
+    private function combineMetrics(array $afferentCoupling, array $efferentCoupling, array $instability) : array
     {
         $result = [];
-        foreach ($ca as $className => $caValue) {
+        foreach ($afferentCoupling as $className => $afferentCouplingValue) {
             $result[] = [
                 $className,
-                $caValue,
-                $ce[$className],
+                $afferentCouplingValue,
+                $efferentCoupling[$className],
                 sprintf('%.2f', $instability[$className])
             ];
         }

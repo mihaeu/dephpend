@@ -3,7 +3,7 @@
 
 class A
 {
-    public function test()
+    public function test(): void
     {
         $name = 'b';
         $b = new $name();

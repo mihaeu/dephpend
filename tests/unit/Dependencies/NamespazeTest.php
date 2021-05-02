@@ -4,98 +4,104 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Dependencies;
 
-use Mihaeu\PhpDependencies\Exceptions\IndexOutOfBoundsException;
+use InvalidArgumentException;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Mihaeu\PhpDependencies\Dependencies\Namespaze
  */
-class NamespazeTest extends \PHPUnit_Framework_TestCase
+class NamespazeTest extends TestCase
 {
-    public function testAcceptsEmptyNamespace()
+    public function testAcceptsEmptyNamespace(): void
     {
-        $this->assertEquals('', new Namespaze([]));
+        assertEquals('', new Namespaze([]));
     }
 
-    public function testAcceptsValidNamespaceParts()
+    public function testAcceptsValidNamespaceParts(): void
     {
-        $this->assertEquals('a\b\c', new Namespaze(['a', 'b', 'c']));
+        assertEquals('a\b\c', new Namespaze(['a', 'b', 'c']));
     }
 
-    public function testDetectsInvalidNamespaceParts()
+    public function testDetectsInvalidNamespaceParts(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         new Namespaze([1]);
     }
 
-    public function testDepthOfEmptyNamespaceIsZero()
+    public function testDepthOfEmptyNamespaceIsZero(): void
     {
-        $this->assertCount(0, new Namespaze([]));
+        assertCount(0, new Namespaze([]));
     }
 
-    public function testDepthOfNamespace()
+    public function testDepthOfNamespace(): void
     {
-        $this->assertCount(2, new Namespaze(['A', 'B']));
+        assertCount(2, new Namespaze(['A', 'B']));
     }
 
-    public function testReducingDepthLowerThanPossibleProducesNullDependency()
+    public function testReducingDepthLowerThanPossibleProducesNullDependency(): void
     {
-        $this->assertInstanceOf(NullDependency::class, (new Namespaze(['Test']))->reduceToDepth(3));
+        assertInstanceOf(NullDependency::class, (new Namespaze(['Test']))->reduceToDepth(3));
     }
 
-    public function testReduceToMaxDepth()
+    public function testReduceToMaxDepth(): void
     {
-        $this->assertEquals(new Namespaze(['A', 'B']), (new Namespaze(['A', 'B', 'C', 'D']))->reduceToDepth(2));
+        assertEquals(new Namespaze(['A', 'B']), (new Namespaze(['A', 'B', 'C', 'D']))->reduceToDepth(2));
     }
 
-    public function testDoNotReduceForMaxDepthZero()
+    public function testDoNotReduceForMaxDepthZero(): void
     {
-        $this->assertEquals(new Namespaze(['A', 'B']), (new Namespaze(['A', 'B']))->reduceToDepth(0));
+        assertEquals(new Namespaze(['A', 'B']), (new Namespaze(['A', 'B']))->reduceToDepth(0));
     }
 
-    public function testLeftReduceNamespace()
+    public function testLeftReduceNamespace(): void
     {
-        $this->assertEquals(new Namespaze(['C']), (new Namespaze(['A', 'B', 'C']))->reduceDepthFromLeftBy(2));
+        assertEquals(new Namespaze(['C']), (new Namespaze(['A', 'B', 'C']))->reduceDepthFromLeftBy(2));
     }
 
-    public function testReduceSameAsLengthProducesEmptyNamespace()
+    public function testReduceSameAsLengthProducesEmptyNamespace(): void
     {
-        $this->assertEquals(new Namespaze([]), (new Namespaze(['A', 'B', 'C']))->reduceDepthFromLeftBy(3));
+        assertEquals(new Namespaze([]), (new Namespaze(['A', 'B', 'C']))->reduceDepthFromLeftBy(3));
     }
 
-    public function testReduceMoreThanLengthProducesEmptyNamespace()
+    public function testReduceMoreThanLengthProducesEmptyNamespace(): void
     {
-        $this->assertEquals(new Namespaze([]), (new Namespaze(['A', 'B', 'C']))->reduceDepthFromLeftBy(5));
+        assertEquals(new Namespaze([]), (new Namespaze(['A', 'B', 'C']))->reduceDepthFromLeftBy(5));
     }
 
-    public function testEquals()
+    public function testEquals(): void
     {
-        $this->assertTrue((new Namespaze(['A', 'B']))->equals(new Namespaze(['A', 'B'])));
-        $this->assertTrue((new Namespaze([]))->equals(new Namespaze([])));
-        $this->assertFalse((new Namespaze(['A', 'B']))->equals(new Namespaze(['A'])));
-        $this->assertFalse((new Namespaze(['A', 'B']))->equals(new Namespaze([])));
+        assertTrue((new Namespaze(['A', 'B']))->equals(new Namespaze(['A', 'B'])));
+        assertTrue((new Namespaze([]))->equals(new Namespaze([])));
+        assertFalse((new Namespaze(['A', 'B']))->equals(new Namespaze(['A'])));
+        assertFalse((new Namespaze(['A', 'B']))->equals(new Namespaze([])));
     }
 
-    public function testPartsByIndex()
+    public function testPartsByIndex(): void
     {
-        $this->assertEquals(new Namespaze(['1']), (new Namespaze(['1', '2']))->parts()[0]);
-        $this->assertEquals(new Namespaze(['2']), (new Namespaze(['1', '2']))->parts()[1]);
-    }
-    
-    public function testNamespazeReturnsItself()
-    {
-        $this->assertEquals(new Namespaze(['1', '2']), (new Namespaze(['1', '2']))->namespaze());
-    }
-    
-    public function testDetectsIfInOtherNamespace()
-    {
-        $this->assertTrue((new Namespaze(['A', 'b', 'T']))->inNamespaze(new Namespaze(['A', 'b', 'T'])));
-        $this->assertTrue((new Namespaze(['A', 'b', 'T']))->inNamespaze(new Namespaze(['A'])));
+        assertEquals(new Namespaze(['1']), (new Namespaze(['1', '2']))->parts()[0]);
+        assertEquals(new Namespaze(['2']), (new Namespaze(['1', '2']))->parts()[1]);
     }
 
-    public function testDetectsIfNotInOtherNamespace()
+    public function testNamespazeReturnsItself(): void
     {
-        $this->assertFalse((new Namespaze(['XZY', 'b', 'T']))->inNamespaze(new Namespaze(['A', 'b', 'T'])));
-        $this->assertFalse((new Namespaze([]))->inNamespaze(new Namespaze(['A', 'b', 'T'])));
-        $this->assertFalse((new Namespaze(['XZY', 'b', 'T']))->inNamespaze(new Namespaze([])));
+        assertEquals(new Namespaze(['1', '2']), (new Namespaze(['1', '2']))->namespaze());
+    }
+
+    public function testDetectsIfInOtherNamespace(): void
+    {
+        assertTrue((new Namespaze(['A', 'b', 'T']))->inNamespaze(new Namespaze(['A', 'b', 'T'])));
+        assertTrue((new Namespaze(['A', 'b', 'T']))->inNamespaze(new Namespaze(['A'])));
+    }
+
+    public function testDetectsIfNotInOtherNamespace(): void
+    {
+        assertFalse((new Namespaze(['XZY', 'b', 'T']))->inNamespaze(new Namespaze(['A', 'b', 'T'])));
+        assertFalse((new Namespaze([]))->inNamespaze(new Namespaze(['A', 'b', 'T'])));
+        assertFalse((new Namespaze(['XZY', 'b', 'T']))->inNamespaze(new Namespaze([])));
+    }
+
+    public function testEmptyNamespaceIsNotNamespaced(): void
+    {
+        assertFalse((new Namespaze([]))->isNamespaced());
     }
 }

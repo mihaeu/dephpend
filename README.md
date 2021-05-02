@@ -1,32 +1,38 @@
-# ![dePHPend logo](https://mike-on-a-bike.com/dephpend-logo.png) 
+<h1 align="center"><a href="https://dephpend.com/"><img src="doc/logo.svg" alt="dePHPend lgo"></a></h1>
 
-> Detect flaws in your architecture, before they drag you down into the depths of dependency hell ...
+[![Build Status](https://travis-ci.org/mihaeu/dephpend.svg?branch=master)](https://travis-ci.org/github/mihaeu/dephpend)
+[![Coverage Status](https://coveralls.io/repos/github/mihaeu/dephpend/badge.svg)](https://coveralls.io/github/mihaeu/dephpend)
+[![Packagist Version](https://img.shields.io/packagist/v/dephpend/dephpend)](https://packagist.org/packages/dephpend/dephpend)
+[![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](https://github.com/mihaeu/dephpend/blob/main/LICENSE)
+[![PHP 7.2](https://img.shields.io/badge/PHP-7.2-blue.svg?style=flat)](https://www.php.net/supported-versions.php)
+[![Join the chat at Gitter](https://badges.gitter.im/dephpend/Lobby.svg)](https://gitter.im/dephpend/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-[![Build Status](https://travis-ci.org/mihaeu/dephpend.svg?branch=develop)](https://travis-ci.org/mihaeu/dephpend) [![Coverage Status](https://coveralls.io/repos/github/mihaeu/dephpend/badge.svg)](https://coveralls.io/github/mihaeu/dephpend) ![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat) [![Join the chat at https://gitter.im/dephpend/Lobby](https://badges.gitter.im/dephpend/Lobby.svg)](https://gitter.im/dephpend/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+Detect flaws in your architecture before they drag you down into the depths of dependency hell ...
 
-  - [What it does](#what-it-does)
-  - [Installation](#installation)
-    + [Phive](#phive)
-    + [Composer](#composer)
-    + [Manual .phar download](#manual-phar-download)
-    + [Git](#git)
-  - [Usage](#usage)
-    + [Filters](#filters)
-    + [Text](#text)
-    + [UML](#uml)
-    + [Dependency Structure Matrix](#dependency-structure-matrix)
-    + [Metrics](#metrics)
-    + [Dynamic Analysis](#dynamic-analysis)
-      * [Setup](#setup)
-      * [Usage](#usage-1)
-  - [Examples](#examples)
-    + [Architecture Constraints](#architecture-constraints)
-    + [Architecture Timeline](#architecture-timeline)
-  - [How it all works](#how-it-all-works)
-  - [Supported Features](#supported-features)
-  - [Troubleshooting](#troubleshooting)
-    + [Not enough RAM](#not-enough-ram)
-  - [License](#license)
+- [What it does](#what-it-does)
+- [System Requirements](#system-requirements)
+- [Installation](#installation)
+  + [Phive](#phive)
+  + [Composer](#composer)
+  + [Manual .phar download](#manual-phar-download)
+  + [Git](#git)
+- [Usage](#usage)
+  + [Filters](#filters)
+  + [Text](#text)
+  + [UML](#uml)
+  + [Dependency Structure Matrix](#dependency-structure-matrix)
+  + [Metrics](#metrics)
+  + [Dynamic Analysis](#dynamic-analysis)
+    * [Setup](#setup)
+    * [Usage](#usage-1)
+- [Examples](#examples)
+  + [Architecture Constraints](#architecture-constraints)
+  + [Architecture Timeline](#architecture-timeline)
+- [How it all works](#how-it-all-works)
+- [Supported Features](#supported-features)
+- [Troubleshooting](#troubleshooting)
+  + [Not enough RAM](#not-enough-ram)
+- [License](#license)
 
 ## What it does
 
@@ -45,7 +51,22 @@ With this information you can:
     (maybe your view shouldn't be telling the model what to do?)
  - find out why your changes are breaking tests
 
+
+## System Requirements
+- PHP >= 7.2
+- plantuml (UML Class diagram)
+
+
 ## Installation
+
+### Docker
+
+If you don't want to worry about PHP versions, composer dependencies etc. you can run dePHPend from a docker container:
+
+```bash
+# replace $PATH_TO_INSPECT with whatever path you would live to inspect
+docker run --rm -v $PATH_TO_INSPECT:/inspect mihaeu/dephpend:latest text /inspect
+```
 
 ### Phive
 
@@ -56,7 +77,7 @@ phive install dephpend
 
 # or
 
-phive install -copy dephpend
+phive install --copy dephpend
 ```
 
 ### Composer
@@ -64,23 +85,18 @@ phive install -copy dephpend
 You can install dePHPend globally, but this might lead to problems if other globally installed QA tools use different versions of PhpParser for instance.
 
 ```bash
-composer global require dephpend/dephpend:dev-master
+composer global require dephpend/dephpend:dev-main
 ```
 
 ### Manual .phar download
 
-Download the phar file by clicking [here](https://phar.dephpend.com/dephpend.phar) or use
-
-```bash
-wget https://phar.dephpend.com/dephpend.phar
-```
-(for old releases use https://phar.dephpend.com/)
+Download the PHAR file by selecting the latest file from [GitHub Releases](https://github.com/mihaeu/dephpend/releases/latest).
 
 ### Git
 
 ```bash
 git clone git@github.com:mihaeu/dephpend.git
-#or
+# or
 git clone https://github.com/mihaeu/dephpend.git
 
 cd dephpend
@@ -89,17 +105,17 @@ composer install
 
 ## Usage
 
-You should almost always run QA tools without XDebug (unless you need code coverage of course). You could use a separate `php.ini` where XDebug is not loaded and pass that to php or you just use the `-n` option (this will however not load any extensions). 
+You should almost always run QA tools without XDebug (unless you need code coverage of course). You could use a separate `php.ini` where XDebug is not loaded and pass that to php or you just use the `-n` option (this will however not load any extensions, so you have to specify those separately). 
 
 ```
 # or bin/dephpend depending on how you installed this
-$ php -n dephpend.phar                                                                                                 
+$ php -n -d extension=tokenizer.so -d extension=json.so -d extension=mbstring.so dephpend.phar                                                                                                 
       _      _____  _    _ _____               _ 
      | |    |  __ \| |  | |  __ \             | |
    __| | ___| |__) | |__| | |__) |__ _ __   __| |
   / _` |/ _ \  ___/|  __  |  ___/ _ \ '_ \ / _` |
  | (_| |  __/ |    | |  | | |  |  __/ | | | (_| |
-  \__,_|\___|_|    |_|  |_|_|   \___|_| |_|\__,_| version 0.3
+  \__,_|\___|_|    |_|  |_|_|   \___|_| |_|\__,_| version 0.8.0
 
 Usage:
   command [options] [arguments]
@@ -119,7 +135,7 @@ Available commands:
   list           Lists commands
   metrics        Generate dependency metrics
   test-features  Test support for dependency detection
-  text           Generate a Dependency Structure Matrix of your dependencies
+  text           Prints a list of all dependencies
   uml            Generate a UML Class diagram of your dependencies
 ```
 
@@ -146,10 +162,10 @@ For more info just run `php dephpend.phar help text`.
 For quick debugging use the `text` command. Say you want to find out which classes depend on XYZ and what XYZ depends on, you'd run: 
 
 ```bash
-php -n dephpend.phar text src | grep XYZ
+php dephpend.phar text src | grep XYZ
 
-# or for more complex applications increase memory limit and use filters
-php -n -d memory_limit=1000M dephpend.phar text symfony --no-classes --depth 3 --exclude-regex='/Test/'
+# or for more complex applications use filters
+php dephpend.phar text symfony --no-classes --depth 3 --exclude-regex='/Test/'
 ```
 
 ### UML
@@ -159,10 +175,10 @@ Generates UML class or package diagrams of your source code. Requires [PlantUML]
 You can either run 
 
 ```bash
-php -n dephpend.phar uml --output=uml.png src
+php dephpend.phar uml --output=uml.png src
 
 # or for post-processing
-php -n dephpend.phar uml --output=uml.png --keep-uml src
+php dephpend.phar uml --output=uml.png --keep-uml src
 ``` 
 
 but most likely what you want to do is to use the `--no-classes` and `--depth[=DEPTH]` option. If your app has more than 20 classes, the UML will become messy if you don't use namespace instead of class level. Experiment with different depth values, but usually a depth of 2 or 3 is what you want.
@@ -174,9 +190,9 @@ If you've tried decrypting massive UML diagrams before, you know that they becom
 This feature is still under construction and right now it's not really fun to use. If you still want to try run 
 
 ```bash
-php -n dephpend.phar dsm src > dependencies.html
+php dephpend.phar dsm src > dependencies.html
 
-php -n dephpend.phar dsm src --no-classes | bcat
+php dephpend.phar dsm src --no-classes | bcat
 ``` 
 or pipe it to something like [bcat](https://rtomayko.github.io/bcat/).
 
@@ -185,7 +201,7 @@ or pipe it to something like [bcat](https://rtomayko.github.io/bcat/).
 The most common package metrics have already been implemented, but there are more to come. Check them out by running the following command:
 
 ```bash
-php -n dephpend.phar metrics src
+php dephpend.phar metrics src
 ```
 
 This feature is not production ready and it's better to rely on [PHP Depend](https://pdepend.org) for this.
@@ -233,7 +249,7 @@ php -c php-with-traces.ini -S localhost:8080
 The better the sample run and the more of your application it covers, the better the results are going to be. After that process the trace file using the `--dynamic` option.
 
 ```bash
-php -n dephpend.phar text src               \
+php dephpend.phar text src                  \
     --no-classes                            \
     --filter-from=Mihaeu\\PhpDependencies   \
     --exclude-regex='/(Test)|(Mock)/'       \
@@ -251,10 +267,10 @@ The trace file, by default, will be in your system's temporary folder. This can 
 Using the `text` command it is fairly straightforward to create a script which validates your architecture:
 
 ```php
-#/usr/bin/env php
+#!/usr/bin/env php
 <?php
 
-$output = shell_exec('php -n dephpend.phar text src --no-classes');
+$output = shell_exec('php dephpend.phar text src --no-classes');
 $constraints = [
     'OS --> .*Analyser',
     'Analyser --> .*OS',
@@ -269,7 +285,7 @@ Save this in your `.git/hooks/pre-commit` or `.git/hooks/pre-push` and you'll ne
 
 ### Architecture Timeline
 
-Executing dePHPend's metric command on every branch `g log --pretty=%H` and using `convert -delay 100 -loop 0 *.png dephpend-timeline.gif` you can create a nice animation detailing the evolution of your architecture:
+Executing dePHPend's metric command on any branch `git log --pretty=%H` and using `convert -delay 100 -loop 0 *.png dephpend-timeline.gif` you can create a nice animation detailing the evolution of your architecture:
 
 ![dePHPend Timeline](https://dephpend.com/dephpend-timeline.gif)
 
@@ -278,7 +294,7 @@ Executing dePHPend's metric command on every branch `g log --pretty=%H` and usin
 Basically the process can be broken down into four steps (the actual work is a bit more complicated and for those interested, I'll publish a paper about it, later this year):
 
  - find all relevant PHP files
- - generate an abstract syntax tree using [php-parser]() by the awesome Nikita Popov
+ - generate an abstract syntax tree using [php-parser](https://github.com/nikic/PHP-Parser) by the awesome Nikita Popov
  - traverse the tree, gathering dependencies along the way
  - pass the information to a formatter
 

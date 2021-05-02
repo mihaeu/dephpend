@@ -9,11 +9,15 @@ use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Dependencies\DependencySet;
 use PhpParser\Node;
+use PhpParser\Node\Expr\ClassConstFetch as FetchClassConstantNode;
+use PhpParser\Node\Expr\Instanceof_ as InstanceofNode;
 use PhpParser\Node\Expr\New_ as NewNode;
 use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Expr\StaticCall as StaticCallNode;
+use PhpParser\Node\Name;
 use PhpParser\Node\Name as NameNode;
-use PhpParser\Node\Name\FullyQualified as FullyQualifiedNameNode;
+use PhpParser\Node\Param;
+use PhpParser\Node\Stmt\Catch_ as CatchNode;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\ClassLike as ClassLikeNode;
 use PhpParser\Node\Stmt\ClassMethod as ClassMethodNode;
@@ -63,30 +67,42 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
                 $this->addImplementedInterfaceDependency($node);
             }
         } elseif ($node instanceof NewNode
-            && $node->class instanceof FullyQualifiedNameNode) {
-            $this->addInstantiationDependency($node);
-            // WEIRD BUG CAUSING XDEBUG TO NOT COVER ELSEIF ONLY ELSE IF
-            // @codeCoverageIgnoreStart
+            && $node->class instanceof NameNode) {
+            $this->addName($node->class);
         } elseif ($node instanceof ClassMethodNode) {
-            // @codeCoverageIgnoreEnd
             $this->addInjectedDependencies($node);
             $this->addReturnType($node);
-            // WEIRD BUG CAUSING XDEBUG TO NOT COVER ELSEIF ONLY ELSE IF
-            // @codeCoverageIgnoreStart
         } elseif ($node instanceof UseNode) {
-            // @codeCoverageIgnoreEnd
-            $this->addUseDependency($node);
-            // @codeCoverageIgnoreStart
+            foreach ($node->uses as $use) {
+                $this->addName($use->name);
+            }
         } elseif ($node instanceof StaticCallNode
-            && $node->class instanceof FullyQualifiedNameNode) {
-            // @codeCoverageIgnoreEnd
+            && $node->class instanceof NameNode) {
             $this->addStaticDependency($node);
-            // WEIRD BUG CAUSING XDEBUG TO NOT COVER ELSEIF ONLY ELSE IF
-            // @codeCoverageIgnoreStart
         } elseif ($node instanceof UseTraitNode) {
-            // @codeCoverageIgnoreEnd
-            $this->addUseTraitDependency($node);
+            foreach ($node->traits as $trait) {
+                $this->addName($trait);
+            }
+        } elseif ($node instanceof InstanceofNode) {
+            $this->addInstanceofDependency($node);
+        } elseif ($node instanceof FetchClassConstantNode
+            && !$node->class instanceof Node\Expr\Variable
+            && !$node->class instanceof Node\Expr\ArrayDimFetch
+            && !$node->class instanceof Node\Expr\PropertyFetch
+            && !$node->class instanceof Node\Expr\MethodCall) {
+            $this->addName($node->class);
+        } elseif ($node instanceof CatchNode) {
+            foreach ($node->types as $name) {
+                $this->addName($name);
+            }
         }
+    }
+
+    public function addName(Name $name)
+    {
+        $this->tempDependencies = $this->tempDependencies->add(
+            $this->dependencyFactory->createClazzFromStringArray($name->parts)
+        );
     }
 
     /**
@@ -100,23 +116,38 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
      */
     public function leaveNode(Node $node)
     {
-        if ($node instanceof ClassLikeNode) {
-            // not in class context
-            if ($this->currentClass === null) {
-                $this->tempDependencies = new DependencySet();
-                return;
-            }
-
-            // by now the class should have been parsed so replace the
-            // temporary class with the parsed class name
-            $this->dependencies = $this->dependencies->addSet(
-                $this->currentClass,
-                $this->tempDependencies
-            );
-            $this->tempDependencies = new DependencySet();
-            $this->currentClass = null;
+        if (!$node instanceof ClassLikeNode) {
+            return null;
         }
-        return null;
+
+        // not in class context
+        if ($this->currentClass === null) {
+            $this->tempDependencies = new DependencySet();
+            return;
+        }
+
+        // by now the class should have been parsed so replace the
+        // temporary class with the parsed class name
+
+        $this->dependencies = $this->dependencies->addSet(
+            $this->currentClass,
+            $this->tempDependencies
+        );
+        $this->tempDependencies = new DependencySet();
+        $this->currentClass = null;
+    }
+
+    /**
+     * Reset state when parsing a new AST.
+     *
+     * @param Node[] $nodes
+     *
+     * @return null|Node[]|void
+     */
+    public function beforeTraverse(array $nodes)
+    {
+        $this->tempDependencies = new DependencySet();
+        $this->currentClass = null;
     }
 
     /**
@@ -132,9 +163,15 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
      */
     private function setCurrentClass(ClassLikeNode $node)
     {
+        if (!isset($node->namespacedName)) {
+            return;
+        }
+
         if ($node instanceof InterfaceNode) {
             $this->currentClass = $this->dependencyFactory->createInterfazeFromStringArray($node->namespacedName->parts);
+        // @codeCoverageIgnoreStart
         } elseif ($node instanceof TraitNode) {
+            // @codeCoverageIgnoreEnd
             $this->currentClass = $this->dependencyFactory->createTraitFromStringArray($node->namespacedName->parts);
         } else {
             $this->currentClass = $node->isAbstract()
@@ -174,38 +211,18 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     }
 
     /**
-     * @param NewNode $node
-     */
-    private function addInstantiationDependency(NewNode $node)
-    {
-        $this->tempDependencies = $this->tempDependencies->add(
-            $this->dependencyFactory->createClazzFromStringArray($node->class->parts)
-        );
-    }
-
-    /**
      * @param ClassMethodNode $node
      */
     private function addInjectedDependencies(ClassMethodNode $node)
     {
         foreach ($node->params as $param) {
-            /* @var \PhpParser\Node\Param */
+            /* @var Param */
             if (isset($param->type, $param->type->parts)) {
                 $this->tempDependencies = $this->tempDependencies->add(
                     $this->dependencyFactory->createClazzFromStringArray($param->type->parts)
                 );
             }
         }
-    }
-
-    /**
-     * @param UseNode $node
-     */
-    private function addUseDependency(UseNode $node)
-    {
-        $this->tempDependencies = $this->tempDependencies->add(
-            $this->dependencyFactory->createClazzFromStringArray($node->uses[0]->name->parts)
-        );
     }
 
     /**
@@ -231,11 +248,11 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     /**
      * @param Node $node
      */
-    private function addUseTraitDependency(Node $node)
+    protected function addReturnType(Node $node)
     {
-        foreach ($node->traits as $trait) {
+        if ($node->returnType instanceof NameNode) {
             $this->tempDependencies = $this->tempDependencies->add(
-                $this->dependencyFactory->createTraitFromStringArray($trait->parts)
+                $this->dependencyFactory->createClazzFromStringArray($node->returnType->parts)
             );
         }
     }
@@ -243,11 +260,11 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     /**
      * @param Node $node
      */
-    protected function addReturnType(Node $node)
+    private function addInstanceofDependency(Node $node)
     {
-        if ($node->returnType instanceof FullyQualifiedNameNode) {
+        if ($node->class instanceof NameNode) {
             $this->tempDependencies = $this->tempDependencies->add(
-                $this->dependencyFactory->createClazzFromStringArray($node->returnType->parts)
+                $this->dependencyFactory->createClazzFromStringArray($node->class->parts)
             );
         }
     }

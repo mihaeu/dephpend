@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies;
 
 use Mihaeu\PhpDependencies\Dependencies\Clazz;
-use Mihaeu\PhpDependencies\Dependencies\DependencyPair;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
+use Mihaeu\PhpDependencies\Dependencies\DependencyPair;
 use Mihaeu\PhpDependencies\Dependencies\Namespaze;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Mihaeu\PhpDependencies\DependencyHelper
  */
-class DependencyHelperTest extends \PHPUnit_Framework_TestCase
+class DependencyHelperTest extends TestCase
 {
-    public function testConvert()
+    public function testConvert(): void
     {
         $expected = (new DependencyMap())->add(
             new Clazz('DepA', new Namespaze(['A'])),
@@ -23,14 +24,13 @@ class DependencyHelperTest extends \PHPUnit_Framework_TestCase
             new Clazz('DepC', new Namespaze(['C'])),
             new Clazz('DepD', new Namespaze(['D']))
         );
-        ;
-        $this->assertEquals($expected, DependencyHelper::map('
+        assertEquals($expected, DependencyHelper::map('
             A\\DepA --> B\\DepB
             C\\DepC --> D\\DepD
         '));
     }
 
-    public function testConvertMultipleDependencies()
+    public function testConvertMultipleDependencies(): void
     {
         $expected = (new DependencyMap())->add(
             new Clazz('DepA', new Namespaze(['A'])),
@@ -39,8 +39,7 @@ class DependencyHelperTest extends \PHPUnit_Framework_TestCase
             new Clazz('DepA', new Namespaze(['A'])),
             new Clazz('DepD', new Namespaze(['D']))
         );
-        ;
-        $this->assertEquals($expected, DependencyHelper::map('
+        assertEquals($expected, DependencyHelper::map('
             A\\DepA --> B\\DepB, D\\DepD
         '));
     }

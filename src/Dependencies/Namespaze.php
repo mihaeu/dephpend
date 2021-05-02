@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Dependencies;
 
-use Mihaeu\PhpDependencies\Exceptions\IndexOutOfBoundsException;
 use Mihaeu\PhpDependencies\Util\Util;
 
 class Namespaze implements Dependency
@@ -13,8 +12,6 @@ class Namespaze implements Dependency
     private $parts;
 
     /**
-     * @param \String[] $parts
-     *
      * @throws \InvalidArgumentException
      */
     public function __construct(array $parts)
@@ -103,5 +100,10 @@ class Namespaze implements Dependency
         return Util::array_once($parts, function ($value) {
             return !is_string($value);
         });
+    }
+
+    public function isNamespaced(): bool
+    {
+        return count($this->parts) > 0;
     }
 }

@@ -5,8 +5,7 @@
 /vendor
 /samples
 
-# PHP Coding Standards Fixer cache file
-.php_cs.cache
+*.cache
 
 # for now don't add any more .phar files
 # because they might bloat the repo
@@ -14,3 +13,8 @@
 
 # build artifacts
 /build
+
+# log files
+*.log
+
+composer.lock

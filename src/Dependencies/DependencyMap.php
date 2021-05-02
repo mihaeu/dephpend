@@ -17,7 +17,10 @@ class DependencyMap extends AbstractMap
     public function add(Dependency $from, Dependency $to) : self
     {
         $clone = clone $this;
-        if ($from->equals($to) || $from->count() === 0 || $to->count() === 0) {
+        if ($from->equals($to)
+            || $from->count() === 0
+            || $to->count() === 0
+            || \in_array($to->toString(), ['self', 'parent', 'static'])) {
             return $clone;
         }
 
@@ -52,19 +55,13 @@ class DependencyMap extends AbstractMap
         return $this->map[$from->toString()][self::$VALUE];
     }
 
-    /**
-     * @return DependencySet
-     */
     public function fromDependencies() : DependencySet
     {
-        return $this->reduce(new DependencySet(), function (DependencySet $set, Dependency $from, Dependency $to) {
+        return $this->reduce(new DependencySet(), function (DependencySet $set, Dependency $from) {
             return $set->add($from);
         });
     }
 
-    /**
-     * @return DependencySet
-     */
     public function allDependencies() : DependencySet
     {
         return $this->reduce(new DependencySet(), function (DependencySet $set, Dependency $from, Dependency $to) {
@@ -98,15 +95,10 @@ class DependencyMap extends AbstractMap
         });
     }
 
-    /**
-     * @inheritDoc
-     */
     public function toString() : string
     {
         return trim($this->reduce('', function (string $carry, Dependency $key, Dependency $value) {
-            return $value instanceof NullDependency || $key instanceof NullDependency
-                ? $carry
-                : $carry.$key->toString().' --> '.$value->toString().PHP_EOL;
+            return $carry.$key->toString().' --> '.$value->toString().PHP_EOL;
         }));
     }
 }

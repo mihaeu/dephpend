@@ -19,7 +19,9 @@ class PhpFileFinder
         $regexIterator = new \RegexIterator(
             new \RecursiveIteratorIterator(
                 new \RecursiveDirectoryIterator($dir->getPathname())
-            ), '/^.+\.php$/i', \RecursiveRegexIterator::GET_MATCH
+            ),
+            '/^.+\.php$/i',
+            \RecursiveRegexIterator::GET_MATCH
         );
         foreach ($regexIterator as $fileName) {
             $collection = $collection->add(new PhpFile(new \SplFileInfo($fileName[0])));
@@ -35,10 +37,12 @@ class PhpFileFinder
      */
     public function getAllPhpFilesFromSources(array $sources) : PhpFileSet
     {
-        return array_reduce($sources,
+        return array_reduce(
+            $sources,
             function (PhpFileSet $set, string $source) {
                 return $set->addAll($this->find(new \SplFileInfo($source)));
-            }, new PhpFileSet()
+            },
+            new PhpFileSet()
         );
     }
 }

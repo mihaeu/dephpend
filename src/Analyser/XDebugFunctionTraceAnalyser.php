@@ -8,7 +8,6 @@ use Mihaeu\PhpDependencies\Dependencies\Clazz;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Dependencies\DependencySet;
-use Mihaeu\PhpDependencies\Dependencies\Namespaze;
 
 /**
  * Analyses XDebug function traces as described in https://xdebug.org/docs/execution_trace

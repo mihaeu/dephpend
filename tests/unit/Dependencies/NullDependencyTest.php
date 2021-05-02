@@ -4,48 +4,55 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Dependencies;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * @covers Mihaeu\PhpDependencies\Dependencies\NullDependency
  */
-class NullDependencyTest extends \PHPUnit_Framework_TestCase
+class NullDependencyTest extends TestCase
 {
-    public function testReduceToDepth()
+    public function testReduceToDepth(): void
     {
-        $this->assertEquals(new NullDependency(), (new NullDependency())->reduceToDepth(99));
+        assertEquals(new NullDependency(), (new NullDependency())->reduceToDepth(99));
     }
 
-    public function testReduceDepthFromLeftBy()
+    public function testReduceDepthFromLeftBy(): void
     {
-        $this->assertEquals(new NullDependency(), (new NullDependency())->reduceDepthFromLeftBy(99));
+        assertEquals(new NullDependency(), (new NullDependency())->reduceDepthFromLeftBy(99));
     }
 
-    public function testEquals()
+    public function testEquals(): void
     {
-        $this->assertFalse((new NullDependency())->equals(new NullDependency()));
+        assertFalse((new NullDependency())->equals(new NullDependency()));
     }
 
-    public function testToString()
+    public function testToString(): void
     {
-        $this->assertEquals('', (new NullDependency())->__toString());
+        assertEquals('', (new NullDependency())->__toString());
     }
 
-    public function testNamespaze()
+    public function testNamespaze(): void
     {
-        $this->assertEquals(new Namespaze([]), (new NullDependency())->namespaze());
+        assertEquals(new Namespaze([]), (new NullDependency())->namespaze());
     }
 
-    public function testInNamespazeIsFalseForEmptyNamespace()
+    public function testInNamespazeIsFalseForEmptyNamespace(): void
     {
-        $this->assertFalse((new NullDependency())->inNamespaze(new Namespaze([])));
+        assertFalse((new NullDependency())->inNamespaze(new Namespaze([])));
     }
 
-    public function testInNamespazeIsFalseForEveryNamespace()
+    public function testInNamespazeIsFalseForEveryNamespace(): void
     {
-        $this->assertFalse((new NullDependency())->inNamespaze(new Namespaze(['A'])));
+        assertFalse((new NullDependency())->inNamespaze(new Namespaze(['A'])));
     }
 
-    public function testCountIsAlwaysZero()
+    public function testCountIsAlwaysZero(): void
     {
-        $this->assertCount(0, new NullDependency());
+        assertCount(0, new NullDependency());
+    }
+
+    public function testIsNotNamespaced(): void
+    {
+        assertFalse((new NullDependency())->isNamespaced());
     }
 }

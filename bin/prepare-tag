@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o pipefail
+set -o nounset
+# set -o xtrace
+
+declare -r __dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# shellcheck source=$HOME/dotfiles/scripts/helpers
+source "${HOME}/dotfiles/scripts/helpers"
+
+function main() {
+  readonly TAG="${1:-}"
+  if [[ $TAG = "" || ! $TAG =~ ^[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}$ ]]; then
+    _error "Please provide the git tag (e.g. 2.31.2) as the first argument."
+    exit 1
+  fi
+
+  if git show "${TAG}" >/dev/null 2>&1; then
+    _error "Tag already exists."
+    exit 2
+  fi
+
+  if [[ $(grep -cF "${TAG}" "${__dir}/../README.md") != 1 ]]; then
+    _error "${TAG} not found in README.md."
+    exit 3
+  fi
+
+  if [[ $(grep -cF "${TAG}" "${__dir}/../bin/dephpend") != 1 ]]; then
+    _error "${TAG} not found in binary."
+    exit 4
+  fi
+
+  if [[ $(grep -cF "${TAG}" "${__dir}/../CHANGELOG.md") != 3 ]]; then
+    _error "${TAG} not mentioned or linked in CHANGELOG.md."
+    exit 5
+  fi
+
+  git tag -a "${TAG}" -m "${TAG}"
+  readonly EXIT_CODE="$?"
+  [[ $EXIT_CODE = 0 ]] && _success "Git tag successfully created." || _error "Command 'git tag failed'."
+  exit "${EXIT_CODE}"
+}
+
+main "$@"

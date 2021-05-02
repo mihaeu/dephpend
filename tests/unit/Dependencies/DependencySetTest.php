@@ -5,77 +5,78 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Dependencies;
 
 use Mihaeu\PhpDependencies\DependencyHelper;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Mihaeu\PhpDependencies\Dependencies\DependencySet
  * @covers Mihaeu\PhpDependencies\Util\AbstractCollection
  */
-class DependencySetTest extends \PHPUnit_Framework_TestCase
+class DependencySetTest extends TestCase
 {
-    public function testAdd()
+    public function testAdd(): void
     {
         $clazzCollection = (new DependencySet())
             ->add(new Clazz('Test'));
         $clazzCollection->each(function (Dependency $clazz) {
-            $this->assertEquals(new Clazz('Test'), $clazz);
+            assertEquals(new Clazz('Test'), $clazz);
         });
     }
 
-    public function testIsImmutable()
+    public function testIsImmutable(): void
     {
         $clazzCollection = (new DependencySet())
             ->add(new Clazz('Test'));
         $newCollectionAfterRefusingDuplicate = $clazzCollection->add(new Clazz('Test'));
-        $this->assertNotSame($clazzCollection, $newCollectionAfterRefusingDuplicate);
+        assertNotSame($clazzCollection, $newCollectionAfterRefusingDuplicate);
     }
 
-    public function testDoesNotAcceptDuplicates()
+    public function testDoesNotAcceptDuplicates(): void
     {
         $clazzCollection = (new DependencySet())
             ->add(new Clazz('Test'));
-        $this->assertEquals($clazzCollection, $clazzCollection->add(new Clazz('Test')));
+        assertEquals($clazzCollection, $clazzCollection->add(new Clazz('Test')));
     }
 
-    public function testToArray()
+    public function testToArray(): void
     {
         $clazzCollection = (new DependencySet())
             ->add(new Clazz('Test'));
-        $this->assertEquals([new Clazz('Test')], $clazzCollection->toArray());
+        assertEquals([new Clazz('Test')], $clazzCollection->toArray());
     }
 
-    public function testToString()
+    public function testToString(): void
     {
         $clazzCollection = (new DependencySet())
             ->add(new Clazz('Test'))
             ->add(new Clazz('Test2'));
-        $this->assertEquals('Test'.PHP_EOL.'Test2', $clazzCollection->__toString());
+        assertEquals('Test'.PHP_EOL.'Test2', $clazzCollection->__toString());
     }
 
-    public function testFilter()
+    public function testFilter(): void
     {
         $expected = DependencyHelper::dependencySet('AB, AC');
-        $this->assertEquals($expected, DependencyHelper::dependencySet('AB, AC, BA, CA')->filter(function (Dependency $dependency) {
+        assertEquals($expected, DependencyHelper::dependencySet('AB, AC, BA, CA')->filter(function (Dependency $dependency) {
             return strpos($dependency->toString(), 'A') === 0;
         }));
     }
 
-    public function testReduce()
+    public function testReduce(): void
     {
-        $this->assertEquals('ABC', DependencyHelper::dependencySet('A, B, C')->reduce('', function (string $carry, Dependency $dependency) {
+        assertEquals('ABC', DependencyHelper::dependencySet('A, B, C')->reduce('', function (string $carry, Dependency $dependency) {
             return $carry.$dependency->toString();
         }));
     }
 
-    public function testNoneIsTrueWhenNoneMatches()
+    public function testNoneIsTrueWhenNoneMatches(): void
     {
-        $this->assertTrue(DependencyHelper::dependencySet('AB, AC, BA, CA')->none(function (Dependency $dependency) {
+        assertTrue(DependencyHelper::dependencySet('AB, AC, BA, CA')->none(function (Dependency $dependency) {
             return strpos($dependency->toString(), 'D') === 0;
         }));
     }
-    
-    public function testNoneIsFalseWhenSomeMatch()
+
+    public function testNoneIsFalseWhenSomeMatch(): void
     {
-        $this->assertFalse(DependencyHelper::dependencySet('AB, AC, BA, CA')->none(function (Dependency $dependency) {
+        assertFalse(DependencyHelper::dependencySet('AB, AC, BA, CA')->none(function (Dependency $dependency) {
             return strpos($dependency->toString(), 'A') === 0;
         }));
     }

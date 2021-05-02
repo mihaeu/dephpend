@@ -4,42 +4,47 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\tests\feature;
 
-class UmlTest extends \PHPUnit_Framework_TestCase
-{
-    const DEPHPEND = PHP_BINARY.' -n '.__DIR__.'/../../bin/dephpend';
-    const SRC = __DIR__.'/../../src';
+use PHPUnit\Framework\TestCase;
 
-    public function testCreatesUml()
+class UmlTest extends TestCase
+{
+    public function testCreatesUml(): void
     {
+        system('plantuml -version > /dev/null 2>&1', $returnStatus);
+        if ($returnStatus !== 0) {
+            $this->markTestSkipped('No PlantUML installation found');
+            return;
+        }
+
         $expected = <<<EOT
 @startuml
 namespace Mihaeu {
 namespace PhpDependencies {
-namespace Util {
-}
-namespace Analyser {
+namespace OS {
 }
 namespace Dependencies {
 }
-namespace OS {
+namespace Exceptions {
+}
+namespace Formatters {
+}
+namespace Util {
 }
 }
-}
-namespace PhpParser {
 }
 
-Mihaeu.PhpDependencies.Util --|> Mihaeu.PhpDependencies.Analyser
-Mihaeu.PhpDependencies.Util --|> Mihaeu.PhpDependencies.Dependencies
-Mihaeu.PhpDependencies.Util --|> Mihaeu.PhpDependencies.OS
-Mihaeu.PhpDependencies.Util --|> PhpParser
+Mihaeu.PhpDependencies.OS --|> Mihaeu.PhpDependencies.Dependencies
+Mihaeu.PhpDependencies.OS --|> Mihaeu.PhpDependencies.Exceptions
+Mihaeu.PhpDependencies.OS --|> Mihaeu.PhpDependencies.Formatters
+Mihaeu.PhpDependencies.OS --|> Mihaeu.PhpDependencies.Util
 @enduml
 EOT;
 
         $tempFilePng = sys_get_temp_dir().'/dephpend-uml-test.png';
         $tempFileUml = sys_get_temp_dir().'/dephpend-uml-test.uml';
-        shell_exec(self::DEPHPEND.' uml '.self::SRC.' --no-classes --keep-uml '
-            .'--output="'.$tempFilePng.'" -f Mihaeu\\\\PhpDependencies\\\\Util');
-        $this->assertEquals(
+        shell_exec(DEPHPEND_BIN.' uml '.SRC_PATH.' --no-classes --keep-uml '
+            .'--output="'.$tempFilePng.'" -f Mihaeu\\\\PhpDependencies\\\\OS');
+        assertEquals(
             $expected,
             file_get_contents($tempFileUml)
         );

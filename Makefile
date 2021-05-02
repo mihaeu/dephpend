@@ -10,17 +10,22 @@ PHPUNIT=vendor/bin/phpunit
 all: autoload tests testdox cov
 
 autoload:
-	composer dumpautoload
+	php composer.phar dumpautoload
 
-test:
+t: test
+test: unit feature
+
+unit:
 	$(PHP) $(PHPUNIT) -c phpunit.xml.dist
 
+f: feature
 feature:
 	@$(PHP) $(PHPUNIT) tests/feature --testdox\
      | sed 's/\[x\]/$(OK_COLOR)$\[x]$(NO_COLOR)/' \
      | sed -r 's/(\[ \].+)/$(ERROR_COLOR)\1$(NO_COLOR)/' \
      | sed -r 's/(^[^ ].+)/$(WARN_COLOR)\1$(NO_COLOR)/'
 
+d: testdox
 testdox:
 	@$(PHP_NO_INI) $(PHPUNIT) -c phpunit.xml.dist --testdox tests \
 	 | sed 's/\[x\]/$(OK_COLOR)$\[x]$(NO_COLOR)/' \
@@ -33,28 +38,20 @@ testdox-osx:
 	 | sed -E 's/(\[ \].+)/$(ERROR_COLOR)\1$(NO_COLOR)/' \
 	 | sed -E 's/(^[^ ].+)/$(WARN_COLOR)\1$(NO_COLOR)/'
 
+c: cov
 cov:
 	@$(PHP) $(PHPUNIT) -c phpunit.xml.dist --coverage-text
 
+s: style
 style:
 	@$(PHP_NO_INI) vendor/bin/php-cs-fixer fix --level=psr2 --verbose src
 	@$(PHP_NO_INI) vendor/bin/php-cs-fixer fix --level=psr2 --verbose tests
 
 phar:
-	@composer update --no-dev
+	@php composer.phar update --no-dev
 	@$(PHP) box.phar build
 	@chmod +x build/dephpend.phar
-	@composer update
+	@php composer.phar update
 
 pages:
 	@pandoc README.md -o index.html --template template.html --variable pagetitle=dePHPend --toc --toc-depth 2 --variable title=dePHPend --variable date="`date`" --variable author="Michael Haeuslmann"
-
-c: cov
-
-d: testdox
-
-s: style
-
-t: test
-
-f: feature

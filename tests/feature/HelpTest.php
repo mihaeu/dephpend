@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\tests\feature;
 
-class HelpTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class HelpTest extends TestCase
 {
-    const DEPHPEND = PHP_BINARY.' -n '.__DIR__.'/../../bin/dephpend';
-
-    public function testNoArgumentsShowsHelp()
+    public function testNoArgumentsShowsHelp(): void
     {
-        $this->assertRegExp('/version \d.*Usage:.*Options:.*commands:.*/s', shell_exec(self::DEPHPEND));
+        self::assertRegExp('/command \[options\] \[arguments\].*/s', shell_exec(DEPHPEND_BIN));
     }
 
-    public function testHelpShowsHelp()
+    public function testHelpShowsHelp(): void
     {
-        $this->assertRegExp('/Usage:.*Options:.*Help:.*/s', shell_exec(self::DEPHPEND.' help'));
+        self::assertRegExp('/Usage:.*Options:.*Help:.*/s', shell_exec(DEPHPEND_BIN.' help'));
     }
 
-    public function testShowsHelpForCommand()
+    public function testShowsHelpForCommand(): void
     {
-        $this->assertRegExp('/Arguments:.*source.*Options:.*--internals.*/s', shell_exec(self::DEPHPEND.' help text'));
+        self::assertRegExp('/Arguments:.*source.*Options:.*--internals.*/s', shell_exec(DEPHPEND_BIN.' help text'));
     }
 }

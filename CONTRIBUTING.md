@@ -36,3 +36,24 @@ Reference: [How to Write a Git Commit Message by Chris Beams](http://chris.beams
  - BUT with great power comes great responsibility
  - so please use type hints where ever possible 
  - functional methods (each, reduce, map, ...) are preferable to loops
+ 
+## How to Release
+
+Bump versions in
+ - `CHANGELOG.md`
+ - `README.md`
+ - `bin/dephpend`
+ - test files
+
+Then run:
+```
+VERSION="MAJOR.MINOR.PATCH"
+make phar
+mv build/dephpend.phar build/dephpend-$VERSION.phar
+gpg -u valid@email.com --detach-sign --output build/dephpend-$VERSION.phar.asc build/dephpend-$VERSION.phar
+gpg --verify build/dephpend-$VERSION.phar.asc build/dephpend-$VERSION.phar
+git tag -a $VERSION -m $VERSION -s
+git push origin $VERSION
+```
+
+Then upload to GitHub releases and verify via `phive install dephpend` or `phive update dephpend`.

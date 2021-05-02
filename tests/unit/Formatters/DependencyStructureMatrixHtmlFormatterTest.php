@@ -5,32 +5,36 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Formatters;
 
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
+use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject;
 
 /**
  * @covers Mihaeu\PhpDependencies\Formatters\DependencyStructureMatrixHtmlFormatter
  */
-class DependencyStructureMatrixHtmlFormatterTest extends \PHPUnit_Framework_TestCase
+class DependencyStructureMatrixHtmlFormatterTest extends TestCase
 {
-    /** @var DependencyStructureMatrixBuilder|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var DependencyStructureMatrixBuilder|PHPUnit_Framework_MockObject_MockObject */
     private $dependencyStructureMatrixBuilder;
 
     /** @var DependencyStructureMatrixHtmlFormatter */
     private $dependencyStructureMatrixHtmlFormatter;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->dependencyStructureMatrixBuilder = $this->createMock(DependencyStructureMatrixBuilder::class);
         $this->dependencyStructureMatrixHtmlFormatter = new DependencyStructureMatrixHtmlFormatter($this->dependencyStructureMatrixBuilder);
     }
 
-    public function testFormatsHtml()
+    public function testFormatsHtml(): void
     {
         $this->dependencyStructureMatrixBuilder->method('buildMatrix')->willReturn([
             'A' => ['A' => 0, 'B' => 1, 'C' => 1],
             'B' => ['A' => 0, 'B' => 0, 'C' => 1],
             'C' => ['A' => 0, 'B' => 0, 'C' => 0]
         ]);
-        $this->assertContains('<table><thead>'
+        Assert::assertStringContainsString(
+            '<table><thead>'
             .'<tr><th>X</th><th>1</th><th>2</th><th>3</th></tr>'
             .'</thead><tbody>'
             .'<tr><th>1: A</th><td>X</td><td>1</td><td>1</td></tr>'

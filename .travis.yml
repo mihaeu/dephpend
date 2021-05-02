@@ -1,20 +1,24 @@
-language: php
+# TravisCI configuration for mihaeu/dephpend
+
+language: "php"
+os:
+    - "linux"
+dist: "bionic"
 
 php:
-    - 7.0
+    - "7.4"
+    - "7.3"
+    - "7.2"
 
-before_script:
-    - composer install --prefer-dist
-    - composer require "satooshi/php-coveralls:^1.0"
+install:
+    - "mkdir -p build/logs"
+    - "composer validate --strict"
+    - "composer install --prefer-dist"
 
 script:
-    - mkdir -p build/logs
-    - bin/check-code-cov
-    - vendor/bin/phpunit -c phpunit.xml.dist --coverage-text --coverage-clover ./build/logs/clover.xml
+    - "bin/check-code-cov"
+    - "vendor/bin/phpunit -c phpunit.xml.dist --coverage-text --coverage-clover ./build/logs/clover.xml"
 
 after_script:
-    - php vendor/bin/coveralls -v
-
-branches:
-  only:
-    - develop
+    - "wget https://github.com/php-coveralls/php-coveralls/releases/download/v2.4.2/php-coveralls.phar"
+    - "php php-coveralls.phar -v"

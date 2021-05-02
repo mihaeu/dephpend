@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\Analyser\StaticAnalyser;
-use Mihaeu\PhpDependencies\Analyser\Parser;
-use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
-use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
-use Mihaeu\PhpDependencies\OS\PhpFileFinder;
-use Mihaeu\PhpDependencies\OS\PhpFileSet;
+use InvalidArgumentException;
 use Mihaeu\PhpDependencies\OS\PlantUmlWrapper;
-use Mihaeu\PhpDependencies\Util\Functional;
+use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -19,35 +16,32 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @covers Mihaeu\PhpDependencies\Cli\UmlCommand
  * @covers Mihaeu\PhpDependencies\Cli\BaseCommand
  */
-class UmlCommandTest extends \PHPUnit_Framework_TestCase
+class UmlCommandTest extends TestCase
 {
     /** @var UmlCommand */
     private $umlCommand;
-    /** @var InputInterface|\PHPUnit_Framework_MockObject_MockObject */
+
+    /** @var InputInterface|PHPUnit_Framework_MockObject_MockObject */
     private $input;
 
-    /** @var OutputInterface|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var OutputInterface|PHPUnit_Framework_MockObject_MockObject */
     private $output;
 
-    /** @var PlantUmlWrapper|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var PlantUmlWrapper|PHPUnit_Framework_MockObject_MockObject */
     private $plantUmlWrapper;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->plantUmlWrapper = $this->createMock(PlantUmlWrapper::class);
-        $this->umlCommand = new UmlCommand(
-            new DependencyMap(),
-            Functional::id(),
-            $this->plantUmlWrapper
-        );
+        $this->umlCommand = new UmlCommand($this->plantUmlWrapper);
         $this->input = $this->createMock(InputInterface::class);
         $this->output = $this->createMock(OutputInterface::class);
     }
 
-    public function testCheckIfSourceExists()
+    public function testCheckIfSourceExists(): void
     {
         $this->input->method('getArgument')->willReturn(['/tsdfsfsfs']);
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('File/Directory does not exist or is not readable.');
         $this->umlCommand->run(
             $this->input,
@@ -55,10 +49,11 @@ class UmlCommandTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testOutputHasToBeDefined()
+    public function testOutputHasToBeDefined(): void
     {
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
-        $this->expectException(\InvalidArgumentException::class);
+        $this->input->method('getOptions')->willReturn(['output' => null]);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Output not defined (use "help" for more information).');
         $this->umlCommand->run(
             $this->input,
@@ -66,11 +61,14 @@ class UmlCommandTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testChecksIfDestinationIsWritable()
+    public function testChecksIfDestinationIsWritable(): void
     {
-        $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
-        $this->input->method('getOptions')->willReturn(['output' => '/sdfsdfsd']);
-        $this->expectException(\InvalidArgumentException::class);
+        $tempDirectory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . rand() . time();
+        mkdir($tempDirectory, 0444);
+
+        $this->input->method('getArgument')->willReturn([$tempDirectory]);
+        $this->input->method('getOptions')->willReturn(['output' => $tempDirectory . '/does_not_exist.png']);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Destination is not writable.');
         $this->umlCommand->run(
             $this->input,
@@ -78,7 +76,7 @@ class UmlCommandTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testGenerateUml()
+    public function testGenerateUml(): void
     {
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
         $this->input->method('getOptions')->willReturn([
@@ -88,7 +86,7 @@ class UmlCommandTest extends \PHPUnit_Framework_TestCase
             'filter-namespace' => null,
             'depth' => 0
         ]);
-        $this->plantUmlWrapper->expects($this->once())->method('generate');
+        $this->plantUmlWrapper->expects(once())->method('generate');
 
         $this->umlCommand->run(
             $this->input,
@@ -96,14 +94,14 @@ class UmlCommandTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testAcceptsOnlyAllowedFormats()
+    public function testAcceptsOnlyAllowedFormats(): void
     {
         $this->input->method('getArgument')->willReturn([sys_get_temp_dir()]);
         $this->input->method('getOptions')->willReturn([
             'output' => sys_get_temp_dir().'/test.bmp'
         ]);
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Output format is not allowed (png)');
         $this->umlCommand->run(
             $this->input,

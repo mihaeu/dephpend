@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\tests\feature;
 
-class ListTest extends \PHPUnit_Framework_TestCase
-{
-    const DEPHPEND = PHP_BINARY.' -n '.__DIR__.'/../../bin/dephpend';
+use PHPUnit\Framework\TestCase;
 
-    public function testNoArgumentsShowsHelp()
+class ListTest extends TestCase
+{
+    public function testNoArgumentsShowsHelp(): void
     {
-        $this->assertRegExp('/dsm.*metrics.*text.*uml.*/s', shell_exec(self::DEPHPEND.' list'));
+        assertRegExp('/dsm.*metrics.*text.*uml.*/s', shell_exec(DEPHPEND_BIN.' list'));
     }
 }

@@ -4,35 +4,37 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Util;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * @covers Mihaeu\PhpDependencies\Util\Util
  */
-class UtilTest extends \PHPUnit_Framework_TestCase
+class UtilTest extends TestCase
 {
-    public function testArrayMatchesAtLeastOnce()
+    public function testArrayMatchesAtLeastOnce(): void
     {
-        $this->assertTrue(Util::array_once([1, 2, 3, 'tt'], function ($value, $index) {
+        assertTrue(Util::array_once([1, 2, 3, 'tt'], function ($value, $index) {
             return $value === 'tt';
         }));
     }
 
-    public function testArrayMatchesIndex()
+    public function testArrayMatchesIndex(): void
     {
-        $this->assertTrue(Util::array_once([1, 2, 3, 'tt'], function ($value, $index) {
+        assertTrue(Util::array_once([1, 2, 3, 'tt'], function ($value, $index) {
             return $index === 3 && $value === 'tt';
         }));
     }
 
-    public function testArrayMatchesNothing()
+    public function testArrayMatchesNothing(): void
     {
-        $this->assertFalse(Util::array_once([1, 2, 3, 'tt'], function ($value, $index) {
+        assertFalse(Util::array_once([1, 2, 3, 'tt'], function ($value, $index) {
             return $value === 'xxx';
         }));
     }
 
-    public function testReduceArrayWithKeys()
+    public function testReduceArrayWithKeys(): void
     {
-        $this->assertEquals('0a1b2c3d', Util::reduce(['a', 'b', 'c', 'd'], function (string $carry, int $index, string $value) {
+        assertEquals('0a1b2c3d', Util::reduce(['a', 'b', 'c', 'd'], function (string $carry, int $index, string $value) {
             return $carry.$index.$value;
         }, ''));
     }

@@ -39,7 +39,7 @@ class PlantUmlWrapper
 
         $umlDestination = preg_replace('/\.\w+$/', '.uml', $destination->getPathname());
         file_put_contents($umlDestination, $this->plantUmlFormatter->format($map));
-        $this->shell->run('plantuml '.$umlDestination);
+        $this->shell->run('plantuml ' . $umlDestination);
 
         if ($keepUml === false) {
             unlink($umlDestination);

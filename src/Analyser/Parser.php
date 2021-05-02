@@ -1,37 +1,8 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Analyser;
 
-use Mihaeu\PhpDependencies\OS\PhpFile;
-use Mihaeu\PhpDependencies\OS\PhpFileSet;
-use PhpParser\Parser as BaseParser;
-
-class Parser
+interface Parser
 {
-    /** @var BaseParser */
-    private $parser;
-
-    /**
-     * @param $parser
-     */
-    public function __construct(BaseParser $parser)
-    {
-        $this->parser = $parser;
-    }
-
-    /**
-     * @param PhpFileSet $files
-     *
-     * @return Ast
-     *
-     * @throws \LogicException
-     */
-    public function parse(PhpFileSet $files) : Ast
-    {
-        return $files->reduce(new Ast(), function (Ast $ast, PhpFile $file) {
-            return $ast->add($file, $this->parser->parse($file->code()));
-        });
-    }
+    public function parse(string $code) : array;
 }

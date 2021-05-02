@@ -23,10 +23,10 @@ class Metrics
         $abstractions = $this->abstractClassCount($map)
             + $this->interfaceCount($map)
             + $this->traitCount($map);
-        $allClasses = $this->classCount($map)
-            + $this->abstractClassCount($map)
-            + $this->interfaceCount($map)
-            + $this->traitCount($map);
+        if ($abstractions === 0) {
+            return 0.0;
+        }
+        $allClasses = $abstractions + $this->classCount($map);
         return $abstractions / $allClasses;
     }
 
@@ -68,11 +68,14 @@ class Metrics
     public function afferentCoupling(DependencyMap $map) : array
     {
         return $map->fromDependencies()->reduce([], function (array $afferent, Dependency $from) use ($map) {
-            $afferent[$from->toString()] = $map->reduce(0, function (int $count, Dependency $fromOther, Dependency $to) use ($from) {
-                return $from->equals($to)
-                    ? $count + 1
-                    : $count;
-            });
+            $afferent[$from->toString()] = $map->reduce(
+                0,
+                function (int $count, Dependency $fromOther, Dependency $to) use ($from): int {
+                    return $from->equals($to)
+                        ? $count + 1
+                        : $count;
+                }
+            );
             return $afferent;
         });
     }
@@ -106,9 +109,7 @@ class Metrics
         $instability = [];
         foreach ($ce as $class => $count) {
             $totalCoupling = $ce[$class] + $ca[$class];
-            $instability[$class] = $totalCoupling !== 0
-                ? $ce[$class] / $totalCoupling
-                : 0;
+            $instability[$class] = $ce[$class] / $totalCoupling;
         }
         return $instability;
     }

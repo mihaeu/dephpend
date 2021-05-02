@@ -4,52 +4,54 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Dependencies;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * @covers Mihaeu\PhpDependencies\Dependencies\DependencyFactory
  */
-class DependencyFactoryTest extends \PHPUnit_Framework_TestCase
+class DependencyFactoryTest extends TestCase
 {
     /** @var DependencyFactory */
     private $clazzFactory;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->clazzFactory = new DependencyFactory();
     }
 
-    public function testInvalidClassReturnsNullDependency()
+    public function testInvalidClassReturnsNullDependency(): void
     {
-        $this->assertInstanceOf(
+        assertInstanceOf(
             NullDependency::class,
             $this->clazzFactory->createClazzFromStringArray(['/'])
         );
     }
 
-    public function testCreatesClazzWithEmptyNamespace()
+    public function testCreatesClazzWithEmptyNamespace(): void
     {
-        $this->assertEquals(new Clazz('Test', new Namespaze([])), $this->clazzFactory->createClazzFromStringArray(['Test']));
+        assertEquals(new Clazz('Test', new Namespaze([])), $this->clazzFactory->createClazzFromStringArray(['Test']));
     }
 
-    public function testCreateClazzWithNamespace()
+    public function testCreateClazzWithNamespace(): void
     {
-        $this->assertEquals(
+        assertEquals(
             new Clazz('Test', new Namespaze(['Mihaeu', 'PhpDependencies'])),
             $this->clazzFactory->createClazzFromStringArray(['Mihaeu', 'PhpDependencies', 'Test'])
         );
     }
 
-    public function testCreateInterfaze()
+    public function testCreateInterfaze(): void
     {
-        $this->assertEquals(new AbstractClazz('Test', new Namespaze([])), $this->clazzFactory->createAbstractClazzFromStringArray(['Test']));
+        assertEquals(new AbstractClazz('Test', new Namespaze([])), $this->clazzFactory->createAbstractClazzFromStringArray(['Test']));
     }
 
-    public function testCreateAbstractClazz()
+    public function testCreateAbstractClazz(): void
     {
-        $this->assertEquals(new Interfaze('Test', new Namespaze([])), $this->clazzFactory->createInterfazeFromStringArray(['Test']));
+        assertEquals(new Interfaze('Test', new Namespaze([])), $this->clazzFactory->createInterfazeFromStringArray(['Test']));
     }
 
-    public function testCreateTrait()
+    public function testCreateTrait(): void
     {
-        $this->assertEquals(new Trait_('Test', new Namespaze([])), $this->clazzFactory->createTraitFromStringArray(['Test']));
+        assertEquals(new Trait_('Test', new Namespaze([])), $this->clazzFactory->createTraitFromStringArray(['Test']));
     }
 }

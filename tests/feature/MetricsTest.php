@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\tests\feature;
 
-class MetricsTest extends \PHPUnit_Framework_TestCase
-{
-    const DEPHPEND = PHP_BINARY.' -n '.__DIR__.'/../../bin/dephpend';
-    const SRC = __DIR__.'/../../src';
+use PHPUnit\Framework\TestCase;
 
-    public function testComputeMetricsForDephpend()
+class MetricsTest extends TestCase
+{
+    public function testComputeMetricsForDephpend(): void
     {
-        $this->assertRegExp(
+        assertRegExp(
             '/Classes:.*\d\d.*Abstract classes:.*\d+.*Abstractness:.*\d\.\d+/s',
-            shell_exec(self::DEPHPEND.' metrics '.self::SRC)
+            shell_exec(DEPHPEND_BIN.' metrics '.SRC_PATH)
         );
     }
 }
