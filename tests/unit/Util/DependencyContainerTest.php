@@ -25,7 +25,7 @@ class DependencyContainerTest extends TestCase
             if (!$method->hasReturnType()) {
                 continue;
             }
-            $methods[] = [$method->getName(), (string) $method->getReturnType()];
+            $methods[] = [$method->getName(), $method->getReturnType()->getName()];
         }
         return $methods;
     }
