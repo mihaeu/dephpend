@@ -173,6 +173,9 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         } elseif ($node instanceof TraitNode) {
             // @codeCoverageIgnoreEnd
             $this->currentClass = $this->dependencyFactory->createTraitFromStringArray($node->namespacedName->parts);
+        } elseif ($node instanceof Node\Stmt\Enum_) {
+            // @codeCoverageIgnoreEnd
+            $this->currentClass = $this->dependencyFactory->createEnumFromStringArray($node->namespacedName->parts);
         } else {
             $this->currentClass = $node->isAbstract()
                 ? $this->dependencyFactory->createAbstractClazzFromStringArray($node->namespacedName->parts)

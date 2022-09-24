@@ -66,6 +66,19 @@ class DependencyFactory
     /**
      * @param array $parts
      *
+     * @return Enum_
+     */
+    final public function createEnumFromStringArray(array $parts): Enum_
+    {
+        return new Enum_(
+            $this->extractClazzPart($parts),
+            new Namespaze($this->extractNamespaceParts($parts))
+        );
+    }
+
+    /**
+     * @param array $parts
+     *
      * @return array
      */
     protected function extractNamespaceParts(array $parts)
