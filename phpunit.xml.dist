@@ -4,7 +4,6 @@
          beStrictAboutTestsThatDoNotTestAnything="true"
          beStrictAboutOutputDuringTests="true"
          beStrictAboutTodoAnnotatedTests="true"
-         forceCoversAnnotation="true"
          colors="true"
          verbose="true">
     <testsuite name="tests">
