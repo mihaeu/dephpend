@@ -13,7 +13,7 @@ class DependencySet extends AbstractCollection
      *
      * @return DependencySet
      */
-    public function add(Dependency $dependency) : DependencySet
+    public function add(Dependency $dependency): DependencySet
     {
         $clone = clone $this;
         if ($this->contains($dependency)

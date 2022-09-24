@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\OS;
 
@@ -45,7 +47,7 @@ class DotWrapperTest extends TestCase
         $root = vfsStream::setup()->url();
 
         $this->shellWrapper
-            ->expects(exactly(2))
+            ->expects($this->exactly(2))
             ->method('run')
             ->withConsecutive(
                 ['dot -V'],
@@ -59,9 +61,9 @@ class DotWrapperTest extends TestCase
     {
         $root = vfsStream::setup()->url();
         $testFile = new SplFileInfo($root.'/test');
-        assertFileNotExists($testFile->getPathname());
+        $this->assertFileDoesNotExist($testFile->getPathname());
         $this->dotWrapper->generate(new DependencyMap(), new SplFileInfo($testFile->getPathname()), true);
-        assertFileExists($testFile->getPathname());
+        $this->assertFileExists($testFile->getPathname());
     }
 
 
@@ -70,6 +72,6 @@ class DotWrapperTest extends TestCase
         $root = vfsStream::setup()->url();
         $testFile = new SplFileInfo($root.'/test');
         $this->dotWrapper->generate(new DependencyMap(), new SplFileInfo($root.'/test.png'), false);
-        assertFileNotExists($testFile->getPathname());
+        $this->assertFileDoesNotExist($testFile->getPathname());
     }
 }

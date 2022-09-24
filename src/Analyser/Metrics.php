@@ -18,7 +18,7 @@ class Metrics
      *
      * @return float Value from 0 (completely concrete) to 1 (completely abstract)
      */
-    public function abstractness(DependencyMap $map) : float
+    public function abstractness(DependencyMap $map): float
     {
         $abstractions = $this->abstractClassCount($map)
             + $this->interfaceCount($map)
@@ -30,28 +30,28 @@ class Metrics
         return $abstractions / $allClasses;
     }
 
-    public function classCount(DependencyMap $map) : int
+    public function classCount(DependencyMap $map): int
     {
         return $this->countFilteredItems($map, function (Dependency $dependency) {
             return $dependency instanceof Clazz;
         });
     }
 
-    public function abstractClassCount(DependencyMap $map) : int
+    public function abstractClassCount(DependencyMap $map): int
     {
         return $this->countFilteredItems($map, function (Dependency $dependency) {
             return $dependency instanceof AbstractClazz;
         });
     }
 
-    public function interfaceCount(DependencyMap $map) : int
+    public function interfaceCount(DependencyMap $map): int
     {
         return $this->countFilteredItems($map, function (Dependency $dependency) {
             return $dependency instanceof Interfaze;
         });
     }
 
-    public function traitCount(DependencyMap $map) : int
+    public function traitCount(DependencyMap $map): int
     {
         return $this->countFilteredItems($map, function (Dependency $dependency) {
             return $dependency instanceof Trait_;
@@ -65,7 +65,7 @@ class Metrics
      *
      * @return array
      */
-    public function afferentCoupling(DependencyMap $map) : array
+    public function afferentCoupling(DependencyMap $map): array
     {
         return $map->fromDependencies()->reduce([], function (array $afferent, Dependency $from) use ($map) {
             $afferent[$from->toString()] = $map->reduce(
@@ -87,7 +87,7 @@ class Metrics
      *
      * @return array
      */
-    public function efferentCoupling(DependencyMap $map) : array
+    public function efferentCoupling(DependencyMap $map): array
     {
         return $map->reduce([], function (array $efferent, Dependency $from, Dependency $to) use ($map) {
             $efferent[$from->toString()] = $map->get($from)->count();
@@ -102,7 +102,7 @@ class Metrics
      *
      * @return array Key: Class Value: Range from 0 (completely stable) to 1 (completely unstable)
      */
-    public function instability(DependencyMap $map) : array
+    public function instability(DependencyMap $map): array
     {
         $ce = $this->efferentCoupling($map);
         $ca = $this->afferentCoupling($map);

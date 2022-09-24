@@ -6,5 +6,6 @@
 class A
 {
     use B;
-    use C, D;
+    use C;
+    use D;
 }

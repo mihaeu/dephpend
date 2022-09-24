@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Analyser;
 
@@ -37,7 +39,7 @@ class XDebugFunctionTraceAnalyserTest extends TestCase
             [0, 1, 2, 3, 4, 'B->c', 6, 7, 8, 9, 10, 'class A'],
             [0, 1, 2, 3, 4, 'D->c', 6, 7, 8, 9, 10, 'class A'],
         ]);
-        assertEquals(
+        $this->assertEquals(
             DependencyHelper::map('
                 B --> A
                 D --> A
@@ -58,7 +60,7 @@ class XDebugFunctionTraceAnalyserTest extends TestCase
             [0, 1, 2, 3, 4, 'D->c', 6, 7, 8, 9, 10, 'int'],
             [0, 1, 2, 3, 4, 'D->c', 6, 7, 8, 9, 10, 'resource'],
         ]);
-        assertEquals(
+        $this->assertEquals(
             DependencyHelper::map('
                 B --> A
             '),
@@ -74,7 +76,7 @@ class XDebugFunctionTraceAnalyserTest extends TestCase
         $this->xDebugFunctionTraceAnalyser->analyse($tmpFile);
     }
 
-    private function createContent(array $data) : string
+    private function createContent(array $data): string
     {
         return array_reduce($data, function (string $carry, array $lineParts) {
             return $carry.implode("\t", $lineParts).PHP_EOL;

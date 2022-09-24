@@ -13,14 +13,14 @@ interface Collection extends \Countable
      *
      * @return bool
      */
-    public function any(\Closure $closure) : bool;
+    public function any(\Closure $closure): bool;
 
     /**
      * @param \Closure $closure
      *
      * @return bool
      */
-    public function none(\Closure $closure) : bool;
+    public function none(\Closure $closure): bool;
 
     /**
      * Applies $closure to each element.
@@ -36,7 +36,7 @@ interface Collection extends \Countable
      *
      * @return array
      */
-    public function mapToArray(\Closure $closure) : array;
+    public function mapToArray(\Closure $closure): array;
 
     /**
      * @param mixed    $initial
@@ -51,29 +51,29 @@ interface Collection extends \Countable
      *
      * @return Collection
      */
-    public function filter(\Closure $closure) : Collection;
+    public function filter(\Closure $closure): Collection;
 
     /**
      * @return array
      */
-    public function toArray() : array;
+    public function toArray(): array;
 
     /**
      * @param $other
      *
      * @return bool
      */
-    public function contains($other) : bool;
+    public function contains($other): bool;
 
     /**
      * @return string
      */
-    public function toString() : string;
+    public function toString(): string;
 
     /**
      * @param Collection $other
      *
      * @return bool
      */
-    public function equals(Collection $other) : bool;
+    public function equals(Collection $other): bool;
 }

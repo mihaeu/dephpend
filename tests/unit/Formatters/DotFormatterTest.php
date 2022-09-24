@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Formatters;
 
@@ -19,7 +21,7 @@ class DotFormatterTest extends TestCase
             .'}'
         ;
 
-        assertEquals($expected, (new DotFormatter())->format(DependencyHelper::map('
+        $this->assertEquals($expected, (new DotFormatter())->format(DependencyHelper::map('
             A --> B
             C --> D
             A\\b --> D\\c

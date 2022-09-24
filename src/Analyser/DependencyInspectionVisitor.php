@@ -153,7 +153,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     /**
      * @return DependencyMap
      */
-    public function dependencies() : DependencyMap
+    public function dependencies(): DependencyMap
     {
         return $this->dependencies;
     }

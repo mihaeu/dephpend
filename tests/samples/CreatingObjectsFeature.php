@@ -7,6 +7,6 @@ class A
     public function test(): void
     {
         new B();
-        new C;
+        new C();
     }
 }

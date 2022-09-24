@@ -7,7 +7,7 @@ class A
 {
     public function test(): void
     {
-        $b = new B;
+        $b = new B();
         new C($b);
     }
 }

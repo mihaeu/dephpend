@@ -47,7 +47,7 @@ class StaticAnalyserTest extends TestCase
         $phpFile = $this->createMock(PhpFile::class);
         $phpFile->method('code')->willReturn('');
         $dependencies = $this->analyser->analyse((new PhpFileSet())->add($phpFile));
-        assertEquals(new DependencyMap(), $dependencies);
+        $this->assertEquals(new DependencyMap(), $dependencies);
     }
 
     public function testEnrichesExceptionWhenParserThrows(): void

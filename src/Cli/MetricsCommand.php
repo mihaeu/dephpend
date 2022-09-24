@@ -58,7 +58,7 @@ class MetricsCommand extends BaseCommand
         return 0;
     }
 
-    private function combineMetrics(array $afferentCoupling, array $efferentCoupling, array $instability) : array
+    private function combineMetrics(array $afferentCoupling, array $efferentCoupling, array $instability): array
     {
         $result = [];
         foreach ($afferentCoupling as $className => $afferentCouplingValue) {

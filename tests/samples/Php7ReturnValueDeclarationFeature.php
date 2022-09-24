@@ -3,7 +3,7 @@
 
 class A
 {
-    public function test() : B
+    public function test(): B
     {
         return null;
     }
