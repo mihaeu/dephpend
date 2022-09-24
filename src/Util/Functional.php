@@ -13,7 +13,7 @@ class Functional
         };
     }
 
-    public static function compose(...$functions) : \Closure
+    public static function compose(...$functions): \Closure
     {
         return array_reduce(
             $functions,

@@ -15,7 +15,7 @@ class Util
      *
      * @return bool
      */
-    public static function array_once(array $xs, \Closure $fn) : bool
+    public static function array_once(array $xs, \Closure $fn): bool
     {
         foreach ($xs as $index => $value) {
             if ($fn($value, $index)) {

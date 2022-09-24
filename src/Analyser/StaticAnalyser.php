@@ -41,7 +41,7 @@ class StaticAnalyser
         $this->parser = $parser;
     }
 
-    public function analyse(PhpFileSet $files) : DependencyMap
+    public function analyse(PhpFileSet $files): DependencyMap
     {
         $files->each(function (PhpFile $file) {
             try {

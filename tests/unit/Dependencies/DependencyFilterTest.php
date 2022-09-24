@@ -25,7 +25,7 @@ class DependencyFilterTest extends TestCase
     {
         $dependencies = DependencyHelper::map('From --> To, SplFileInfo');
         $expected = (new DependencyMap())->add(new Clazz('From'), new Clazz('To'));
-        assertEquals($expected, $this->filter->removeInternals($dependencies));
+        $this->assertEquals($expected, $this->filter->removeInternals($dependencies));
     }
 
     public function testFilterByDepthOne(): void
@@ -39,12 +39,12 @@ class DependencyFilterTest extends TestCase
             _B --> SplFileInfo
         ');
         $actual = $this->filter->filterByDepth($dependencies, 1);
-        assertEquals($expected, $actual);
+        $this->assertEquals($expected, $actual);
     }
 
     public function testMapUnderscoreNamespaces(): void
     {
-        assertEquals(
+        $this->assertEquals(
             DependencyHelper::map('
                 A\\b\\c --> D\\e\\f
                 F\\a --> D\\b
@@ -58,7 +58,7 @@ class DependencyFilterTest extends TestCase
 
     public function testMapUnderscoreNamespacesAlreadyNamespace(): void
     {
-        assertEquals(
+        $this->assertEquals(
             DependencyHelper::map('
                 VendorA\\Tests\\DDC1209_1 --> a\\To
                 A\\__b__\\c --> D\\e\\f
@@ -77,7 +77,7 @@ class DependencyFilterTest extends TestCase
         ');
         $expected = DependencyHelper::map('_VendorA\\ProjectA\\PathA --> _VendorB\\ProjectB\\PathB');
         $actual = $this->filter->filterByDepth($dependencies, 3);
-        assertEquals($expected, $actual);
+        $this->assertEquals($expected, $actual);
     }
 
     public function testFilterByVendor(): void
@@ -90,7 +90,7 @@ class DependencyFilterTest extends TestCase
         $expected = DependencyHelper::map('
             VendorA\\A --> VendorA\\C
         ');
-        assertEquals($expected, $this->filter->filterByNamespace($dependencies, 'VendorA'));
+        $this->assertEquals($expected, $this->filter->filterByNamespace($dependencies, 'VendorA'));
     }
 
     public function testFilterByDepth0ReturnsEqual(): void
@@ -101,7 +101,7 @@ class DependencyFilterTest extends TestCase
             VendorB\\B --> VendorA\\A
             VendorC\\C --> VendorA\\A
         ');
-        assertEquals($dependencies, $this->filter->filterByDepth($dependencies, 0));
+        $this->assertEquals($dependencies, $this->filter->filterByDepth($dependencies, 0));
     }
     public function testRemoveClasses(): void
     {
@@ -114,12 +114,12 @@ class DependencyFilterTest extends TestCase
             VendorB\\B --> VendorA\\A
             VendorC\\C --> B
         '));
-        assertEquals($expected, $actual);
+        $this->assertEquals($expected, $actual);
     }
 
     public function testFilterFromDependencies(): void
     {
-        assertEquals(DependencyHelper::map('
+        $this->assertEquals(DependencyHelper::map('
             Good\\A --> Bad\\B
             Good\\B --> Good\\C
         '), $this->filter->filterByFromNamespace(DependencyHelper::map('
@@ -166,12 +166,12 @@ class DependencyFilterTest extends TestCase
             A\\a\\z --> A\\b\\z
             A\\b\\c --> A\\b\\z
         ');
-        assertEquals($expected, $actual);
+        $this->assertEquals($expected, $actual);
     }
 
     public function testExcludeByRegex(): void
     {
-        assertEquals(DependencyHelper::map('
+        $this->assertEquals(DependencyHelper::map('
             X --> Z
         '), $this->filter->excludeByRegex(DependencyHelper::map('
             Test\\A --> B
@@ -186,6 +186,6 @@ class DependencyFilterTest extends TestCase
     public function testPostFilters(): void
     {
         $filters = $this->filter->postFiltersByOptions(['no-classes' => true, 'depth' => 1]);
-        assertEquals(new Namespaze(['A']), $filters(new Clazz('Test', new Namespaze(['A', 'a']))));
+        $this->assertEquals(new Namespaze(['A']), $filters(new Clazz('Test', new Namespaze(['A', 'a']))));
     }
 }

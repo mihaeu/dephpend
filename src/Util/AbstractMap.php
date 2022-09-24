@@ -15,7 +15,7 @@ abstract class AbstractMap implements Collection
     /**
      * @inheritDoc
      */
-    public function any(\Closure $closure) : bool
+    public function any(\Closure $closure): bool
     {
         foreach ($this->map as $item) {
             foreach ($item[self::$VALUE]->toArray() as $subItem) {
@@ -30,7 +30,7 @@ abstract class AbstractMap implements Collection
     /**
      * @inheritDoc
      */
-    public function none(\Closure $closure) : bool
+    public function none(\Closure $closure): bool
     {
         return !$this->any($closure);
     }
@@ -50,7 +50,7 @@ abstract class AbstractMap implements Collection
     /**
      * @inheritDoc
      */
-    public function mapToArray(\Closure $closure) : array
+    public function mapToArray(\Closure $closure): array
     {
         $xs = [];
         foreach ($this->map as $item) {
@@ -77,7 +77,7 @@ abstract class AbstractMap implements Collection
     /**
      * @inheritDoc
      */
-    public function filter(\Closure $closure) : Collection
+    public function filter(\Closure $closure): Collection
     {
         $clone = clone $this;
         $clone->map = [];
@@ -94,7 +94,7 @@ abstract class AbstractMap implements Collection
     /**
      * @inheritDoc
      */
-    public function toArray() : array
+    public function toArray(): array
     {
         return $this->map;
     }
@@ -102,7 +102,7 @@ abstract class AbstractMap implements Collection
     /**
      * @inheritDoc
      */
-    public function contains($other) : bool
+    public function contains($other): bool
     {
         foreach ($this->map as $key => $item) {
             if ($item[self::$KEY] instanceof $other && $item[self::$KEY]->equals($other)) {
@@ -115,12 +115,12 @@ abstract class AbstractMap implements Collection
     /**
      * @inheritDoc
      */
-    abstract public function toString() : string;
+    abstract public function toString(): string;
 
     /**
      * @inheritDoc
      */
-    public function equals(Collection $other) : bool
+    public function equals(Collection $other): bool
     {
         return $this instanceof $other
             && $this->toString() === $other->toString();
@@ -129,7 +129,7 @@ abstract class AbstractMap implements Collection
     /**
      * @inheritDoc
      */
-    public function count()
+    public function count(): int
     {
         return count($this->map);
     }

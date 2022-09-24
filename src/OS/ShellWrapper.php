@@ -15,7 +15,7 @@ class ShellWrapper
      *
      * @return int return var
      */
-    public function run(string $command) : int
+    public function run(string $command): int
     {
         $output = [];
         $returnVar = 1;

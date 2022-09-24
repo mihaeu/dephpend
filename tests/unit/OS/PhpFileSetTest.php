@@ -20,7 +20,7 @@ class PhpFileSetTest extends TestCase
             ->add($file);
         $collection2 = (new PhpFileSet())
             ->add($file);
-        assertTrue($collection1->equals($collection2));
+        $this->assertTrue($collection1->equals($collection2));
     }
 
     public function testDoesNotAllowDuplicated(): void
@@ -28,7 +28,7 @@ class PhpFileSetTest extends TestCase
         $set = (new PhpFileSet())
             ->add(new PhpFile(new SplFileInfo(__DIR__)))
             ->add(new PhpFile(new SplFileInfo(__DIR__)));
-        assertCount(1, $set);
+        $this->assertCount(1, $set);
     }
 
     public function testIsImmutable(): void
@@ -36,7 +36,7 @@ class PhpFileSetTest extends TestCase
         $set = (new PhpFileSet())
             ->add(new PhpFile(new SplFileInfo(__DIR__)));
         $setAfterRefusingDuplicate = $set->add(new PhpFile(new SplFileInfo(__DIR__)));
-        assertNotSame($set, $setAfterRefusingDuplicate);
+        $this->assertNotSame($set, $setAfterRefusingDuplicate);
     }
 
     public function testNotEquals(): void
@@ -45,18 +45,18 @@ class PhpFileSetTest extends TestCase
             ->add(new PhpFile(new SplFileInfo(sys_get_temp_dir())));
         $collection2 = (new PhpFileSet())
             ->add(new PhpFile(new SplFileInfo(__DIR__)));
-        assertFalse($collection1->equals($collection2));
+        $this->assertFalse($collection1->equals($collection2));
     }
 
     public function testCount0WhenEmpty(): void
     {
         $collection1 = new PhpFileSet();
-        assertCount(0, $collection1);
+        $this->assertCount(0, $collection1);
     }
 
     public function testCount(): void
     {
-        assertCount(2, (new PhpFileSet())
+        $this->assertCount(2, (new PhpFileSet())
             ->add(new PhpFile(new SplFileInfo(__DIR__)))
             ->add(new PhpFile(new SplFileInfo(__DIR__.'/../../../composer.json'))));
     }
@@ -65,7 +65,7 @@ class PhpFileSetTest extends TestCase
     {
         $collection1 = (new PhpFileSet())->add(new PhpFile(new SplFileInfo(__DIR__)));
         $collection1->each(function (PhpFile $file) {
-            assertEquals(new PhpFile(new SplFileInfo(__DIR__)), $file);
+            $this->assertEquals(new PhpFile(new SplFileInfo(__DIR__)), $file);
         });
     }
 
@@ -75,8 +75,8 @@ class PhpFileSetTest extends TestCase
             ->add(new PhpFile(new SplFileInfo(__DIR__)))
             ->add(new PhpFile(new SplFileInfo(__FILE__)))
             ->toArray();
-        assertEquals(new PhpFile(new SplFileInfo(__DIR__)), $collection1[0]);
-        assertEquals(new PhpFile(new SplFileInfo(__DIR__)), $collection1[1]);
+        $this->assertEquals(new PhpFile(new SplFileInfo(__DIR__)), $collection1[0]);
+        $this->assertEquals(new PhpFile(new SplFileInfo(__DIR__)), $collection1[1]);
     }
 
     public function testAddAll(): void
@@ -86,8 +86,8 @@ class PhpFileSetTest extends TestCase
             ->add(new PhpFile(new SplFileInfo(__DIR__)))
             ->add(new PhpFile(new SplFileInfo(__FILE__)));
         $combinedCollection = $collection1->addAll($collection2)->toArray();
-        assertCount(2, $combinedCollection);
-        assertEquals(new PhpFile(new SplFileInfo(__DIR__)), $combinedCollection[0]);
-        assertEquals(new PhpFile(new SplFileInfo(__FILE__)), $combinedCollection[1]);
+        $this->assertCount(2, $combinedCollection);
+        $this->assertEquals(new PhpFile(new SplFileInfo(__DIR__)), $combinedCollection[0]);
+        $this->assertEquals(new PhpFile(new SplFileInfo(__FILE__)), $combinedCollection[1]);
     }
 }

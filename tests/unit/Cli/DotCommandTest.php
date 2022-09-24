@@ -44,7 +44,7 @@ class DotCommandTest extends TestCase
             'filter-namespace' => null,
             'depth' => 0
         ]);
-        $this->dotWrapper->expects(once())->method('generate');
+        $this->dotWrapper->expects($this->once())->method('generate');
 
         $this->dotCommand->run(
             $this->input,

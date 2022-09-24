@@ -44,8 +44,8 @@ cov:
 
 s: style
 style:
-	@$(PHP_NO_INI) vendor/bin/php-cs-fixer fix --level=psr2 --verbose src
-	@$(PHP_NO_INI) vendor/bin/php-cs-fixer fix --level=psr2 --verbose tests
+	@$(PHP_NO_INI) vendor/bin/php-cs-fixer fix --rules=@PSR12 --verbose src
+	@$(PHP_NO_INI) vendor/bin/php-cs-fixer fix --rules=@PSR12 --verbose tests
 
 phar:
 	@php composer.phar update --no-dev

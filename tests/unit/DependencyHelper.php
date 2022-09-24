@@ -27,7 +27,7 @@ class DependencyHelper
      *
      * @throws InvalidArgumentException
      */
-    public static function map(string $input) : DependencyMap
+    public static function map(string $input): DependencyMap
     {
         $lines = preg_split('/\v+/', $input, -1, PREG_SPLIT_NO_EMPTY);
         $array_reduce = array_reduce(
@@ -59,7 +59,7 @@ class DependencyHelper
      *
      * @return Namespaze
      */
-    public static function namespaze(string $input) : Namespaze
+    public static function namespaze(string $input): Namespaze
     {
         return new Namespaze(explode('\\', $input));
     }
@@ -69,7 +69,7 @@ class DependencyHelper
      *
      * @return array
      */
-    public static function dependencyPair(string $input) : array
+    public static function dependencyPair(string $input): array
     {
         $tokens = explode('-->', str_replace(' ', '', $input));
         return [self::dependency($tokens[0]), self::dependencySet($tokens[1])];
@@ -80,7 +80,7 @@ class DependencyHelper
      *
      * @return DependencySet
      */
-    public static function dependencySet(string $input) : DependencySet
+    public static function dependencySet(string $input): DependencySet
     {
         $set = new DependencySet();
         if ($input === '_') {
@@ -93,7 +93,7 @@ class DependencyHelper
         return $set;
     }
 
-    private static function dependency(string $input) : Dependency
+    private static function dependency(string $input): Dependency
     {
         $input = str_replace(' ', '', $input);
         if (strpos($input, '_') === 0) {

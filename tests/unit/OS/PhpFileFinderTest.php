@@ -31,7 +31,7 @@ class PhpFileFinderTest extends TestCase
         $dir = new SplFileInfo($mockDir->url());
         $expected = (new PhpFileSet())
             ->add(new PhpFile(new SplFileInfo($mockDir->url().'/root/someFile.php')));
-        assertEquals($expected, $this->finder->find($dir));
+        $this->assertEquals($expected, $this->finder->find($dir));
     }
 
     public function testFindsFilesInDeepStructure(): void
@@ -58,7 +58,7 @@ class PhpFileFinderTest extends TestCase
             ->add(new PhpFile(new SplFileInfo($mockDir->url().'/root/dirA/dirB/fileInB.php')))
             ->add(new PhpFile(new SplFileInfo($mockDir->url().'/root/dirA/dirB/fileInB2.php')))
             ->add(new PhpFile(new SplFileInfo($mockDir->url().'/root/dirA/dirB/dirC/fileInC.php')));
-        assertEquals($expected, $this->finder->find($dir));
+        $this->assertEquals($expected, $this->finder->find($dir));
     }
 
     public function testFindsNothingIfThereIsNothing(): void
@@ -79,7 +79,7 @@ class PhpFileFinderTest extends TestCase
             ],
         ]);
         $dir = new SplFileInfo($mockDir->url());
-        assertEmpty($this->finder->find($dir));
+        $this->assertEmpty($this->finder->find($dir));
     }
 
     public function testFindFilesInDeeplyNestedDirectory(): void
@@ -108,6 +108,6 @@ class PhpFileFinderTest extends TestCase
             $mockDir->url().'/root/dirA',
             $mockDir->url().'/root/dirB',
         ]);
-        assertEquals($expected, $actual);
+        $this->assertEquals($expected, $actual);
     }
 }

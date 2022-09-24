@@ -25,7 +25,7 @@ class DependencyContainerTest extends TestCase
             if (!$method->hasReturnType()) {
                 continue;
             }
-            $methods[] = [$method->getName(), (string) $method->getReturnType()];
+            $methods[] = [$method->getName(), $method->getReturnType()->getName()];
         }
         return $methods;
     }
@@ -37,6 +37,6 @@ class DependencyContainerTest extends TestCase
      */
     public function testCanInstantiateAllDependencies(string $methodName, string $expectedReturnType): void
     {
-        assertInstanceOf($expectedReturnType, (new DependencyContainer([]))->{$methodName}());
+        $this->assertInstanceOf($expectedReturnType, (new DependencyContainer([]))->{$methodName}());
     }
 }

@@ -53,7 +53,7 @@ class MetricsCommandTest extends TestCase
 
         $output = new BufferedOutput();
         $this->metricsCommand->run($this->input, $output);
-        assertEquals(
+        $this->assertEquals(
             '+--------------------+-------+
 | Classes:           | 1     |
 | Abstract classes:  | 2     |

@@ -24,7 +24,7 @@ class DependencyHelperTest extends TestCase
             new Clazz('DepC', new Namespaze(['C'])),
             new Clazz('DepD', new Namespaze(['D']))
         );
-        assertEquals($expected, DependencyHelper::map('
+        $this->assertEquals($expected, DependencyHelper::map('
             A\\DepA --> B\\DepB
             C\\DepC --> D\\DepD
         '));
@@ -39,7 +39,7 @@ class DependencyHelperTest extends TestCase
             new Clazz('DepA', new Namespaze(['A'])),
             new Clazz('DepD', new Namespaze(['D']))
         );
-        assertEquals($expected, DependencyHelper::map('
+        $this->assertEquals($expected, DependencyHelper::map('
             A\\DepA --> B\\DepB, D\\DepD
         '));
     }

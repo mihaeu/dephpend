@@ -22,14 +22,14 @@ class PhpFileTest extends TestCase
     {
         $file1 = new PhpFile(new SplFileInfo(sys_get_temp_dir()));
         $file2 = new PhpFile(new SplFileInfo(sys_get_temp_dir()));
-        assertTrue($file1->equals($file2));
+        $this->assertTrue($file1->equals($file2));
     }
 
     public function testNotEquals(): void
     {
         $file1 = new PhpFile(new SplFileInfo(sys_get_temp_dir()));
         $file2 = new PhpFile(new SplFileInfo(__DIR__));
-        assertFalse($file1->equals($file2));
+        $this->assertFalse($file1->equals($file2));
     }
 
     public function testReturnsCode(): void
@@ -39,7 +39,7 @@ class PhpFileTest extends TestCase
             'someFile.php' => $code,
         ]);
         $file = new PhpFile(new SplFileInfo($mockDir->url().'/someFile.php'));
-        assertEquals($code, $file->code());
+        $this->assertEquals($code, $file->code());
     }
 
     public function testToString(): void

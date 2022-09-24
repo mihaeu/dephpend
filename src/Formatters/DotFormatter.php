@@ -10,7 +10,7 @@ use Mihaeu\PhpDependencies\Util\Functional;
 
 class DotFormatter implements Formatter
 {
-    public function format(DependencyMap $map, \Closure $mappers = null) : string
+    public function format(DependencyMap $map, \Closure $mappers = null): string
     {
         return 'digraph generated_by_dePHPend {'.PHP_EOL
             .$map->reduceEachDependency($mappers ?? Functional::id())->reduce('', function (string $carry, Dependency $from, Dependency $to) {

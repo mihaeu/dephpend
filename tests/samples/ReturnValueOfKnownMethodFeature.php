@@ -13,7 +13,7 @@ class A
 
 class B
 {
-    public function x() : C
+    public function x(): C
     {
         return new C();
     }

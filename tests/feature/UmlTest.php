@@ -44,7 +44,7 @@ EOT;
         $tempFileUml = sys_get_temp_dir().'/dephpend-uml-test.uml';
         shell_exec(DEPHPEND_BIN.' uml '.SRC_PATH.' --no-classes --keep-uml '
             .'--output="'.$tempFilePng.'" -f Mihaeu\\\\PhpDependencies\\\\OS');
-        assertEquals(
+        $this->assertEquals(
             $expected,
             file_get_contents($tempFileUml)
         );

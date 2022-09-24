@@ -86,7 +86,7 @@ class UmlCommandTest extends TestCase
             'filter-namespace' => null,
             'depth' => 0
         ]);
-        $this->plantUmlWrapper->expects(once())->method('generate');
+        $this->plantUmlWrapper->expects($this->once())->method('generate');
 
         $this->umlCommand->run(
             $this->input,

@@ -6,14 +6,14 @@ namespace Mihaeu\PhpDependencies\OS;
 
 class PhpFileFinder
 {
-    public function find(\SplFileInfo $file) : PhpFileSet
+    public function find(\SplFileInfo $file): PhpFileSet
     {
         return $file->isDir()
             ? $this->findInDir($file)
             : (new PhpFileSet())->add(new PhpFile($file));
     }
 
-    private function findInDir(\SplFileInfo $dir) : PhpFileSet
+    private function findInDir(\SplFileInfo $dir): PhpFileSet
     {
         $collection = new PhpFileSet();
         $regexIterator = new \RegexIterator(
@@ -35,7 +35,7 @@ class PhpFileFinder
      *
      * @return PhpFileSet
      */
-    public function getAllPhpFilesFromSources(array $sources) : PhpFileSet
+    public function getAllPhpFilesFromSources(array $sources): PhpFileSet
     {
         return array_reduce(
             $sources,
