@@ -31,7 +31,7 @@ class ErrorOutputTest extends TestCase
     public function testWriteln(): void
     {
         $this->symfonyStyle->method('getErrorStyle')->willReturnSelf();
-        $this->symfonyStyle->expects(self::once())->method('writeln')->with('test');
+        $this->symfonyStyle->expects($this->once())->method('writeln')->with('test');
         $this->errorOutput->writeln('test');
     }
 }

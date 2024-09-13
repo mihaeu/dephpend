@@ -14,14 +14,14 @@ class TextCommand extends BaseCommand
         parent::__construct('text');
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
         $this->setDescription('Prints a list of all dependencies');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->ensureSourcesAreReadable($input->getArgument('source'));
 

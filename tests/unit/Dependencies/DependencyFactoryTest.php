@@ -21,7 +21,7 @@ class DependencyFactoryTest extends TestCase
 
     public function testInvalidClassReturnsNullDependency(): void
     {
-        assertInstanceOf(
+        $this->assertInstanceOf(
             NullDependency::class,
             $this->clazzFactory->createClazzFromStringArray(['/'])
         );
@@ -29,12 +29,12 @@ class DependencyFactoryTest extends TestCase
 
     public function testCreatesClazzWithEmptyNamespace(): void
     {
-        assertEquals(new Clazz('Test', new Namespaze([])), $this->clazzFactory->createClazzFromStringArray(['Test']));
+        $this->assertEquals(new Clazz('Test', new Namespaze([])), $this->clazzFactory->createClazzFromStringArray(['Test']));
     }
 
     public function testCreateClazzWithNamespace(): void
     {
-        assertEquals(
+        $this->assertEquals(
             new Clazz('Test', new Namespaze(['Mihaeu', 'PhpDependencies'])),
             $this->clazzFactory->createClazzFromStringArray(['Mihaeu', 'PhpDependencies', 'Test'])
         );
@@ -42,16 +42,16 @@ class DependencyFactoryTest extends TestCase
 
     public function testCreateInterfaze(): void
     {
-        assertEquals(new AbstractClazz('Test', new Namespaze([])), $this->clazzFactory->createAbstractClazzFromStringArray(['Test']));
+        $this->assertEquals(new AbstractClazz('Test', new Namespaze([])), $this->clazzFactory->createAbstractClazzFromStringArray(['Test']));
     }
 
     public function testCreateAbstractClazz(): void
     {
-        assertEquals(new Interfaze('Test', new Namespaze([])), $this->clazzFactory->createInterfazeFromStringArray(['Test']));
+        $this->assertEquals(new Interfaze('Test', new Namespaze([])), $this->clazzFactory->createInterfazeFromStringArray(['Test']));
     }
 
     public function testCreateTrait(): void
     {
-        assertEquals(new Trait_('Test', new Namespaze([])), $this->clazzFactory->createTraitFromStringArray(['Test']));
+        $this->assertEquals(new Trait_('Test', new Namespaze([])), $this->clazzFactory->createTraitFromStringArray(['Test']));
     }
 }

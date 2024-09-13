@@ -37,6 +37,6 @@ class DependencyContainerTest extends TestCase
      */
     public function testCanInstantiateAllDependencies(string $methodName, string $expectedReturnType): void
     {
-        assertInstanceOf($expectedReturnType, (new DependencyContainer([]))->{$methodName}());
+        $this->assertInstanceOf($expectedReturnType, (new DependencyContainer([]))->{$methodName}());
     }
 }

@@ -45,12 +45,17 @@ class DotWrapperTest extends TestCase
         $root = vfsStream::setup()->url();
 
         $this->shellWrapper
-            ->expects(exactly(2))
+            ->expects($this->exactly(2))
             ->method('run')
-            ->withConsecutive(
-                ['dot -V'],
-                ['dot -O -Tpng '.$root.'/test']
-            )
+            ->willReturnCallback(function ($command) use ($root) {
+                if ($command === 'dot -V') {
+                    return 0;
+                }
+                if ($command === 'dot -O -Tpng '.$root.'/test') {
+                    return 0;
+                }
+                return 1;
+            })
         ;
         $this->dotWrapper->generate(new DependencyMap(), new SplFileInfo($root.'/test.png'), true);
     }
@@ -59,9 +64,9 @@ class DotWrapperTest extends TestCase
     {
         $root = vfsStream::setup()->url();
         $testFile = new SplFileInfo($root.'/test');
-        assertFileNotExists($testFile->getPathname());
+        $this->assertFileDoesNotExist($testFile->getPathname());
         $this->dotWrapper->generate(new DependencyMap(), new SplFileInfo($testFile->getPathname()), true);
-        assertFileExists($testFile->getPathname());
+        $this->assertFileExists($testFile->getPathname());
     }
 
 
@@ -70,6 +75,6 @@ class DotWrapperTest extends TestCase
         $root = vfsStream::setup()->url();
         $testFile = new SplFileInfo($root.'/test');
         $this->dotWrapper->generate(new DependencyMap(), new SplFileInfo($root.'/test.png'), false);
-        assertFileNotExists($testFile->getPathname());
+        $this->assertFileDoesNotExist($testFile->getPathname());
     }
 }

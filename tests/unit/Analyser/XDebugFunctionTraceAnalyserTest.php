@@ -7,6 +7,7 @@ use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
 use Mihaeu\PhpDependencies\DependencyHelper;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Finder\SplFileInfo;
+use ValueError;
 
 /**
  * @covers Mihaeu\PhpDependencies\Analyser\XDebugFunctionTraceAnalyser
@@ -37,7 +38,7 @@ class XDebugFunctionTraceAnalyserTest extends TestCase
             [0, 1, 2, 3, 4, 'B->c', 6, 7, 8, 9, 10, 'class A'],
             [0, 1, 2, 3, 4, 'D->c', 6, 7, 8, 9, 10, 'class A'],
         ]);
-        assertEquals(
+        $this->assertEquals(
             DependencyHelper::map('
                 B --> A
                 D --> A
@@ -58,7 +59,7 @@ class XDebugFunctionTraceAnalyserTest extends TestCase
             [0, 1, 2, 3, 4, 'D->c', 6, 7, 8, 9, 10, 'int'],
             [0, 1, 2, 3, 4, 'D->c', 6, 7, 8, 9, 10, 'resource'],
         ]);
-        assertEquals(
+        $this->assertEquals(
             DependencyHelper::map('
                 B --> A
             '),
@@ -70,13 +71,13 @@ class XDebugFunctionTraceAnalyserTest extends TestCase
     {
         $tmpFile = $this->createMock(SplFileInfo::class);
         $tmpFile->expects($this->once())->method('getPathname')->willReturn('');
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(ValueError::class);
         $this->xDebugFunctionTraceAnalyser->analyse($tmpFile);
     }
 
     private function createContent(array $data) : string
     {
-        return array_reduce($data, function (string $carry, array $lineParts) {
+        return array_reduce($data, static function (string $carry, array $lineParts) {
             return $carry.implode("\t", $lineParts).PHP_EOL;
         }, '');
     }

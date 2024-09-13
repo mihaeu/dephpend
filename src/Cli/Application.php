@@ -45,7 +45,7 @@ class Application extends \Symfony\Component\Console\Application
      *
      * @throws \Symfony\Component\Console\Exception\LogicException
      */
-    public function doRun(InputInterface $input, OutputInterface $output)
+    public function doRun(InputInterface $input, OutputInterface $output): int
     {
         $this->printWarningIfXdebugIsEnabled($input, $output);
 

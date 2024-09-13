@@ -34,7 +34,7 @@ class TestFeaturesCommand extends Command
     /**
      * @inheritDoc
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $files = $this->fetchAllFeatureTests();
         $results = $this->runAllTests($files);

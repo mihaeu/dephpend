@@ -10,6 +10,6 @@ class ListTest extends TestCase
 {
     public function testNoArgumentsShowsHelp(): void
     {
-        assertRegExp('/dsm.*metrics.*text.*uml.*/s', shell_exec(DEPHPEND_BIN.' list'));
+        $this->assertRegExp('/dsm.*metrics.*text.*uml.*/s', shell_exec(DEPHPEND_BIN.' list'));
     }
 }

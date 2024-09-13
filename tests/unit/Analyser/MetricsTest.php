@@ -39,27 +39,27 @@ class MetricsTest extends TestCase
 
     public function testAbstractnessWithNoDependency(): void
     {
-        assertEquals(0, (new Metrics)->abstractness(new DependencyMap));
+        $this->assertEquals(0, (new Metrics)->abstractness(new DependencyMap));
     }
 
     public function testCountClasses(): void
     {
-        assertEquals(4, $this->metrics->classCount($this->dependencies));
+        $this->assertEquals(4, $this->metrics->classCount($this->dependencies));
     }
 
     public function testCountInterfaces(): void
     {
-        assertEquals(1, $this->metrics->interfaceCount($this->dependencies));
+        $this->assertEquals(1, $this->metrics->interfaceCount($this->dependencies));
     }
 
     public function testCountAbstractClasses(): void
     {
-        assertEquals(1, $this->metrics->abstractClassCount($this->dependencies));
+        $this->assertEquals(1, $this->metrics->abstractClassCount($this->dependencies));
     }
 
     public function testCountTraits(): void
     {
-        assertEquals(1, $this->metrics->traitCount($this->dependencies));
+        $this->assertEquals(1, $this->metrics->traitCount($this->dependencies));
     }
 
     public function testComputeAbstractness(): void
@@ -69,7 +69,7 @@ class MetricsTest extends TestCase
 
     public function testComputeAfferentCoupling(): void
     {
-        assertEquals([
+        $this->assertEquals([
             'A' => 0,
             'G' => 0,
             'R' => 0,
@@ -83,7 +83,7 @@ class MetricsTest extends TestCase
     public function testComputeEfferentCoupling(): void
     {
         // all my classes depend only on one dependency
-        assertEquals([
+        $this->assertEquals([
             'A' => 1,
             'G' => 1,
             'R' => 1,
@@ -96,7 +96,7 @@ class MetricsTest extends TestCase
 
     public function testComputeInstability(): void
     {
-        assertEquals([
+        $this->assertEquals([
             'A' => 1,
             'G' => 1,
             'R' => 1,

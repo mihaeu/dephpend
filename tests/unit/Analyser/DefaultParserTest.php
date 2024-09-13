@@ -15,6 +15,6 @@ class DefaultParserTest extends TestCase
         $baseParser = $this->createMock(Parser::class);
         $baseParser->method('parse')->willReturn(['test']);
         $parser = new DefaultParser($baseParser);
-        assertEquals(['test'], $parser->parse(''));
+        $this->assertEquals(['test'], $parser->parse(''));
     }
 }
