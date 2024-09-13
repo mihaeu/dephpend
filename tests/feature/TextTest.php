@@ -11,7 +11,7 @@ class TextTest extends TestCase
 
     public function testTextCommandOnDephpendSourceWithoutClassesAndWithRegexAndFromFilter(): void
     {
-        assertEquals(
+        $this->assertEquals(
             'Mihaeu\PhpDependencies\Analyser --> Mihaeu\PhpDependencies\Dependencies'.PHP_EOL
             .'Mihaeu\PhpDependencies\Analyser --> Mihaeu\PhpDependencies\OS'.PHP_EOL,
             shell_exec(DEPHPEND_BIN.' text '.SRC_PATH

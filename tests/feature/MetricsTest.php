@@ -10,7 +10,7 @@ class MetricsTest extends TestCase
 {
     public function testComputeMetricsForDephpend(): void
     {
-        assertRegExp(
+        $this->assertRegExp(
             '/Classes:.*\d\d.*Abstract classes:.*\d+.*Abstractness:.*\d\.\d+/s',
             shell_exec(DEPHPEND_BIN.' metrics '.SRC_PATH)
         );

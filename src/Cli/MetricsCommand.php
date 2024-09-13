@@ -34,7 +34,7 @@ class MetricsCommand extends BaseCommand
      *
      * @throws \Symfony\Component\Console\Exception\InvalidArgumentException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $table = new Table($output);
         $table->setRows([

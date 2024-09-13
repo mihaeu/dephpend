@@ -56,9 +56,9 @@ class ApplicationTest extends TestCase
         // not sure how to mock this, so we test only one case, there's always one error message regarding
         // Symfony console setup, so if there's no xdebug loaded we still see one message
         if (!extension_loaded('xdebug')) {
-            $errorOutput->expects(once())->method('writeln');
+            $errorOutput->expects($this->once())->method('writeln');
         } else {
-            $errorOutput->expects(exactly(2))->method('writeln');
+            $errorOutput->expects($this->exactly(2))->method('writeln');
         }
         $this->application->doRun($this->input, $this->output);
     }
@@ -76,11 +76,15 @@ class ApplicationTest extends TestCase
         $errorOutput = $this->createMock(ErrorOutput::class);
         $this->application->setErrorOutput($errorOutput);
         if (!extension_loaded('xdebug')) {
-            $errorOutput->expects(once())->method('writeln')->with($expectedMessage);
+            $errorOutput->expects($this->once())->method('writeln')->with($expectedMessage);
         } else {
-            $errorOutput->expects(exactly(2))->method('writeln')->withConsecutive(
-                [self::XDEBUG_WARNING],
-                [$expectedMessage]
+            $errorOutput->expects($this->exactly(2))->method('writeln')->willReturnCallback(
+                function ($message) use ($expectedMessage) {
+                    if ($message === self::XDEBUG_WARNING) {
+                        return;
+                    }
+                    $this->assertEquals($expectedMessage, $message);
+                }
             );
         }
         $this->application->doRun($this->input, $this->output);
@@ -95,7 +99,7 @@ class ApplicationTest extends TestCase
         $application->setErrorOutput($errorOutput);
 
         $returnCode = $application->doRun($this->input, $this->output);
-        assertEquals(0, $returnCode);
+        $this->assertEquals(0, $returnCode);
     }
 
     public function testValidatesUmlInput(): void
@@ -107,7 +111,7 @@ class ApplicationTest extends TestCase
         $application->setErrorOutput($errorOutput);
 
         $returnCode = $application->doRun($this->input, $this->output);
-        assertEquals(0, $returnCode);
+        $this->assertEquals(0, $returnCode);
     }
 
     public function testValidatesMetricInput(): void
@@ -119,7 +123,7 @@ class ApplicationTest extends TestCase
         $application->setErrorOutput($errorOutput);
 
         $returnCode = $application->doRun($this->input, $this->output);
-        assertEquals(0, $returnCode);
+        $this->assertEquals(0, $returnCode);
     }
 
     public function testValidatesDotInput(): void
@@ -131,7 +135,7 @@ class ApplicationTest extends TestCase
         $application->setErrorOutput($errorOutput);
 
         $returnCode = $application->doRun($this->input, $this->output);
-        assertEquals(0, $returnCode);
+        $this->assertEquals(0, $returnCode);
     }
 
     public function testCommandWithHelpOptionProvidesHelpForDotCommand(): void
@@ -149,7 +153,7 @@ class ApplicationTest extends TestCase
         $input = new ArgvInput(['', '--version']);
         $output = new BufferedOutput();
         (new Application('Test', '4.2.0', $this->dispatcher))->doRun($input, $output);
-        assertRegExp('/\d+\.\d+\.\d+/', $output->fetch());
+        $this->assertMatchesRegularExpression('/\d+\.\d+\.\d+/', $output->fetch());
     }
 
     public function testNoCommandWithHelpOptionWritesHelp(): void

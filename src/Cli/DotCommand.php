@@ -45,7 +45,7 @@ class DotCommand extends BaseCommand
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $options = $input->getOptions();
         $this->ensureDestinationIsWritable($options['output']);

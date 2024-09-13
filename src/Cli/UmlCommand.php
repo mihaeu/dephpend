@@ -24,7 +24,7 @@ class UmlCommand extends BaseCommand
         $this->allowedFormats = [$this->defaultFormat];
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
@@ -45,7 +45,7 @@ class UmlCommand extends BaseCommand
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $options = $input->getOptions();
         $this->ensureSourcesAreReadable($input->getArgument('source'));
