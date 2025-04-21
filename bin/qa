@@ -30,8 +30,8 @@ exit($result);
 
 function psr2Compliance()
 {
-    exec(PHP_CS_FIXER.' fix --dry-run --level=psr2 '.SRC, $output, $srcStatus);
-    exec(PHP_CS_FIXER.' fix --dry-run --level=psr2 '.SRC, $output, $testStatus);
+    exec(PHP_CS_FIXER.' fix --dry-run --rules=@PSR2 '.SRC, $output, $srcStatus);
+    exec(PHP_CS_FIXER.' fix --dry-run --rules=@PSR2 '.SRC, $output, $testStatus);
     $srcStatus === 0 ? success('Sources are PSR-2 compliant') : error('Sources are not PSR-2 compliant');
     $testStatus === 0 ? success('Tests are PSR-2 compliant') : error('Tests are not PSR-2 compliant');
     return $srcStatus + $testStatus;
@@ -83,7 +83,7 @@ function codeCoverageHasTobeWithinThreshold(int $threshold)
         echo 'Checking line coverage ...';
     }
 
-    $output = shell_exec(PHPUNIT.' --coverage-text --colors=never');
+    $output = shell_exec('XDEBUG_MODE=coverage '.PHPUNIT.' --coverage-text --colors=never');
     $lineCoverage = preg_replace('/
         .+?         # ungreedy so that we check everything before the first occurrence (summary)
         Lines:      # first occurrence of lines is for the summary

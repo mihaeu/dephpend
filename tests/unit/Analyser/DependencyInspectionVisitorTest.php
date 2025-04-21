@@ -9,10 +9,10 @@ use Mihaeu\PhpDependencies\Dependencies\Clazz;
 use Mihaeu\PhpDependencies\Dependencies\Dependency;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
-use Mihaeu\PhpDependencies\Dependencies\DependencyPair;
 use Mihaeu\PhpDependencies\Dependencies\Interfaze;
 use Mihaeu\PhpDependencies\Dependencies\Namespaze;
 use Mihaeu\PhpDependencies\Dependencies\Trait_;
+use PhpParser\Modifiers;
 use PhpParser\Node;
 use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\ClassConstFetch;
@@ -26,13 +26,12 @@ use PhpParser\Node\Param;
 use PhpParser\Node\Stmt\Catch_;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\ClassMethod;
-use PhpParser\Node\Stmt\Interface_;
+use PhpParser\Node\Stmt\Enum_ as EnumNode;
 use PhpParser\Node\Stmt\Interface_ as InterfaceNode;
 use PhpParser\Node\Stmt\Trait_ as TraitNode;
 use PhpParser\Node\Stmt\TraitUse;
 use PhpParser\Node\Stmt\Use_ as UseNode;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 
 /**
  * The Dependency Inspection is where all the magic happens,
@@ -96,8 +95,7 @@ class DependencyInspectionVisitorTest extends TestCase
     private function createAndEnterCurrentClassNode(): ClassNode
     {
         $node = new ClassNode('SomeClass');
-        $node->namespacedName = new stdClass();
-        $node->namespacedName->parts = ['SomeNamespace', 'SomeClass'];
+        $node->namespacedName = new Name('SomeNamespace\\SomeClass');
         $this->dependencyInspectionVisitor->enterNode($node);
 
         return $node;
@@ -128,11 +126,9 @@ class DependencyInspectionVisitorTest extends TestCase
     public function testDetectsExtendedClasses(): void
     {
         $node = new ClassNode('SomeClass');
-        $node->namespacedName = new stdClass();
-        $node->namespacedName->parts = ['SomeNamespace', 'SomeClass'];
+        $node->namespacedName = new Name('SomeNamespace\\SomeClass');
+        $node->extends = new Name(['A', 'a', '1', 'ClassA']);
 
-        $node->extends = new stdClass();
-        $node->extends->parts = ['A', 'a', '1', 'ClassA'];
         $this->dependencyInspectionVisitor->enterNode($node);
 
         $this->dependencyInspectionVisitor->leaveNode($node);
@@ -144,16 +140,8 @@ class DependencyInspectionVisitorTest extends TestCase
 
     public function testDetectsWhenInterfacesImplementMultipleInterfaces(): void
     {
-        $node = new InterfaceNode('SomeInterface');
-        $node->namespacedName = new stdClass();
-        $node->namespacedName->parts = ['SomeNamespace', 'SomeInterface'];
-
-        $node->extends = [
-            new stdClass(),
-            new stdClass()
-        ];
-        $node->extends[0]->parts = ['A', 'a', '1', 'ClassA'];
-        $node->extends[1]->parts = ['B', 'b', '2', 'ClassB'];
+        $node = new InterfaceNode('SomeInterface', ['extends' => [new Name('A\\a\\1\\ClassA'), new Name('B\\b\\2\\ClassB')]]);
+        $node->namespacedName = new Name('SomeNamespace\\SomeInterface');
         $this->dependencyInspectionVisitor->enterNode($node);
 
         $this->dependencyInspectionVisitor->leaveNode($node);
@@ -169,9 +157,9 @@ class DependencyInspectionVisitorTest extends TestCase
 
     public function testDetectsAbstractClasses(): void
     {
-        $node = new ClassNode('Test', ['type' => 16]);
-        $node->namespacedName = new stdClass();
-        $node->namespacedName->parts = ['A', 'Test'];
+        $node = new ClassNode('Test', ['type' => Modifiers::ABSTRACT]);
+        $node->namespacedName = new Name('A\\Test');
+
         $this->dependencyInspectionVisitor->enterNode($node);
 
         $this->addRandomDependency();
@@ -185,9 +173,8 @@ class DependencyInspectionVisitorTest extends TestCase
 
     public function testDetectsInterfaces(): void
     {
-        $node = new Interface_('Test');
-        $node->namespacedName = new stdClass();
-        $node->namespacedName->parts = ['A', 'Test'];
+        $node = new InterfaceNode('Test');
+        $node->namespacedName = new Name('A\\Test');
         $this->dependencyInspectionVisitor->enterNode($node);
 
         $this->addRandomDependency();
@@ -202,11 +189,10 @@ class DependencyInspectionVisitorTest extends TestCase
     public function testDetectsImplementedInterfaces(): void
     {
         $node = new ClassNode('SomeClass');
-        $node->namespacedName = new stdClass();
-        $node->namespacedName->parts = ['SomeNamespace', 'SomeClass'];
+        $node->namespacedName = new Name('SomeNamespace\\SomeClass');
 
-        $interfaceOneNode = new Name(['A', 'B', 'InterfaceOne']);
-        $interfaceTwoNode = new Name(['C', 'D', 'InterfaceTwo']);
+        $interfaceOneNode = new Name('A\\B\\InterfaceOne');
+        $interfaceTwoNode = new Name('C\\D\\InterfaceTwo');
         $node->implements = [$interfaceOneNode, $interfaceTwoNode];
         $this->dependencyInspectionVisitor->enterNode($node);
 
@@ -223,7 +209,7 @@ class DependencyInspectionVisitorTest extends TestCase
 
     public function testIgnoresInnerClassesWithoutName(): void
     {
-        $node = new ClassNode('');
+        $node = new ClassNode(null);
         $this->dependencyInspectionVisitor->enterNode($node);
         $this->dependencyInspectionVisitor->leaveNode($node);
 
@@ -233,12 +219,8 @@ class DependencyInspectionVisitorTest extends TestCase
     public function testDetectsDependenciesFromMethodArguments(): void
     {
         $methodNode = new ClassMethod('someMethod');
-        $paramOne = new Param('one', null, 'DependencyOne');
-        $paramOne->type = new stdClass();
-        $paramOne->type->parts = ['A', 'B', 'DependencyOne'];
-        $paramTwo = new Param('two', null, 'DependencyTwo');
-        $paramTwo->type = new stdClass();
-        $paramTwo->type->parts = ['A', 'B', 'DependencyTwo'];
+        $paramOne = new Param(new Variable('one'), null, new Name(['A\\B\\DependencyOne']));
+        $paramTwo = new Param(new Variable('two'), null, new Name(['A\\B\\DependencyTwo']));
         $methodNode->params = [
             $paramOne,
             $paramTwo,
@@ -273,7 +255,7 @@ class DependencyInspectionVisitorTest extends TestCase
     public function testReturnType(): void
     {
         $this->addNodeToAst(
-            new ClassMethod('', ['returnType' => new Name(['Namespace', 'Test'])])
+            new ClassMethod('anyMethod', ['returnType' => new Name(['Namespace', 'Test'])])
         );
 
         $this->assertTrue($this->dependenciesContain(
@@ -286,8 +268,7 @@ class DependencyInspectionVisitorTest extends TestCase
     {
         $node = $this->createAndEnterCurrentClassNode();
 
-        $staticCall = new StaticCall(new FullyQualifiedNameNode('Singleton'), 'Singleton');
-        $staticCall->class->parts = ['A', 'a', '1', 'Singleton'];
+        $staticCall = new StaticCall(new FullyQualifiedNameNode('A\\a\\1\\Singleton'), 'Singleton');
         $this->dependencyInspectionVisitor->enterNode($staticCall);
 
         $this->dependencyInspectionVisitor->leaveNode($node);
@@ -311,8 +292,7 @@ class DependencyInspectionVisitorTest extends TestCase
     public function testTrait(): void
     {
         $node = new TraitNode('Test');
-        $node->namespacedName = new stdClass();
-        $node->namespacedName->parts = ['A', 'Test'];
+        $node->namespacedName = new Name('A\\Test');
         $this->dependencyInspectionVisitor->enterNode($node);
 
         $this->addRandomDependency();
@@ -412,6 +392,19 @@ class DependencyInspectionVisitorTest extends TestCase
         $this->assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
             new Clazz('StaticTest')
+        ));
+    }
+
+    public function testAddsParentDependenciesForExtendableNodesOnly(): void
+    {
+        $node = new EnumNode('WithoutExtends');
+        $node->namespacedName = new Name('A\\WithoutExtends');
+        $this->dependencyInspectionVisitor->enterNode($node);
+
+        $this->dependencyInspectionVisitor->leaveNode($node);
+        $this->assertFalse($this->dependenciesContain(
+            $this->dependencyInspectionVisitor->dependencies(),
+            new Clazz('WithoutExtends', new Namespaze(['A']))
         ));
     }
 

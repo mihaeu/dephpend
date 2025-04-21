@@ -27,6 +27,9 @@ use PhpParser\Node\Stmt\TraitUse as UseTraitNode;
 use PhpParser\Node\Stmt\Use_ as UseNode;
 use PhpParser\NodeVisitorAbstract;
 
+/**
+ * @phpstan-type SubclassedNode ClassNode|InterfaceNode
+ */
 class DependencyInspectionVisitor extends NodeVisitorAbstract
 {
     /** @var DependencyMap */
@@ -101,7 +104,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     public function addName(Name $name)
     {
         $this->tempDependencies = $this->tempDependencies->add(
-            $this->dependencyFactory->createClazzFromStringArray($name->parts)
+            $this->dependencyFactory->createClazzFromStringArray($name->getParts())
         );
     }
 
@@ -153,7 +156,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     /**
      * @return DependencyMap
      */
-    public function dependencies() : DependencyMap
+    public function dependencies(): DependencyMap
     {
         return $this->dependencies;
     }
@@ -168,23 +171,20 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         }
 
         if ($node instanceof InterfaceNode) {
-            $this->currentClass = $this->dependencyFactory->createInterfazeFromStringArray($node->namespacedName->parts);
-        // @codeCoverageIgnoreStart
+            $this->currentClass = $this->dependencyFactory->createInterfazeFromStringArray($node->namespacedName->getParts());
         } elseif ($node instanceof TraitNode) {
-            // @codeCoverageIgnoreEnd
-            $this->currentClass = $this->dependencyFactory->createTraitFromStringArray($node->namespacedName->parts);
-        } else {
-            if (!method_exists($node, 'isAbstract')) {
-                return;
-            }
+            $this->currentClass = $this->dependencyFactory->createTraitFromStringArray($node->namespacedName->getParts());
+        } elseif ($node instanceof ClassNode) {
             $this->currentClass = $node->isAbstract()
-                ? $this->dependencyFactory->createAbstractClazzFromStringArray($node->namespacedName->parts)
-                : $this->dependencyFactory->createClazzFromStringArray($node->namespacedName->parts);
+                ? $this->dependencyFactory->createAbstractClazzFromStringArray($node->namespacedName->getParts())
+                : $this->dependencyFactory->createClazzFromStringArray($node->namespacedName->getParts());
+        } else {
+            $this->dependencyFactory->createClazzFromStringArray($node->namespacedName->getParts());
         }
     }
 
     /**
-     * @param ClassLikeNode $node
+     * @param SubclassedNode $node
      */
     private function addParentDependency(ClassLikeNode $node)
     {
@@ -196,7 +196,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
             : [$node->extends];
         foreach ($extendedClasses as $extendedClass) {
             $this->tempDependencies = $this->tempDependencies->add(
-                $this->dependencyFactory->createClazzFromStringArray($extendedClass->parts)
+                $this->dependencyFactory->createClazzFromStringArray($extendedClass->getParts())
             );
         }
     }
@@ -208,7 +208,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     {
         foreach ($node->implements as $interfaceNode) {
             $this->tempDependencies = $this->tempDependencies->add(
-                $this->dependencyFactory->createClazzFromStringArray($interfaceNode->parts)
+                $this->dependencyFactory->createClazzFromStringArray($interfaceNode->getParts())
             );
         }
     }
@@ -220,9 +220,9 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     {
         foreach ($node->params as $param) {
             /* @var Param */
-            if (isset($param->type, $param->type->parts)) {
+            if ($param->type instanceof NameNode && count($param->type->getParts()) > 0) {
                 $this->tempDependencies = $this->tempDependencies->add(
-                    $this->dependencyFactory->createClazzFromStringArray($param->type->parts)
+                    $this->dependencyFactory->createClazzFromStringArray($param->type->getParts())
                 );
             }
         }
@@ -234,12 +234,12 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     private function addStaticDependency(StaticCall $node)
     {
         $this->tempDependencies = $this->tempDependencies->add(
-            $this->dependencyFactory->createClazzFromStringArray($node->class->parts)
+            $this->dependencyFactory->createClazzFromStringArray($node->class->getParts())
         );
     }
 
     /**
-     * @param ClassLikeNode $node
+     * @param SubclassedNode $node
      *
      * @return bool
      */
@@ -255,7 +255,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     {
         if ($node->returnType instanceof NameNode) {
             $this->tempDependencies = $this->tempDependencies->add(
-                $this->dependencyFactory->createClazzFromStringArray($node->returnType->parts)
+                $this->dependencyFactory->createClazzFromStringArray($node->returnType->getParts())
             );
         }
     }
@@ -267,7 +267,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     {
         if ($node->class instanceof NameNode) {
             $this->tempDependencies = $this->tempDependencies->add(
-                $this->dependencyFactory->createClazzFromStringArray($node->class->parts)
+                $this->dependencyFactory->createClazzFromStringArray($node->class->getParts())
             );
         }
     }

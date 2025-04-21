@@ -5,6 +5,7 @@ namespace Mihaeu\PhpDependencies\Analyser;
 use InvalidArgumentException;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
 use Mihaeu\PhpDependencies\DependencyHelper;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Finder\SplFileInfo;
 use ValueError;
@@ -22,7 +23,9 @@ class XDebugFunctionTraceAnalyserTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->xDebugFunctionTraceAnalyser = new XDebugFunctionTraceAnalyser($this->createMock(DependencyFactory::class));
+        /** @var DependencyFactory&MockObject $dependencyFactory */
+        $dependencyFactory = $this->createMock(DependencyFactory::class);
+        $this->xDebugFunctionTraceAnalyser = new XDebugFunctionTraceAnalyser($dependencyFactory);
         $this->tempFile = new \SplFileInfo(sys_get_temp_dir().'/'.'dephpend-trace.sample');
         touch($this->tempFile->getPathname());
     }
@@ -69,9 +72,10 @@ class XDebugFunctionTraceAnalyserTest extends TestCase
 
     public function testThrowsExceptionIfFileCannotBeOpened(): void
     {
+        /** @var SplFileInfo&MockObject $tmpFile */
         $tmpFile = $this->createMock(SplFileInfo::class);
-        $tmpFile->expects($this->once())->method('getPathname')->willReturn('');
-        $this->expectException(ValueError::class);
+        $tmpFile->expects($this->once())->method('getPathname')->willReturn('doesntexist');
+        $this->expectException(InvalidArgumentException::class);
         $this->xDebugFunctionTraceAnalyser->analyse($tmpFile);
     }
 

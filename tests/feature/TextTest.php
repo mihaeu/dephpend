@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\tests\feature;
 
+use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\TestCase;
 
+#[CoversNothing]
 class TextTest extends TestCase
 {
 
