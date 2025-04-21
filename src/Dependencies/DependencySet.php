@@ -6,14 +6,15 @@ namespace Mihaeu\PhpDependencies\Dependencies;
 
 use Mihaeu\PhpDependencies\Util\AbstractCollection;
 
+/**
+ * @extends AbstractCollection<Dependency>
+ */
 class DependencySet extends AbstractCollection
 {
     /**
-     * @param Dependency $dependency
-     *
-     * @return DependencySet
+     * @param T $dependency
      */
-    public function add(Dependency $dependency) : DependencySet
+    public function add($dependency): self
     {
         $clone = clone $this;
         if ($this->contains($dependency)

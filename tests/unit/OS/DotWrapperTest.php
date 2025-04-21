@@ -16,10 +16,10 @@ use SplFileInfo;
  */
 class DotWrapperTest extends TestCase
 {
-    /** @var ShellWrapper|MockObject */
+    /** @var ShellWrapper&MockObject */
     private $shellWrapper;
 
-    /** @var DotFormatter|MockObject */
+    /** @var DotFormatter&MockObject */
     private $dotFormatter;
 
     /** @var DotWrapper */
@@ -45,12 +45,20 @@ class DotWrapperTest extends TestCase
         $root = vfsStream::setup()->url();
 
         $this->shellWrapper
-            ->expects(exactly(2))
+            ->expects($this->exactly(2))
             ->method('run')
-            ->withConsecutive(
-                ['dot -V'],
-                ['dot -O -Tpng '.$root.'/test']
-            )
+            ->willReturnCallback(function ($command) use ($root) {
+                static $callCount = 0;
+                $callCount++;
+                
+                if ($callCount === 1) {
+                    $this->assertEquals('dot -V', $command);
+                } else if ($callCount === 2) {
+                    $this->assertEquals('dot -O -Tpng '.$root.'/test', $command);
+                }
+                
+                return 0;
+            })
         ;
         $this->dotWrapper->generate(new DependencyMap(), new SplFileInfo($root.'/test.png'), true);
     }
@@ -59,9 +67,9 @@ class DotWrapperTest extends TestCase
     {
         $root = vfsStream::setup()->url();
         $testFile = new SplFileInfo($root.'/test');
-        assertFileNotExists($testFile->getPathname());
+        $this->assertFalse(file_exists($testFile->getPathname()));
         $this->dotWrapper->generate(new DependencyMap(), new SplFileInfo($testFile->getPathname()), true);
-        assertFileExists($testFile->getPathname());
+        $this->assertTrue(file_exists($testFile->getPathname()));
     }
 
 
@@ -70,6 +78,6 @@ class DotWrapperTest extends TestCase
         $root = vfsStream::setup()->url();
         $testFile = new SplFileInfo($root.'/test');
         $this->dotWrapper->generate(new DependencyMap(), new SplFileInfo($root.'/test.png'), false);
-        assertFileNotExists($testFile->getPathname());
+        $this->assertFalse(file_exists($testFile->getPathname()));
     }
 }

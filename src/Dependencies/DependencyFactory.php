@@ -11,7 +11,7 @@ class DependencyFactory
      *
      * @return Dependency
      */
-    final public function createClazzFromStringArray(array $parts) : Dependency
+    final public function createClazzFromStringArray(array $parts): Dependency
     {
         try {
             $clazz = new Clazz(
@@ -29,7 +29,7 @@ class DependencyFactory
      *
      * @return AbstractClazz
      */
-    final public function createAbstractClazzFromStringArray(array $parts) : AbstractClazz
+    final public function createAbstractClazzFromStringArray(array $parts): AbstractClazz
     {
         return new AbstractClazz(
             $this->extractClazzPart($parts),
@@ -42,7 +42,7 @@ class DependencyFactory
      *
      * @return Interfaze
      */
-    final public function createInterfazeFromStringArray(array $parts) : Interfaze
+    final public function createInterfazeFromStringArray(array $parts): Interfaze
     {
         return new Interfaze(
             $this->extractClazzPart($parts),
@@ -55,7 +55,7 @@ class DependencyFactory
      *
      * @return Trait_
      */
-    final public function createTraitFromStringArray(array $parts) : Trait_
+    final public function createTraitFromStringArray(array $parts): Trait_
     {
         return new Trait_(
             $this->extractClazzPart($parts),

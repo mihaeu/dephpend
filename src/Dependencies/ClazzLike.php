@@ -16,7 +16,7 @@ abstract class ClazzLike implements Dependency
      * @param string    $name
      * @param Namespaze $clazzNamespace
      */
-    public function __construct(string $name, Namespaze $clazzNamespace = null)
+    public function __construct(string $name, ?Namespaze $clazzNamespace = null)
     {
         $this->ensureClassNameIsValid($name);
 
@@ -27,46 +27,46 @@ abstract class ClazzLike implements Dependency
         $this->namespaze = $clazzNamespace;
     }
 
-    public function equals(Dependency $other) : bool
+    public function equals(Dependency $other): bool
     {
         return $this->toString() === $other->toString();
     }
 
-    public function toString() : string
+    public function toString(): string
     {
         return $this->hasNamespace()
             ? $this->namespaze.'\\'.$this->name
             : $this->name;
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
         return $this->toString();
     }
 
-    public function namespaze() : Namespaze
+    public function namespaze(): Namespaze
     {
         return $this->namespaze;
     }
 
-    public function hasNamespace() : bool
+    public function hasNamespace(): bool
     {
         return $this->namespaze->toString() !== '';
     }
 
-    public function count() : int
+    public function count(): int
     {
         return 1 + $this->namespaze->count();
     }
 
-    public function reduceToDepth(int $maxDepth) : Dependency
+    public function reduceToDepth(int $maxDepth): Dependency
     {
         return $this->count() <= $maxDepth || $maxDepth === 0
             ? $this
             : $this->namespaze->reduceToDepth($maxDepth);
     }
 
-    public function reduceDepthFromLeftBy(int $reduction) : Dependency
+    public function reduceDepthFromLeftBy(int $reduction): Dependency
     {
         return $this->count() <= $reduction || $reduction === 0
             ? $this
@@ -85,12 +85,12 @@ abstract class ClazzLike implements Dependency
         }
     }
 
-    public function inNamespaze(Namespaze $other) : bool
+    public function inNamespaze(Namespaze $other): bool
     {
         return $this->namespaze->inNamespaze($other);
     }
 
-    public function isNamespaced() : bool
+    public function isNamespaced(): bool
     {
         return $this->namespaze->count() > 0;
     }

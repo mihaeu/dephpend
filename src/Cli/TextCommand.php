@@ -21,7 +21,7 @@ class TextCommand extends BaseCommand
         $this->setDescription('Prints a list of all dependencies');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->ensureSourcesAreReadable($input->getArgument('source'));
 

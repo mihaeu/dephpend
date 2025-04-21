@@ -34,7 +34,7 @@ class MetricsCommand extends BaseCommand
      *
      * @throws \Symfony\Component\Console\Exception\InvalidArgumentException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $table = new Table($output);
         $table->setRows([
@@ -58,7 +58,7 @@ class MetricsCommand extends BaseCommand
         return 0;
     }
 
-    private function combineMetrics(array $afferentCoupling, array $efferentCoupling, array $instability) : array
+    private function combineMetrics(array $afferentCoupling, array $efferentCoupling, array $instability): array
     {
         $result = [];
         foreach ($afferentCoupling as $className => $afferentCouplingValue) {

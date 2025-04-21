@@ -19,7 +19,7 @@ class DependencyFilter
         $this->internals = $internals;
     }
 
-    public function filterByOptions(DependencyMap $dependencies, array $options) : DependencyMap
+    public function filterByOptions(DependencyMap $dependencies, array $options): DependencyMap
     {
         if (isset($options['underscore-namespaces']) && $options['underscore-namespaces'] === true) {
             $dependencies = $this->mapNamespaces($dependencies);
@@ -45,7 +45,7 @@ class DependencyFilter
         return $dependencies;
     }
 
-    public function postFiltersByOptions(array $options) : \Closure
+    public function postFiltersByOptions(array $options): \Closure
     {
         $filters = [];
         if ($options['depth'] > 0) {
@@ -58,7 +58,7 @@ class DependencyFilter
         return Functional::compose(...$filters);
     }
 
-    public function removeInternals(DependencyMap $dependencies) : DependencyMap
+    public function removeInternals(DependencyMap $dependencies): DependencyMap
     {
         return $dependencies->reduce(new DependencyMap(), function (DependencyMap $map, Dependency $from, Dependency $to) {
             return !in_array($to->toString(), $this->internals, true)
@@ -67,13 +67,13 @@ class DependencyFilter
         });
     }
 
-    public function filterByNamespace(DependencyMap $dependencies, string $namespace) : DependencyMap
+    public function filterByNamespace(DependencyMap $dependencies, string $namespace): DependencyMap
     {
         $namespace = new Namespaze(array_filter(explode('\\', $namespace)));
         return $dependencies->reduce(new DependencyMap(), $this->filterNamespaceFn($namespace));
     }
 
-    public function excludeByRegex(DependencyMap $dependencies, string $regex) : DependencyMap
+    public function excludeByRegex(DependencyMap $dependencies, string $regex): DependencyMap
     {
         return $dependencies->reduce(new DependencyMap(), function (DependencyMap $map, Dependency $from, Dependency $to) use ($regex) {
             return preg_match($regex, $from->toString()) === 1 || preg_match($regex, $to->toString()) === 1
@@ -82,7 +82,7 @@ class DependencyFilter
         });
     }
 
-    public function filterByFromNamespace(DependencyMap $dependencies, string $namespace) : DependencyMap
+    public function filterByFromNamespace(DependencyMap $dependencies, string $namespace): DependencyMap
     {
         $namespace = new Namespaze(array_filter(explode('\\', $namespace)));
         return $dependencies->reduce(new DependencyMap(), function (DependencyMap $map, Dependency $from, Dependency $to) use ($namespace) {
@@ -92,16 +92,16 @@ class DependencyFilter
         });
     }
 
-    private function filterNamespaceFn(Namespaze $namespaze) : \Closure
+    private function filterNamespaceFn(Namespaze $namespaze): \Closure
     {
-        return function (DependencyMap $map, Dependency $from, Dependency $to) use ($namespaze) : DependencyMap {
+        return function (DependencyMap $map, Dependency $from, Dependency $to) use ($namespaze): DependencyMap {
             return $from->inNamespaze($namespaze) && $to->inNamespaze($namespaze)
                 ? $map->add($from, $to)
                 : $map;
         };
     }
 
-    public function filterByDepth(DependencyMap $dependencies, int $depth) : DependencyMap
+    public function filterByDepth(DependencyMap $dependencies, int $depth): DependencyMap
     {
         if ($depth === 0) {
             return clone $dependencies;
@@ -115,7 +115,7 @@ class DependencyFilter
         });
     }
 
-    public function filterClasses(DependencyMap $dependencies) : DependencyMap
+    public function filterClasses(DependencyMap $dependencies): DependencyMap
     {
         return $dependencies->reduce(new DependencyMap(), function (DependencyMap $map, Dependency $from, Dependency $to) {
             if ($from->namespaze()->count() === 0 || $to->namespaze()->count() === 0) {
@@ -125,21 +125,21 @@ class DependencyFilter
         });
     }
 
-    public function reduceDependencyToNamespace() : \Closure
+    public function reduceDependencyToNamespace(): \Closure
     {
-        return function (Dependency $dependency) : Dependency {
+        return function (Dependency $dependency): Dependency {
             return $dependency->namespaze();
         };
     }
 
-    public function reduceDependencyByDepth(int $depth) : \Closure
+    public function reduceDependencyByDepth(int $depth): \Closure
     {
-        return function (Dependency $dependency) use ($depth) : Dependency {
+        return function (Dependency $dependency) use ($depth): Dependency {
             return $dependency->reduceToDepth($depth);
         };
     }
 
-    public function mapNamespaces(DependencyMap $dependencies) : DependencyMap
+    public function mapNamespaces(DependencyMap $dependencies): DependencyMap
     {
         return $dependencies->reduceEachDependency(function (Dependency $dependency) {
             if (strpos($dependency->toString(), '_') === false) {

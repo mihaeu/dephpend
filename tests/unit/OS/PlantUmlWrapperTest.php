@@ -7,8 +7,8 @@ namespace Mihaeu\PhpDependencies\OS;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Exceptions\PlantUmlNotInstalledException;
 use Mihaeu\PhpDependencies\Formatters\PlantUmlFormatter;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 use SplFileInfo;
 
 /**
@@ -17,10 +17,10 @@ use SplFileInfo;
  */
 class PlantUmlWrapperTest extends TestCase
 {
-    /** @var ShellWrapper|PHPUnit_Framework_MockObject_MockObject */
+    /** @var ShellWrapper&MockObject */
     private $shellWrapper;
 
-    /** @var PlantUmlFormatter|PHPUnit_Framework_MockObject_MockObject */
+    /** @var PlantUmlFormatter&MockObject */
     private $plantUmlFormatter;
 
     protected function setUp(): void
@@ -41,14 +41,14 @@ class PlantUmlWrapperTest extends TestCase
     public function testDetectsIfPlantUmlIsInstalled(): void
     {
         $this->shellWrapper->method('run')->willReturn(0);
-        assertInstanceOf(PlantUmlWrapper::class, new PlantUmlWrapper($this->plantUmlFormatter, $this->shellWrapper));
+        $this->assertInstanceOf(PlantUmlWrapper::class, new PlantUmlWrapper($this->plantUmlFormatter, $this->shellWrapper));
     }
 
     public function testGenerate(): void
     {
         $plantUml = new PlantUmlWrapper($this->plantUmlFormatter, $this->shellWrapper);
         $plantUml->generate(new DependencyMap(), new SplFileInfo(sys_get_temp_dir().'/dependencies.png'), true);
-        assertFileExists(sys_get_temp_dir().'/dependencies.uml');
+        $this->assertFileExists(sys_get_temp_dir().'/dependencies.uml');
         unlink(sys_get_temp_dir().'/dependencies.uml');
     }
 
@@ -56,6 +56,6 @@ class PlantUmlWrapperTest extends TestCase
     {
         $plantUml = new PlantUmlWrapper($this->plantUmlFormatter, $this->shellWrapper);
         $plantUml->generate(new DependencyMap(), new SplFileInfo(sys_get_temp_dir().'/dependencies.png'));
-        assertFileNotExists(sys_get_temp_dir().'/dependencies.uml');
+        $this->assertFileDoesNotExist(sys_get_temp_dir().'/dependencies.uml');
     }
 }

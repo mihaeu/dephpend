@@ -40,7 +40,7 @@ class DsmCommand extends BaseCommand
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $options = $input->getOptions();
         $this->ensureSourcesAreReadable($input->getArgument('source'));

@@ -5,6 +5,7 @@ namespace Mihaeu\PhpDependencies\Analyser;
 use InvalidArgumentException;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
 use Mihaeu\PhpDependencies\DependencyHelper;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -21,7 +22,9 @@ class XDebugFunctionTraceAnalyserTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->xDebugFunctionTraceAnalyser = new XDebugFunctionTraceAnalyser($this->createMock(DependencyFactory::class));
+        /** @var DependencyFactory&MockObject $dependencyFactory */
+        $dependencyFactory = $this->createMock(DependencyFactory::class);
+        $this->xDebugFunctionTraceAnalyser = new XDebugFunctionTraceAnalyser($dependencyFactory);
         $this->tempFile = new \SplFileInfo(sys_get_temp_dir().'/'.'dephpend-trace.sample');
         touch($this->tempFile->getPathname());
     }
@@ -37,7 +40,7 @@ class XDebugFunctionTraceAnalyserTest extends TestCase
             [0, 1, 2, 3, 4, 'B->c', 6, 7, 8, 9, 10, 'class A'],
             [0, 1, 2, 3, 4, 'D->c', 6, 7, 8, 9, 10, 'class A'],
         ]);
-        assertEquals(
+        $this->assertEquals(
             DependencyHelper::map('
                 B --> A
                 D --> A
@@ -58,7 +61,7 @@ class XDebugFunctionTraceAnalyserTest extends TestCase
             [0, 1, 2, 3, 4, 'D->c', 6, 7, 8, 9, 10, 'int'],
             [0, 1, 2, 3, 4, 'D->c', 6, 7, 8, 9, 10, 'resource'],
         ]);
-        assertEquals(
+        $this->assertEquals(
             DependencyHelper::map('
                 B --> A
             '),
@@ -68,8 +71,9 @@ class XDebugFunctionTraceAnalyserTest extends TestCase
 
     public function testThrowsExceptionIfFileCannotBeOpened(): void
     {
+        /** @var SplFileInfo&MockObject $tmpFile */
         $tmpFile = $this->createMock(SplFileInfo::class);
-        $tmpFile->expects($this->once())->method('getPathname')->willReturn('');
+        $tmpFile->expects($this->once())->method('getPathname')->willReturn('doesntexist');
         $this->expectException(InvalidArgumentException::class);
         $this->xDebugFunctionTraceAnalyser->analyse($tmpFile);
     }

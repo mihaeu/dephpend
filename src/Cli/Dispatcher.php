@@ -44,7 +44,7 @@ class Dispatcher extends EventDispatcher
         $this->dependencyFilter = $dependencyFilter;
     }
 
-    public function dispatch($event, string $eventName = null): object
+    public function dispatch($event, ?string $eventName = null): object
     {
         $event = parent::dispatch($event, $eventName);
 

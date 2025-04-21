@@ -8,8 +8,8 @@ use Exception;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\DependencyHelper;
 use Mihaeu\PhpDependencies\Formatters\DependencyStructureMatrixHtmlFormatter;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -22,16 +22,16 @@ class DsmCommandTest extends TestCase
     /** @var DsmCommand */
     private $dsmCommand;
 
-    /** @var InputInterface|PHPUnit_Framework_MockObject_MockObject */
+    /** @var InputInterface&MockObject */
     private $input;
 
-    /** @var OutputInterface|PHPUnit_Framework_MockObject_MockObject */
+    /** @var OutputInterface&MockObject */
     private $output;
 
-    /** @var DependencyFilter|PHPUnit_Framework_MockObject_MockObject */
+    /** @var DependencyFilter&MockObject */
     private $dependencyFilter;
 
-    /** @var DependencyStructureMatrixHtmlFormatter|PHPUnit_Framework_MockObject_MockObject */
+    /** @var DependencyStructureMatrixHtmlFormatter&MockObject */
     private $dependencyStructureMatrixFormatter;
 
     protected function setUp(): void
@@ -57,7 +57,7 @@ class DsmCommandTest extends TestCase
         $dependencies = DependencyHelper::map('A --> B');
         $this->dsmCommand->setDependencies($dependencies);
 
-        $this->dependencyStructureMatrixFormatter->expects(once())->method('format')->with($dependencies);
+        $this->dependencyStructureMatrixFormatter->expects($this->once())->method('format')->with($dependencies);
         $this->dsmCommand->run($this->input, $this->output);
     }
 

@@ -7,6 +7,7 @@ namespace Mihaeu\PhpDependencies\Cli;
 use Mihaeu\PhpDependencies\Exceptions\ParserException;
 use Mihaeu\PhpDependencies\OS\DotWrapper;
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -26,10 +27,10 @@ class ApplicationTest extends TestCase
     /** @var Application */
     private $application;
 
-    /** @var InputInterface */
+    /** @var Input&MockObject */
     private $input;
 
-    /** @var OutputInterface */
+    /** @var Output&MockObject */
     private $output;
 
     /** @var EventDispatcherInterface */
@@ -43,22 +44,25 @@ class ApplicationTest extends TestCase
         $_SERVER['argv'] = ['', 'text', sys_get_temp_dir()];
         $this->application = new Application('', '', $this->dispatcher);
 
+        /** @var Input&MockObject $input */
         $this->input = $this->createMock(Input::class);
+        /** @var Output&MockObject $output */
         $this->output = $this->createMock(Output::class);
         $this->output->method('getFormatter')->willReturn($this->createMock(OutputFormatter::class));
     }
 
     public function testWarningIfXDebugEnabled(): void
     {
+        /** @var ErrorOutput&MockObject $errorOutput */
         $errorOutput = $this->createMock(ErrorOutput::class);
         $this->application->setErrorOutput($errorOutput);
 
         // not sure how to mock this, so we test only one case, there's always one error message regarding
         // Symfony console setup, so if there's no xdebug loaded we still see one message
         if (!extension_loaded('xdebug')) {
-            $errorOutput->expects(once())->method('writeln');
+            $errorOutput->expects($this->once())->method('writeln');
         } else {
-            $errorOutput->expects(exactly(2))->method('writeln');
+            $errorOutput->expects($this->exactly(2))->method('writeln');
         }
         $this->application->doRun($this->input, $this->output);
     }
@@ -73,12 +77,13 @@ class ApplicationTest extends TestCase
             . 'because the sources contain syntax errors:' . PHP_EOL . PHP_EOL
             . 'Test in file someFile.php<error>';
 
+        /** @var ErrorOutput&MockObject $errorOutput */
         $errorOutput = $this->createMock(ErrorOutput::class);
         $this->application->setErrorOutput($errorOutput);
         if (!extension_loaded('xdebug')) {
-            $errorOutput->expects(once())->method('writeln')->with($expectedMessage);
+            $errorOutput->expects($this->once())->method('writeln')->with($expectedMessage);
         } else {
-            $errorOutput->expects(exactly(2))->method('writeln')->withConsecutive(
+            $errorOutput->expects($this->exactly(2))->method('writeln')->willReturnOnConsecutiveCalls(
                 [self::XDEBUG_WARNING],
                 [$expectedMessage]
             );
@@ -90,48 +95,52 @@ class ApplicationTest extends TestCase
     {
         $_SERVER['argv'] = ['', 'dsm', sys_get_temp_dir(), '--format=html'];
 
+        /** @var ErrorOutput&MockObject $errorOutput */
         $errorOutput = $this->createMock(ErrorOutput::class);
         $application = new Application('', '', $this->dispatcher);
         $application->setErrorOutput($errorOutput);
 
         $returnCode = $application->doRun($this->input, $this->output);
-        assertEquals(0, $returnCode);
+        $this->assertEquals(0, $returnCode);
     }
 
     public function testValidatesUmlInput(): void
     {
         $_SERVER['argv'] = ['', 'uml', sys_get_temp_dir(), '--output=test.png'];
 
+        /** @var ErrorOutput&MockObject $errorOutput */
         $errorOutput = $this->createMock(ErrorOutput::class);
         $application = new Application('', '', $this->dispatcher);
         $application->setErrorOutput($errorOutput);
 
         $returnCode = $application->doRun($this->input, $this->output);
-        assertEquals(0, $returnCode);
+        $this->assertEquals(0, $returnCode);
     }
 
     public function testValidatesMetricInput(): void
     {
         $_SERVER['argv'] = ['', 'metrics', sys_get_temp_dir()];
 
+        /** @var ErrorOutput&MockObject $errorOutput */
         $errorOutput = $this->createMock(ErrorOutput::class);
         $application = new Application('', '', $this->dispatcher);
         $application->setErrorOutput($errorOutput);
 
         $returnCode = $application->doRun($this->input, $this->output);
-        assertEquals(0, $returnCode);
+        $this->assertEquals(0, $returnCode);
     }
 
     public function testValidatesDotInput(): void
     {
         $_SERVER['argv'] = ['', 'dot', sys_get_temp_dir()];
 
+        /** @var ErrorOutput&MockObject $errorOutput */
         $errorOutput = $this->createMock(ErrorOutput::class);
         $application = new Application('', '', $this->dispatcher);
         $application->setErrorOutput($errorOutput);
 
         $returnCode = $application->doRun($this->input, $this->output);
-        assertEquals(0, $returnCode);
+        $this->assertEquals(0, $returnCode);
     }
 
     public function testCommandWithHelpOptionProvidesHelpForDotCommand(): void
@@ -139,7 +148,9 @@ class ApplicationTest extends TestCase
         $input = new ArgvInput(['', 'dot', '--help']);
         $output = new BufferedOutput();
         $application = new Application('', '', $this->dispatcher);
-        $application->add(new DotCommand($this->createMock(DotWrapper::class)));
+        /** @var DotWrapper&MockObject $wrapper */
+        $wrapper = $this->createMock(DotWrapper::class);
+        $application->add(new DotCommand($wrapper));
         $application->doRun($input, $output);
         Assert::assertStringContainsString('dot [options]', $output->fetch());
     }
@@ -149,7 +160,7 @@ class ApplicationTest extends TestCase
         $input = new ArgvInput(['', '--version']);
         $output = new BufferedOutput();
         (new Application('Test', '4.2.0', $this->dispatcher))->doRun($input, $output);
-        assertRegExp('/\d+\.\d+\.\d+/', $output->fetch());
+        $this->assertMatchesRegularExpression('/\d+\.\d+\.\d+/', $output->fetch());
     }
 
     public function testNoCommandWithHelpOptionWritesHelp(): void

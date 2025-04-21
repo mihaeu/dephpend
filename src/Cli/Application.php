@@ -12,7 +12,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class Application extends \Symfony\Component\Console\Application
 {
-    const XDEBUG_WARNING = 'You are running dePHPend with xdebug enabled. This has a major impact on runtime performance. See https://getcomposer.org/xdebug';
+    public const XDEBUG_WARNING = 'You are running dePHPend with xdebug enabled. This has a major impact on runtime performance. See https://getcomposer.org/xdebug';
 
     /** @var ErrorOutput */
     private $errorOutput;
@@ -45,7 +45,7 @@ class Application extends \Symfony\Component\Console\Application
      *
      * @throws \Symfony\Component\Console\Exception\LogicException
      */
-    public function doRun(InputInterface $input, OutputInterface $output)
+    public function doRun(InputInterface $input, OutputInterface $output): int
     {
         $this->printWarningIfXdebugIsEnabled($input, $output);
 

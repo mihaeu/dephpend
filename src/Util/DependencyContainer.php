@@ -53,7 +53,7 @@ class DependencyContainer
 
     public function parser(): Parser
     {
-        return new DefaultParser((new ParserFactory())->create(ParserFactory::PREFER_PHP7));
+        return new DefaultParser((new ParserFactory())->createForHostVersion());
     }
 
     public function dependencyFactory(): DependencyFactory

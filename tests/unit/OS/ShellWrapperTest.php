@@ -16,11 +16,11 @@ class ShellWrapperTest extends TestCase
      */
     public function testDetectsEcho(): void
     {
-        assertEquals(0, (new ShellWrapper())->run('echo'));
+        $this->assertEquals(0, (new ShellWrapper())->run('echo'));
     }
 
     public function testDetectsWhenApplicationNotInstalled(): void
     {
-        assertNotEquals(0, (new ShellWrapper())->run('xjcsajhckjsdfhksdf'));
+        $this->assertNotEquals(0, (new ShellWrapper())->run('xjcsajhckjsdfhksdf'));
     }
 }
