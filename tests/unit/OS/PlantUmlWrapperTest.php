@@ -7,8 +7,8 @@ namespace Mihaeu\PhpDependencies\OS;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Exceptions\PlantUmlNotInstalledException;
 use Mihaeu\PhpDependencies\Formatters\PlantUmlFormatter;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 use SplFileInfo;
 
 /**
@@ -17,10 +17,10 @@ use SplFileInfo;
  */
 class PlantUmlWrapperTest extends TestCase
 {
-    /** @var ShellWrapper|PHPUnit_Framework_MockObject_MockObject */
+    /** @var ShellWrapper&MockObject */
     private $shellWrapper;
 
-    /** @var PlantUmlFormatter|PHPUnit_Framework_MockObject_MockObject */
+    /** @var PlantUmlFormatter&MockObject */
     private $plantUmlFormatter;
 
     protected function setUp(): void

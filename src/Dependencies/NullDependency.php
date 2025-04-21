@@ -6,22 +6,22 @@ namespace Mihaeu\PhpDependencies\Dependencies;
 
 class NullDependency implements Dependency
 {
-    public function reduceToDepth(int $maxDepth) : Dependency
+    public function reduceToDepth(int $maxDepth): Dependency
     {
         return new NullDependency();
     }
 
-    public function reduceDepthFromLeftBy(int $reduction) : Dependency
+    public function reduceDepthFromLeftBy(int $reduction): Dependency
     {
         return new NullDependency();
     }
 
-    public function equals(Dependency $other) : bool
+    public function equals(Dependency $other): bool
     {
         return false;
     }
 
-    public function toString() : string
+    public function toString(): string
     {
         return '';
     }
@@ -29,17 +29,17 @@ class NullDependency implements Dependency
     /**
      * @return string
      */
-    public function __toString() : string
+    public function __toString(): string
     {
         return $this->toString();
     }
 
-    public function namespaze() : Namespaze
+    public function namespaze(): Namespaze
     {
         return new Namespaze([]);
     }
 
-    public function inNamespaze(Namespaze $other) : bool
+    public function inNamespaze(Namespaze $other): bool
     {
         return false;
     }

@@ -4,8 +4,8 @@
          beStrictAboutOutputDuringTests="true"
          requireCoverageMetadata="true"
          colors="true">
-    <testsuite name="tests">
-        <directory suffix="Test.php">tests/unit</directory>
+    <testsuite name="unit">
+        <directory>tests/unit</directory>
     </testsuite>
 
     <source>

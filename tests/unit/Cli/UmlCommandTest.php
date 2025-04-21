@@ -6,9 +6,8 @@ namespace Mihaeu\PhpDependencies\Cli;
 
 use InvalidArgumentException;
 use Mihaeu\PhpDependencies\OS\PlantUmlWrapper;
-use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -21,13 +20,13 @@ class UmlCommandTest extends TestCase
     /** @var UmlCommand */
     private $umlCommand;
 
-    /** @var InputInterface|PHPUnit_Framework_MockObject_MockObject */
+    /** @var InputInterface&MockObject */
     private $input;
 
-    /** @var OutputInterface|PHPUnit_Framework_MockObject_MockObject */
+    /** @var OutputInterface&MockObject */
     private $output;
 
-    /** @var PlantUmlWrapper|PHPUnit_Framework_MockObject_MockObject */
+    /** @var PlantUmlWrapper&MockObject */
     private $plantUmlWrapper;
 
     protected function setUp(): void

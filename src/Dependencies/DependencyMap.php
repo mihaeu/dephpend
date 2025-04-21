@@ -6,15 +6,16 @@ namespace Mihaeu\PhpDependencies\Dependencies;
 
 use Mihaeu\PhpDependencies\Util\AbstractMap;
 
+/**
+ * @extends AbstractMap<Dependency, Dependency>
+ */
 class DependencyMap extends AbstractMap
 {
     /**
-     * @param Dependency $from
-     * @param Dependency $to
-     *
-     * @return DependencyMap
+     * @param TKey $from
+     * @param TValue $to
      */
-    public function add(Dependency $from, Dependency $to) : self
+    public function add($from, $to): self
     {
         $clone = clone $this;
         if ($from->equals($to)
@@ -35,14 +36,14 @@ class DependencyMap extends AbstractMap
         return $clone;
     }
 
-    public function addMap(self $other) : self
+    public function addMap(self $other): self
     {
         return $this->reduce($other, function (DependencyMap $map, Dependency $from, Dependency $to) {
             return $map->add($from, $to);
         });
     }
 
-    public function addSet(Dependency $from, DependencySet $toSet) : self
+    public function addSet(Dependency $from, DependencySet $toSet): self
     {
         $clone = $toSet->reduce($this, function (DependencyMap $map, Dependency $to) use ($from) {
             return $map->add($from, $to);
@@ -50,19 +51,19 @@ class DependencyMap extends AbstractMap
         return $clone;
     }
 
-    public function get(Dependency $from) : DependencySet
+    public function get(Dependency $from): DependencySet
     {
         return $this->map[$from->toString()][self::$VALUE];
     }
 
-    public function fromDependencies() : DependencySet
+    public function fromDependencies(): DependencySet
     {
         return $this->reduce(new DependencySet(), function (DependencySet $set, Dependency $from) {
             return $set->add($from);
         });
     }
 
-    public function allDependencies() : DependencySet
+    public function allDependencies(): DependencySet
     {
         return $this->reduce(new DependencySet(), function (DependencySet $set, Dependency $from, Dependency $to) {
             return $set
@@ -71,7 +72,7 @@ class DependencyMap extends AbstractMap
         });
     }
 
-    public function mapAllDependencies(\Closure $mappers) : DependencySet
+    public function mapAllDependencies(\Closure $mappers): DependencySet
     {
         return $this->reduce(new DependencySet(), function (DependencySet $set, Dependency $from, Dependency $to) use ($mappers) {
             return $set
@@ -88,14 +89,14 @@ class DependencyMap extends AbstractMap
      *
      * @return DependencyMap
      */
-    public function reduceEachDependency(\Closure $mappers) : DependencyMap
+    public function reduceEachDependency(\Closure $mappers): DependencyMap
     {
         return $this->reduce(new self(), function (self $map, Dependency $from, Dependency $to) use ($mappers) {
             return $map->add($mappers($from), $mappers($to));
         });
     }
 
-    public function toString() : string
+    public function toString(): string
     {
         return trim($this->reduce('', function (string $carry, Dependency $key, Dependency $value) {
             return $carry.$key->toString().' --> '.$value->toString().PHP_EOL;

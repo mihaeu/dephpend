@@ -19,7 +19,7 @@ class PhpFile
         $this->file = $file;
     }
 
-    public function file() : \SplFileInfo
+    public function file(): \SplFileInfo
     {
         return $this->file;
     }
@@ -34,7 +34,7 @@ class PhpFile
         return @file_get_contents($this->file->getPathname());
     }
 
-    public function toString() : string
+    public function toString(): string
     {
         return (string) $this->file;
     }
@@ -42,7 +42,7 @@ class PhpFile
     /**
      * @return string
      */
-    public function __toString() : string
+    public function __toString(): string
     {
         return $this->toString();
     }

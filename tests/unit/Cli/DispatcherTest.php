@@ -23,16 +23,16 @@ class DispatcherTest extends TestCase
     /** @var Dispatcher */
     private $dispatcher;
 
-    /** @var StaticAnalyser | MockObject */
+    /** @var StaticAnalyser&MockObject */
     private $staticAnalyser;
 
-    /** @var XDebugFunctionTraceAnalyser | MockObject */
+    /** @var XDebugFunctionTraceAnalyser&MockObject */
     private $xDebugFunctionTraceAnalyser;
 
-    /** @var PhpFileFinder | MockObject */
+    /** @var PhpFileFinder&MockObject */
     private $phpFileFinder;
 
-    /** @var DependencyFilter | MockObject */
+    /** @var DependencyFilter&MockObject */
     private $dependencyFilter;
 
     protected function setUp(): void

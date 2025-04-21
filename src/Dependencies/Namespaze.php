@@ -32,12 +32,12 @@ class Namespaze implements Dependency
         }
     }
 
-    public function count() : int
+    public function count(): int
     {
         return count($this->parts);
     }
 
-    public function namespaze() : Namespaze
+    public function namespaze(): Namespaze
     {
         return $this;
     }
@@ -45,12 +45,12 @@ class Namespaze implements Dependency
     /**
      * @return string[]
      */
-    public function parts() : array
+    public function parts(): array
     {
         return $this->parts;
     }
 
-    public function reduceToDepth(int $maxDepth) : Dependency
+    public function reduceToDepth(int $maxDepth): Dependency
     {
         if ($maxDepth === 0 || $this->count() === $maxDepth) {
             return $this;
@@ -61,29 +61,29 @@ class Namespaze implements Dependency
             : new self(array_slice($this->parts, 0, $maxDepth));
     }
 
-    public function reduceDepthFromLeftBy(int $reduction) : Dependency
+    public function reduceDepthFromLeftBy(int $reduction): Dependency
     {
         return $reduction >= $this->count()
             ? new self([])
             : new self(array_slice($this->parts, $reduction));
     }
 
-    public function equals(Dependency $other) : bool
+    public function equals(Dependency $other): bool
     {
         return $this->toString() === $other->toString();
     }
 
-    public function toString() : string
+    public function toString(): string
     {
         return implode('\\', $this->parts);
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
         return $this->toString();
     }
 
-    public function inNamespaze(Namespaze $other) : bool
+    public function inNamespaze(Namespaze $other): bool
     {
         return $other->toString() !== ''
             && $this->toString() !== ''
@@ -95,7 +95,7 @@ class Namespaze implements Dependency
      *
      * @return bool
      */
-    private function arrayContainsNotOnlyStrings(array $parts):bool
+    private function arrayContainsNotOnlyStrings(array $parts): bool
     {
         return Util::array_once($parts, function ($value) {
             return !is_string($value);

@@ -8,11 +8,8 @@
 # - checks code for code coverage and prints a warning
 #   if it is not within the threshold (but doesn't aborts)
 
-PHPCS_PATH="php -n vendor/bin/php-cs-fixer"
-
 # check style of changed files
-git diff-index --name-only --cached --diff-filter=ACMR HEAD -- \
-    | xargs -I {} $PHPCS_PATH fix --dry-run --level=psr2 --verbose {} || exit 1;
+php -n vendor/bin/php-cs-fixer fix src --dry-run --rules=@PSR2 --verbose || exit 1;
 
 echo
 echo "Running QA ..."

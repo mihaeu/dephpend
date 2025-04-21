@@ -7,8 +7,8 @@ namespace Mihaeu\PhpDependencies\Cli;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\DependencyHelper;
 use Mihaeu\PhpDependencies\Util\Functional;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -21,13 +21,13 @@ class TextCommandTest extends TestCase
     /** @var TextCommand */
     private $textCommand;
 
-    /** @var InputInterface|PHPUnit_Framework_MockObject_MockObject */
+    /** @var InputInterface&MockObject */
     private $input;
 
-    /** @var OutputInterface|PHPUnit_Framework_MockObject_MockObject */
+    /** @var OutputInterface&MockObject */
     private $output;
 
-    /** @var DependencyFilter|PHPUnit_Framework_MockObject_MockObject */
+    /** @var DependencyFilter&MockObject */
     private $dependencyFilter;
 
     protected function setUp(): void

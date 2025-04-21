@@ -8,6 +8,7 @@ use Mihaeu\PhpDependencies\Exceptions\FileDoesNotExistException;
 use Mihaeu\PhpDependencies\Exceptions\FileIsNotReadableException;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use SplFileInfo;
 
@@ -55,6 +56,7 @@ class PhpFileTest extends TestCase
 
     public function testThrowsExceptionIfFileIsNotReadable(): void
     {
+        /** @var SplFileInfo&MockObject $tmpFiles */
         $tmpFiles = $this->createMock(SplFileInfo::class);
         $tmpFiles->expects($this->once())->method('isFile')->willReturn(true);
         $tmpFiles->expects($this->once())->method('isReadable')->willReturn(false);
