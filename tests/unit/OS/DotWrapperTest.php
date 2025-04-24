@@ -53,7 +53,7 @@ class DotWrapperTest extends TestCase
                 
                 if ($callCount === 1) {
                     $this->assertEquals('dot -V', $command);
-                } else if ($callCount === 2) {
+                } elseif ($callCount === 2) {
                     $this->assertEquals('dot -O -Tpng '.$root.'/test', $command);
                 }
                 
