@@ -18,21 +18,12 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class TextCommandTest extends TestCase
 {
-    /** @var TextCommand */
-    private $textCommand;
+    private InputInterface&MockObject $input;
 
-    /** @var InputInterface&MockObject */
-    private $input;
-
-    /** @var OutputInterface&MockObject */
-    private $output;
-
-    /** @var DependencyFilter&MockObject */
-    private $dependencyFilter;
+    private OutputInterface&MockObject $output;
 
     protected function setUp(): void
     {
-        $this->dependencyFilter = $this->createMock(DependencyFilter::class);
         $this->input = $this->createMock(InputInterface::class);
         $this->output = $this->createMock(OutputInterface::class);
     }

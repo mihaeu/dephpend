@@ -19,25 +19,17 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class DsmCommandTest extends TestCase
 {
-    /** @var DsmCommand */
-    private $dsmCommand;
+    private DsmCommand $dsmCommand;
 
-    /** @var InputInterface&MockObject */
-    private $input;
+    private InputInterface&MockObject $input;
 
-    /** @var OutputInterface&MockObject */
-    private $output;
+    private OutputInterface&MockObject $output;
 
-    /** @var DependencyFilter&MockObject */
-    private $dependencyFilter;
-
-    /** @var DependencyStructureMatrixHtmlFormatter&MockObject */
-    private $dependencyStructureMatrixFormatter;
+    private DependencyStructureMatrixHtmlFormatter&MockObject $dependencyStructureMatrixFormatter;
 
     protected function setUp(): void
     {
         $this->dependencyStructureMatrixFormatter = $this->createMock(DependencyStructureMatrixHtmlFormatter::class);
-        $this->dependencyFilter = $this->createMock(DependencyFilter::class);
         $this->dsmCommand = new DsmCommand($this->dependencyStructureMatrixFormatter);
         $this->input = $this->createMock(InputInterface::class);
         $this->output = $this->createMock(OutputInterface::class);
