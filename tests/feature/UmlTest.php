@@ -15,7 +15,6 @@ class UmlTest extends TestCase
         system('plantuml -version > /dev/null 2>&1', $returnStatus);
         if ($returnStatus !== 0) {
             $this->markTestSkipped('No PlantUML installation found');
-            return;
         }
 
         $expected = <<<EOT

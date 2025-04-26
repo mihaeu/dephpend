@@ -10,6 +10,7 @@ use Mihaeu\PhpDependencies\Formatters\PlantUmlFormatter;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use SplFileInfo;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @covers Mihaeu\PhpDependencies\OS\PlantUmlWrapper
@@ -29,19 +30,32 @@ class PlantUmlWrapperTest extends TestCase
         $this->plantUmlFormatter = $this->createMock(PlantUmlFormatter::class);
     }
 
-    public function testDetectsIfPlantUmlIsNotInstalled(): void
+    public static function plantUmlInstallationProvider(): array
     {
-        $this->shellWrapper->method('run')->willReturn(1);
-        $plantUml = new PlantUmlWrapper($this->plantUmlFormatter, $this->shellWrapper);
-
-        $this->expectException(PlantUmlNotInstalledException::class);
-        $plantUml->generate(new DependencyMap(), new SplFileInfo(__FILE__));
+        return [
+            'PlantUML is installed' => ['shellReturnCode' => 0, 'expectException' => false],
+            'PlantUML is not installed' => ['shellReturnCode' => 1, 'expectException' => true],
+        ];
     }
 
-    public function testDetectsIfPlantUmlIsInstalled(): void
+    #[DataProvider('plantUmlInstallationProvider')]
+    public function testInstallationCheckDuringGeneration(int $shellReturnCode, bool $expectException): void
     {
-        $this->shellWrapper->method('run')->willReturn(0);
-        $this->assertInstanceOf(PlantUmlWrapper::class, new PlantUmlWrapper($this->plantUmlFormatter, $this->shellWrapper));
+        $this->shellWrapper->method('run')
+             ->willReturn($shellReturnCode);
+
+        $wrapper = new PlantUmlWrapper($this->plantUmlFormatter, $this->shellWrapper);
+
+        if ($expectException) {
+            $this->expectException(PlantUmlNotInstalledException::class);
+        }
+
+        $wrapper->generate(new DependencyMap(), new SplFileInfo('test.png'));
+        if ($expectException) {
+            $this->fail('PlantUmlNotInstalledException was expected but not thrown.');
+        }
+
+        $this->expectNotToPerformAssertions();
     }
 
     public function testGenerate(): void

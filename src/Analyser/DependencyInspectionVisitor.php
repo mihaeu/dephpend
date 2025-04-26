@@ -123,9 +123,6 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
 
     public function addName(Name $name)
     {
-        if (count($name->getParts()) <= 0) {
-            return;
-        }
         $this->tempDependencies = $this->tempDependencies->add(
             $this->dependencyFactory->createClazzFromStringArray($name->getParts())
         );

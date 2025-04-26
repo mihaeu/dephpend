@@ -16,24 +16,17 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class MetricsCommandTest extends TestCase
 {
-    /** @var MetricsCommand */
-    private $metricsCommand;
+    private MetricsCommand $metricsCommand;
 
-    /** @var Metrics&MockObject */
-    private $metrics;
+    private Metrics&MockObject $metrics;
 
-    /** @var InputInterface&MockObject */
-    private $input;
-
-    /** @var OutputInterface&MockObject */
-    private $output;
+    private InputInterface&MockObject $input;
 
     protected function setUp(): void
     {
         $this->metrics = $this->createMock(Metrics::class);
         $this->metricsCommand = new MetricsCommand($this->metrics);
         $this->input = $this->createMock(InputInterface::class);
-        $this->output = $this->createMock(OutputInterface::class);
     }
 
     public function testPrintsMetrics(): void
