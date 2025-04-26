@@ -9,7 +9,7 @@
 #   if it is not within the threshold (but doesn't aborts)
 
 # check style of changed files
-php -n vendor/bin/php-cs-fixer fix src --dry-run --rules=@PSR2 --verbose || exit 1;
+PHP_CS_FIXER_IGNORE_ENV=true php -n vendor/bin/php-cs-fixer fix src --dry-run --rules=@PSR2 --verbose || exit 1;
 
 echo
 echo "Running QA ..."

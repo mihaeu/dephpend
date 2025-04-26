@@ -31,6 +31,10 @@ use PhpParser\Node\Stmt\Interface_ as InterfaceNode;
 use PhpParser\Node\Stmt\Trait_ as TraitNode;
 use PhpParser\Node\Stmt\TraitUse;
 use PhpParser\Node\Stmt\Use_ as UseNode;
+use PhpParser\Node\AttributeGroup;
+use PhpParser\Node\Attribute;
+use PhpParser\Node\UnionType;
+use PhpParser\Node\IntersectionType;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -405,6 +409,127 @@ class DependencyInspectionVisitorTest extends TestCase
         $this->assertFalse($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
             new Clazz('WithoutExtends', new Namespaze(['A']))
+        ));
+    }
+
+    public function testDetectsAttributeDependency(): void
+    {
+        $attributeGroupNode = new AttributeGroup([
+            new Attribute(new Name('MyAttribute')),
+            new Attribute(new FullyQualifiedNameNode('Another\\AttributeClass')),
+        ]);
+
+        $this->addNodeToAst($attributeGroupNode);
+
+        $this->assertTrue($this->dependenciesContain(
+            $this->dependencyInspectionVisitor->dependencies(),
+            new Clazz('MyAttribute')
+        ));
+        $this->assertTrue($this->dependenciesContain(
+            $this->dependencyInspectionVisitor->dependencies(),
+            new Clazz('AttributeClass', new Namespaze(['Another']))
+        ));
+    }
+
+    public function testDetectsEnumBackingTypeDependency(): void
+    {
+        $enumNode = new EnumNode('MyEnum');
+        $enumNode->namespacedName = new Name('MyNamespace\\MyEnum');
+        $enumNode->backedType = new Name('MyBackingClass'); // Assuming it's a class name
+
+        // Enter/Leave the Enum node itself to register the backing type dependency
+        $this->dependencyInspectionVisitor->enterNode($enumNode);
+        $this->dependencyInspectionVisitor->leaveNode($enumNode);
+
+        // Note: The test primarily verifies the backing type dependency.
+        // The Enum itself (MyNamespace\MyEnum) should be captured when used elsewhere (like type hints), covered by other tests.
+        $this->assertTrue($this->dependenciesContain(
+            $this->dependencyInspectionVisitor->dependencies(),
+            new Clazz('MyBackingClass')
+        ));
+    }
+
+    public function testDetectsUnionTypeParameterDependency(): void
+    {
+        $methodNode = new ClassMethod('someMethod');
+        $unionType = new UnionType([
+            new Name('UnionDepOne'),
+            new FullyQualifiedNameNode('NS\\UnionDepTwo')
+        ]);
+        $param = new Param(new Variable('param'), null, $unionType);
+        $methodNode->params = [$param];
+
+        $this->addNodeToAst($methodNode);
+
+        $this->assertTrue($this->dependenciesContain(
+            $this->dependencyInspectionVisitor->dependencies(),
+            new Clazz('UnionDepOne')
+        ));
+        $this->assertTrue($this->dependenciesContain(
+            $this->dependencyInspectionVisitor->dependencies(),
+            new Clazz('UnionDepTwo', new Namespaze(['NS']))
+        ));
+    }
+
+    public function testDetectsIntersectionTypeParameterDependency(): void
+    {
+        $methodNode = new ClassMethod('someMethod');
+        $intersectionType = new IntersectionType([
+            new Name('IntersectionDepOne'),
+            new FullyQualifiedNameNode('NS\\IntersectionDepTwo')
+        ]);
+        $param = new Param(new Variable('param'), null, $intersectionType);
+        $methodNode->params = [$param];
+
+        $this->addNodeToAst($methodNode);
+
+        $this->assertTrue($this->dependenciesContain(
+            $this->dependencyInspectionVisitor->dependencies(),
+            new Clazz('IntersectionDepOne')
+        ));
+        $this->assertTrue($this->dependenciesContain(
+            $this->dependencyInspectionVisitor->dependencies(),
+            new Clazz('IntersectionDepTwo', new Namespaze(['NS']))
+        ));
+    }
+
+    public function testDetectsUnionTypeReturnDependency(): void
+    {
+        $unionType = new UnionType([
+            new Name('ReturnUnionOne'),
+            new FullyQualifiedNameNode('NS\\ReturnUnionTwo')
+        ]);
+        $this->addNodeToAst(
+            new ClassMethod('anyMethod', ['returnType' => $unionType])
+        );
+
+        $this->assertTrue($this->dependenciesContain(
+            $this->dependencyInspectionVisitor->dependencies(),
+            new Clazz('ReturnUnionOne')
+        ));
+        $this->assertTrue($this->dependenciesContain(
+            $this->dependencyInspectionVisitor->dependencies(),
+            new Clazz('ReturnUnionTwo', new Namespaze(['NS']))
+        ));
+    }
+
+    public function testDetectsIntersectionTypeReturnDependency(): void
+    {
+        $intersectionType = new IntersectionType([
+            new Name('ReturnIntersectionOne'),
+            new FullyQualifiedNameNode('NS\\ReturnIntersectionTwo')
+        ]);
+        $this->addNodeToAst(
+            new ClassMethod('anyMethod', ['returnType' => $intersectionType])
+        );
+
+        $this->assertTrue($this->dependenciesContain(
+            $this->dependencyInspectionVisitor->dependencies(),
+            new Clazz('ReturnIntersectionOne')
+        ));
+        $this->assertTrue($this->dependenciesContain(
+            $this->dependencyInspectionVisitor->dependencies(),
+            new Clazz('ReturnIntersectionTwo', new Namespaze(['NS']))
         ));
     }
 
