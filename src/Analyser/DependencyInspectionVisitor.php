@@ -30,6 +30,9 @@ use PhpParser\Node\Stmt\Enum_ as EnumNode;
 use PhpParser\Node\UnionType;
 use PhpParser\Node\IntersectionType;
 use PhpParser\Node\AttributeGroup;
+use PhpParser\Node\FunctionLike;
+use PhpParser\Node\Identifier;
+use PhpParser\Node\NullableType;
 
 /**
  * @phpstan-type SubclassedNode ClassNode|InterfaceNode
@@ -54,7 +57,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     /**
      * {@inheritdoc}
      */
-    public function enterNode(Node $node)
+    public function enterNode(Node $node): void
     {
         if ($node instanceof ClassLikeNode) {
             $this->setCurrentClass($node);
@@ -63,12 +66,8 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
                 $this->addParentDependency($node);
             }
 
-            if ($node instanceof ClassNode) {
+            if ($node instanceof EnumNode || $node instanceof ClassNode) {
                 $this->addImplementedInterfaceDependency($node);
-            }
-            // Handle Enum backing type if it's a class/interface name
-            if ($node instanceof EnumNode && $node->scalarType === null && $node->backedType instanceof NameNode) {
-                $this->addName($node->backedType);
             }
         } elseif ($node instanceof NewNode
             && $node->class instanceof NameNode) {
@@ -99,19 +98,16 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
             foreach ($node->types as $name) {
                 $this->addName($name);
             }
-            // Add dependencies from Attributes
         } elseif ($node instanceof AttributeGroup) {
             foreach ($node->attrs as $attribute) {
                 $this->addName($attribute->name);
             }
-            // Add dependencies from Union Types (used in params, return types, properties)
         } elseif ($node instanceof UnionType) {
             foreach ($node->types as $type) {
                 if ($type instanceof NameNode) {
                     $this->addName($type);
                 }
             }
-            // Add dependencies from Intersection Types (used in params, return types, properties)
         } elseif ($node instanceof IntersectionType) {
             foreach ($node->types as $type) {
                 if ($type instanceof NameNode) {
@@ -123,6 +119,9 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
 
     public function addName(Name $name)
     {
+        if (count($name->getParts()) <= 0) {
+            return;
+        }
         $this->tempDependencies = $this->tempDependencies->add(
             $this->dependencyFactory->createClazzFromStringArray($name->getParts())
         );
@@ -224,14 +223,12 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     }
 
     /**
-     * @param ClassNode $node
+     * @param EnumNode|ClassNode $node
      */
-    private function addImplementedInterfaceDependency(ClassNode $node)
+    private function addImplementedInterfaceDependency(EnumNode|ClassNode $node)
     {
         foreach ($node->implements as $interfaceNode) {
-            $this->tempDependencies = $this->tempDependencies->add(
-                $this->dependencyFactory->createClazzFromStringArray($interfaceNode->getParts())
-            );
+            $this->addName($interfaceNode);
         }
     }
 
@@ -242,16 +239,17 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     {
         foreach ($node->params as $param) {
             /* @var Param */
-            if ($param->type instanceof NameNode && count($param->type->getParts()) > 0) {
-                $this->tempDependencies = $this->tempDependencies->add(
-                    $this->dependencyFactory->createClazzFromStringArray($param->type->getParts())
-                );
-                // Check if the parameter type is a Union or Intersection Type
+            if ($param->type instanceof NameNode) {
+                $this->addName($param->type);
             } elseif (($param->type instanceof UnionType || $param->type instanceof IntersectionType)) {
                 foreach ($param->type->types as $type) {
                     if ($type instanceof NameNode) {
                         $this->addName($type);
                     }
+                }
+            } elseif ($param->type instanceof NullableType) {
+                if ($param->type->type instanceof NameNode) {
+                    $this->addName($param->type->type);
                 }
             }
         }
@@ -267,44 +265,35 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         );
     }
 
-    /**
-     * @param SubclassedNode $node
-     *
-     * @return bool
-     */
-    private function isSubclass(ClassLikeNode $node)
+    private function isSubclass(ClassLikeNode $node): bool
     {
-        return !empty($node->extends);
+        if ($node instanceof InterfaceNode || $node instanceof ClassNode) {
+            return !empty($node->extends);
+        }
+
+        return false;
     }
 
-    /**
-     * @param Node $node
-     */
-    protected function addReturnType(Node $node)
+    protected function addReturnType(FunctionLike $node)
     {
-        if ($node->returnType instanceof NameNode) {
-            $this->tempDependencies = $this->tempDependencies->add(
-                $this->dependencyFactory->createClazzFromStringArray($node->returnType->getParts())
-            );
-            // Check if the return type is a Union or Intersection Type
-        } elseif (($node->returnType instanceof UnionType || $node->returnType instanceof IntersectionType)) {
-            foreach ($node->returnType->types as $type) {
+        $returnType = $node->getReturnType();
+        if ($returnType instanceof NameNode) {
+            $this->addName($returnType);
+        } elseif (($returnType instanceof UnionType || $returnType instanceof IntersectionType)) {
+            foreach ($returnType->types as $type) {
                 if ($type instanceof NameNode) {
                     $this->addName($type);
                 }
             }
+        } elseif ($returnType instanceof NullableType) {
+            $this->addName($returnType->type);
         }
     }
 
-    /**
-     * @param Node $node
-     */
-    private function addInstanceofDependency(Node $node)
+    private function addInstanceofDependency(InstanceofNode $node)
     {
         if ($node->class instanceof NameNode) {
-            $this->tempDependencies = $this->tempDependencies->add(
-                $this->dependencyFactory->createClazzFromStringArray($node->class->getParts())
-            );
+            $this->addName($node->class);
         }
     }
 }

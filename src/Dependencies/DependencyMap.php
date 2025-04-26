@@ -12,8 +12,8 @@ use Mihaeu\PhpDependencies\Util\AbstractMap;
 class DependencyMap extends AbstractMap
 {
     /**
-     * @param TKey $from
-     * @param TValue $to
+     * @param Dependency $from
+     * @param Dependency $to
      */
     public function add($from, $to): self
     {
@@ -53,7 +53,7 @@ class DependencyMap extends AbstractMap
 
     public function get(Dependency $from): DependencySet
     {
-        return $this->map[$from->toString()][self::$VALUE];
+        return $this->map[$from->toString()][self::$VALUE] ?? new DependencySet();
     }
 
     public function fromDependencies(): DependencySet
