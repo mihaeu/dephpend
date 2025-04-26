@@ -26,7 +26,9 @@
         "mikey179/vfsstream": "^1.6",
         "phpunit/phpunit": "^10.0",
         "squizlabs/php_codesniffer": "^3.3",
-        "friendsofphp/php-cs-fixer": "^3.75.0"
+        "friendsofphp/php-cs-fixer": "^3.75.0",
+        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan-phpunit": "^2.0"
     },
     "minimum-stability": "stable",
     "prefer-stable": true,
