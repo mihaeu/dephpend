@@ -22,15 +22,13 @@ class DependencyStructureMatrixBuilder
     }
 
     /**
-     * @param $dependencies
-     *
      * @return array
      */
     private function createEmptyDsm(DependencySet $dependencies)
     {
         return $dependencies->reduce([], function (array $combined, Dependency $dependency) use ($dependencies) {
             $combined[$dependency->toString()] = array_combine(
-                array_values($dependencies->toArray()),     // keys:    dependency name
+                array_values(array_map(static fn (Dependency $d): string => $d->toString(), $dependencies->toArray())),     // keys:    dependency name
                 array_pad([], $dependencies->count(), 0)    // values:  [0, 0, 0, ... , 0]
             );
             return $combined;

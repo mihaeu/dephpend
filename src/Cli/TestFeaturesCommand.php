@@ -52,7 +52,7 @@ class TestFeaturesCommand extends Command
         $application = new Application('', '', (new DependencyContainer([]))->dispatcher());
         $application->setAutoExit(false);
         $applicationOutput = new BufferedOutput();
-        $application->doRun(new ArgvInput($_SERVER['argv']), $applicationOutput);
+        $application->doRun(new ArgvInput(), $applicationOutput);
 
         $expected = $this->getExpectations($filename);
         $actual = $this->cleanOutput($applicationOutput->fetch());
