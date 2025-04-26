@@ -3,8 +3,8 @@ OK_COLOR=\x1b[32;01m
 ERROR_COLOR=\x1b[31;01m
 WARN_COLOR=\x1b[33;01m
 
-PHP=php
-PHP_NO_INI=php -n
+PHP=PHP_CS_FIXER_IGNORE_ENV=true php
+PHP_NO_INI=PHP_CS_FIXER_IGNORE_ENV=true php -n
 PHPUNIT=vendor/bin/phpunit
 
 all: autoload tests testdox cov
