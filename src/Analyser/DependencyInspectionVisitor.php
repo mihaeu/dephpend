@@ -266,6 +266,9 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         );
     }
 
+    /**
+     * @phpstan-assert-if-true ClassNode|InterfaceNode $node
+     */
     private function isSubclass(ClassLikeNode $node): bool
     {
         if ($node instanceof InterfaceNode || $node instanceof ClassNode) {
