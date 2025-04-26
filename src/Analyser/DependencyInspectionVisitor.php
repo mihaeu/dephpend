@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Analyser;
 
-use Mihaeu\PhpDependencies\Dependencies\Clazz;
+use Mihaeu\PhpDependencies\Dependencies\ClazzLike;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Dependencies\DependencySet;
@@ -26,27 +26,24 @@ use PhpParser\Node\Stmt\Trait_ as TraitNode;
 use PhpParser\Node\Stmt\TraitUse as UseTraitNode;
 use PhpParser\Node\Stmt\Use_ as UseNode;
 use PhpParser\NodeVisitorAbstract;
+use PhpParser\Node\Stmt\Enum_ as EnumNode;
+use PhpParser\Node\UnionType;
+use PhpParser\Node\IntersectionType;
+use PhpParser\Node\AttributeGroup;
 
 /**
  * @phpstan-type SubclassedNode ClassNode|InterfaceNode
  */
 class DependencyInspectionVisitor extends NodeVisitorAbstract
 {
-    /** @var DependencyMap */
-    private $dependencies;
+    private DependencyMap $dependencies;
 
-    /** @var DependencySet */
-    private $tempDependencies;
+    private DependencySet $tempDependencies;
 
-    /** @var Clazz */
-    private $currentClass;
+    private ?ClazzLike $currentClass;
 
-    /** @var DependencyFactory */
-    private $dependencyFactory;
+    private DependencyFactory $dependencyFactory;
 
-    /**
-     * @param DependencyFactory $dependencyFactory
-     */
     public function __construct(DependencyFactory $dependencyFactory)
     {
         $this->dependencyFactory = $dependencyFactory;
@@ -68,6 +65,10 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
 
             if ($node instanceof ClassNode) {
                 $this->addImplementedInterfaceDependency($node);
+            }
+            // Handle Enum backing type if it's a class/interface name
+            if ($node instanceof EnumNode && $node->scalarType === null && $node->backedType instanceof NameNode) {
+                $this->addName($node->backedType);
             }
         } elseif ($node instanceof NewNode
             && $node->class instanceof NameNode) {
@@ -97,6 +98,25 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         } elseif ($node instanceof CatchNode) {
             foreach ($node->types as $name) {
                 $this->addName($name);
+            }
+            // Add dependencies from Attributes
+        } elseif ($node instanceof AttributeGroup) {
+            foreach ($node->attrs as $attribute) {
+                $this->addName($attribute->name);
+            }
+            // Add dependencies from Union Types (used in params, return types, properties)
+        } elseif ($node instanceof UnionType) {
+            foreach ($node->types as $type) {
+                if ($type instanceof NameNode) {
+                    $this->addName($type);
+                }
+            }
+            // Add dependencies from Intersection Types (used in params, return types, properties)
+        } elseif ($node instanceof IntersectionType) {
+            foreach ($node->types as $type) {
+                if ($type instanceof NameNode) {
+                    $this->addName($type);
+                }
             }
         }
     }
@@ -180,8 +200,10 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
             $this->currentClass = $node->isAbstract()
                 ? $this->dependencyFactory->createAbstractClazzFromStringArray($node->namespacedName->getParts())
                 : $this->dependencyFactory->createClazzFromStringArray($node->namespacedName->getParts());
+        } elseif ($node instanceof EnumNode) {
+            $this->currentClass = $this->dependencyFactory->createClazzFromStringArray($node->namespacedName->getParts());
         } else {
-            $this->dependencyFactory->createClazzFromStringArray($node->namespacedName->getParts());
+            $this->currentClass = $this->dependencyFactory->createClazzFromStringArray($node->namespacedName->getParts());
         }
     }
 
@@ -226,6 +248,13 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
                 $this->tempDependencies = $this->tempDependencies->add(
                     $this->dependencyFactory->createClazzFromStringArray($param->type->getParts())
                 );
+                // Check if the parameter type is a Union or Intersection Type
+            } elseif (($param->type instanceof UnionType || $param->type instanceof IntersectionType)) {
+                foreach ($param->type->types as $type) {
+                    if ($type instanceof NameNode) {
+                        $this->addName($type);
+                    }
+                }
             }
         }
     }
@@ -259,6 +288,13 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
             $this->tempDependencies = $this->tempDependencies->add(
                 $this->dependencyFactory->createClazzFromStringArray($node->returnType->getParts())
             );
+            // Check if the return type is a Union or Intersection Type
+        } elseif (($node->returnType instanceof UnionType || $node->returnType instanceof IntersectionType)) {
+            foreach ($node->returnType->types as $type) {
+                if ($type instanceof NameNode) {
+                    $this->addName($type);
+                }
+            }
         }
     }
 
