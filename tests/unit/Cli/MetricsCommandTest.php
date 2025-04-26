@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser\Metrics;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -19,13 +19,13 @@ class MetricsCommandTest extends TestCase
     /** @var MetricsCommand */
     private $metricsCommand;
 
-    /** @var Metrics|PHPUnit_Framework_MockObject_MockObject */
+    /** @var Metrics&MockObject */
     private $metrics;
 
-    /** @var InputInterface|PHPUnit_Framework_MockObject_MockObject */
+    /** @var InputInterface&MockObject */
     private $input;
 
-    /** @var OutputInterface|PHPUnit_Framework_MockObject_MockObject */
+    /** @var OutputInterface&MockObject */
     private $output;
 
     protected function setUp(): void

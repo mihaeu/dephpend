@@ -124,8 +124,6 @@ abstract class AbstractMap implements Collection
     /**
      * Adds an item to the map.
      *
-     * @template TKey
-     * @template TValue
      * @param TKey $key
      * @param TValue $value
      */
@@ -146,5 +144,13 @@ abstract class AbstractMap implements Collection
     public function count(): int
     {
         return count($this->map);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isEmpty(): bool
+    {
+        return $this->count() === 0;
     }
 }

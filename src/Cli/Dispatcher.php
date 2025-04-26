@@ -68,7 +68,6 @@ class Dispatcher extends EventDispatcher
 
     /**
      * @param InputInterface $input
-     * @param DependencyContainer $dependencyContainer
      *
      * @return DependencyMap
      *

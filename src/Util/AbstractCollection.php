@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Util;
 
 /**
+ * @template T
+ *
  * @implements Collection<T>
  */
 abstract class AbstractCollection implements Collection
@@ -87,6 +89,11 @@ abstract class AbstractCollection implements Collection
     public function count(): int
     {
         return count($this->collection);
+    }
+
+    public function isEmpty(): bool
+    {
+        return $this->count() === 0;
     }
 
     /**
