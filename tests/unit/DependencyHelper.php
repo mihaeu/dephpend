@@ -46,8 +46,6 @@ class DependencyHelper
 
     /**
      * @param string $input format: NamespaceA\\ClassA
-     *
-     * @return Clazz
      */
     public static function clazz(string $input): Dependency
     {

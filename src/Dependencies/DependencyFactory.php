@@ -8,10 +8,8 @@ class DependencyFactory
 {
     /**
      * @param array $parts
-     *
-     * @return Dependency
      */
-    final public function createClazzFromStringArray(array $parts): Dependency
+    final public function createClazzFromStringArray(array $parts): Clazz|NullDependency
     {
         try {
             $clazz = new Clazz(
