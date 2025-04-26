@@ -8,8 +8,8 @@ use Mihaeu\PhpDependencies\Util\Util;
 
 class Namespaze implements Dependency
 {
-    /** @var string[] */
-    private $parts;
+    /** @var list<string> */
+    private array $parts;
 
     /**
      * @throws \InvalidArgumentException
@@ -61,7 +61,7 @@ class Namespaze implements Dependency
             : new self(array_slice($this->parts, 0, $maxDepth));
     }
 
-    public function reduceDepthFromLeftBy(int $reduction): Dependency
+    public function reduceDepthFromLeftBy(int $reduction): Namespaze
     {
         return $reduction >= $this->count()
             ? new self([])
