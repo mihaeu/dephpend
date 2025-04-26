@@ -6,20 +6,20 @@ namespace Mihaeu\PhpDependencies\OS;
 
 use Mihaeu\PhpDependencies\Exceptions\FileDoesNotExistException;
 use Mihaeu\PhpDependencies\Exceptions\FileIsNotReadableException;
+use SplFileInfo;
 
 class PhpFile
 {
-    /** @var \SplFileObject */
-    private $file;
+    private SplFileInfo $file;
 
-    public function __construct(\SplFileInfo $file)
+    public function __construct(SplFileInfo $file)
     {
         $this->ensureFileExists($file);
         $this->ensureFileIsReadable($file);
         $this->file = $file;
     }
 
-    public function file(): \SplFileInfo
+    public function file(): SplFileInfo
     {
         return $this->file;
     }
@@ -47,14 +47,14 @@ class PhpFile
         return $this->toString();
     }
 
-    private function ensureFileExists(\SplFileInfo $file)
+    private function ensureFileExists(SplFileInfo $file)
     {
         if (!$file->isFile() && !$file->isDir()) {
             throw new FileDoesNotExistException($file);
         }
     }
 
-    private function ensureFileIsReadable(\SplFileInfo $file)
+    private function ensureFileIsReadable(SplFileInfo $file)
     {
         if (!$file->isReadable()) {
             throw new FileIsNotReadableException($file);

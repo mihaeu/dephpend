@@ -7,25 +7,23 @@ use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
 use Mihaeu\PhpDependencies\DependencyHelper;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Finder\SplFileInfo;
+use SplFileInfo;
 
 /**
  * @covers Mihaeu\PhpDependencies\Analyser\XDebugFunctionTraceAnalyser
  */
 class XDebugFunctionTraceAnalyserTest extends TestCase
 {
-    /** @var XDebugFunctionTraceAnalyser */
-    private $xDebugFunctionTraceAnalyser;
+    private XDebugFunctionTraceAnalyser $xDebugFunctionTraceAnalyser;
 
-    /** @var SplFileInfo */
-    private $tempFile;
+    private SplFileInfo $tempFile;
 
     protected function setUp(): void
     {
         /** @var DependencyFactory&MockObject $dependencyFactory */
         $dependencyFactory = $this->createMock(DependencyFactory::class);
         $this->xDebugFunctionTraceAnalyser = new XDebugFunctionTraceAnalyser($dependencyFactory);
-        $this->tempFile = new \SplFileInfo(sys_get_temp_dir().'/'.'dephpend-trace.sample');
+        $this->tempFile = new SplFileInfo(sys_get_temp_dir().'/'.'dephpend-trace.sample');
         touch($this->tempFile->getPathname());
     }
 

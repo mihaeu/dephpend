@@ -56,8 +56,10 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
 
     /**
      * {@inheritdoc}
+     *
+     * @return array<Node>|int|Node|null
      */
-    public function enterNode(Node $node): void
+    public function enterNode(Node $node): array|int|Node|null
     {
         if ($node instanceof ClassLikeNode) {
             $this->setCurrentClass($node);
@@ -115,6 +117,8 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
                 }
             }
         }
+
+        return null;
     }
 
     public function addName(Name $name)
