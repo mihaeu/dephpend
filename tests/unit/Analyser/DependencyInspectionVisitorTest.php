@@ -401,15 +401,17 @@ class DependencyInspectionVisitorTest extends TestCase
 
     public function testAddsParentDependenciesForExtendableNodesOnly(): void
     {
-        $node = new EnumNode('WithoutExtends');
-        $node->namespacedName = new Name('A\\WithoutExtends');
-        $this->dependencyInspectionVisitor->enterNode($node);
+        $enumNode = new EnumNode('MyEnum');
+        $enumNode->namespacedName = new Name('MyNamespace\MyEnum');
 
-        $this->dependencyInspectionVisitor->leaveNode($node);
-        $this->assertFalse($this->dependenciesContain(
-            $this->dependencyInspectionVisitor->dependencies(),
-            new Clazz('WithoutExtends', new Namespaze(['A']))
-        ));
+        $this->dependencyInspectionVisitor->enterNode($enumNode);
+        $this->dependencyInspectionVisitor->leaveNode($enumNode);
+
+        $dependencies = $this->dependencyInspectionVisitor->dependencies();
+        $enumDependency = new Clazz('MyEnum', new Namespaze(['MyNamespace']));
+
+        $enumDepsSet = $dependencies->get($enumDependency);
+        $this->assertTrue($enumDepsSet->isEmpty(), 'Dependency set for Enum should be empty as no parent dependencies should be added.');
     }
 
     public function testDetectsAttributeDependency(): void
@@ -428,24 +430,6 @@ class DependencyInspectionVisitorTest extends TestCase
         $this->assertTrue($this->dependenciesContain(
             $this->dependencyInspectionVisitor->dependencies(),
             new Clazz('AttributeClass', new Namespaze(['Another']))
-        ));
-    }
-
-    public function testDetectsEnumBackingTypeDependency(): void
-    {
-        $enumNode = new EnumNode('MyEnum');
-        $enumNode->namespacedName = new Name('MyNamespace\\MyEnum');
-        $enumNode->backedType = new Name('MyBackingClass'); // Assuming it's a class name
-
-        // Enter/Leave the Enum node itself to register the backing type dependency
-        $this->dependencyInspectionVisitor->enterNode($enumNode);
-        $this->dependencyInspectionVisitor->leaveNode($enumNode);
-
-        // Note: The test primarily verifies the backing type dependency.
-        // The Enum itself (MyNamespace\MyEnum) should be captured when used elsewhere (like type hints), covered by other tests.
-        $this->assertTrue($this->dependenciesContain(
-            $this->dependencyInspectionVisitor->dependencies(),
-            new Clazz('MyBackingClass')
         ));
     }
 

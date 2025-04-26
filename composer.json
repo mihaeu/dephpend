@@ -10,12 +10,10 @@
     "homepage": "https://dephpend.com",
     "bin": ["bin/dephpend", "bin/php-trace"],
     "require": {
-        "php": "^8.1",
-        "nikic/php-parser": "^5.0",
-        "symfony/console": "^6",
-        "symfony/event-dispatcher": "^6",
-        "ext-tokenizer": "*",
-        "ext-mbstring": "*"
+        "php": "^8.2",
+        "nikic/php-parser": "^5.4",
+        "symfony/console": "^7",
+        "symfony/event-dispatcher": "^7"
     },
     "suggest": {
         "ext-json": "*",

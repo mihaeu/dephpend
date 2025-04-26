@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Dependencies;
 
+use Mihaeu\PhpDependencies\Dependencies\Dependency;
 use Mihaeu\PhpDependencies\Util\AbstractCollection;
 
 /**
@@ -12,7 +13,7 @@ use Mihaeu\PhpDependencies\Util\AbstractCollection;
 class DependencySet extends AbstractCollection
 {
     /**
-     * @param T $dependency
+     * @param Dependency $dependency
      */
     public function add($dependency): self
     {

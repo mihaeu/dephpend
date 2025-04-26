@@ -44,9 +44,7 @@ class ApplicationTest extends TestCase
         $_SERVER['argv'] = ['', 'text', sys_get_temp_dir()];
         $this->application = new Application('', '', $this->dispatcher);
 
-        /** @var Input&MockObject $input */
         $this->input = $this->createMock(Input::class);
-        /** @var Output&MockObject $output */
         $this->output = $this->createMock(Output::class);
         $this->output->method('getFormatter')->willReturn($this->createMock(OutputFormatter::class));
     }

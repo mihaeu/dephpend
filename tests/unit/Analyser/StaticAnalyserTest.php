@@ -10,26 +10,23 @@ use Mihaeu\PhpDependencies\OS\PhpFile;
 use Mihaeu\PhpDependencies\OS\PhpFileSet;
 use PhpParser\Error;
 use PhpParser\NodeTraverser;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 
 /**
  * @covers Mihaeu\PhpDependencies\Analyser\StaticAnalyser
  */
 class StaticAnalyserTest extends TestCase
 {
-    /** @var StaticAnalyser */
-    private $analyser;
+    private StaticAnalyser $analyser;
 
-    /** @var DependencyInspectionVisitor|PHPUnit_Framework_MockObject_MockObject */
-    private $dependencyInspectionVisitor;
+    private DependencyInspectionVisitor&MockObject $dependencyInspectionVisitor;
 
-    /** @var Parser */
-    private $parser;
+    private Parser&MockObject $parser;
 
     protected function setUp(): void
     {
-        /** @var NodeTraverser $nodeTraverser */
+        /** @var NodeTraverser&MockObject $nodeTraverser */
         $nodeTraverser = $this->createMock(NodeTraverser::class);
         $this->dependencyInspectionVisitor = $this->createMock(DependencyInspectionVisitor::class);
         $this->parser = $this->createMock(Parser::class);

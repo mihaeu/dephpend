@@ -52,31 +52,25 @@ interface Collection extends \Countable
     /**
      * @param \Closure $closure
      *
-     * @return Collection
+     * @return Collection<T>
      */
     public function filter(\Closure $closure): Collection;
 
     /**
-     * @return array
+     * @return array<T>
      */
     public function toArray(): array;
 
     /**
-     * @param $other
-     *
-     * @return bool
+     * @param T $other
      */
     public function contains($other): bool;
 
-    /**
-     * @return string
-     */
     public function toString(): string;
 
-    /**
-     * @param Collection $other
-     *
-     * @return bool
-     */
     public function equals(Collection $other): bool;
+
+    public function count(): int;
+
+    public function isEmpty(): bool;
 }
