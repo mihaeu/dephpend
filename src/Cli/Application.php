@@ -14,8 +14,7 @@ class Application extends \Symfony\Component\Console\Application
 {
     public const XDEBUG_WARNING = 'You are running dePHPend with xdebug enabled. This has a major impact on runtime performance. See https://getcomposer.org/xdebug';
 
-    /** @var ErrorOutput */
-    private $errorOutput;
+    private ?ErrorOutput $errorOutput = null;
 
     public function __construct(string $name, string $version, EventDispatcherInterface $dispatcher)
     {
@@ -26,7 +25,7 @@ class Application extends \Symfony\Component\Console\Application
         $this->setDispatcher($dispatcher);
     }
 
-    public function setErrorOutput(ErrorOutput $errorOutput): void
+    public function setErrorOutput(?ErrorOutput $errorOutput): void
     {
         $this->errorOutput = $errorOutput;
     }
@@ -78,7 +77,11 @@ class Application extends \Symfony\Component\Console\Application
 
     private function writeToStdErr(InputInterface $input, OutputInterface $output, string $message): void
     {
-        $this->setErrorOutput(new ErrorOutput(new SymfonyStyle($input, $output)));
+        // Only create a new ErrorOutput if one hasn't been explicitly set (e.g., by a test)
+        if ($this->errorOutput === null) {
+            $this->setErrorOutput(new ErrorOutput(new SymfonyStyle($input, $output)));
+        }
+        // Always use the current errorOutput instance
         $this->errorOutput->writeln($message);
     }
 }

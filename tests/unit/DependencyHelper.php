@@ -65,7 +65,7 @@ class DependencyHelper
     /**
      * @param string $input format: NamespaceA\\ClassA --> NamespaceB\\ClassB, NamespaceC\\ClassC
      *
-     * @return array
+     * @return array{0: Dependency, 1: DependencySet}
      */
     public static function dependencyPair(string $input) : array
     {

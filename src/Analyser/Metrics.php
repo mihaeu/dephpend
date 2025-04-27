@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Analyser;
 
+use Closure;
 use Mihaeu\PhpDependencies\Dependencies\AbstractClazz;
 use Mihaeu\PhpDependencies\Dependencies\Clazz;
 use Mihaeu\PhpDependencies\Dependencies\Dependency;
@@ -61,9 +62,7 @@ class Metrics
     /**
      * Afferent coupling is an indicator for the responsibility of a package.
      *
-     * @param DependencyMap $map
-     *
-     * @return array
+     * @return array<string, int>
      */
     public function afferentCoupling(DependencyMap $map): array
     {
@@ -83,9 +82,7 @@ class Metrics
     /**
      * Efferent coupling is an indicator for how independent a package is.
      *
-     * @param DependencyMap $map
-     *
-     * @return array
+     * @return array<string, int>
      */
     public function efferentCoupling(DependencyMap $map): array
     {
@@ -98,9 +95,7 @@ class Metrics
     /**
      * Instability is an indicator for how resilient a package is towards change.
      *
-     * @param DependencyMap $map
-     *
-     * @return array Key: Class Value: Range from 0 (completely stable) to 1 (completely unstable)
+     * @return array<string, float>
      */
     public function instability(DependencyMap $map): array
     {
@@ -114,7 +109,7 @@ class Metrics
         return $instability;
     }
 
-    private function countFilteredItems(DependencyMap $map, \Closure $closure)
+    private function countFilteredItems(DependencyMap $map, Closure $closure): int
     {
         return $map->fromDependencies()->filter($closure)->count();
     }

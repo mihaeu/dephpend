@@ -30,6 +30,9 @@ class PlantUmlWrapperTest extends TestCase
         $this->plantUmlFormatter = $this->createMock(PlantUmlFormatter::class);
     }
 
+    /**
+     * @return array<string, array{shellReturnCode: int, expectException: bool}>
+     */
     public static function plantUmlInstallationProvider(): array
     {
         return [

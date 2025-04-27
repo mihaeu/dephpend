@@ -7,6 +7,7 @@ namespace Mihaeu\PhpDependencies\OS;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Exceptions\PlantUmlNotInstalledException;
 use Mihaeu\PhpDependencies\Formatters\PlantUmlFormatter;
+use SplFileInfo;
 
 class PlantUmlWrapper
 {
@@ -27,13 +28,9 @@ class PlantUmlWrapper
     }
 
     /**
-     * @param DependencyMap $map
-     * @param \SplFileInfo  $destination
-     * @param bool          $keepUml
-     *
      * @throws PlantUmlNotInstalledException
      */
-    public function generate(DependencyMap $map, \SplFileInfo $destination, bool $keepUml = false)
+    public function generate(DependencyMap $map, SplFileInfo $destination, bool $keepUml = false): void
     {
         $this->ensurePlantUmlIsInstalled($this->shell);
 
@@ -47,11 +44,9 @@ class PlantUmlWrapper
     }
 
     /**
-     * @param ShellWrapper $shell
-     *
      * @throws PlantUmlNotInstalledException
      */
-    private function ensurePlantUmlIsInstalled(ShellWrapper $shell)
+    private function ensurePlantUmlIsInstalled(ShellWrapper $shell): void
     {
         if ($shell->run('plantuml -version') !== 0) {
             throw new PlantUmlNotInstalledException();

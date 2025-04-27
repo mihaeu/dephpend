@@ -78,7 +78,7 @@ abstract class ClazzLike implements Dependency
      *
      * @throws \InvalidArgumentException
      */
-    private function ensureClassNameIsValid(string $name)
+    private function ensureClassNameIsValid(string $name): void
     {
         if (preg_match('/^[a-zA-Z0-9_\x7f-\xff]+$/u', $name) !== 1) {
             throw new \InvalidArgumentException('Class name "' . $name . '" is not valid.');
