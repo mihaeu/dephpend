@@ -24,12 +24,12 @@ class PhpFile
         return $this->file;
     }
 
-    public function equals(PhpFile $other)
+    public function equals(PhpFile $other): bool
     {
         return $this->file()->getPathname() === $other->file()->getPathname();
     }
 
-    public function code()
+    public function code(): string
     {
         return @file_get_contents($this->file->getPathname());
     }
@@ -47,14 +47,14 @@ class PhpFile
         return $this->toString();
     }
 
-    private function ensureFileExists(SplFileInfo $file)
+    private function ensureFileExists(SplFileInfo $file): void
     {
         if (!$file->isFile() && !$file->isDir()) {
             throw new FileDoesNotExistException($file);
         }
     }
 
-    private function ensureFileIsReadable(SplFileInfo $file)
+    private function ensureFileIsReadable(SplFileInfo $file): void
     {
         if (!$file->isReadable()) {
             throw new FileIsNotReadableException($file);

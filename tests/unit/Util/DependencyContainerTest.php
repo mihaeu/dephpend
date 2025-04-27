@@ -7,6 +7,9 @@ namespace Mihaeu\PhpDependencies\Util;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionException;
+use ReflectionNamedType;
+use ReflectionUnionType;
+use ReflectionIntersectionType;
 
 /**
  * @covers Mihaeu\PhpDependencies\Util\DependencyContainer
@@ -14,7 +17,7 @@ use ReflectionException;
 class DependencyContainerTest extends TestCase
 {
     /**
-     * @return array
+     * @return list<array{non-empty-string, non-empty-string}>
      * @throws ReflectionException
      */
     public static function provideMethods(): array
@@ -22,7 +25,7 @@ class DependencyContainerTest extends TestCase
         $reflectionClass = new ReflectionClass(DependencyContainer::class);
         $methods = [];
         foreach ($reflectionClass->getMethods() as $method) {
-            if (!$method->hasReturnType()) {
+            if (! $method->hasReturnType()) {
                 continue;
             }
             $methods[] = [$method->getName(), (string) $method->getReturnType()];
@@ -32,8 +35,6 @@ class DependencyContainerTest extends TestCase
 
     /**
      * @dataProvider provideMethods
-     * @param string $methodName
-     * @param string $expectedReturnType
      */
     public function testCanInstantiateAllDependencies(string $methodName, string $expectedReturnType): void
     {

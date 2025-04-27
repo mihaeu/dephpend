@@ -76,6 +76,9 @@ class XDebugFunctionTraceAnalyserTest extends TestCase
         $this->xDebugFunctionTraceAnalyser->analyse($tmpFile);
     }
 
+    /**
+     * @param list<list<int|string>> $data
+     */
     private function createContent(array $data) : string
     {
         return array_reduce($data, static function (string $carry, array $lineParts) {
@@ -83,6 +86,9 @@ class XDebugFunctionTraceAnalyserTest extends TestCase
         }, '');
     }
 
+    /**
+     * @param list<list<int|string>> $data
+     */
     private function writeContent(array $data): void
     {
         file_put_contents($this->tempFile->getPathname(), $this->createContent($data));

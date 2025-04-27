@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Util   ;
 
+use Closure;
+
 class Functional
 {
+    /**
+     * @return Closure (mixed $x): mixed
+     */
     public static function id()
     {
         return function ($x) {
@@ -13,11 +18,14 @@ class Functional
         };
     }
 
-    public static function compose(...$functions): \Closure
+    /**
+     * @param Closure $functions
+     */
+    public static function compose(...$functions): Closure
     {
         return array_reduce(
             $functions,
-            function ($carry, $item) {
+            function (Closure $carry, Closure $item): Closure {
                 return function ($x) use ($carry, $item) {
                     return $item($carry($x));
                 };

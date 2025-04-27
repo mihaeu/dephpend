@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Formatters;
 
+use Closure;
 use Mihaeu\PhpDependencies\Dependencies\Dependency;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Dependencies\DependencySet;
@@ -15,7 +16,7 @@ class PlantUmlFormatter implements Formatter
     /**
      * {@inheritdoc}
      */
-    public function format(DependencyMap $map, ?\Closure $mappers = null): string
+    public function format(DependencyMap $map, ?Closure $mappers = null): string
     {
         return '@startuml'.PHP_EOL
             .$this->plantUmlNamespaceDefinitions($map).PHP_EOL
@@ -44,6 +45,9 @@ class PlantUmlFormatter implements Formatter
         );
     }
 
+    /**
+     * @return array<string, array<string, array<string, array<string>>>>
+     */
     private function buildNamespaceTree(DependencySet $namespaces): array
     {
         return $namespaces->reduce([], function (array $total, Namespaze $namespaze) {
@@ -58,6 +62,9 @@ class PlantUmlFormatter implements Formatter
         });
     }
 
+    /**
+     * @param array<string, array<string, array<string, array<string>>>> $buildNamespaceTree
+     */
     private function printNamespaceTree(array $buildNamespaceTree): string
     {
         return Util::reduce($buildNamespaceTree, function (string $total, string $namespace, array $children): string {

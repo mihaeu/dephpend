@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Dependencies;
 
+use function array_map;
+use function array_slice;
+use function trim;
+
 class DependencyFactory
 {
     /**
-     * @param array $parts
+     * @param array<string> $parts
      */
     final public function createClazzFromStringArray(array $parts): Clazz|NullDependency
     {
@@ -23,7 +27,7 @@ class DependencyFactory
     }
 
     /**
-     * @param array $parts
+     * @param array<string> $parts
      *
      * @return AbstractClazz
      */
@@ -36,7 +40,7 @@ class DependencyFactory
     }
 
     /**
-     * @param array $parts
+     * @param array<string> $parts
      *
      * @return Interfaze
      */
@@ -49,7 +53,7 @@ class DependencyFactory
     }
 
     /**
-     * @param array $parts
+     * @param array<string> $parts
      *
      * @return Trait_
      */
@@ -62,11 +66,11 @@ class DependencyFactory
     }
 
     /**
-     * @param array $parts
+     * @param array<string> $parts
      *
-     * @return array
+     * @return array<string>
      */
-    protected function extractNamespaceParts(array $parts)
+    protected function extractNamespaceParts(array $parts): array
     {
         return array_map(function (string $part) {
             return trim($part);
@@ -74,11 +78,9 @@ class DependencyFactory
     }
 
     /**
-     * @param array $parts
-     *
-     * @return mixed
+     * @param array<string> $parts
      */
-    protected function extractClazzPart(array $parts)
+    protected function extractClazzPart(array $parts): string
     {
         return trim(array_slice($parts, -1)[0]);
     }

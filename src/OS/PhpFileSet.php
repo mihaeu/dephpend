@@ -6,9 +6,12 @@ namespace Mihaeu\PhpDependencies\OS;
 
 use Mihaeu\PhpDependencies\Util\AbstractCollection;
 
+/**
+ * @extends AbstractCollection<PhpFile>
+ */
 class PhpFileSet extends AbstractCollection
 {
-    public function add(PhpFile $file): PhpFileSet
+    public function add(PhpFile $file): static
     {
         $clone = clone $this;
         if ($this->contains($file)) {
@@ -19,14 +22,14 @@ class PhpFileSet extends AbstractCollection
         return $clone;
     }
 
-    public function addAll(PhpFileSet $otherCollection): PhpFileSet
+    public function addAll(PhpFileSet $otherCollection): static
     {
         return $otherCollection->reduce(clone $this, function (self $set, PhpFile $file) {
             return $set->add($file);
         });
     }
 
-    public function contains($other): bool
+    public function contains(mixed $other): bool
     {
         return $this->any(function (PhpFile $file) use ($other) {
             return $file->equals($other);

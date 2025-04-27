@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Util;
 
+use Closure;
+
 /**
  * @template T
  *
@@ -17,7 +19,7 @@ abstract class AbstractCollection implements Collection
     /**
      * {@inheritdoc}
      */
-    public function any(\Closure $closure): bool
+    public function any(Closure $closure): bool
     {
         foreach ($this->collection as $item) {
             if ($closure($item) === true) {
@@ -29,11 +31,11 @@ abstract class AbstractCollection implements Collection
     }
 
     /**
-     * @param \Closure $closure
+     * @param Closure $closure
      *
      * @return bool
      */
-    public function none(\Closure $closure): bool
+    public function none(Closure $closure): bool
     {
         return !$this->any($closure);
     }
@@ -41,7 +43,7 @@ abstract class AbstractCollection implements Collection
     /**
      * {@inheritdoc}
      */
-    public function each(\Closure $closure)
+    public function each(Closure $closure): void
     {
         foreach ($this->collection as $item) {
             $closure($item);
@@ -51,7 +53,7 @@ abstract class AbstractCollection implements Collection
     /**
      * {@inheritdoc}
      */
-    public function mapToArray(\Closure $closure): array
+    public function mapToArray(Closure $closure): array
     {
         return array_map($closure, $this->collection);
     }
@@ -59,7 +61,7 @@ abstract class AbstractCollection implements Collection
     /**
      * {@inheritdoc}
      */
-    public function reduce($initial, \Closure $closure)
+    public function reduce(mixed $initial, Closure $closure): mixed
     {
         return array_reduce($this->collection, $closure, $initial);
     }
@@ -67,7 +69,7 @@ abstract class AbstractCollection implements Collection
     /**
      * {@inheritdoc}
      */
-    public function filter(\Closure $closure): Collection
+    public function filter(Closure $closure): Collection
     {
         $clone = clone $this;
         $clone->collection = array_values(array_filter($this->collection, $closure));
