@@ -8,24 +8,22 @@ use Mihaeu\PhpDependencies\Util\Util;
 
 class Namespaze implements Dependency
 {
-    /** @var list<string> */
-    private array $parts;
-
     /**
-     * @throws \InvalidArgumentException
-     */
-    public function __construct(array $parts)
-    {
-        $this->ensureNamespaceIsValid($parts);
-        $this->parts = $parts;
-    }
-
-    /**
-     * @param array $parts
+     * @param list<string> $parts
      *
      * @throws \InvalidArgumentException
      */
-    private function ensureNamespaceIsValid(array $parts)
+    public function __construct(private array $parts)
+    {
+        $this->ensureNamespaceIsValid($parts);
+    }
+
+    /**
+     * @param array<string> $parts
+     *
+     * @throws \InvalidArgumentException
+     */
+    private function ensureNamespaceIsValid(array $parts): void
     {
         if ($this->arrayContainsNotOnlyStrings($parts)) {
             throw new \InvalidArgumentException('Invalid namespace');
@@ -43,7 +41,7 @@ class Namespaze implements Dependency
     }
 
     /**
-     * @return string[]
+     * @return list<string>
      */
     public function parts(): array
     {
@@ -91,9 +89,7 @@ class Namespaze implements Dependency
     }
 
     /**
-     * @param array $parts
-     *
-     * @return bool
+     * @param array<string> $parts
      */
     private function arrayContainsNotOnlyStrings(array $parts): bool
     {

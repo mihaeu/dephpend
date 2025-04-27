@@ -11,17 +11,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class DotCommand extends BaseCommand
 {
-    /** @var DotWrapper */
-    private $dotWrapper;
-
-    public function __construct(DotWrapper $dotWrapper)
+    public function __construct(private DotWrapper $dotWrapper)
     {
-        parent::__construct('dot');
-
-        $this->dotWrapper = $dotWrapper;
-
         $this->defaultFormat = 'png';
         $this->allowedFormats = [$this->defaultFormat, 'dot', 'svg'];
+
+        parent::__construct('dot');
     }
 
     protected function configure()

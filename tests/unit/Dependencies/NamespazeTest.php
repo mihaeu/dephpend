@@ -25,6 +25,7 @@ class NamespazeTest extends TestCase
     public function testDetectsInvalidNamespaceParts(): void
     {
         $this->expectException(InvalidArgumentException::class);
+        /** @phpstan-ignore-next-line */
         new Namespaze([1]);
     }
 

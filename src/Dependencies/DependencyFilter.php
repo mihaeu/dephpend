@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Dependencies;
 
+use Closure;
 use Mihaeu\PhpDependencies\Util\Functional;
 
 class DependencyFilter
 {
-    /** @var array */
-    private $internals;
-
     /**
-     * @param array $internals
+     * @param array<string> $internals
      */
-    public function __construct(array $internals)
+    public function __construct(private array $internals)
     {
-        $this->internals = $internals;
     }
 
+    /**
+     * @param array<string, mixed> $options
+     */
     public function filterByOptions(DependencyMap $dependencies, array $options): DependencyMap
     {
         if (isset($options['underscore-namespaces']) && $options['underscore-namespaces'] === true) {
@@ -45,7 +45,10 @@ class DependencyFilter
         return $dependencies;
     }
 
-    public function postFiltersByOptions(array $options): \Closure
+    /**
+     * @param array<string, mixed> $options
+     */
+    public function postFiltersByOptions(array $options): Closure
     {
         $filters = [];
         if ($options['depth'] > 0) {
@@ -153,7 +156,7 @@ class DependencyFilter
         });
     }
 
-    private function ensureRegexIsValid(string $regex)
+    private function ensureRegexIsValid(string $regex): void
     {
         if (@preg_match($regex, '') === false) {
             throw new \InvalidArgumentException(

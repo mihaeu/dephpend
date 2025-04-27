@@ -33,12 +33,11 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class DependencyContainer
 {
-    /** @var array */
-    private $internals;
-
-    public function __construct(array $internals)
+    /**
+     * @param list<string> $internals
+     */
+    public function __construct(private array $internals)
     {
-        $this->internals = $internals;
     }
 
     public function dependencyFilter(): DependencyFilter

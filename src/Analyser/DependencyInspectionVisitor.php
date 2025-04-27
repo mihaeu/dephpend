@@ -121,7 +121,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         return null;
     }
 
-    public function addName(Name $name)
+    public function addName(Name $name): void
     {
         $this->tempDependencies = $this->tempDependencies->add(
             $this->dependencyFactory->createClazzFromStringArray($name->getParts())
@@ -135,9 +135,9 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
      *
      * @param Node $node
      *
-     * @return false|null|Node|\PhpParser\Node[]|void
+     * @return false|null|Node|\PhpParser\Node[]
      */
-    public function leaveNode(Node $node)
+    public function leaveNode(Node $node): bool|null|Node|array
     {
         if (!$node instanceof ClassLikeNode) {
             return null;
@@ -146,7 +146,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         // not in class context
         if ($this->currentClass === null) {
             $this->tempDependencies = new DependencySet();
-            return;
+            return null;
         }
 
         // by now the class should have been parsed so replace the
@@ -158,6 +158,8 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         );
         $this->tempDependencies = new DependencySet();
         $this->currentClass = null;
+
+        return null;
     }
 
     /**
@@ -181,10 +183,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         return $this->dependencies;
     }
 
-    /**
-     * @param ClassLikeNode $node
-     */
-    private function setCurrentClass(ClassLikeNode $node)
+    private function setCurrentClass(ClassLikeNode $node): void
     {
         if (!isset($node->namespacedName)) {
             return;
@@ -210,7 +209,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     /**
      * @param SubclassedNode $node
      */
-    private function addParentDependency(ClassLikeNode $node)
+    private function addParentDependency(ClassLikeNode $node): void
     {
         // interfaces EXTEND other interfaces, they don't implement them,
         // so if the node is an interface, then this could contain
@@ -219,16 +218,14 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
             ? $node->extends
             : [$node->extends];
         foreach ($extendedClasses as $extendedClass) {
-            $this->tempDependencies = $this->tempDependencies->add(
-                $this->dependencyFactory->createClazzFromStringArray($extendedClass->getParts())
-            );
+            $this->addName($extendedClass);
         }
     }
 
     /**
      * @param EnumNode|ClassNode $node
      */
-    private function addImplementedInterfaceDependency(EnumNode|ClassNode $node)
+    private function addImplementedInterfaceDependency(EnumNode|ClassNode $node): void
     {
         foreach ($node->implements as $interfaceNode) {
             $this->addName($interfaceNode);
@@ -238,7 +235,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
     /**
      * @param ClassMethodNode $node
      */
-    private function addInjectedDependencies(ClassMethodNode $node)
+    private function addInjectedDependencies(ClassMethodNode $node): void
     {
         foreach ($node->params as $param) {
             /* @var Param */
@@ -258,14 +255,9 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         }
     }
 
-    /**
-     * @param StaticCallNode $node
-     */
-    private function addStaticDependency(StaticCall $node)
+    private function addStaticDependency(StaticCall $node): void
     {
-        $this->tempDependencies = $this->tempDependencies->add(
-            $this->dependencyFactory->createClazzFromStringArray($node->class->getParts())
-        );
+        $this->addName($node->class);
     }
 
     /**
@@ -280,7 +272,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         return false;
     }
 
-    protected function addReturnType(FunctionLike $node)
+    private function addReturnType(FunctionLike $node): void
     {
         $returnType = $node->getReturnType();
         if ($returnType instanceof NameNode) {
@@ -296,7 +288,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         }
     }
 
-    private function addInstanceofDependency(InstanceofNode $node)
+    private function addInstanceofDependency(InstanceofNode $node): void
     {
         if ($node->class instanceof NameNode) {
             $this->addName($node->class);

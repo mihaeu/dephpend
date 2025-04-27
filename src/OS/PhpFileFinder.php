@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\OS;
 
+use SplFileInfo;
+
 class PhpFileFinder
 {
-    public function find(\SplFileInfo $file): PhpFileSet
+    public function find(SplFileInfo $file): PhpFileSet
     {
         return $file->isDir()
             ? $this->findInDir($file)
             : (new PhpFileSet())->add(new PhpFile($file));
     }
 
-    private function findInDir(\SplFileInfo $dir): PhpFileSet
+    private function findInDir(SplFileInfo $dir): PhpFileSet
     {
         $collection = new PhpFileSet();
         $regexIterator = new \RegexIterator(
@@ -24,14 +26,14 @@ class PhpFileFinder
             \RecursiveRegexIterator::GET_MATCH
         );
         foreach ($regexIterator as $fileName) {
-            $collection = $collection->add(new PhpFile(new \SplFileInfo($fileName[0])));
+            $collection = $collection->add(new PhpFile(new SplFileInfo($fileName[0])));
         }
 
         return $collection;
     }
 
     /**
-     * @param array $sources
+     * @param list<string> $sources
      *
      * @return PhpFileSet
      */
@@ -40,7 +42,7 @@ class PhpFileFinder
         return array_reduce(
             $sources,
             function (PhpFileSet $set, string $source) {
-                return $set->addAll($this->find(new \SplFileInfo($source)));
+                return $set->addAll($this->find(new SplFileInfo($source)));
             },
             new PhpFileSet()
         );

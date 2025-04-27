@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
+use InvalidArgumentException;
 use Mihaeu\PhpDependencies\OS\PlantUmlWrapper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -11,14 +12,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class UmlCommand extends BaseCommand
 {
-    /** @var PlantUmlWrapper */
-    private $plantUmlWrapper;
-
-    public function __construct(PlantUmlWrapper $plantUmlWrapper)
+    public function __construct(private PlantUmlWrapper $plantUmlWrapper)
     {
         parent::__construct('uml');
-
-        $this->plantUmlWrapper = $plantUmlWrapper;
 
         $this->defaultFormat = 'png';
         $this->allowedFormats = [$this->defaultFormat];
@@ -64,14 +60,12 @@ class UmlCommand extends BaseCommand
     }
 
     /**
-     * @param $outputOption
-     *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    private function ensureOutputExists($outputOption)
+    private function ensureOutputExists(mixed $outputOption): void
     {
         if ($outputOption === null) {
-            throw new \InvalidArgumentException('Output not defined (use "help" for more information).');
+            throw new InvalidArgumentException('Output not defined (use "help" for more information).');
         }
     }
 }

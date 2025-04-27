@@ -4,25 +4,30 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
+use Closure;
+use Exception;
+use InvalidArgumentException;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Util\Functional;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+use function implode;
+use function in_array;
+use function is_readable;
+use function is_writable;
+use function preg_replace;
 
 abstract class BaseCommand extends Command
 {
-    /** @var DependencyMap */
-    protected $dependencies;
+    protected DependencyMap $dependencies;
 
-    /** @var \Closure */
-    protected $postProcessors;
+    protected Closure $postProcessors;
 
-    /** @var string */
-    protected $defaultFormat;
+    protected string $defaultFormat;
 
-    /** @var string[] */
-    protected $allowedFormats;
+    /** @var list<string> */
+    protected array $allowedFormats;
 
     public function __construct(?string $name = null)
     {
@@ -33,12 +38,12 @@ abstract class BaseCommand extends Command
     }
 
 
-    public function setDependencies(DependencyMap $dependencies)
+    public function setDependencies(DependencyMap $dependencies): void
     {
         $this->dependencies = $dependencies;
     }
 
-    public function setPostProcessors(\Closure $postProcessors)
+    public function setPostProcessors(Closure $postProcessors): void
     {
         $this->postProcessors = $postProcessors;
     }
@@ -105,27 +110,25 @@ abstract class BaseCommand extends Command
     }
 
     /**
-     * @param string $destination
-     *
-     * @throws \Exception
+     * @throws InvalidArgumentException
      */
-    protected function ensureOutputFormatIsValid(string $destination)
+    protected function ensureOutputFormatIsValid(string $destination): void
     {
         if (!in_array(preg_replace('/.+\.(\w+)$/', '$1', $destination), $this->allowedFormats, true)) {
-            throw new \InvalidArgumentException('Output format is not allowed ('.implode(', ', $this->allowedFormats).')');
+            throw new InvalidArgumentException('Output format is not allowed ('.implode(', ', $this->allowedFormats).')');
         }
     }
 
     /**
-     * @param string[] $sources
+     * @param list<string> $sources
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    protected function ensureSourcesAreReadable(array $sources)
+    protected function ensureSourcesAreReadable(array $sources): void
     {
         foreach ($sources as $source) {
             if (!is_readable($source)) {
-                throw new \InvalidArgumentException('File/Directory does not exist or is not readable.');
+                throw new InvalidArgumentException('File/Directory does not exist or is not readable.');
             }
         }
     }
@@ -133,12 +136,12 @@ abstract class BaseCommand extends Command
     /**
      * @param string $destination
      *
-     * @throws \Exception
+     * @throws InvalidArgumentException
      */
-    protected function ensureDestinationIsWritable(string $destination)
+    protected function ensureDestinationIsWritable(string $destination): void
     {
         if (!is_writable(dirname($destination))) {
-            throw new \InvalidArgumentException('Destination is not writable.');
+            throw new InvalidArgumentException('Destination is not writable.');
         }
     }
 }

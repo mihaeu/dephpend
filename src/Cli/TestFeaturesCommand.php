@@ -4,12 +4,22 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
+use Closure;
 use Mihaeu\PhpDependencies\Util\DependencyContainer;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use RecursiveRegexIterator;
+use RegexIterator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Traversable;
+use function array_map;
+use function str_replace;
+use function trim;
+use function usort;
 
 // @codeCoverageIgnoreStart
 class TestFeaturesCommand extends Command
@@ -46,6 +56,11 @@ class TestFeaturesCommand extends Command
         return 0;
     }
 
+    /**
+     * @param string $filename
+     *
+     * @return array{bool, non-falsy-string}
+     */
     public function runTest(string $filename): array
     {
         $_SERVER['argv'] = [0, 'text', $filename];
@@ -95,22 +110,21 @@ class TestFeaturesCommand extends Command
     }
 
     /**
-     *
-     * @return \RegexIterator
+     * @return Traversable<mixed, list<string>>
      */
-    protected function fetchAllFeatureTests(): \RegexIterator
+    protected function fetchAllFeatureTests(): Traversable
     {
-        return new \RegexIterator(
-            new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(__DIR__ . '/../../tests/samples')),
+        return new RegexIterator(
+            new RecursiveIteratorIterator(new RecursiveDirectoryIterator(__DIR__ . '/../../tests/samples')),
             '/^.+Feature\.php$/i',
-            \RecursiveRegexIterator::GET_MATCH
+            RecursiveRegexIterator::GET_MATCH
         );
     }
 
     /**
-     * @param $files
+     * @param Traversable<mixed, list<string>> $files
      *
-     * @return array
+     * @return array<array{bool, non-falsy-string}>
      */
     protected function runAllTests($files): array
     {
@@ -119,7 +133,7 @@ class TestFeaturesCommand extends Command
         }, iterator_to_array($files));
     }
 
-    private function sortSuccessFirst(): \Closure
+    private function sortSuccessFirst(): Closure
     {
         return function (array $x, array $y) {
             if ($x[0] === true) {
