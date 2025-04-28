@@ -813,7 +813,7 @@ class DependencyInspectionVisitorTest extends TestCase
     {
         $methodNode = new ClassMethod('someMethod');
         $methodNode->setDocComment(new Doc('/**
-         * @param TestNamespace\\ArrayClass[] $param
+         * @param ?TestNamespace\\ArrayClass[] $param
          */'));
         
         $this->addNodeToAst($methodNode);
