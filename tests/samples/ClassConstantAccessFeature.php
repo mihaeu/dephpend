@@ -5,6 +5,6 @@ class A
 {
     public function test(): void
     {
-        B::x();
+        $b = B::CONSTANT;
     }
 }
