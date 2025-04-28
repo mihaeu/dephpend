@@ -31,10 +31,10 @@ abstract class BaseCommand extends Command
 
     public function __construct(?string $name = null)
     {
-        parent::__construct($name);
-
         $this->dependencies = new DependencyMap();
         $this->postProcessors = Functional::id();
+
+        parent::__construct($name);
     }
 
 
@@ -50,7 +50,6 @@ abstract class BaseCommand extends Command
 
     protected function configure()
     {
-        parent::configure();
         $this
             ->addArgument(
                 'source',

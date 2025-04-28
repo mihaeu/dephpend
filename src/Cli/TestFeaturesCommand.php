@@ -10,6 +10,7 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RecursiveRegexIterator;
 use RegexIterator;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
@@ -22,25 +23,13 @@ use function trim;
 use function usort;
 
 // @codeCoverageIgnoreStart
+#[AsCommand(
+    name: 'test-features',
+    description: 'Test support for dependency detection',
+    hidden: false,
+)]
 class TestFeaturesCommand extends Command
 {
-    /**
-     * @inheritDoc
-     */
-    public function __construct()
-    {
-        parent::__construct('test-features');
-    }
-
-    protected function configure()
-    {
-        parent::configure();
-
-        $this
-            ->setDescription('Test support for dependency detection')
-        ;
-    }
-
     /**
      * @inheritDoc
      */
@@ -53,7 +42,7 @@ class TestFeaturesCommand extends Command
         foreach ($results as $result) {
             $output->writeln($result[1]);
         }
-        return 0;
+        return Command::SUCCESS;
     }
 
     /**
@@ -63,11 +52,11 @@ class TestFeaturesCommand extends Command
      */
     public function runTest(string $filename): array
     {
-        $_SERVER['argv'] = [0, 'text', $filename];
         $application = new Application('', '', (new DependencyContainer([]))->dispatcher());
+        $application->add(new TextCommand());
         $application->setAutoExit(false);
         $applicationOutput = new BufferedOutput();
-        $application->doRun(new ArgvInput(), $applicationOutput);
+        $application->doRun(new ArgvInput([0, 'text', $filename]), $applicationOutput);
 
         $expected = $this->getExpectations($filename);
         $actual = $this->cleanOutput($applicationOutput->fetch());
