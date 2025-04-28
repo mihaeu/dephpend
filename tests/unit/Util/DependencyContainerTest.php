@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Util;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionException;
@@ -20,7 +21,7 @@ class DependencyContainerTest extends TestCase
      * @return list<array{non-empty-string, non-empty-string}>
      * @throws ReflectionException
      */
-    public function provideMethods(): array
+    public static function provideMethods(): array
     {
         $reflectionClass = new ReflectionClass(DependencyContainer::class);
         $methods = [];
@@ -33,9 +34,7 @@ class DependencyContainerTest extends TestCase
         return $methods;
     }
 
-    /**
-     * @dataProvider provideMethods
-     */
+    #[DataProvider('provideMethods')]
     public function testCanInstantiateAllDependencies(string $methodName, string $expectedReturnType): void
     {
         $this->assertInstanceOf($expectedReturnType, (new DependencyContainer([]))->{$methodName}());
