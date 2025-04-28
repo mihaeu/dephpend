@@ -114,8 +114,6 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         }
 
         if ($node instanceof ClassLikeNode) {
-            $this->templateTypes = [];
-            $this->addedTemplateConstraints = [];
             if ($node->getDocComment() instanceof Doc) {
                 $docText = $node->getDocComment()->getText();
                 $this->extractTemplateTypes($docText);
@@ -244,6 +242,11 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
             $this->currentScope = null;
         }
     
+        if ($node instanceof ClassLikeNode) {
+            $this->templateTypes = [];
+            $this->addedTemplateConstraints = [];
+        }
+    
         if (!$node instanceof ClassLikeNode) {
             return null;
         }
@@ -280,6 +283,8 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         $this->currentClass = null;
         $this->variableValues = [];
         $this->currentScope = null;
+        $this->templateTypes = [];
+        $this->addedTemplateConstraints = [];
     }
 
     /**
@@ -496,8 +501,18 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         }
         // Strip array notation variants (Type[] or Type[][])
         $type = preg_replace('/(\[\])+$/', '', $type);
+        // Remove nullable type indicator
+        if (strpos($type, '?') === 0) {
+            $type = substr($type, 1);
+        }
+        // Remove leading backslash for fully qualified names
+        if (strpos($type, '\\') === 0) {
+            $type = substr($type, 1);
+        }
+        // Normalize again after all stripping
+        $type = trim($type);
         // Skip template types, but add their constraint as a dependency if present
-        if (isset($this->templateTypes[$type])) {
+        if (array_key_exists($type, $this->templateTypes)) {
             $constraint = $this->templateTypes[$type];
             if ($constraint && !$this->isPrimitiveType($constraint)) {
                 if (!isset($this->addedTemplateConstraints[$constraint])) {
