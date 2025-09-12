@@ -7,15 +7,14 @@ namespace Mihaeu\PhpDependencies\OS;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Exceptions\PlantUmlNotInstalledException;
 use Mihaeu\PhpDependencies\Formatters\PlantUmlFormatter;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use SplFileInfo;
-use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @covers Mihaeu\PhpDependencies\OS\PlantUmlWrapper
- * @covers Mihaeu\PhpDependencies\Exceptions\PlantUmlNotInstalledException
- */
+#[CoversClass(\Mihaeu\PhpDependencies\OS\PlantUmlWrapper::class)]
+#[CoversClass(\Mihaeu\PhpDependencies\Exceptions\PlantUmlNotInstalledException::class)]
 class PlantUmlWrapperTest extends TestCase
 {
     /** @var ShellWrapper&MockObject */

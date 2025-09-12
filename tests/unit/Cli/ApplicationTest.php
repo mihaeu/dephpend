@@ -7,21 +7,18 @@ namespace Mihaeu\PhpDependencies\Cli;
 use Mihaeu\PhpDependencies\Exceptions\ParserException;
 use Mihaeu\PhpDependencies\OS\DotWrapper;
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\Input;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\Output;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-/**
- * @covers Mihaeu\PhpDependencies\Cli\Application
- * @covers \Mihaeu\PhpDependencies\Exceptions\ParserException
- */
+#[CoversClass(Application::class)]
+#[CoversClass(ParserException::class)]
 class ApplicationTest extends TestCase
 {
     /** @var Application */

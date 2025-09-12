@@ -6,14 +6,13 @@ use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Exceptions\DotNotInstalledException;
 use Mihaeu\PhpDependencies\Formatters\DotFormatter;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use SplFileInfo;
 
-/**
- * @covers Mihaeu\PhpDependencies\OS\DotWrapper
- * @covers \Mihaeu\PhpDependencies\Exceptions\DotNotInstalledException
- */
+#[CoversClass(\Mihaeu\PhpDependencies\OS\DotWrapper::class)]
+#[CoversClass(\Mihaeu\PhpDependencies\Exceptions\DotNotInstalledException::class)]
 class DotWrapperTest extends TestCase
 {
     /** @var ShellWrapper&MockObject */

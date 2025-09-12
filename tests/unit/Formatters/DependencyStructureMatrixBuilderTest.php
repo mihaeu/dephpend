@@ -4,11 +4,10 @@ namespace Mihaeu\PhpDependencies\Formatters;
 
 use Mihaeu\PhpDependencies\DependencyHelper;
 use Mihaeu\PhpDependencies\Util\Functional;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers Mihaeu\PhpDependencies\Formatters\DependencyStructureMatrixBuilder
- */
+#[CoversClass(\Mihaeu\PhpDependencies\Formatters\DependencyStructureMatrixBuilder::class)]
 class DependencyStructureMatrixBuilderTest extends TestCase
 {
     /** @var DependencyStructureMatrixBuilder */

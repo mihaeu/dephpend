@@ -39,6 +39,7 @@ use PhpParser\Node\UnionType;
 use PhpParser\Node\IntersectionType;
 use PhpParser\Node\Identifier;
 use PhpParser\Comment\Doc;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -61,8 +62,8 @@ use PHPUnit\Framework\TestCase;
  *  - leave the Class node
  *  - verify that TestClassA --> OtherClass was detected
  *
- * @covers Mihaeu\PhpDependencies\Analyser\DependencyInspectionVisitor
  */
+#[CoversClass(DependencyInspectionVisitor::class)]
 class DependencyInspectionVisitorTest extends TestCase
 {
     /** @var DependencyInspectionVisitor */
