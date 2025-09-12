@@ -10,6 +10,7 @@ use Mihaeu\PhpDependencies\OS\PhpFile;
 use Mihaeu\PhpDependencies\OS\PhpFileSet;
 use PhpParser\Error;
 use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitor\NameResolver;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -19,19 +20,24 @@ class StaticAnalyserTest extends TestCase
 {
     private StaticAnalyser $analyser;
 
+    private NameResolver&MockObject $nameResolver;
+
+    private NodeTraverser&MockObject $nodeTraverser;
+
     private DependencyInspectionVisitor&MockObject $dependencyInspectionVisitor;
 
     private Parser&MockObject $parser;
 
     protected function setUp(): void
     {
-        /** @var NodeTraverser&MockObject $nodeTraverser */
-        $nodeTraverser = $this->createMock(NodeTraverser::class);
+        $this->nodeTraverser = $this->createMock(NodeTraverser::class);
         $this->dependencyInspectionVisitor = $this->createMock(DependencyInspectionVisitor::class);
         $this->parser = $this->createMock(Parser::class);
+        $this->nameResolver = $this->createMock(NameResolver::class);
 
         $this->analyser = new StaticAnalyser(
-            $nodeTraverser,
+            $this->nodeTraverser,
+            $this->nameResolver,
             $this->dependencyInspectionVisitor,
             $this->parser
         );

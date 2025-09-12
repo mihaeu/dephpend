@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Cli;
 
 use Closure;
-use Exception;
 use InvalidArgumentException;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Util\Functional;

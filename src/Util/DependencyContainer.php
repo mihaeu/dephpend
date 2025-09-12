@@ -28,6 +28,7 @@ use Mihaeu\PhpDependencies\OS\PhpFileFinder;
 use Mihaeu\PhpDependencies\OS\PlantUmlWrapper;
 use Mihaeu\PhpDependencies\OS\ShellWrapper;
 use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\ParserFactory;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -60,13 +61,27 @@ class DependencyContainer
         return new DependencyFactory();
     }
 
+    public function nameResolver(): NameResolver
+    {
+        return new NameResolver();
+    }
+
+    public function nodeTraverser(): NodeTraverser
+    {
+        return new NodeTraverser();
+    }
+
+    public function dependencyInspectionVisitor(): DependencyInspectionVisitor
+    {
+        return new DependencyInspectionVisitor($this->dependencyFactory());
+    }
+
     public function staticAnalyser(): StaticAnalyser
     {
         return new StaticAnalyser(
-            new NodeTraverser(),
-            new DependencyInspectionVisitor(
-                $this->dependencyFactory()
-            ),
+            $this->nodeTraverser(),
+            $this->nameResolver(),
+            $this->dependencyInspectionVisitor(),
             $this->parser()
         );
     }
