@@ -16,10 +16,11 @@ class StaticAnalyser
 {
     public function __construct(
         private NodeTraverser $nodeTraverser,
+        private NameResolver $nameResolver,
         private DependencyInspectionVisitor $dependencyInspectionVisitor,
         private Parser $parser
     ) {
-        $this->nodeTraverser->addVisitor(new NameResolver());
+        $this->nodeTraverser->addVisitor($this->nameResolver);
         $this->nodeTraverser->addVisitor($this->dependencyInspectionVisitor);
     }
 

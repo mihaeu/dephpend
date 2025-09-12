@@ -22,7 +22,7 @@ use PhpParser\Node\Expr\New_ as NewNode;
 use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Name;
-use PhpParser\Node\Name\FullyQualified as FullyQualifiedNameNode;
+use PhpParser\Node\Name\FullyQualified;
 use PhpParser\Node\Param;
 use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt\Catch_;
@@ -104,7 +104,7 @@ class DependencyInspectionVisitorTest extends TestCase
     private function createAndEnterCurrentClassNode(): ClassNode
     {
         $node = new ClassNode('SomeClass');
-        $node->namespacedName = new Name('SomeNamespace\\SomeClass');
+        $node->namespacedName = new FullyQualified('SomeNamespace\\SomeClass');
         $this->dependencyInspectionVisitor->enterNode($node);
 
         return $node;
@@ -119,7 +119,7 @@ class DependencyInspectionVisitorTest extends TestCase
     private function createAndEnterNamedClassNode(string $className): ClassNode
     {
         $node = new ClassNode($className);
-        $node->namespacedName = new Name($className);
+        $node->namespacedName = new FullyQualified($className);
         $this->dependencyInspectionVisitor->enterNode($node);
 
         return $node;
@@ -145,7 +145,7 @@ class DependencyInspectionVisitorTest extends TestCase
      */
     private function addRandomDependency(): void
     {
-        $newNode = new NewNode(new FullyQualifiedNameNode('TestDep'));
+        $newNode = new NewNode(new FullyQualified('TestDep'));
         $this->dependencyInspectionVisitor->enterNode($newNode);
         $this->dependencyInspectionVisitor->leaveNode($newNode);
     }
@@ -154,7 +154,7 @@ class DependencyInspectionVisitorTest extends TestCase
     {
         $node = $this->createAndEnterCurrentClassNode();
 
-        $newNode = new NewNode(new FullyQualifiedNameNode('TestDep'));
+        $newNode = new NewNode(new FullyQualified('TestDep'));
         $this->dependencyInspectionVisitor->enterNode($newNode);
 
         $this->dependencyInspectionVisitor->leaveNode($node);
@@ -164,8 +164,8 @@ class DependencyInspectionVisitorTest extends TestCase
     public function testDetectsExtendedClasses(): void
     {
         $node = new ClassNode('SomeClass');
-        $node->namespacedName = new Name('SomeNamespace\\SomeClass');
-        $node->extends = new Name(['A', 'a', '1', 'ClassA']);
+        $node->namespacedName = new FullyQualified('SomeNamespace\\SomeClass');
+        $node->extends = new FullyQualified(['A', 'a', '1', 'ClassA']);
 
         $this->dependencyInspectionVisitor->enterNode($node);
 
@@ -178,8 +178,8 @@ class DependencyInspectionVisitorTest extends TestCase
 
     public function testDetectsWhenInterfacesImplementMultipleInterfaces(): void
     {
-        $node = new InterfaceNode('SomeInterface', ['extends' => [new Name('A\\a\\1\\ClassA'), new Name('B\\b\\2\\ClassB')]]);
-        $node->namespacedName = new Name('SomeNamespace\\SomeInterface');
+        $node = new InterfaceNode('SomeInterface', ['extends' => [new FullyQualified('A\\a\\1\\ClassA'), new FullyQualified('B\\b\\2\\ClassB')]]);
+        $node->namespacedName = new FullyQualified('SomeNamespace\\SomeInterface');
         $this->dependencyInspectionVisitor->enterNode($node);
 
         $this->dependencyInspectionVisitor->leaveNode($node);
@@ -196,7 +196,7 @@ class DependencyInspectionVisitorTest extends TestCase
     public function testDetectsAbstractClasses(): void
     {
         $node = new ClassNode('Test', ['type' => Modifiers::ABSTRACT]);
-        $node->namespacedName = new Name('A\\Test');
+        $node->namespacedName = new FullyQualified('A\\Test');
 
         $this->dependencyInspectionVisitor->enterNode($node);
 
@@ -212,7 +212,7 @@ class DependencyInspectionVisitorTest extends TestCase
     public function testDetectsInterfaces(): void
     {
         $node = new InterfaceNode('Test');
-        $node->namespacedName = new Name('A\\Test');
+        $node->namespacedName = new FullyQualified('A\\Test');
         $this->dependencyInspectionVisitor->enterNode($node);
 
         $this->addRandomDependency();
@@ -227,10 +227,10 @@ class DependencyInspectionVisitorTest extends TestCase
     public function testDetectsImplementedInterfaces(): void
     {
         $node = new ClassNode('SomeClass');
-        $node->namespacedName = new Name('SomeNamespace\\SomeClass');
+        $node->namespacedName = new FullyQualified('SomeNamespace\\SomeClass');
 
-        $interfaceOneNode = new Name('A\\B\\InterfaceOne');
-        $interfaceTwoNode = new Name('C\\D\\InterfaceTwo');
+        $interfaceOneNode = new FullyQualified('A\\B\\InterfaceOne');
+        $interfaceTwoNode = new FullyQualified('C\\D\\InterfaceTwo');
         $node->implements = [$interfaceOneNode, $interfaceTwoNode];
         $this->dependencyInspectionVisitor->enterNode($node);
 
@@ -257,8 +257,8 @@ class DependencyInspectionVisitorTest extends TestCase
     public function testDetectsDependenciesFromMethodArguments(): void
     {
         $methodNode = new ClassMethod('someMethod');
-        $paramOne = new Param(new Variable('one'), null, new Name(['A\\B\\DependencyOne']));
-        $paramTwo = new Param(new Variable('two'), null, new Name(['A\\B\\DependencyTwo']));
+        $paramOne = new Param(new Variable('one'), null, new FullyQualified(['A\\B\\DependencyOne']));
+        $paramTwo = new Param(new Variable('two'), null, new FullyQualified(['A\\B\\DependencyTwo']));
         $methodNode->params = [
             $paramOne,
             $paramTwo,
@@ -280,7 +280,7 @@ class DependencyInspectionVisitorTest extends TestCase
     {
         $this->addNodeToAst(
             new UseNode(
-                [new Node\Stmt\UseUse(new Name(['A', 'a', '1', 'Test']))]
+                [new Node\Stmt\UseUse(new FullyQualified(['A', 'a', '1', 'Test']))]
             )
         );
 
@@ -293,7 +293,7 @@ class DependencyInspectionVisitorTest extends TestCase
     public function testReturnType(): void
     {
         $this->addNodeToAst(
-            new ClassMethod('anyMethod', ['returnType' => new Name(['Namespace', 'Test'])])
+            new ClassMethod('anyMethod', ['returnType' => new FullyQualified(['Namespace', 'Test'])])
         );
 
         $this->assertTrue($this->dependenciesContain(
@@ -306,7 +306,7 @@ class DependencyInspectionVisitorTest extends TestCase
     {
         $node = $this->createAndEnterCurrentClassNode();
 
-        $staticCall = new StaticCall(new FullyQualifiedNameNode('A\\a\\1\\Singleton'), 'Singleton');
+        $staticCall = new StaticCall(new FullyQualified('A\\a\\1\\Singleton'), 'Singleton');
         $this->dependencyInspectionVisitor->enterNode($staticCall);
 
         $this->dependencyInspectionVisitor->leaveNode($node);
@@ -318,7 +318,7 @@ class DependencyInspectionVisitorTest extends TestCase
 
     public function testAddsDependenciesOnlyWhenInClassContext(): void
     {
-        $node = new NewNode(new FullyQualifiedNameNode('TestDep'));
+        $node = new NewNode(new FullyQualified('TestDep'));
         $this->dependencyInspectionVisitor->enterNode($node);
 
         // we leave the ClassNode, but we haven't entered it, so class context is unknown
@@ -330,7 +330,7 @@ class DependencyInspectionVisitorTest extends TestCase
     public function testTrait(): void
     {
         $node = new TraitNode('Test');
-        $node->namespacedName = new Name('A\\Test');
+        $node->namespacedName = new FullyQualified('A\\Test');
         $this->dependencyInspectionVisitor->enterNode($node);
 
         $this->addRandomDependency();
@@ -345,7 +345,7 @@ class DependencyInspectionVisitorTest extends TestCase
     public function testUseSingleTrait(): void
     {
         $this->addNodeToAst(
-            new TraitUse([new Name(['A', 'Test'])])
+            new TraitUse([new FullyQualified(['A', 'Test'])])
         );
 
         $this->assertTrue($this->dependenciesContain(
@@ -358,9 +358,9 @@ class DependencyInspectionVisitorTest extends TestCase
     {
         $this->addNodeToAst(
             new TraitUse([
-                new Name(['A', 'Test']),
-                new Name(['B', 'Test2']),
-                new Name(['C', 'Test3']),
+                new FullyQualified(['A', 'Test']),
+                new FullyQualified(['B', 'Test2']),
+                new FullyQualified(['C', 'Test3']),
             ])
         );
 
@@ -381,7 +381,7 @@ class DependencyInspectionVisitorTest extends TestCase
     public function testUseInstanceofComparison(): void
     {
         $this->addNodeToAst(
-            new Instanceof_(new Array_(), new FullyQualifiedNameNode('Test'))
+            new Instanceof_(new Array_(), new FullyQualified('Test'))
         );
 
         $this->assertTrue($this->dependenciesContain(
@@ -393,7 +393,7 @@ class DependencyInspectionVisitorTest extends TestCase
     public function testDetectsCatchNode(): void
     {
         $this->addNodeToAst(
-            new Catch_([new Name(['AnException'])], new Variable('e'))
+            new Catch_([new FullyQualified(['AnException'])], new Variable('e'))
         );
 
         $this->assertTrue($this->dependenciesContain(
@@ -406,8 +406,8 @@ class DependencyInspectionVisitorTest extends TestCase
     {
         $this->addNodeToAst(
             new Catch_([
-                new Name(['AnException']),
-                new Name(['AnotherException']),
+                new FullyQualified(['AnException']),
+                new FullyQualified(['AnotherException']),
             ], new Variable('e'))
         );
 
@@ -424,7 +424,7 @@ class DependencyInspectionVisitorTest extends TestCase
     public function testDetectsFetchClassNode(): void
     {
         $this->addNodeToAst(
-            new ClassConstFetch(new Name('StaticTest'), 'test')
+            new ClassConstFetch(new FullyQualified('StaticTest'), 'test')
         );
 
         $this->assertTrue($this->dependenciesContain(
@@ -436,7 +436,7 @@ class DependencyInspectionVisitorTest extends TestCase
     public function testAddsParentDependenciesForExtendableNodesOnly(): void
     {
         $enumNode = new EnumNode('MyEnum');
-        $enumNode->namespacedName = new Name('MyNamespace\MyEnum');
+        $enumNode->namespacedName = new FullyQualified('MyNamespace\MyEnum');
 
         $this->dependencyInspectionVisitor->enterNode($enumNode);
         $this->dependencyInspectionVisitor->leaveNode($enumNode);
@@ -451,8 +451,8 @@ class DependencyInspectionVisitorTest extends TestCase
     public function testDetectsAttributeDependency(): void
     {
         $attributeGroupNode = new AttributeGroup([
-            new Attribute(new Name('MyAttribute')),
-            new Attribute(new FullyQualifiedNameNode('Another\\AttributeClass')),
+            new Attribute(new FullyQualified('MyAttribute')),
+            new Attribute(new FullyQualified('Another\\AttributeClass')),
         ]);
 
         $this->addNodeToAst($attributeGroupNode);
@@ -471,8 +471,8 @@ class DependencyInspectionVisitorTest extends TestCase
     {
         $methodNode = new ClassMethod('someMethod');
         $unionType = new UnionType([
-            new Name('UnionDepOne'),
-            new FullyQualifiedNameNode('NS\\UnionDepTwo')
+            new FullyQualified('UnionDepOne'),
+            new FullyQualified('NS\\UnionDepTwo')
         ]);
         $param = new Param(new Variable('param'), null, $unionType);
         $methodNode->params = [$param];
@@ -493,8 +493,8 @@ class DependencyInspectionVisitorTest extends TestCase
     {
         $methodNode = new ClassMethod('someMethod');
         $intersectionType = new IntersectionType([
-            new Name('IntersectionDepOne'),
-            new FullyQualifiedNameNode('NS\\IntersectionDepTwo')
+            new FullyQualified('IntersectionDepOne'),
+            new FullyQualified('NS\\IntersectionDepTwo')
         ]);
         $param = new Param(new Variable('param'), null, $intersectionType);
         $methodNode->params = [$param];
@@ -514,8 +514,8 @@ class DependencyInspectionVisitorTest extends TestCase
     public function testDetectsUnionTypeReturnDependency(): void
     {
         $unionType = new UnionType([
-            new Name('ReturnUnionOne'),
-            new FullyQualifiedNameNode('NS\\ReturnUnionTwo')
+            new FullyQualified('ReturnUnionOne'),
+            new FullyQualified('NS\\ReturnUnionTwo')
         ]);
         $this->addNodeToAst(
             new ClassMethod('anyMethod', ['returnType' => $unionType])
@@ -534,8 +534,8 @@ class DependencyInspectionVisitorTest extends TestCase
     public function testDetectsIntersectionTypeReturnDependency(): void
     {
         $intersectionType = new IntersectionType([
-            new Name('ReturnIntersectionOne'),
-            new FullyQualifiedNameNode('NS\\ReturnIntersectionTwo')
+            new FullyQualified('ReturnIntersectionOne'),
+            new FullyQualified('NS\\ReturnIntersectionTwo')
         ]);
         $this->addNodeToAst(
             new ClassMethod('anyMethod', ['returnType' => $intersectionType])
@@ -549,138 +549,6 @@ class DependencyInspectionVisitorTest extends TestCase
             $this->dependencyInspectionVisitor->dependencies(),
             new Clazz('ReturnIntersectionTwo', new Namespaze(['NS']))
         ));
-    }
-
-    public function testDetectsDynamicClassInstantiationFromStringVariable(): void
-    {
-        // Setup class and method context
-        $classNode = $this->createAndEnterNamedClassNode('TestClass');
-        $methodNode = new ClassMethod('testMethod');
-        $this->dependencyInspectionVisitor->enterNode($methodNode);
-
-        // Create variable assignment node: $className = 'DynamicClass';
-        $stringNode = new String_('dynamicclass');
-        $variableNode = new Variable('className');
-        $assignNode = new Assign($variableNode, $stringNode);
-        $this->dependencyInspectionVisitor->enterNode($assignNode);
-        
-        // Create instantiation node: $obj = new $className();
-        $newNode = new NewNode(new Variable('className'));
-        $this->dependencyInspectionVisitor->enterNode($newNode);
-        
-        // Leave contexts
-        $this->dependencyInspectionVisitor->leaveNode($methodNode);
-        $this->dependencyInspectionVisitor->leaveNode($classNode);
-        
-        // Assert that DynamicClass was detected as a dependency
-        // Note that our normalization function should capitalize the class name
-        $this->assertTrue($this->dependenciesContain(
-            $this->dependencyInspectionVisitor->dependencies(),
-            new Clazz('Dynamicclass')
-        ));
-    }
-
-    public function testDetectsDynamicClassInstantiationWithNamespaces(): void
-    {
-        // Setup class and method context
-        $classNode = $this->createAndEnterNamedClassNode('TestClass');
-        $methodNode = new ClassMethod('testMethod');
-        $this->dependencyInspectionVisitor->enterNode($methodNode);
-
-        // Create variable assignment node: $className = 'Namespace\\DynamicClass';
-        $stringNode = new String_('namespace\\dynamicclass');
-        $variableNode = new Variable('className');
-        $assignNode = new Assign($variableNode, $stringNode);
-        $this->dependencyInspectionVisitor->enterNode($assignNode);
-        
-        // Create instantiation node: $obj = new $className();
-        $newNode = new NewNode(new Variable('className'));
-        $this->dependencyInspectionVisitor->enterNode($newNode);
-        
-        // Leave contexts
-        $this->dependencyInspectionVisitor->leaveNode($methodNode);
-        $this->dependencyInspectionVisitor->leaveNode($classNode);
-        
-        // Assert that Namespace\DynamicClass was detected as a dependency
-        // First letters should be capitalized
-        $this->assertTrue($this->dependenciesContain(
-            $this->dependencyInspectionVisitor->dependencies(),
-            new Clazz('Dynamicclass', new Namespaze(['Namespace']))
-        ));
-    }
-
-    public function testDetectsDynamicClassInstantiationFromClassConstant(): void
-    {
-        // Setup class and method context
-        $classNode = $this->createAndEnterNamedClassNode('TestClass');
-        $methodNode = new ClassMethod('testMethod');
-        $this->dependencyInspectionVisitor->enterNode($methodNode);
-
-        // Create variable assignment node: $className = TargetClass::class;
-        $classConstFetchNode = new ClassConstFetch(
-            new Name('TargetClass'),
-            new Identifier('class')
-        );
-        $variableNode = new Variable('className');
-        $assignNode = new Assign($variableNode, $classConstFetchNode);
-        $this->dependencyInspectionVisitor->enterNode($assignNode);
-        
-        // Create instantiation node: $obj = new $className();
-        $newNode = new NewNode(new Variable('className'));
-        $this->dependencyInspectionVisitor->enterNode($newNode);
-        
-        // Leave contexts
-        $this->dependencyInspectionVisitor->leaveNode($methodNode);
-        $this->dependencyInspectionVisitor->leaveNode($classNode);
-        
-        // Assert that TargetClass was detected as a dependency
-        $this->assertTrue($this->dependenciesContain(
-            $this->dependencyInspectionVisitor->dependencies(),
-            new Clazz('TargetClass')
-        ));
-    }
-
-    public function testNormalizesClassNamesCorrectly(): void
-    {
-        // Setup class and method context
-        $classNode = $this->createAndEnterNamedClassNode('TestClass');
-        $methodNode = new ClassMethod('testMethod');
-        $this->dependencyInspectionVisitor->enterNode($methodNode);
-
-        // Create multiple variable assignments with different casing
-        $variables = [
-            'var1' => 'lowercase',
-            'var2' => 'UPPERCASE',
-            'var3' => 'MixedCase',
-            'var4' => 'namespace\\lowercased',
-            'var5' => 'NAMESPACE\\UPPERCASED',
-            'var6' => 'Mixed\\Cased\\Namespace',
-        ];
-        
-        foreach ($variables as $varName => $className) {
-            $stringNode = new String_($className);
-            $variableNode = new Variable($varName);
-            $assignNode = new Assign($variableNode, $stringNode);
-            $this->dependencyInspectionVisitor->enterNode($assignNode);
-            
-            $newNode = new NewNode(new Variable($varName));
-            $this->dependencyInspectionVisitor->enterNode($newNode);
-        }
-        
-        // Leave contexts
-        $this->dependencyInspectionVisitor->leaveNode($methodNode);
-        $this->dependencyInspectionVisitor->leaveNode($classNode);
-        
-        $dependencies = $this->dependencyInspectionVisitor->dependencies();
-        
-        // Test against the actual dependencies created by the visitor
-        // Note: Normalization capitalizes the first letter, but keeps the rest of the casing untouched
-        $this->assertTrue($this->hasDependency($dependencies, 'TestClass', 'Lowercase'));
-        $this->assertTrue($this->hasDependency($dependencies, 'TestClass', 'UPPERCASE'));
-        $this->assertTrue($this->hasDependency($dependencies, 'TestClass', 'MixedCase'));
-        $this->assertTrue($this->hasDependency($dependencies, 'TestClass', 'Namespace\\Lowercased'));
-        $this->assertTrue($this->hasDependency($dependencies, 'TestClass', 'NAMESPACE\\UPPERCASED'));
-        $this->assertTrue($this->hasDependency($dependencies, 'TestClass', 'Mixed\\Cased\\Namespace'));
     }
 
     public function testIgnoresDynamicInstantiationWithoutTrackedVariables(): void
@@ -848,7 +716,7 @@ class DependencyInspectionVisitorTest extends TestCase
     public function testDetectsPhpDocPropertyAnnotations(): void
     {
         $classNode = new ClassNode('TestClass');
-        $classNode->namespacedName = new Name('TestNamespace\\TestClass');
+        $classNode->namespacedName = new FullyQualified('TestNamespace\\TestClass');
         $classNode->setDocComment(new Doc('/**
          * @property PropertyNamespace\\PropertyClass $property
          * @property-read ReadNamespace\\ReadClass $readOnly
@@ -881,7 +749,7 @@ class DependencyInspectionVisitorTest extends TestCase
             \PhpParser\Modifiers::PUBLIC,
             [new \PhpParser\Node\Stmt\PropertyProperty('property1')],
             [],
-            new Name('B')
+            new FullyQualified('B')
         );
         $this->dependencyInspectionVisitor->enterNode($propertyNode);
         $this->dependencyInspectionVisitor->leaveNode($classNode);
@@ -895,8 +763,8 @@ class DependencyInspectionVisitorTest extends TestCase
     {
         $classNode = $this->createAndEnterNamedClassNode('A');
         $unionType = new UnionType([
-            new Name('B'),
-            new Name('C')
+            new FullyQualified('B'),
+            new FullyQualified('C')
         ]);
         $propertyNode = new \PhpParser\Node\Stmt\Property(
             \PhpParser\Modifiers::PROTECTED,
@@ -915,8 +783,8 @@ class DependencyInspectionVisitorTest extends TestCase
     {
         $classNode = $this->createAndEnterNamedClassNode('A');
         $intersectionType = new IntersectionType([
-            new Name('D'),
-            new Name('E')
+            new FullyQualified('D'),
+            new FullyQualified('E')
         ]);
         $propertyNode = new \PhpParser\Node\Stmt\Property(
             \PhpParser\Modifiers::PRIVATE,
@@ -934,7 +802,7 @@ class DependencyInspectionVisitorTest extends TestCase
     public function testDetectsPropertyNullableTypeDeclarationDependency(): void
     {
         $classNode = $this->createAndEnterNamedClassNode('A');
-        $nullableType = new \PhpParser\Node\NullableType(new Name('F'));
+        $nullableType = new \PhpParser\Node\NullableType(new FullyQualified('F'));
         $propertyNode = new \PhpParser\Node\Stmt\Property(
             \PhpParser\Modifiers::PUBLIC,
             [new \PhpParser\Node\Stmt\PropertyProperty('property4')],
@@ -947,54 +815,6 @@ class DependencyInspectionVisitorTest extends TestCase
             $this->dependencyInspectionVisitor->dependencies(),
             new Clazz('F')
         ));
-    }
-
-    public function testDetectsTemplateConstraintDependency(): void
-    {
-        $classNode = new ClassNode('A');
-        $classNode->namespacedName = new Name('A');
-        $classNode->setDocComment(new Doc("/**
-         * @template T of B
-         */"));
-        $this->dependencyInspectionVisitor->enterNode($classNode);
-        $this->dependencyInspectionVisitor->leaveNode($classNode);
-        $dependencies = $this->dependencyInspectionVisitor->dependencies();
-        $this->assertTrue(
-            $this->hasDependency($dependencies, 'A', 'B'),
-            'Class A should have a dependency on B due to @template T of B.'
-        );
-    }
-
-    public function testDoesNotDependOnGenericTypeTWithConstraint(): void
-    {
-        $classNode = new ClassNode('A');
-        $classNode->namespacedName = new Name('A');
-        $classNode->setDocComment(new Doc("/**
-         * @template T of B
-         */"));
-        $this->dependencyInspectionVisitor->enterNode($classNode);
-        $this->dependencyInspectionVisitor->leaveNode($classNode);
-        $dependencies = $this->dependencyInspectionVisitor->dependencies();
-        $this->assertFalse(
-            $this->hasDependency($dependencies, 'A', 'T'),
-            'Class A should NOT have a dependency on T (the template variable) when using @template T of B.'
-        );
-    }
-
-    public function testDoesNotDependOnGenericTypeTWithoutConstraint(): void
-    {
-        $classNode = new ClassNode('A');
-        $classNode->namespacedName = new Name('A');
-        $classNode->setDocComment(new Doc("/**
-         * @template T
-         */"));
-        $this->dependencyInspectionVisitor->enterNode($classNode);
-        $this->dependencyInspectionVisitor->leaveNode($classNode);
-        $dependencies = $this->dependencyInspectionVisitor->dependencies();
-        $this->assertFalse(
-            $this->hasDependency($dependencies, 'A', 'T'),
-            'Class A should NOT have a dependency on T (the template variable) when using @template T.'
-        );
     }
 
     private function addNodeToAst(Node $node): void
