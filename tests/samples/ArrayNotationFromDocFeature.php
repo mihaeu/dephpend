@@ -8,7 +8,7 @@
 <?php
 
 /**
- * @template T 
+ * @template T
  */
 class A
 {
