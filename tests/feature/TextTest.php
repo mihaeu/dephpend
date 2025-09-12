@@ -16,8 +16,7 @@ class TextTest extends TestCase
         $this->assertEquals(
             'Mihaeu\PhpDependencies\Analyser --> Mihaeu\PhpDependencies\Dependencies'.PHP_EOL
             .'Mihaeu\PhpDependencies\Analyser --> Mihaeu\PhpDependencies\OS'.PHP_EOL,
-            shell_exec(DEPHPEND_BIN.' text '.SRC_PATH
-            .' --no-classes --filter-from=Mihaeu\\\\PhpDependencies\\\\Analyser --exclude-regex="/Parser/"')
+            shell_exec(sprintf('"%s" -n "%s" text "%s" --no-classes --filter-from=Mihaeu\\\\PhpDependencies\\\\Analyser --exclude-regex="/Parser/"', PHP_BINARY, DEPHPEND_BIN, SRC_PATH))
         );
     }
 }

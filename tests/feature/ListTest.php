@@ -12,6 +12,6 @@ class ListTest extends TestCase
 {
     public function testNoArgumentsShowsHelp(): void
     {
-        $this->assertMatchesRegularExpression('/dsm.*metrics.*text.*uml.*/s', shell_exec(DEPHPEND_BIN.' list'));
+        $this->assertMatchesRegularExpression('/dsm.*metrics.*text.*uml.*/s', shell_exec(sprintf('"%s" -n "%s" list', PHP_BINARY, DEPHPEND_BIN)));
     }
 }

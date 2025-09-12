@@ -14,7 +14,7 @@ class MetricsTest extends TestCase
     {
         $this->assertMatchesRegularExpression(
             '/Classes:.*\d\d.*Abstract classes:.*\d+.*Abstractness:.*\d\.\d+/s',
-            shell_exec(DEPHPEND_BIN.' metrics '.SRC_PATH)
+            shell_exec(sprintf('"%s" -n "%s" metrics "%s"', PHP_BINARY, DEPHPEND_BIN, SRC_PATH))
         );
     }
 }

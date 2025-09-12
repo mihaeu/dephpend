@@ -14,7 +14,7 @@ class DsmTest extends TestCase
     {
         $this->assertMatchesRegularExpression(
             '@\d: PhpParser</th><td>([1-9]\d*).+.+@s',
-            shell_exec(DEPHPEND_BIN.' dsm '.SRC_PATH.' --no-classes --depth=2 --format=html')
+            shell_exec(sprintf('"%s" -n "%s" dsm "%s" --no-classes --depth=2 --format=html', PHP_BINARY, DEPHPEND_BIN, SRC_PATH))
         );
     }
 }
