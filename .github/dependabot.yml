@@ -6,6 +6,7 @@ updates:
       interval: "weekly"
     groups:
       security:
+        dependency-type: "production"
         applies-to: security-updates
       dependencies:
         dependency-type: "production"
