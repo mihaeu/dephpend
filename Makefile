@@ -48,3 +48,7 @@ phar:
 	$(BOX) compile
 	chmod +x build/dephpend.phar
 	$(COMPOSER) update
+
+compile:
+	$(BOX) compile
+	chmod +x build/dephpend.phar

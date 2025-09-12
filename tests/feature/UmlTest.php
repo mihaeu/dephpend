@@ -23,20 +23,20 @@ namespace Mihaeu {
 namespace PhpDependencies {
 namespace OS {
 }
+namespace Formatters {
+}
 namespace Dependencies {
 }
 namespace Exceptions {
-}
-namespace Formatters {
 }
 namespace Util {
 }
 }
 }
 
+Mihaeu.PhpDependencies.OS --|> Mihaeu.PhpDependencies.Formatters
 Mihaeu.PhpDependencies.OS --|> Mihaeu.PhpDependencies.Dependencies
 Mihaeu.PhpDependencies.OS --|> Mihaeu.PhpDependencies.Exceptions
-Mihaeu.PhpDependencies.OS --|> Mihaeu.PhpDependencies.Formatters
 Mihaeu.PhpDependencies.OS --|> Mihaeu.PhpDependencies.Util
 @enduml
 EOT;
