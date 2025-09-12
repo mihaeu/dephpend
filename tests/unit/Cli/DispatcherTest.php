@@ -8,6 +8,7 @@ use Mihaeu\PhpDependencies\Analyser\StaticAnalyser;
 use Mihaeu\PhpDependencies\Analyser\XDebugFunctionTraceAnalyser;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\OS\PhpFileFinder;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\ConsoleEvents;
@@ -15,9 +16,7 @@ use Symfony\Component\Console\Event\ConsoleEvent;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
-/**
- * @covers Mihaeu\PhpDependencies\Cli\Dispatcher
- */
+#[CoversClass(Dispatcher::class)]
 class DispatcherTest extends TestCase
 {
     /** @var Dispatcher */

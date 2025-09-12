@@ -6,15 +6,14 @@ namespace Mihaeu\PhpDependencies\Cli;
 
 use InvalidArgumentException;
 use Mihaeu\PhpDependencies\OS\PlantUmlWrapper;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * @covers Mihaeu\PhpDependencies\Cli\UmlCommand
- * @covers Mihaeu\PhpDependencies\Cli\BaseCommand
- */
+#[CoversClass(\Mihaeu\PhpDependencies\Cli\UmlCommand::class)]
+#[CoversClass(\Mihaeu\PhpDependencies\Cli\BaseCommand::class)]
 class UmlCommandTest extends TestCase
 {
     /** @var UmlCommand */

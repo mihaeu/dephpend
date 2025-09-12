@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser\Metrics;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * @covers Mihaeu\PhpDependencies\Cli\MetricsCommand
- */
+#[CoversClass(\Mihaeu\PhpDependencies\Cli\MetricsCommand::class)]
 class MetricsCommandTest extends TestCase
 {
     private MetricsCommand $metricsCommand;

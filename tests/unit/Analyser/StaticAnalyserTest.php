@@ -10,12 +10,11 @@ use Mihaeu\PhpDependencies\OS\PhpFile;
 use Mihaeu\PhpDependencies\OS\PhpFileSet;
 use PhpParser\Error;
 use PhpParser\NodeTraverser;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers Mihaeu\PhpDependencies\Analyser\StaticAnalyser
- */
+#[CoversClass(StaticAnalyser::class)]
 class StaticAnalyserTest extends TestCase
 {
     private StaticAnalyser $analyser;

@@ -5,13 +5,12 @@ namespace Mihaeu\PhpDependencies\Analyser;
 use InvalidArgumentException;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
 use Mihaeu\PhpDependencies\DependencyHelper;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use SplFileInfo;
 
-/**
- * @covers Mihaeu\PhpDependencies\Analyser\XDebugFunctionTraceAnalyser
- */
+#[CoversClass(XDebugFunctionTraceAnalyser::class)]
 class XDebugFunctionTraceAnalyserTest extends TestCase
 {
     private XDebugFunctionTraceAnalyser $xDebugFunctionTraceAnalyser;

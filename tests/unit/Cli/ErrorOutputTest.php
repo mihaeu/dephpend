@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Cli;
 
 use Mihaeu\PhpDependencies\Cli\ErrorOutput;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * @covers \Mihaeu\PhpDependencies\Cli\ErrorOutput
- */
+#[CoversClass(\Mihaeu\PhpDependencies\Cli\ErrorOutput::class)]
 class ErrorOutputTest extends TestCase
 {
     /** @var ErrorOutput */

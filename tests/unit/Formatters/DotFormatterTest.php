@@ -3,11 +3,10 @@
 namespace Mihaeu\PhpDependencies\Formatters;
 
 use Mihaeu\PhpDependencies\DependencyHelper;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers Mihaeu\PhpDependencies\Formatters\DotFormatter
- */
+#[CoversClass(\Mihaeu\PhpDependencies\Formatters\DotFormatter::class)]
 class DotFormatterTest extends TestCase
 {
     public function testFormatsSimpleDependencies(): void

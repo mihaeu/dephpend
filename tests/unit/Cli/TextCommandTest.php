@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\DependencyHelper;
 use Mihaeu\PhpDependencies\Util\Functional;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * @covers Mihaeu\PhpDependencies\Cli\TextCommand
- * @covers Mihaeu\PhpDependencies\Cli\BaseCommand
- */
+#[CoversClass(\Mihaeu\PhpDependencies\Cli\TextCommand::class)]
+#[CoversClass(\Mihaeu\PhpDependencies\Cli\BaseCommand::class)]
 class TextCommandTest extends TestCase
 {
     private InputInterface&MockObject $input;
