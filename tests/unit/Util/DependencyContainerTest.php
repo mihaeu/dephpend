@@ -4,17 +4,13 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Util;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionException;
-use ReflectionNamedType;
-use ReflectionUnionType;
-use ReflectionIntersectionType;
 
-/**
- * @covers Mihaeu\PhpDependencies\Util\DependencyContainer
- */
+#[CoversClass(\Mihaeu\PhpDependencies\Util\DependencyContainer::class)]
 class DependencyContainerTest extends TestCase
 {
     /**

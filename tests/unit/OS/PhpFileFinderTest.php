@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\OS;
 
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use SplFileInfo;
 
-/**
- * @covers Mihaeu\PhpDependencies\OS\PhpFileFinder
- */
+#[CoversClass(\Mihaeu\PhpDependencies\OS\PhpFileFinder::class)]
 class PhpFileFinderTest extends TestCase
 {
     /** @var PhpFileFinder */

@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Dependencies;
 
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers Mihaeu\PhpDependencies\Dependencies\Namespaze
- */
+#[CoversClass(\Mihaeu\PhpDependencies\Dependencies\Namespaze::class)]
 class NamespazeTest extends TestCase
 {
     public function testAcceptsEmptyNamespace(): void

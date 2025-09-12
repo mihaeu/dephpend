@@ -5,18 +5,16 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Cli;
 
 use Exception;
-use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\DependencyHelper;
 use Mihaeu\PhpDependencies\Formatters\DependencyStructureMatrixHtmlFormatter;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * @covers Mihaeu\PhpDependencies\Cli\DsmCommand
- * @covers Mihaeu\PhpDependencies\Cli\BaseCommand
- */
+#[CoversClass(\Mihaeu\PhpDependencies\Cli\DsmCommand::class)]
+#[CoversClass(\Mihaeu\PhpDependencies\Cli\BaseCommand::class)]
 class DsmCommandTest extends TestCase
 {
     private DsmCommand $dsmCommand;
