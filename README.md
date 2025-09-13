@@ -1,11 +1,10 @@
 <h1 align="center"><a href="https://dephpend.com/"><img src="doc/logo.svg" alt="dePHPend lgo"></a></h1>
 
-[![Build Status](https://travis-ci.org/mihaeu/dephpend.svg?branch=master)](https://travis-ci.org/github/mihaeu/dephpend)
-[![Coverage Status](https://coveralls.io/repos/github/mihaeu/dephpend/badge.svg)](https://coveralls.io/github/mihaeu/dephpend)
+[![Build Status](https://travis-ci.org/aaronjewell/dephpend.svg?branch=master)](https://travis-ci.org/github/aaronjewell/dephpend)
+[![Coverage Status](https://coveralls.io/repos/github/aaronjewell/dephpend/badge.svg)](https://coveralls.io/github/aaronjewell/dephpend)
 [![Packagist Version](https://img.shields.io/packagist/v/dephpend/dephpend)](https://packagist.org/packages/dephpend/dephpend)
 [![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](https://github.com/mihaeu/dephpend/blob/main/LICENSE)
-[![PHP 7.2](https://img.shields.io/badge/PHP-7.2-blue.svg?style=flat)](https://www.php.net/supported-versions.php)
-[![Join the chat at Gitter](https://badges.gitter.im/dephpend/Lobby.svg)](https://gitter.im/dephpend/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![PHP 7.2](https://img.shields.io/badge/PHP-8.4-blue.svg?style=flat)](https://www.php.net/supported-versions.php)
 
 Detect flaws in your architecture before they drag you down into the depths of dependency hell ...
 
@@ -65,7 +64,7 @@ If you don't want to worry about PHP versions, composer dependencies etc. you ca
 
 ```bash
 # replace $PATH_TO_INSPECT with whatever path you would live to inspect
-docker run --rm -v $PATH_TO_INSPECT:/inspect mihaeu/dephpend:latest text /inspect
+docker run --rm -v $PATH_TO_INSPECT:/inspect aaronjewell/dephpend:latest text /inspect
 ```
 
 ### Phive
