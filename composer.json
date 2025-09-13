@@ -1,6 +1,7 @@
 {
-    "name": "dephpend/dephpend",
+    "name": "aaronjewell/dephpend",
     "description": "Dependency analysis for PHP",
+    "version": "1.0.0",
     "type": "library",
     "keywords": [
         "dependencies",

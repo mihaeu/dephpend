@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.0] - 2025-09-13
+### Added
+- PHP 8.4 support
+- Experimental mermaid command
+
+### Fixed
+- Updated tests, builds, coverage to work with latest PHP versions, min 8.2 
+
 ## [0.8.1] - 2021-05-02
 ### Fixed
 - Fixed `test-features` command 
@@ -20,11 +28,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.6.3] - 2020-01-17
 ### Fixed
- - [Issue 58](https://github.com/mihaeu/dephpend/issues/58)
+ - [Issue 58](https://github.com/aaronjewell/dephpend/issues/58)
 
 ## [0.6.2] - 2019-10-20
 ### Fixed
- - Do not analyse method calls via dynamic property fetch [#50](https://github.com/mihaeu/dephpend/issues/56)
+ - Do not analyse method calls via dynamic property fetch [#50](https://github.com/aaronjewell/dephpend/issues/56)
 
 ## [0.6.1] - 2019-07-14
 ### Added
@@ -96,19 +104,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
  - first tagged release
  - uml, text, dsm and metrics command
 
-[Unreleased]: https://github.com/mihaeu/dephpend/compare/0.8.1...HEAD
-[0.8.0]: https://github.com/mihaeu/dephpend/compare/0.8.0...0.8.1
-[0.8.0]: https://github.com/mihaeu/dephpend/compare/0.7.0...0.8.0
-[0.7.0]: https://github.com/mihaeu/dephpend/compare/0.6.3...0.7.0
-[0.6.3]: https://github.com/mihaeu/dephpend/compare/0.6.2...0.6.3
-[0.6.2]: https://github.com/mihaeu/dephpend/compare/0.6.1...0.6.2
-[0.6.1]: https://github.com/mihaeu/dephpend/compare/0.6.0...0.6.1
-[0.6.0]: https://github.com/mihaeu/dephpend/compare/0.5.1...0.6.0
-[0.5.1]: https://github.com/mihaeu/dephpend/compare/0.5.0...0.5.1
-[0.5.0]: https://github.com/mihaeu/dephpend/compare/0.4.0...0.5.0
-[0.4.0]: https://github.com/mihaeu/dephpend/compare/0.3.2...0.4.0
-[0.3.2]: https://github.com/mihaeu/dephpend/compare/0.3.1...0.3.2
-[0.3.1]: https://github.com/mihaeu/dephpend/compare/0.3.0...0.3.1
-[0.3.0]: https://github.com/mihaeu/dephpend/compare/0.2.0...0.3.0
-[0.2.0]: https://github.com/mihaeu/dephpend/compare/0.1.0...0.2.0
-[0.1.0]: https://github.com/mihaeu/dephpend/compare/0549dbd...0.1.0
+[Unreleased]: https://github.com/aaronjewell/dephpend/compare/1.0.0...HEAD
+[1.0.0]: https://github.com/aaronjewell/dephpend/compare/0.8.1...1.0.0
+[0.8.1]: https://github.com/aaronjewell/dephpend/compare/0.8.0...0.8.1
+[0.8.0]: https://github.com/aaronjewell/dephpend/compare/0.7.0...0.8.0
+[0.7.0]: https://github.com/aaronjewell/dephpend/compare/0.6.3...0.7.0
+[0.6.3]: https://github.com/aaronjewell/dephpend/compare/0.6.2...0.6.3
+[0.6.2]: https://github.com/aaronjewell/dephpend/compare/0.6.1...0.6.2
+[0.6.1]: https://github.com/aaronjewell/dephpend/compare/0.6.0...0.6.1
+[0.6.0]: https://github.com/aaronjewell/dephpend/compare/0.5.1...0.6.0
+[0.5.1]: https://github.com/aaronjewell/dephpend/compare/0.5.0...0.5.1
+[0.5.0]: https://github.com/aaronjewell/dephpend/compare/0.4.0...0.5.0
+[0.4.0]: https://github.com/aaronjewell/dephpend/compare/0.3.2...0.4.0
+[0.3.2]: https://github.com/aaronjewell/dephpend/compare/0.3.1...0.3.2
+[0.3.1]: https://github.com/aaronjewell/dephpend/compare/0.3.0...0.3.1
+[0.3.0]: https://github.com/aaronjewell/dephpend/compare/0.2.0...0.3.0
+[0.2.0]: https://github.com/aaronjewell/dephpend/compare/0.1.0...0.2.0
+[0.1.0]: https://github.com/aaronjewell/dephpend/compare/0549dbd...0.1.0

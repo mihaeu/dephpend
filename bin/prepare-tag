@@ -7,8 +7,14 @@ set -o nounset
 
 declare -r __dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# shellcheck source=$HOME/dotfiles/scripts/helpers
-source "${HOME}/dotfiles/scripts/helpers"
+# Helper functions
+_error() {
+  echo -e "\033[31mError: $1\033[0m" >&2
+}
+
+_success() {
+  echo -e "\033[32mSuccess: $1\033[0m"
+}
 
 function main() {
   readonly TAG="${1:-}"
