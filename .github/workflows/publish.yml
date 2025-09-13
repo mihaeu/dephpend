@@ -27,7 +27,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@c1e51972afc2121e065aed6d45c65596fe445f3f
         with:
-          images: aaronjewell/dephpend
+          images: mihaeu/dephpend
 
       - name: Build and push Docker image
         id: push
@@ -42,6 +42,6 @@ jobs:
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v3
         with:
-          subject-name: index.docker.io/aaronjewell/dephpend
+          subject-name: index.docker.io/mihaeu/dephpend
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true

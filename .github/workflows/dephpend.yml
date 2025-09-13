@@ -1,4 +1,4 @@
-name: aaronjewell/dephpend
+name: mihaeu/dephpend
 on:
   push:
     branches:
