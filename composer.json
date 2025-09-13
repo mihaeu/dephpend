@@ -1,7 +1,6 @@
 {
     "name": "aaronjewell/dephpend",
     "description": "Dependency analysis for PHP",
-    "version": "1.0.0",
     "type": "library",
     "keywords": [
         "dependencies",
@@ -37,6 +36,10 @@
         {
             "name": "Michael Haeuslmann",
             "email": "michael.haeuslmann@gmail.com"
+        },
+        {
+            "name": "Aaron Jewell",
+            "email": "me@aaronjewell.dev"
         }
     ],
     "autoload": {
@@ -53,7 +56,7 @@
         ]
     },
     "support": {
-        "issues": "https://github.com/mihaeu/dephpend/issues"
+        "issues": "https://github.com/aaronjewell/dephpend/issues"
     },
     "config": {
         "allow-plugins": {
