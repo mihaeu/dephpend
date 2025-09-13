@@ -22,7 +22,7 @@ jobs:
     - run: composer install --prefer-dist
     - run: bin/check-code-cov
     - run: vendor/bin/phpunit -c phpunit.xml.dist --coverage-text --coverage-clover ./build/logs/clover.xml
-    - run: wget https://github.com/php-coveralls/php-coveralls/releases/download/v2.4.2/php-coveralls.phar
+    - run: wget https://github.com/php-coveralls/php-coveralls/releases/download/v2.8.0/php-coveralls.phar
     - run: php php-coveralls.phar -v
     strategy:
       matrix:
