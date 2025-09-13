@@ -1,9 +1,9 @@
 <h1 align="center"><a href="https://dephpend.com/"><img src="doc/logo.svg" alt="dePHPend lgo"></a></h1>
 
-[![Build Status](!(https://github.com/github/docs/actions/workflows/dephpend.yml/badge.svg))](https://github.com/aaronjewell/dephpend/actions)
-[![Coverage Status](https://coveralls.io/repos/github/aaronjewell/dephpend/badge.svg)](https://coveralls.io/github/aaronjewell/dephpend)
+[![Build Status](!(https://github.com/github/docs/actions/workflows/dephpend.yml/badge.svg))](https://github.com/mihaeu/dephpend/actions)
+[![Coverage Status](https://coveralls.io/repos/github/mihaeu/dephpend/badge.svg)](https://coveralls.io/github/mihaeu/dephpend)
 [![Packagist Version](https://img.shields.io/packagist/v/dephpend/dephpend)](https://packagist.org/packages/dephpend/dephpend)
-[![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](https://github.com/aaronjewell/dephpend/blob/main/LICENSE)
+[![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](https://github.com/mihaeu/dephpend/blob/main/LICENSE)
 [![PHP 8.4](https://img.shields.io/badge/PHP-8.4-blue.svg?style=flat)](https://www.php.net/supported-versions.php)
 
 Detect flaws in your architecture before they drag you down into the depths of dependency hell ...
@@ -52,7 +52,7 @@ With this information you can:
 
 
 ## System Requirements
-- PHP >= 7.2
+- PHP >= 8.2
 - plantuml (UML Class diagram)
 
 
@@ -64,7 +64,7 @@ If you don't want to worry about PHP versions, composer dependencies etc. you ca
 
 ```bash
 # replace $PATH_TO_INSPECT with whatever path you would live to inspect
-docker run --rm -v $PATH_TO_INSPECT:/inspect aaronjewell/dephpend:latest text /inspect
+docker run --rm -v $PATH_TO_INSPECT:/inspect mihaeu/dephpend:latest text /inspect
 ```
 
 ### Phive
@@ -89,14 +89,14 @@ composer global require dephpend/dephpend:dev-main
 
 ### Manual .phar download
 
-Download the PHAR file by selecting the latest file from [GitHub Releases](https://github.com/aaronjewell/dephpend/releases/latest).
+Download the PHAR file by selecting the latest file from [GitHub Releases](https://github.com/mihaeu/dephpend/releases/latest).
 
 ### Git
 
 ```bash
-git clone git@github.com:aaronjewell/dephpend.git
+git clone git@github.com:mihaeu/dephpend.git
 # or
-git clone https://github.com/aaronjewell/dephpend.git
+git clone https://github.com/mihaeu/dephpend.git
 
 cd dephpend
 composer install
