@@ -1,10 +1,10 @@
 <h1 align="center"><a href="https://dephpend.com/"><img src="doc/logo.svg" alt="dePHPend lgo"></a></h1>
 
-[![Build Status](https://travis-ci.org/aaronjewell/dephpend.svg?branch=master)](https://travis-ci.org/github/aaronjewell/dephpend)
+[![Build Status](!(https://github.com/github/docs/actions/workflows/dephpend.yml/badge.svg))](https://github.com/aaronjewell/dephpend/actions)
 [![Coverage Status](https://coveralls.io/repos/github/aaronjewell/dephpend/badge.svg)](https://coveralls.io/github/aaronjewell/dephpend)
 [![Packagist Version](https://img.shields.io/packagist/v/dephpend/dephpend)](https://packagist.org/packages/dephpend/dephpend)
-[![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](https://github.com/mihaeu/dephpend/blob/main/LICENSE)
-[![PHP 7.2](https://img.shields.io/badge/PHP-8.4-blue.svg?style=flat)](https://www.php.net/supported-versions.php)
+[![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](https://github.com/aaronjewell/dephpend/blob/main/LICENSE)
+[![PHP 8.4](https://img.shields.io/badge/PHP-8.4-blue.svg?style=flat)](https://www.php.net/supported-versions.php)
 
 Detect flaws in your architecture before they drag you down into the depths of dependency hell ...
 
@@ -89,14 +89,14 @@ composer global require dephpend/dephpend:dev-main
 
 ### Manual .phar download
 
-Download the PHAR file by selecting the latest file from [GitHub Releases](https://github.com/mihaeu/dephpend/releases/latest).
+Download the PHAR file by selecting the latest file from [GitHub Releases](https://github.com/aaronjewell/dephpend/releases/latest).
 
 ### Git
 
 ```bash
-git clone git@github.com:mihaeu/dephpend.git
+git clone git@github.com:aaronjewell/dephpend.git
 # or
-git clone https://github.com/mihaeu/dephpend.git
+git clone https://github.com/aaronjewell/dephpend.git
 
 cd dephpend
 composer install
