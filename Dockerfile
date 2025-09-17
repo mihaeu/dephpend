@@ -9,6 +9,6 @@ RUN mkdir -p /usr/share/man/man1 \
         plantuml
 COPY . /dephpend
 WORKDIR /dephpend
-RUN curl https://raw.githubusercontent.com/composer/getcomposer.org/a5abae68b349213793dca4a1afcaada0ad11143b/web/installer -O - -q | php -- --quiet \
-    && php -n composer.phar install
+COPY --link --from=composer:2.8.11 /usr/bin/composer /usr/local/bin/composer
+RUN composer install
 ENTRYPOINT [ "php", "-n", "-d memory_limit=-1", "./bin/dephpend" ]
