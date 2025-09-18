@@ -10,6 +10,7 @@ use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Dependencies\DependencySet;
 use PhpParser\Node;
 use PhpParser\Node\AttributeGroup as AttributeGroupNode;
+use PhpParser\Node\Expr as ExprNode;
 use PhpParser\Node\Expr\ClassConstFetch as FetchClassConstantNode;
 use PhpParser\Node\Expr\Instanceof_ as InstanceofNode;
 use PhpParser\Node\Expr\New_ as NewNode;
@@ -118,7 +119,8 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
             && !$node->class instanceof Node\Expr\Variable
             && !$node->class instanceof Node\Expr\ArrayDimFetch
             && !$node->class instanceof Node\Expr\PropertyFetch
-            && !$node->class instanceof Node\Expr\MethodCall) {
+            && !$node->class instanceof Node\Expr\MethodCall
+            && !$node->class instanceof Node\Expr\BinaryOp) {
             $this->addName($node->class);
         } elseif ($node instanceof CatchNode) {
             foreach ($node->types as $name) {
@@ -141,22 +143,14 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         return null;
     }
 
-    public function addName(NameNode|IdentifierNode|null $name): void
+    public function addName(NameNode|IdentifierNode|ExprNode|null $name): void
     {
-        if ($name instanceof IdentifierNode || $name === null) {
-            return;
-        }
-
-        if ($name->isSpecialClassName()) {
-            return;
-        }
-
         if (! $name instanceof FullyQualifiedNameNode) {
             return;
         }
 
-        if ($name instanceof VariableNode) {
-            $name->getType();
+        if ($name instanceof NameNode && $name->isSpecialClassName()) {
+            return;
         }
 
         $this->tempDependencies = $this->tempDependencies->add(
