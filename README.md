@@ -114,7 +114,7 @@ $ php -n -d extension=tokenizer.so -d extension=json.so -d extension=mbstring.so
    __| | ___| |__) | |__| | |__) |__ _ __   __| |
   / _` |/ _ \  ___/|  __  |  ___/ _ \ '_ \ / _` |
  | (_| |  __/ |    | |  | | |  |  __/ | | | (_| |
-  \__,_|\___|_|    |_|  |_|_|   \___|_| |_|\__,_| version 1.0.0
+  \__,_|\___|_|    |_|  |_|_|   \___|_| |_|\__,_| version 1.0.1
 
 Usage:
   command [options] [arguments]

@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.1] - 2025-09-17
+### Fixed
+- Docker build process automation
+
 ## [1.0.0] - 2025-09-13
 ### Added
 - PHP 8.4 support
@@ -104,7 +108,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
  - first tagged release
  - uml, text, dsm and metrics command
 
-[Unreleased]: https://github.com/aaronjewell/dephpend/compare/1.0.0...HEAD
+[Unreleased]: https://github.com/aaronjewell/dephpend/compare/1.0.1...HEAD
+[1.0.1]: https://github.com/aaronjewell/dephpend/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/aaronjewell/dephpend/compare/0.8.1...1.0.0
 [0.8.1]: https://github.com/aaronjewell/dephpend/compare/0.8.0...0.8.1
 [0.8.0]: https://github.com/aaronjewell/dephpend/compare/0.7.0...0.8.0

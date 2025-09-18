@@ -32,7 +32,7 @@ $name = <<<EOT
 EOT;
 
 $dependencyContainer = new DependencyContainer($internals);
-$application = new Application($name, '1.0.0', $dependencyContainer->dispatcher());
+$application = new Application($name, '1.0.1', $dependencyContainer->dispatcher());
 $application->add($dependencyContainer->umlCommand());
 $application->add($dependencyContainer->dotCommand());
 $application->add($dependencyContainer->dsmCommand());
