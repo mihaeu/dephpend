@@ -36,10 +36,6 @@
         {
             "name": "Michael Haeuslmann",
             "email": "michael.haeuslmann@gmail.com"
-        },
-        {
-            "name": "Aaron Jewell",
-            "email": "me@aaronjewell.dev"
         }
     ],
     "autoload": {
