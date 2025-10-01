@@ -13,5 +13,5 @@ interface Formatter
      *
      * @return string
      */
-    public function format(DependencyMap $map, \Closure $mappers = null) : string;
+    public function format(DependencyMap $map, ?\Closure $mappers = null) : string;
 }

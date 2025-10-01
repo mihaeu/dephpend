@@ -17,7 +17,7 @@ class DependencyContainerTest extends TestCase
      * @return array
      * @throws ReflectionException
      */
-    public function provideMethods(): array
+    public static function provideMethods(): array
     {
         $reflectionClass = new ReflectionClass(DependencyContainer::class);
         $methods = [];

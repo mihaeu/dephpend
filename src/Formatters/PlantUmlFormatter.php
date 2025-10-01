@@ -15,7 +15,7 @@ class PlantUmlFormatter implements Formatter
     /**
      * {@inheritdoc}
      */
-    public function format(DependencyMap $map, \Closure $mappers = null) : string
+    public function format(DependencyMap $map, ?\Closure $mappers = null) : string
     {
         return '@startuml'.PHP_EOL
             .$this->plantUmlNamespaceDefinitions($map).PHP_EOL

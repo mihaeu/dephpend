@@ -174,6 +174,9 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
             // @codeCoverageIgnoreEnd
             $this->currentClass = $this->dependencyFactory->createTraitFromStringArray($node->namespacedName->parts);
         } else {
+            if (!method_exists($node, 'isAbstract')) {
+                return;
+            }
             $this->currentClass = $node->isAbstract()
                 ? $this->dependencyFactory->createAbstractClazzFromStringArray($node->namespacedName->parts)
                 : $this->dependencyFactory->createClazzFromStringArray($node->namespacedName->parts);

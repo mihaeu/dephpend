@@ -1,0 +1,23 @@
+services:
+  dephpend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: dephpend:latest
+    container_name: dephpend
+    volumes:
+      # Mount the project to analyze
+      - ./:/dephpend
+      # Optionally mount an external project to analyze
+      # - /path/to/your/project:/project:ro
+      # Mount output directory for reports
+      # - ./output:/output
+    working_dir: /dephpend
+    # Override entrypoint if needed
+    # entrypoint: ["php", "-n", "-d", "memory_limit=-1", "./bin/dephpend"]
+    # Default command (can be overridden)
+    # command: ["metrics", "src"]
+    stdin_open: true
+    tty: true
+
+

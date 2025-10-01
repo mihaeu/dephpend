@@ -205,10 +205,8 @@ class DependencyInspectionVisitorTest extends TestCase
         $node->namespacedName = new stdClass();
         $node->namespacedName->parts = ['SomeNamespace', 'SomeClass'];
 
-        $interfaceOneNode = new InterfaceNode('InterfaceOne');
-        $interfaceOneNode->parts = ['A', 'B', 'InterfaceOne'];
-        $interfaceTwoNode = new InterfaceNode('InterfaceTwo');
-        $interfaceTwoNode->parts = ['C', 'D', 'InterfaceTwo'];
+        $interfaceOneNode = new Name(['A', 'B', 'InterfaceOne']);
+        $interfaceTwoNode = new Name(['C', 'D', 'InterfaceTwo']);
         $node->implements = [$interfaceOneNode, $interfaceTwoNode];
         $this->dependencyInspectionVisitor->enterNode($node);
 

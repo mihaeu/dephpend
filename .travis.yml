@@ -6,9 +6,8 @@ os:
 dist: "bionic"
 
 php:
-    - "7.4"
-    - "7.3"
-    - "7.2"
+    - "8.2"
+    - "8.3"
 
 install:
     - "mkdir -p build/logs"

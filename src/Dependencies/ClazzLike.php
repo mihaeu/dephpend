@@ -14,9 +14,9 @@ abstract class ClazzLike implements Dependency
 
     /**
      * @param string    $name
-     * @param Namespaze $clazzNamespace
+     * @param Namespaze|null $clazzNamespace
      */
-    public function __construct(string $name, Namespaze $clazzNamespace = null)
+    public function __construct(string $name, ?Namespaze $clazzNamespace = null)
     {
         $this->ensureClassNameIsValid($name);
 

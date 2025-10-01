@@ -23,7 +23,7 @@ class DependencyStructureMatrixHtmlFormatter implements Formatter
     /**
      * {@inheritdoc}
      */
-    public function format(DependencyMap $all, \Closure $mappers = null) : string
+    public function format(DependencyMap $all, ?\Closure $mappers = null) : string
     {
         return $this->buildHtmlTable(
             $this->dependencyStructureMatrixBuilder->buildMatrix($all, $mappers ?? Functional::id())

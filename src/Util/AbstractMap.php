@@ -129,7 +129,7 @@ abstract class AbstractMap implements Collection
     /**
      * @inheritDoc
      */
-    public function count()
+    public function count(): int
     {
         return count($this->map);
     }
