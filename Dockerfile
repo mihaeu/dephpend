@@ -1,4 +1,4 @@
-FROM php:7.3-cli
+FROM php:8.2-cli
 RUN mkdir -p /usr/share/man/man1 \
     && apt-get update && apt-get install -y \
         default-jdk \

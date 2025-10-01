@@ -81,7 +81,7 @@ abstract class AbstractCollection implements Collection
     /**
      * {@inheritdoc}
      */
-    public function count()
+    public function count(): int
     {
         return count($this->collection);
     }

@@ -44,7 +44,7 @@ class NullDependency implements Dependency
         return false;
     }
 
-    public function count()
+    public function count(): int
     {
         return 0;
     }
