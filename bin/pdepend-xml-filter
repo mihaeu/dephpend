@@ -51,4 +51,3 @@ foreach ($dependencies as $from => $tos) {
         echo $from.' --> '.$to.PHP_EOL;
     }
 }
-//var_dump($dependencies);

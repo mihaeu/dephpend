@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Util;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionException;
 
-/**
- * @covers Mihaeu\PhpDependencies\Util\DependencyContainer
- */
+#[CoversClass(\Mihaeu\PhpDependencies\Util\DependencyContainer::class)]
 class DependencyContainerTest extends TestCase
 {
     /**
-     * @return array
+     * @return list<array{non-empty-string, non-empty-string}>
      * @throws ReflectionException
      */
     public static function provideMethods(): array
@@ -22,7 +22,7 @@ class DependencyContainerTest extends TestCase
         $reflectionClass = new ReflectionClass(DependencyContainer::class);
         $methods = [];
         foreach ($reflectionClass->getMethods() as $method) {
-            if (!$method->hasReturnType()) {
+            if (! $method->hasReturnType()) {
                 continue;
             }
             $methods[] = [$method->getName(), (string) $method->getReturnType()];
@@ -30,11 +30,7 @@ class DependencyContainerTest extends TestCase
         return $methods;
     }
 
-    /**
-     * @dataProvider provideMethods
-     * @param string $methodName
-     * @param string $expectedReturnType
-     */
+    #[DataProvider('provideMethods')]
     public function testCanInstantiateAllDependencies(string $methodName, string $expectedReturnType): void
     {
         $this->assertInstanceOf($expectedReturnType, (new DependencyContainer([]))->{$methodName}());

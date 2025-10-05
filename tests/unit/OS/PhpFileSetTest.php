@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\OS;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use SplFileInfo;
 
-/**
- * @covers Mihaeu\PhpDependencies\OS\PhpFileSet
- * @covers Mihaeu\PhpDependencies\Util\AbstractCollection
- */
+#[CoversClass(\Mihaeu\PhpDependencies\OS\PhpFileSet::class)]
+#[CoversClass(\Mihaeu\PhpDependencies\Util\AbstractCollection::class)]
 class PhpFileSetTest extends TestCase
 {
     public function testEquals(): void

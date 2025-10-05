@@ -8,12 +8,11 @@ use InvalidArgumentException;
 use Mihaeu\PhpDependencies\DependencyHelper;
 use Mihaeu\PhpDependencies\DependencyHelper as H;
 use Mihaeu\PhpDependencies\Util\Collection;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers Mihaeu\PhpDependencies\Dependencies\Clazz
- * @covers Mihaeu\PhpDependencies\Dependencies\ClazzLike
- */
+#[CoversClass(\Mihaeu\PhpDependencies\Dependencies\Clazz::class)]
+#[CoversClass(\Mihaeu\PhpDependencies\Dependencies\ClazzLike::class)]
 class ClazzTest extends TestCase
 {
     public function testAcceptsUtf8Name(): void

@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\OS;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers Mihaeu\PhpDependencies\OS\ShellWrapper
- */
+#[CoversClass(\Mihaeu\PhpDependencies\OS\ShellWrapper::class)]
 class ShellWrapperTest extends TestCase
 {
     /**

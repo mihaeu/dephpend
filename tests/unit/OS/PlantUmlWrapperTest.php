@@ -7,20 +7,20 @@ namespace Mihaeu\PhpDependencies\OS;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Exceptions\PlantUmlNotInstalledException;
 use Mihaeu\PhpDependencies\Formatters\PlantUmlFormatter;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 use SplFileInfo;
 
-/**
- * @covers Mihaeu\PhpDependencies\OS\PlantUmlWrapper
- * @covers Mihaeu\PhpDependencies\Exceptions\PlantUmlNotInstalledException
- */
+#[CoversClass(\Mihaeu\PhpDependencies\OS\PlantUmlWrapper::class)]
+#[CoversClass(\Mihaeu\PhpDependencies\Exceptions\PlantUmlNotInstalledException::class)]
 class PlantUmlWrapperTest extends TestCase
 {
-    /** @var ShellWrapper|PHPUnit_Framework_MockObject_MockObject */
+    /** @var ShellWrapper&MockObject */
     private $shellWrapper;
 
-    /** @var PlantUmlFormatter|PHPUnit_Framework_MockObject_MockObject */
+    /** @var PlantUmlFormatter&MockObject */
     private $plantUmlFormatter;
 
     protected function setUp(): void
@@ -29,19 +29,35 @@ class PlantUmlWrapperTest extends TestCase
         $this->plantUmlFormatter = $this->createMock(PlantUmlFormatter::class);
     }
 
-    public function testDetectsIfPlantUmlIsNotInstalled(): void
+    /**
+     * @return array<string, array{shellReturnCode: int, expectException: bool}>
+     */
+    public static function plantUmlInstallationProvider(): array
     {
-        $this->shellWrapper->method('run')->willReturn(1);
-        $plantUml = new PlantUmlWrapper($this->plantUmlFormatter, $this->shellWrapper);
-
-        $this->expectException(PlantUmlNotInstalledException::class);
-        $plantUml->generate(new DependencyMap(), new SplFileInfo(__FILE__));
+        return [
+            'PlantUML is installed' => ['shellReturnCode' => 0, 'expectException' => false],
+            'PlantUML is not installed' => ['shellReturnCode' => 1, 'expectException' => true],
+        ];
     }
 
-    public function testDetectsIfPlantUmlIsInstalled(): void
+    #[DataProvider('plantUmlInstallationProvider')]
+    public function testInstallationCheckDuringGeneration(int $shellReturnCode, bool $expectException): void
     {
-        $this->shellWrapper->method('run')->willReturn(0);
-        $this->assertInstanceOf(PlantUmlWrapper::class, new PlantUmlWrapper($this->plantUmlFormatter, $this->shellWrapper));
+        $this->shellWrapper->method('run')
+             ->willReturn($shellReturnCode);
+
+        $wrapper = new PlantUmlWrapper($this->plantUmlFormatter, $this->shellWrapper);
+
+        if ($expectException) {
+            $this->expectException(PlantUmlNotInstalledException::class);
+        }
+
+        $wrapper->generate(new DependencyMap(), new SplFileInfo('test.png'));
+        if ($expectException) {
+            $this->fail('PlantUmlNotInstalledException was expected but not thrown.');
+        }
+
+        $this->expectNotToPerformAssertions();
     }
 
     public function testGenerate(): void

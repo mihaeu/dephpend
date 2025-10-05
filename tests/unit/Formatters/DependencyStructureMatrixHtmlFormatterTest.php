@@ -6,15 +6,14 @@ namespace Mihaeu\PhpDependencies\Formatters;
 
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 
-/**
- * @covers Mihaeu\PhpDependencies\Formatters\DependencyStructureMatrixHtmlFormatter
- */
+#[CoversClass(\Mihaeu\PhpDependencies\Formatters\DependencyStructureMatrixHtmlFormatter::class)]
 class DependencyStructureMatrixHtmlFormatterTest extends TestCase
 {
-    /** @var DependencyStructureMatrixBuilder|PHPUnit_Framework_MockObject_MockObject */
+    /** @var DependencyStructureMatrixBuilder&MockObject */
     private $dependencyStructureMatrixBuilder;
 
     /** @var DependencyStructureMatrixHtmlFormatter */

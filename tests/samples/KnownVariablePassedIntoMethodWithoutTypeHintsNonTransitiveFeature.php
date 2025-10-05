@@ -1,6 +1,5 @@
 # A --> B
 # A --> C
-# C --> B
 <?php
 
 class A

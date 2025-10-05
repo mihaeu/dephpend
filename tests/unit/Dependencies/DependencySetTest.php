@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Dependencies;
 
 use Mihaeu\PhpDependencies\DependencyHelper;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers Mihaeu\PhpDependencies\Dependencies\DependencySet
- * @covers Mihaeu\PhpDependencies\Util\AbstractCollection
- */
+#[CoversClass(\Mihaeu\PhpDependencies\Dependencies\DependencySet::class)]
+#[CoversClass(\Mihaeu\PhpDependencies\Util\AbstractCollection::class)]
 class DependencySetTest extends TestCase
 {
     public function testAdd(): void

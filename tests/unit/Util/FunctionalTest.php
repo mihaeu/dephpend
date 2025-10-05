@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Util;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers Mihaeu\PhpDependencies\Util\Functional
- */
+#[CoversClass(\Mihaeu\PhpDependencies\Util\Functional::class)]
 class FunctionalTest extends TestCase
 {
     public function testCompose(): void

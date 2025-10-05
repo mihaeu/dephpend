@@ -6,21 +6,21 @@ namespace Mihaeu\PhpDependencies\OS;
 
 class ShellWrapper
 {
-    private $STD_ERR_PIPE = ' 2>&1 /dev/null';
+    private const STD_ERR_PIPE = ' 2>&1 /dev/null';
 
-    private $STD_ERR_PIPE_WIN = ' 2> NUL';
+    private const STD_ERR_PIPE_WIN = ' 2> NUL';
 
     /**
      * @param string $command
      *
      * @return int return var
      */
-    public function run(string $command) : int
+    public function run(string $command): int
     {
         $output = [];
         $returnVar = 1;
 
-        $command .= $this->isWindows() ? $this->STD_ERR_PIPE_WIN : $this->STD_ERR_PIPE;
+        $command .= $this->isWindows() ? self::STD_ERR_PIPE_WIN : self::STD_ERR_PIPE;
 
         exec($command, $output, $returnVar);
 

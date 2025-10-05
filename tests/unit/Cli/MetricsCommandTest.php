@@ -5,35 +5,27 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Cli;
 
 use Mihaeu\PhpDependencies\Analyser\Metrics;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * @covers Mihaeu\PhpDependencies\Cli\MetricsCommand
- */
+#[CoversClass(\Mihaeu\PhpDependencies\Cli\MetricsCommand::class)]
 class MetricsCommandTest extends TestCase
 {
-    /** @var MetricsCommand */
-    private $metricsCommand;
+    private MetricsCommand $metricsCommand;
 
-    /** @var Metrics|PHPUnit_Framework_MockObject_MockObject */
-    private $metrics;
+    private Metrics&MockObject $metrics;
 
-    /** @var InputInterface|PHPUnit_Framework_MockObject_MockObject */
-    private $input;
-
-    /** @var OutputInterface|PHPUnit_Framework_MockObject_MockObject */
-    private $output;
+    private InputInterface&MockObject $input;
 
     protected function setUp(): void
     {
         $this->metrics = $this->createMock(Metrics::class);
         $this->metricsCommand = new MetricsCommand($this->metrics);
         $this->input = $this->createMock(InputInterface::class);
-        $this->output = $this->createMock(OutputInterface::class);
     }
 
     public function testPrintsMetrics(): void

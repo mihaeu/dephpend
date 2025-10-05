@@ -6,20 +6,19 @@ use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Exceptions\DotNotInstalledException;
 use Mihaeu\PhpDependencies\Formatters\DotFormatter;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use SplFileInfo;
 
-/**
- * @covers Mihaeu\PhpDependencies\OS\DotWrapper
- * @covers \Mihaeu\PhpDependencies\Exceptions\DotNotInstalledException
- */
+#[CoversClass(\Mihaeu\PhpDependencies\OS\DotWrapper::class)]
+#[CoversClass(\Mihaeu\PhpDependencies\Exceptions\DotNotInstalledException::class)]
 class DotWrapperTest extends TestCase
 {
-    /** @var ShellWrapper|MockObject */
+    /** @var ShellWrapper&MockObject */
     private $shellWrapper;
 
-    /** @var DotFormatter|MockObject */
+    /** @var DotFormatter&MockObject */
     private $dotFormatter;
 
     /** @var DotWrapper */
@@ -48,13 +47,16 @@ class DotWrapperTest extends TestCase
             ->expects($this->exactly(2))
             ->method('run')
             ->willReturnCallback(function ($command) use ($root) {
-                if ($command === 'dot -V') {
-                    return 0;
+                static $callCount = 0;
+                $callCount++;
+                
+                if ($callCount === 1) {
+                    $this->assertEquals('dot -V', $command);
+                } elseif ($callCount === 2) {
+                    $this->assertEquals('dot -O -Tpng '.$root.'/test', $command);
                 }
-                if ($command === 'dot -O -Tpng '.$root.'/test') {
-                    return 0;
-                }
-                return 1;
+                
+                return 0;
             })
         ;
         $this->dotWrapper->generate(new DependencyMap(), new SplFileInfo($root.'/test.png'), true);
@@ -64,9 +66,9 @@ class DotWrapperTest extends TestCase
     {
         $root = vfsStream::setup()->url();
         $testFile = new SplFileInfo($root.'/test');
-        $this->assertFileDoesNotExist($testFile->getPathname());
+        $this->assertFalse(file_exists($testFile->getPathname()));
         $this->dotWrapper->generate(new DependencyMap(), new SplFileInfo($testFile->getPathname()), true);
-        $this->assertFileExists($testFile->getPathname());
+        $this->assertTrue(file_exists($testFile->getPathname()));
     }
 
 
@@ -75,6 +77,6 @@ class DotWrapperTest extends TestCase
         $root = vfsStream::setup()->url();
         $testFile = new SplFileInfo($root.'/test');
         $this->dotWrapper->generate(new DependencyMap(), new SplFileInfo($root.'/test.png'), false);
-        $this->assertFileDoesNotExist($testFile->getPathname());
+        $this->assertFalse(file_exists($testFile->getPathname()));
     }
 }

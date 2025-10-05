@@ -12,10 +12,9 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class Application extends \Symfony\Component\Console\Application
 {
-    const XDEBUG_WARNING = 'You are running dePHPend with xdebug enabled. This has a major impact on runtime performance. See https://getcomposer.org/xdebug';
+    public const XDEBUG_WARNING = 'You are running dePHPend with xdebug enabled. This has a major impact on runtime performance. See https://getcomposer.org/xdebug';
 
-    /** @var ErrorOutput */
-    private $errorOutput;
+    private ?ErrorOutput $errorOutput = null;
 
     public function __construct(string $name, string $version, EventDispatcherInterface $dispatcher)
     {
@@ -26,20 +25,15 @@ class Application extends \Symfony\Component\Console\Application
         $this->setDispatcher($dispatcher);
     }
 
-    public function setErrorOutput(ErrorOutput $errorOutput): void
+    public function setErrorOutput(?ErrorOutput $errorOutput): void
     {
-        if (!$this->errorOutput) {
-            $this->errorOutput = $errorOutput;
-        }
+        $this->errorOutput = $errorOutput;
     }
 
     /**
      * Commands are added here instead of before executing run(), because
      * we need access to command line options in order to inject the
      * right dependencies.
-     *
-     * @param InputInterface $input
-     * @param OutputInterface $output
      *
      * @return int
      *
@@ -55,22 +49,20 @@ class Application extends \Symfony\Component\Console\Application
             $this->writeToStdErr($input, $output, '<error>Sorry, we could not analyse your dependencies, '
                 . 'because the sources contain syntax errors:' . PHP_EOL . PHP_EOL
                 . $e->getMessage() . ' in file ' . $e->getFile() . '<error>');
-            return $e->getCode() ?? 1;
+            return $e->getCode();
         } catch (\Throwable $e) {
-            if ($output !== null) {
-                $this->writeToStdErr(
-                    $input,
-                    $output,
-                    "<error>Something went wrong, this shouldn't happen."
-                    . ' Please take a minute and report this issue:'
-                    . ' https://github.com/mihaeu/dephpend/issues</error>'
-                    . PHP_EOL . PHP_EOL
-                    . $e->getMessage()
-                    . PHP_EOL . PHP_EOL
-                    . "[{$e->getFile()} at line {$e->getLine()}]"
-                );
-            }
-            return $e->getCode() ?? 1;
+            $this->writeToStdErr(
+                $input,
+                $output,
+                "<error>Something went wrong, this shouldn't happen."
+                . ' Please take a minute and report this issue:'
+                . ' https://github.com/mihaeu/dephpend/issues</error>'
+                . PHP_EOL . PHP_EOL
+                . $e->getMessage()
+                . PHP_EOL . PHP_EOL
+                . "[{$e->getFile()} at line {$e->getLine()}]"
+            );
+            return $e->getCode();
         }
 
         return 0;
@@ -85,7 +77,11 @@ class Application extends \Symfony\Component\Console\Application
 
     private function writeToStdErr(InputInterface $input, OutputInterface $output, string $message): void
     {
-        $this->setErrorOutput(new ErrorOutput(new SymfonyStyle($input, $output)));
+        // Only create a new ErrorOutput if one hasn't been explicitly set (e.g., by a test)
+        if ($this->errorOutput === null) {
+            $this->setErrorOutput(new ErrorOutput(new SymfonyStyle($input, $output)));
+        }
+        // Always use the current errorOutput instance
         $this->errorOutput->writeln($message);
     }
 }

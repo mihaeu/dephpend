@@ -14,34 +14,17 @@ use PhpParser\NodeVisitor\NameResolver;
 
 class StaticAnalyser
 {
-    /** @var NodeTraverser */
-    private $nodeTraverser;
-
-    /** @var DependencyInspectionVisitor */
-    private $dependencyInspectionVisitor;
-
-    /** @var Parser */
-    private $parser;
-
-    /**
-     * @param NodeTraverser               $nodeTraverser
-     * @param DependencyInspectionVisitor $dependencyInspectionVisitor
-     */
     public function __construct(
-        NodeTraverser $nodeTraverser,
-        DependencyInspectionVisitor $dependencyInspectionVisitor,
-        Parser $parser
+        private NodeTraverser $nodeTraverser,
+        private NameResolver $nameResolver,
+        private DependencyInspectionVisitor $dependencyInspectionVisitor,
+        private Parser $parser
     ) {
-        $this->dependencyInspectionVisitor = $dependencyInspectionVisitor;
-
-        $this->nodeTraverser = $nodeTraverser;
-        $this->nodeTraverser->addVisitor(new NameResolver());
+        $this->nodeTraverser->addVisitor($this->nameResolver);
         $this->nodeTraverser->addVisitor($this->dependencyInspectionVisitor);
-
-        $this->parser = $parser;
     }
 
-    public function analyse(PhpFileSet $files) : DependencyMap
+    public function analyse(PhpFileSet $files): DependencyMap
     {
         $files->each(function (PhpFile $file) {
             try {

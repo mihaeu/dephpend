@@ -7,29 +7,27 @@ namespace Mihaeu\PhpDependencies\Cli;
 use Mihaeu\PhpDependencies\Exceptions\ParserException;
 use Mihaeu\PhpDependencies\OS\DotWrapper;
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\Input;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\Output;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-/**
- * @covers Mihaeu\PhpDependencies\Cli\Application
- * @covers \Mihaeu\PhpDependencies\Exceptions\ParserException
- */
+#[CoversClass(Application::class)]
+#[CoversClass(ParserException::class)]
 class ApplicationTest extends TestCase
 {
     /** @var Application */
     private $application;
 
-    /** @var InputInterface */
+    /** @var Input&MockObject */
     private $input;
 
-    /** @var OutputInterface */
+    /** @var Output&MockObject */
     private $output;
 
     /** @var EventDispatcherInterface */
@@ -50,6 +48,7 @@ class ApplicationTest extends TestCase
 
     public function testWarningIfXDebugEnabled(): void
     {
+        /** @var ErrorOutput&MockObject $errorOutput */
         $errorOutput = $this->createMock(ErrorOutput::class);
         $this->application->setErrorOutput($errorOutput);
 
@@ -73,18 +72,15 @@ class ApplicationTest extends TestCase
             . 'because the sources contain syntax errors:' . PHP_EOL . PHP_EOL
             . 'Test in file someFile.php<error>';
 
+        /** @var ErrorOutput&MockObject $errorOutput */
         $errorOutput = $this->createMock(ErrorOutput::class);
         $this->application->setErrorOutput($errorOutput);
         if (!extension_loaded('xdebug')) {
             $errorOutput->expects($this->once())->method('writeln')->with($expectedMessage);
         } else {
-            $errorOutput->expects($this->exactly(2))->method('writeln')->willReturnCallback(
-                function ($message) use ($expectedMessage) {
-                    if ($message === self::XDEBUG_WARNING) {
-                        return;
-                    }
-                    $this->assertEquals($expectedMessage, $message);
-                }
+            $errorOutput->expects($this->exactly(2))->method('writeln')->willReturnOnConsecutiveCalls(
+                [self::XDEBUG_WARNING],
+                [$expectedMessage]
             );
         }
         $this->application->doRun($this->input, $this->output);
@@ -94,6 +90,7 @@ class ApplicationTest extends TestCase
     {
         $_SERVER['argv'] = ['', 'dsm', sys_get_temp_dir(), '--format=html'];
 
+        /** @var ErrorOutput&MockObject $errorOutput */
         $errorOutput = $this->createMock(ErrorOutput::class);
         $application = new Application('', '', $this->dispatcher);
         $application->setErrorOutput($errorOutput);
@@ -106,6 +103,7 @@ class ApplicationTest extends TestCase
     {
         $_SERVER['argv'] = ['', 'uml', sys_get_temp_dir(), '--output=test.png'];
 
+        /** @var ErrorOutput&MockObject $errorOutput */
         $errorOutput = $this->createMock(ErrorOutput::class);
         $application = new Application('', '', $this->dispatcher);
         $application->setErrorOutput($errorOutput);
@@ -118,6 +116,7 @@ class ApplicationTest extends TestCase
     {
         $_SERVER['argv'] = ['', 'metrics', sys_get_temp_dir()];
 
+        /** @var ErrorOutput&MockObject $errorOutput */
         $errorOutput = $this->createMock(ErrorOutput::class);
         $application = new Application('', '', $this->dispatcher);
         $application->setErrorOutput($errorOutput);
@@ -130,6 +129,7 @@ class ApplicationTest extends TestCase
     {
         $_SERVER['argv'] = ['', 'dot', sys_get_temp_dir()];
 
+        /** @var ErrorOutput&MockObject $errorOutput */
         $errorOutput = $this->createMock(ErrorOutput::class);
         $application = new Application('', '', $this->dispatcher);
         $application->setErrorOutput($errorOutput);
@@ -143,7 +143,9 @@ class ApplicationTest extends TestCase
         $input = new ArgvInput(['', 'dot', '--help']);
         $output = new BufferedOutput();
         $application = new Application('', '', $this->dispatcher);
-        $application->add(new DotCommand($this->createMock(DotWrapper::class)));
+        /** @var DotWrapper&MockObject $wrapper */
+        $wrapper = $this->createMock(DotWrapper::class);
+        $application->add(new DotCommand($wrapper));
         $application->doRun($input, $output);
         Assert::assertStringContainsString('dot [options]', $output->fetch());
     }

@@ -57,7 +57,7 @@ COMMIT_EMAIL="valid@email.com"
   mv "build/dephpend.phar" "build/dephpend-$VERSION.phar" && \
   gpg --local-user "${COMMIT_EMAIL}" --detach-sign --output "build/dephpend-${VERSION}.phar.asc" "build/dephpend-${VERSION}.phar" && \
   gpg --verify "build/dephpend-${VERSION}.phar.asc" "build/dephpend-${VERSION}.phar" && \
-  bin/prepare-tag "${VERSION}" && \
+  "$(pwd)/bin/prepare-tag" "${VERSION}" && \
   git push && \
   git push origin "${VERSION}" 
 ```

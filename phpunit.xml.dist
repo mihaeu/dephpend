@@ -2,10 +2,12 @@
 <phpunit backupGlobals="false"
          bootstrap="vendor/autoload.php"
          beStrictAboutOutputDuringTests="true"
-         requireCoverageMetadata="true"
+         failOnRisky="true"
+         failOnDeprecation="true"
+         failOnPhpunitDeprecation="true"
          colors="true">
-    <testsuite name="tests">
-        <directory suffix="Test.php">tests/unit</directory>
+    <testsuite name="unit">
+        <directory>tests/unit</directory>
     </testsuite>
 
     <source>

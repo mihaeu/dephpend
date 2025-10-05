@@ -3,7 +3,7 @@
 
 # composer dependencies
 /vendor
-/samples
+/vendor-bin
 
 *.cache
 
@@ -17,4 +17,5 @@
 # log files
 *.log
 
-composer.lock
+# macOS
+.DS_Store

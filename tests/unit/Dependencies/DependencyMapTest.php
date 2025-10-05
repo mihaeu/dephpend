@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Dependencies;
 
 use Mihaeu\PhpDependencies\DependencyHelper;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers Mihaeu\PhpDependencies\Dependencies\DependencyMap
- * @covers Mihaeu\PhpDependencies\Util\AbstractMap
- */
+#[CoversClass(\Mihaeu\PhpDependencies\Dependencies\DependencyMap::class)]
+#[CoversClass(\Mihaeu\PhpDependencies\Util\AbstractMap::class)]
 class DependencyMapTest extends TestCase
 {
     public function testNoDuplicates(): void

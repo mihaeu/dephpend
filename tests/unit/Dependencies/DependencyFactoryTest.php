@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Dependencies;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers Mihaeu\PhpDependencies\Dependencies\DependencyFactory
- */
+#[CoversClass(\Mihaeu\PhpDependencies\Dependencies\DependencyFactory::class)]
 class DependencyFactoryTest extends TestCase
 {
     /** @var DependencyFactory */

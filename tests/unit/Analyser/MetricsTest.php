@@ -10,11 +10,10 @@ use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
 use Mihaeu\PhpDependencies\Dependencies\Interfaze;
 use Mihaeu\PhpDependencies\Dependencies\Trait_;
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers Mihaeu\PhpDependencies\Analyser\Metrics
- */
+#[CoversClass(Metrics::class)]
 class MetricsTest extends TestCase
 {
     /** @var Metrics */

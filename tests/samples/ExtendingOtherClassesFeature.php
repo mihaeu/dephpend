@@ -3,5 +3,4 @@
 
 class A extends B
 {
-    // ...
 }

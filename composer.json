@@ -11,7 +11,7 @@
     "bin": ["bin/dephpend", "bin/php-trace"],
     "require": {
         "php": "^8.2",
-        "nikic/php-parser": "^4.0",
+        "nikic/php-parser": "^5.4",
         "symfony/console": "^7",
         "symfony/event-dispatcher": "^7"
     },
@@ -22,9 +22,12 @@
     },
     "require-dev": {
         "mikey179/vfsstream": "^1.6",
-        "phpunit/phpunit": "^10.0",
+        "phpunit/phpunit": "^11.0",
         "squizlabs/php_codesniffer": "^3.3",
-        "friendsofphp/php-cs-fixer": "^v3.64.0"
+        "friendsofphp/php-cs-fixer": "^3.75.0",
+        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan-phpunit": "^2.0",
+        "bamarni/composer-bin-plugin": "^1.8"
     },
     "minimum-stability": "stable",
     "prefer-stable": true,
@@ -45,11 +48,15 @@
             "Mihaeu\\PhpDependencies\\Tests\\Feature\\": ["tests/feature/"]
         },
         "files": [
-            "vendor/phpunit/phpunit/src/Framework/Assert/Functions.php",
             "tests/feature/constants.php"
         ]
     },
     "support": {
-        "issues": "https://github.com/mihaeu/dephpend/issues"
+        "issues": "https://github.com/aaronjewell/dephpend/issues"
+    },
+    "config": {
+        "allow-plugins": {
+            "bamarni/composer-bin-plugin": true
+        }
     }
 }

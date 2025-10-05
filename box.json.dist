@@ -1,6 +1,4 @@
 {
     "directories": ["src/", "vendor/"],
-    "main": "bin/dephpend",
-    "output": "build/dephpend.phar",
-    "stub": true
+    "output": "build/dephpend.phar"
 }

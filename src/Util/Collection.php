@@ -4,76 +4,58 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Util;
 
-interface Collection extends \Countable
+use Closure;
+use Countable;
+
+/**
+ * @template T
+ */
+interface Collection extends Countable
 {
     /**
      * True if any element matches the $closure.
-     *
-     * @param \Closure $closure
-     *
-     * @return bool
      */
-    public function any(\Closure $closure) : bool;
+    public function any(Closure $closure): bool;
 
-    /**
-     * @param \Closure $closure
-     *
-     * @return bool
-     */
-    public function none(\Closure $closure) : bool;
+    public function none(Closure $closure): bool;
 
     /**
      * Applies $closure to each element.
-     *
-     * @param \Closure $closure
      */
-    public function each(\Closure $closure);
+    public function each(Closure $closure): void;
 
     /**
      * Returns a new array by applying the $closure to each element.
      *
-     * @param \Closure $closure
-     *
-     * @return array
+     * @return array<int|string, mixed>
      */
-    public function mapToArray(\Closure $closure) : array;
+    public function mapToArray(Closure $closure): array;
+
+    public function reduce(mixed $initial, Closure $closure): mixed;
 
     /**
-     * @param mixed    $initial
-     * @param \Closure $closure
-     *
-     * @return mixed
+     * @return Collection<T>
      */
-    public function reduce($initial, \Closure $closure);
+    public function filter(Closure $closure): Collection;
 
     /**
-     * @param \Closure $closure
-     *
-     * @return Collection
+     * @return array<T>
      */
-    public function filter(\Closure $closure) : Collection;
+    public function toArray(): array;
 
     /**
-     * @return array
+     * @param T $other
      */
-    public function toArray() : array;
+    public function contains($other): bool;
+
+    public function toString(): string;
 
     /**
-     * @param $other
-     *
-     * @return bool
+     * @param Collection<T> $other
      */
-    public function contains($other) : bool;
+    public function equals(Collection $other): bool;
 
-    /**
-     * @return string
-     */
-    public function toString() : string;
+    public function count(): int;
 
-    /**
-     * @param Collection $other
-     *
-     * @return bool
-     */
-    public function equals(Collection $other) : bool;
+    public function isEmpty(): bool;
 }

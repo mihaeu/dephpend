@@ -13,6 +13,7 @@ use Mihaeu\PhpDependencies\Analyser\XDebugFunctionTraceAnalyser;
 use Mihaeu\PhpDependencies\Cli\Dispatcher;
 use Mihaeu\PhpDependencies\Cli\DotCommand;
 use Mihaeu\PhpDependencies\Cli\DsmCommand;
+use Mihaeu\PhpDependencies\Cli\MermaidCommand;
 use Mihaeu\PhpDependencies\Cli\MetricsCommand;
 use Mihaeu\PhpDependencies\Cli\TestFeaturesCommand;
 use Mihaeu\PhpDependencies\Cli\TextCommand;
@@ -22,23 +23,25 @@ use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\Formatters\DependencyStructureMatrixBuilder;
 use Mihaeu\PhpDependencies\Formatters\DependencyStructureMatrixHtmlFormatter;
 use Mihaeu\PhpDependencies\Formatters\DotFormatter;
+use Mihaeu\PhpDependencies\Formatters\MermaidFormatter;
 use Mihaeu\PhpDependencies\Formatters\PlantUmlFormatter;
 use Mihaeu\PhpDependencies\OS\DotWrapper;
+use Mihaeu\PhpDependencies\OS\MermaidWrapper;
 use Mihaeu\PhpDependencies\OS\PhpFileFinder;
 use Mihaeu\PhpDependencies\OS\PlantUmlWrapper;
 use Mihaeu\PhpDependencies\OS\ShellWrapper;
 use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\ParserFactory;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class DependencyContainer
 {
-    /** @var array */
-    private $internals;
-
-    public function __construct(array $internals)
+    /**
+     * @param list<string> $internals
+     */
+    public function __construct(private array $internals)
     {
-        $this->internals = $internals;
     }
 
     public function dependencyFilter(): DependencyFilter
@@ -53,7 +56,7 @@ class DependencyContainer
 
     public function parser(): Parser
     {
-        return new DefaultParser((new ParserFactory())->create(ParserFactory::ONLY_PHP7));
+        return new DefaultParser((new ParserFactory())->createForHostVersion());
     }
 
     public function dependencyFactory(): DependencyFactory
@@ -61,13 +64,27 @@ class DependencyContainer
         return new DependencyFactory();
     }
 
+    public function nameResolver(): NameResolver
+    {
+        return new NameResolver();
+    }
+
+    public function nodeTraverser(): NodeTraverser
+    {
+        return new NodeTraverser();
+    }
+
+    public function dependencyInspectionVisitor(): DependencyInspectionVisitor
+    {
+        return new DependencyInspectionVisitor($this->dependencyFactory());
+    }
+
     public function staticAnalyser(): StaticAnalyser
     {
         return new StaticAnalyser(
-            new NodeTraverser(),
-            new DependencyInspectionVisitor(
-                $this->dependencyFactory()
-            ),
+            $this->nodeTraverser(),
+            $this->nameResolver(),
+            $this->dependencyInspectionVisitor(),
             $this->parser()
         );
     }
@@ -80,6 +97,11 @@ class DependencyContainer
     public function umlCommand(): UmlCommand
     {
         return new UmlCommand(new PlantUmlWrapper(new PlantUmlFormatter(), new ShellWrapper()));
+    }
+
+    public function mermaidCommand(): MermaidCommand
+    {
+        return new MermaidCommand(new MermaidWrapper(new MermaidFormatter()));
     }
 
     public function dotCommand(): DotCommand

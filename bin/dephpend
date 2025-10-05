@@ -39,4 +39,5 @@ $application->add($dependencyContainer->dsmCommand());
 $application->add($dependencyContainer->textCommand());
 $application->add($dependencyContainer->metricsCommand());
 $application->add($dependencyContainer->testFeaturesCommand());
+$application->add($dependencyContainer->mermaidCommand());
 $application->run();

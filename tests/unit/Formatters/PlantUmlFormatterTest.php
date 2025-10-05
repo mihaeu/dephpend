@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Formatters;
 
 use Mihaeu\PhpDependencies\DependencyHelper;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers Mihaeu\PhpDependencies\Formatters\PlantUmlFormatter
- */
+#[CoversClass(\Mihaeu\PhpDependencies\Formatters\PlantUmlFormatter::class)]
 class PlantUmlFormatterTest extends TestCase
 {
     /** @var PlantUmlFormatter */

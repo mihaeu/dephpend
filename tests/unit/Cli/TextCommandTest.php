@@ -4,35 +4,24 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Cli;
 
-use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\DependencyHelper;
 use Mihaeu\PhpDependencies\Util\Functional;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * @covers Mihaeu\PhpDependencies\Cli\TextCommand
- * @covers Mihaeu\PhpDependencies\Cli\BaseCommand
- */
+#[CoversClass(\Mihaeu\PhpDependencies\Cli\TextCommand::class)]
+#[CoversClass(\Mihaeu\PhpDependencies\Cli\BaseCommand::class)]
 class TextCommandTest extends TestCase
 {
-    /** @var TextCommand */
-    private $textCommand;
+    private InputInterface&MockObject $input;
 
-    /** @var InputInterface|PHPUnit_Framework_MockObject_MockObject */
-    private $input;
-
-    /** @var OutputInterface|PHPUnit_Framework_MockObject_MockObject */
-    private $output;
-
-    /** @var DependencyFilter|PHPUnit_Framework_MockObject_MockObject */
-    private $dependencyFilter;
+    private OutputInterface&MockObject $output;
 
     protected function setUp(): void
     {
-        $this->dependencyFilter = $this->createMock(DependencyFilter::class);
         $this->input = $this->createMock(InputInterface::class);
         $this->output = $this->createMock(OutputInterface::class);
     }

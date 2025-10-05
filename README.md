@@ -1,11 +1,10 @@
 <h1 align="center"><a href="https://dephpend.com/"><img src="doc/logo.svg" alt="dePHPend lgo"></a></h1>
 
-[![Build Status](https://travis-ci.org/mihaeu/dephpend.svg?branch=master)](https://travis-ci.org/github/mihaeu/dephpend)
+[![Build Status](!(https://github.com/github/docs/actions/workflows/dephpend.yml/badge.svg))](https://github.com/mihaeu/dephpend/actions)
 [![Coverage Status](https://coveralls.io/repos/github/mihaeu/dephpend/badge.svg)](https://coveralls.io/github/mihaeu/dephpend)
 [![Packagist Version](https://img.shields.io/packagist/v/dephpend/dephpend)](https://packagist.org/packages/dephpend/dephpend)
 [![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](https://github.com/mihaeu/dephpend/blob/main/LICENSE)
-[![PHP 7.2](https://img.shields.io/badge/PHP-7.2-blue.svg?style=flat)](https://www.php.net/supported-versions.php)
-[![Join the chat at Gitter](https://badges.gitter.im/dephpend/Lobby.svg)](https://gitter.im/dephpend/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![PHP 8.4](https://img.shields.io/badge/PHP-8.4-blue.svg?style=flat)](https://www.php.net/supported-versions.php)
 
 Detect flaws in your architecture before they drag you down into the depths of dependency hell ...
 
@@ -53,7 +52,7 @@ With this information you can:
 
 
 ## System Requirements
-- PHP >= 7.2
+- PHP >= 8.2
 - plantuml (UML Class diagram)
 
 

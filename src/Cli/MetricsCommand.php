@@ -58,7 +58,13 @@ class MetricsCommand extends BaseCommand
         return 0;
     }
 
-    private function combineMetrics(array $afferentCoupling, array $efferentCoupling, array $instability) : array
+    /**
+     * @param array<string, int> $afferentCoupling
+     * @param array<string, int> $efferentCoupling
+     * @param array<string, float> $instability
+     * @return array<array{string, int, int, string}>
+     */
+    private function combineMetrics(array $afferentCoupling, array $efferentCoupling, array $instability): array
     {
         $result = [];
         foreach ($afferentCoupling as $className => $afferentCouplingValue) {

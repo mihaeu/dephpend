@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Util;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers Mihaeu\PhpDependencies\Util\Util
- */
+#[CoversClass(\Mihaeu\PhpDependencies\Util\Util::class)]
 class UtilTest extends TestCase
 {
     public function testArrayMatchesAtLeastOnce(): void

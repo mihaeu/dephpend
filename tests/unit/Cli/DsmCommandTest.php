@@ -5,39 +5,29 @@ declare(strict_types=1);
 namespace Mihaeu\PhpDependencies\Cli;
 
 use Exception;
-use Mihaeu\PhpDependencies\Dependencies\DependencyFilter;
 use Mihaeu\PhpDependencies\DependencyHelper;
 use Mihaeu\PhpDependencies\Formatters\DependencyStructureMatrixHtmlFormatter;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * @covers Mihaeu\PhpDependencies\Cli\DsmCommand
- * @covers Mihaeu\PhpDependencies\Cli\BaseCommand
- */
+#[CoversClass(\Mihaeu\PhpDependencies\Cli\DsmCommand::class)]
+#[CoversClass(\Mihaeu\PhpDependencies\Cli\BaseCommand::class)]
 class DsmCommandTest extends TestCase
 {
-    /** @var DsmCommand */
-    private $dsmCommand;
+    private DsmCommand $dsmCommand;
 
-    /** @var InputInterface|PHPUnit_Framework_MockObject_MockObject */
-    private $input;
+    private InputInterface&MockObject $input;
 
-    /** @var OutputInterface|PHPUnit_Framework_MockObject_MockObject */
-    private $output;
+    private OutputInterface&MockObject $output;
 
-    /** @var DependencyFilter|PHPUnit_Framework_MockObject_MockObject */
-    private $dependencyFilter;
-
-    /** @var DependencyStructureMatrixHtmlFormatter|PHPUnit_Framework_MockObject_MockObject */
-    private $dependencyStructureMatrixFormatter;
+    private DependencyStructureMatrixHtmlFormatter&MockObject $dependencyStructureMatrixFormatter;
 
     protected function setUp(): void
     {
         $this->dependencyStructureMatrixFormatter = $this->createMock(DependencyStructureMatrixHtmlFormatter::class);
-        $this->dependencyFilter = $this->createMock(DependencyFilter::class);
         $this->dsmCommand = new DsmCommand($this->dependencyStructureMatrixFormatter);
         $this->input = $this->createMock(InputInterface::class);
         $this->output = $this->createMock(OutputInterface::class);

@@ -6,13 +6,11 @@ namespace Mihaeu\PhpDependencies;
 
 use Mihaeu\PhpDependencies\Dependencies\Clazz;
 use Mihaeu\PhpDependencies\Dependencies\DependencyMap;
-use Mihaeu\PhpDependencies\Dependencies\DependencyPair;
 use Mihaeu\PhpDependencies\Dependencies\Namespaze;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers Mihaeu\PhpDependencies\DependencyHelper
- */
+#[CoversClass(\Mihaeu\PhpDependencies\DependencyHelper::class)]
 class DependencyHelperTest extends TestCase
 {
     public function testConvert(): void

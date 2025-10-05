@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Exceptions;
 
-class FileIsNotReadableException extends \Exception
+use Exception;
+use SplFileInfo;
+
+class FileIsNotReadableException extends Exception
 {
-    public function __construct(\SplFileInfo $file)
+    public function __construct(SplFileInfo $file)
     {
         parent::__construct($file->getPathname() . ' is not readable.');
     }

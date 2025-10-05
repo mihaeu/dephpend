@@ -9,21 +9,14 @@ use Mihaeu\PhpDependencies\Util\Functional;
 
 class DependencyStructureMatrixHtmlFormatter implements Formatter
 {
-    /** @var DependencyStructureMatrixBuilder */
-    private $dependencyStructureMatrixBuilder;
-
-    /**
-     * @param DependencyStructureMatrixBuilder $dependencyStructureMatrixBuilder
-     */
-    public function __construct(DependencyStructureMatrixBuilder $dependencyStructureMatrixBuilder)
+    public function __construct(private DependencyStructureMatrixBuilder $dependencyStructureMatrixBuilder)
     {
-        $this->dependencyStructureMatrixBuilder = $dependencyStructureMatrixBuilder;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function format(DependencyMap $all, ?\Closure $mappers = null) : string
+    public function format(DependencyMap $all, ?\Closure $mappers = null): string
     {
         return $this->buildHtmlTable(
             $this->dependencyStructureMatrixBuilder->buildMatrix($all, $mappers ?? Functional::id())
@@ -31,11 +24,9 @@ class DependencyStructureMatrixHtmlFormatter implements Formatter
     }
 
     /**
-     * @param array $dependencyArray
-     *
-     * @return string
+     * @param array<string, array<string, int>> $dependencyArray
      */
-    private function buildHtmlTable(array $dependencyArray) : string
+    private function buildHtmlTable(array $dependencyArray): string
     {
         return '<table>'
             .$this->tableHead($dependencyArray)
@@ -111,11 +102,9 @@ td {
     }
 
     /**
-     * @param array $dependencyArray
-     *
-     * @return string
+     * @param array<string, array<string, int>> $dependencyArray
      */
-    private function tableBody(array $dependencyArray)
+    private function tableBody(array $dependencyArray): string
     {
         $output = '<tbody>';
         $numIndex = 1;
@@ -136,11 +125,9 @@ td {
     }
 
     /**
-     * @param array $dependencyArray
-     *
-     * @return string
+     * @param array<string, array<string, int>> $dependencyArray
      */
-    private function tableHead(array $dependencyArray)
+    private function tableHead(array $dependencyArray): string
     {
         $output = '<thead><tr><th>X</th>';
         for ($i = 1, $len = count($dependencyArray); $i <= $len; $i += 1) {

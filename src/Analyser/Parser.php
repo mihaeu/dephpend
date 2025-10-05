@@ -1,8 +1,15 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Mihaeu\PhpDependencies\Analyser;
 
+use PhpParser\Node;
+
 interface Parser
 {
-    public function parse(string $code) : array;
+    /**
+     * @return list<Node>
+     */
+    public function parse(string $code): array;
 }

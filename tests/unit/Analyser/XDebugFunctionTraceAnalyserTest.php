@@ -5,25 +5,24 @@ namespace Mihaeu\PhpDependencies\Analyser;
 use InvalidArgumentException;
 use Mihaeu\PhpDependencies\Dependencies\DependencyFactory;
 use Mihaeu\PhpDependencies\DependencyHelper;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Finder\SplFileInfo;
-use ValueError;
+use SplFileInfo;
 
-/**
- * @covers Mihaeu\PhpDependencies\Analyser\XDebugFunctionTraceAnalyser
- */
+#[CoversClass(XDebugFunctionTraceAnalyser::class)]
 class XDebugFunctionTraceAnalyserTest extends TestCase
 {
-    /** @var XDebugFunctionTraceAnalyser */
-    private $xDebugFunctionTraceAnalyser;
+    private XDebugFunctionTraceAnalyser $xDebugFunctionTraceAnalyser;
 
-    /** @var SplFileInfo */
-    private $tempFile;
+    private SplFileInfo $tempFile;
 
     protected function setUp(): void
     {
-        $this->xDebugFunctionTraceAnalyser = new XDebugFunctionTraceAnalyser($this->createMock(DependencyFactory::class));
-        $this->tempFile = new \SplFileInfo(sys_get_temp_dir().'/'.'dephpend-trace.sample');
+        /** @var DependencyFactory&MockObject $dependencyFactory */
+        $dependencyFactory = $this->createMock(DependencyFactory::class);
+        $this->xDebugFunctionTraceAnalyser = new XDebugFunctionTraceAnalyser($dependencyFactory);
+        $this->tempFile = new SplFileInfo(sys_get_temp_dir().'/'.'dephpend-trace.sample');
         touch($this->tempFile->getPathname());
     }
 
@@ -69,12 +68,16 @@ class XDebugFunctionTraceAnalyserTest extends TestCase
 
     public function testThrowsExceptionIfFileCannotBeOpened(): void
     {
+        /** @var SplFileInfo&MockObject $tmpFile */
         $tmpFile = $this->createMock(SplFileInfo::class);
-        $tmpFile->expects($this->once())->method('getPathname')->willReturn('');
-        $this->expectException(ValueError::class);
+        $tmpFile->expects($this->once())->method('getPathname')->willReturn('doesntexist');
+        $this->expectException(InvalidArgumentException::class);
         $this->xDebugFunctionTraceAnalyser->analyse($tmpFile);
     }
 
+    /**
+     * @param list<list<int|string>> $data
+     */
     private function createContent(array $data) : string
     {
         return array_reduce($data, static function (string $carry, array $lineParts) {
@@ -82,6 +85,9 @@ class XDebugFunctionTraceAnalyserTest extends TestCase
         }, '');
     }
 
+    /**
+     * @param list<list<int|string>> $data
+     */
     private function writeContent(array $data): void
     {
         file_put_contents($this->tempFile->getPathname(), $this->createContent($data));

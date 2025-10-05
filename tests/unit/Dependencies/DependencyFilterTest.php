@@ -6,11 +6,10 @@ namespace Mihaeu\PhpDependencies\Dependencies;
 
 use InvalidArgumentException;
 use Mihaeu\PhpDependencies\DependencyHelper;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers Mihaeu\PhpDependencies\Dependencies\DependencyFilter
- */
+#[CoversClass(\Mihaeu\PhpDependencies\Dependencies\DependencyFilter::class)]
 class DependencyFilterTest extends TestCase
 {
     /** @var DependencyFilter */
