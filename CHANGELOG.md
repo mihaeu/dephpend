@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.9.0] - 2025-10-05
+### Changed
+
+- Requirement for PHP raised to 8.2
+
 ## [0.8.1] - 2021-05-02
 ### Fixed
 - Fixed `test-features` command 
@@ -96,8 +101,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
  - first tagged release
  - uml, text, dsm and metrics command
 
-[Unreleased]: https://github.com/mihaeu/dephpend/compare/0.8.1...HEAD
-[0.8.0]: https://github.com/mihaeu/dephpend/compare/0.8.0...0.8.1
+[Unreleased]: https://github.com/mihaeu/dephpend/compare/0.9.0...HEAD
+[0.9.0]: https://github.com/mihaeu/dephpend/compare/0.8.1...0.9.0
+[0.8.1]: https://github.com/mihaeu/dephpend/compare/0.8.0...0.8.1
 [0.8.0]: https://github.com/mihaeu/dephpend/compare/0.7.0...0.8.0
 [0.7.0]: https://github.com/mihaeu/dephpend/compare/0.6.3...0.7.0
 [0.6.3]: https://github.com/mihaeu/dephpend/compare/0.6.2...0.6.3
