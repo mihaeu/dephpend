@@ -23,7 +23,7 @@
     "require-dev": {
         "mikey179/vfsstream": "^1.6",
         "phpunit/phpunit": "^11.0",
-        "squizlabs/php_codesniffer": "^3.3",
+        "squizlabs/php_codesniffer": "^3.3 || ^4.0",
         "friendsofphp/php-cs-fixer": "^3.75.0",
         "phpstan/phpstan": "^2.1",
         "phpstan/phpstan-phpunit": "^2.0",
