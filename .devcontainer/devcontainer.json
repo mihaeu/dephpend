@@ -1,0 +1,25 @@
+{
+	"name": "PHP",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.shell.linux": "/bin/bash"
+            },
+            // IDs of extensions you installed when the container is created.
+            "extensions": [
+                "felixfbecker.php-debug",
+                "felixfbecker.php-intellisense"
+            ]
+        }
+    },
+
+	// commands run after the container is created.
+	"postCreateCommand": "composer install"
+
+	// Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
+	// "remoteUser": "vscode"
+}

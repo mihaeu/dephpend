@@ -105,7 +105,7 @@ class DependencyInspectionVisitor extends NodeVisitorAbstract
         } elseif ($node instanceof StaticCallNode) {
             if ($node->class instanceof NameNode) {
                 $this->addName($node->class);
-            } 
+            }
         } elseif ($node instanceof UseTraitNode) {
             foreach ($node->traits as $trait) {
                 $this->addName($trait);

@@ -74,3 +74,8 @@ git checkout gh-pages && \
   git push && \
   git checkout main
 ```
+
+## Environment
+
+For convenience, a VS Code devcontainer configuration is provided. This pre-configured Docker environment can
+be used for development and running tests. For more info, see: https://code.visualstudio.com/docs/devcontainers/containers
